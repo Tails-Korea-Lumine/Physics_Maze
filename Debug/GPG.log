@@ -1,0 +1,43 @@
+﻿  Task_Map3d.cpp
+  Task_Ball.cpp
+  Gravity.cpp
+  Collision.cpp
+c:\users\game\desktop\3d tasksystem\collision.cpp(14): warning C4244: '引数': 'int' から 'const float' への変換です。データが失われる可能性があります。
+c:\users\game\desktop\3d tasksystem\collision.cpp(15): warning C4244: '引数': 'int' から 'const float' への変換です。データが失われる可能性があります。
+c:\users\game\desktop\3d tasksystem\collision.cpp(16): warning C4244: '引数': 'int' から 'const float' への変換です。データが失われる可能性があります。
+c:\users\game\desktop\3d tasksystem\collision.cpp(21): warning C4244: '引数': 'int' から 'const float' への変換です。データが失われる可能性があります。
+c:\users\game\desktop\3d tasksystem\collision.cpp(22): warning C4244: '引数': 'int' から 'const float' への変換です。データが失われる可能性があります。
+c:\users\game\desktop\3d tasksystem\collision.cpp(23): warning C4244: '引数': 'int' から 'const float' への変換です。データが失われる可能性があります。
+c:\users\game\desktop\3d tasksystem\collision.cpp(28): warning C4244: '引数': 'int' から 'const float' への変換です。データが失われる可能性があります。
+c:\users\game\desktop\3d tasksystem\collision.cpp(29): warning C4244: '引数': 'int' から 'const float' への変換です。データが失われる可能性があります。
+c:\users\game\desktop\3d tasksystem\collision.cpp(30): warning C4244: '引数': 'int' から 'const float' への変換です。データが失われる可能性があります。
+c:\users\game\desktop\3d tasksystem\collision.cpp(35): warning C4244: '引数': 'int' から 'const float' への変換です。データが失われる可能性があります。
+c:\users\game\desktop\3d tasksystem\collision.cpp(36): warning C4244: '引数': 'int' から 'const float' への変換です。データが失われる可能性があります。
+c:\users\game\desktop\3d tasksystem\collision.cpp(37): warning C4244: '引数': 'int' から 'const float' への変換です。データが失われる可能性があります。
+c:\users\game\desktop\3d tasksystem\collision.cpp(42): warning C4244: '引数': 'int' から 'const float' への変換です。データが失われる可能性があります。
+c:\users\game\desktop\3d tasksystem\collision.cpp(43): warning C4244: '引数': 'int' から 'const float' への変換です。データが失われる可能性があります。
+c:\users\game\desktop\3d tasksystem\collision.cpp(44): warning C4244: '引数': 'int' から 'const float' への変換です。データが失われる可能性があります。
+c:\users\game\desktop\3d tasksystem\collision.cpp(49): warning C4244: '引数': 'int' から 'const float' への変換です。データが失われる可能性があります。
+c:\users\game\desktop\3d tasksystem\collision.cpp(50): warning C4244: '引数': 'int' から 'const float' への変換です。データが失われる可能性があります。
+c:\users\game\desktop\3d tasksystem\collision.cpp(51): warning C4244: '引数': 'int' から 'const float' への変換です。データが失われる可能性があります。
+c:\users\game\desktop\3d tasksystem\collision.cpp(56): warning C4244: '引数': 'int' から 'const float' への変換です。データが失われる可能性があります。
+c:\users\game\desktop\3d tasksystem\collision.cpp(57): warning C4244: '引数': 'int' から 'const float' への変換です。データが失われる可能性があります。
+c:\users\game\desktop\3d tasksystem\collision.cpp(58): warning C4244: '引数': 'int' から 'const float' への変換です。データが失われる可能性があります。
+c:\users\game\desktop\3d tasksystem\collision.cpp(63): warning C4244: '引数': 'int' から 'const float' への変換です。データが失われる可能性があります。
+c:\users\game\desktop\3d tasksystem\collision.cpp(64): warning C4244: '引数': 'int' から 'const float' への変換です。データが失われる可能性があります。
+c:\users\game\desktop\3d tasksystem\collision.cpp(65): warning C4244: '引数': 'int' から 'const float' への変換です。データが失われる可能性があります。
+c:\users\game\desktop\3d tasksystem\collision.cpp(70): warning C4244: '引数': 'int' から 'const float' への変換です。データが失われる可能性があります。
+c:\users\game\desktop\3d tasksystem\collision.cpp(71): warning C4244: '引数': 'int' から 'const float' への変換です。データが失われる可能性があります。
+c:\users\game\desktop\3d tasksystem\collision.cpp(72): warning C4244: '引数': 'int' から 'const float' への変換です。データが失われる可能性があります。
+c:\users\game\desktop\3d tasksystem\collision.cpp(77): warning C4244: '引数': 'int' から 'const float' への変換です。データが失われる可能性があります。
+c:\users\game\desktop\3d tasksystem\collision.cpp(78): warning C4244: '引数': 'int' から 'const float' への変換です。データが失われる可能性があります。
+c:\users\game\desktop\3d tasksystem\collision.cpp(79): warning C4244: '引数': 'int' から 'const float' への変換です。データが失われる可能性があります。
+c:\users\game\desktop\3d tasksystem\collision.cpp(85): warning C4244: '引数': 'int' から 'const float' への変換です。データが失われる可能性があります。
+c:\users\game\desktop\3d tasksystem\collision.cpp(86): warning C4244: '引数': 'int' から 'const float' への変換です。データが失われる可能性があります。
+c:\users\game\desktop\3d tasksystem\collision.cpp(87): warning C4244: '引数': 'int' から 'const float' への変換です。データが失われる可能性があります。
+c:\users\game\desktop\3d tasksystem\collision.cpp(92): warning C4244: '引数': 'int' から 'const float' への変換です。データが失われる可能性があります。
+c:\users\game\desktop\3d tasksystem\collision.cpp(93): warning C4244: '引数': 'int' から 'const float' への変換です。データが失われる可能性があります。
+c:\users\game\desktop\3d tasksystem\collision.cpp(94): warning C4244: '引数': 'int' から 'const float' への変換です。データが失われる可能性があります。
+  コードを生成中...
+  GPG.vcxproj -> C:\Users\game\Desktop\3d tasksystem\Debug\GPG.exe
+  GPG.vcxproj -> C:\Users\game\Desktop\3d tasksystem\Debug\GPG.pdb (Full PDB)
