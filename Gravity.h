@@ -23,12 +23,12 @@ public:
 	void Rotation_on_Gravity(float angle,ML::Vec3 centor);
 
 	//加速させる
-	ML::Vec3 Accelerate(ML::Vec3 speed);
+	ML::Vec3 Accelerate(float Weight);
 	//壁とぶつかった後の移動方向と速度を返す
-	void CollisionOver_Accelerate(ML::Vec3& speed, ML::Vec3 normal);
+	ML::Vec3 CollisionOver_Accelerate(ML::Vec3 speed, ML::Vec3 normal);
 
 	//反射ベクトルを求める
-	ML::Vec3 Reflaction_Vector(ML::Vec3 force, ML::Vec3 normal);
+	ML::Vec3 Reflaction_Vector(ML::Vec3 force, ML::Vec3 normal, float weight);
 
 
 //生成消滅字

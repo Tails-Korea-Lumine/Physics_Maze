@@ -65,14 +65,14 @@ float Gravity::Cheak_angle(ML::Vec3 normal)
 	return Gravity::Vector_Dot(this->G_acceleration, normal);
 }
 
-ML::Vec3 Gravity::Accelerate(ML::Vec3 speed)
+ML::Vec3 Gravity::Accelerate(float Weight)
 {
-	return speed += this->G_acceleration;
+	return Weight * this->G_acceleration;
 }
 
-void Gravity::CollisionOver_Accelerate(ML::Vec3& speed, ML::Vec3 normal)
+ML::Vec3 Gravity::CollisionOver_Accelerate(ML::Vec3 speed, ML::Vec3 normal)
 {
-	//法線ベクトルと速度の角度とサイン値
+	/*//法線ベクトルと速度の角度とサイン値
 	float sin , seta;
 
 	sin = Gravity::Vector_Dot(-speed, normal);
@@ -95,10 +95,32 @@ void Gravity::CollisionOver_Accelerate(ML::Vec3& speed, ML::Vec3 normal)
 	rotation.TransformNormal(speed);
 	
 	//各要素に変化後の力の量を掛ける
-	speed *= force;
+	speed *= force;*/
+
+	//----------------------------------------------------------------------------
+	//このうえはver.1
+
+	float fn;
+	fn = Gravity::Get_Vector_Dot(speed, normal);
+	//絶対値に変える
+	if (fn < 0)
+	{
+		fn *= -1;
+	}
+	//長さを力に合わせた後のベクトルの大きさ
+	ML::Vec3 after_Normal;
+
+	after_Normal = normal * fn;
+
+	//反射角に変換したベクトル
+	ML::Vec3 after_Collision;
+
+	after_Collision = speed + after_Normal;
+	
+	return after_Collision;
 }
 
-ML::Vec3 Gravity::Reflaction_Vector(ML::Vec3 force, ML::Vec3 normal)
+ML::Vec3 Gravity::Reflaction_Vector(ML::Vec3 force, ML::Vec3 normal, float weight)
 {
 	//内積のコサイン値
 	float cos;
@@ -130,8 +152,8 @@ ML::Vec3 Gravity::Reflaction_Vector(ML::Vec3 force, ML::Vec3 normal)
 	
 	after_Reflection = force + (2 * after_Normal);
 
-	//40％の大きさで返す
-	return after_Reflection*0.4f;
+	//重さに応じて減らして返す
+	return (after_Reflection*0.6f)/weight;
 }
 
 void Gravity::Rotation_on_Gravity(float angle, ML::Vec3 centor)

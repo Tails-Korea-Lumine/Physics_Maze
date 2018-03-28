@@ -36,7 +36,8 @@ namespace  Ball
 		//★データ初期化
 		this->pos = ML::Vec3(1050, 300, 450);//仮の位置後で調整をかける(2018/03/15)
 		this->speed = ML::Vec3(0, 0, 0);
-		this->r = 40.0f;
+		this->r = 20.0f;
+		this->m = 10.0f;
 		this->collision_Flag = false;
 
 	
@@ -62,21 +63,15 @@ namespace  Ball
 	//-------------------------------------------------------------------
 	//「更新」１フレーム毎に行う処理
 	void  Object::UpDate()
-	{		
-		//重力加速
-		
-		if (this->speed.Length() < 10.0f)
-		{
-			this->speed = this->G.Accelerate(this->speed);
-		}
-		this->pos += this->speed;
-
+	{	
 		//マップの情報を修得、今はタスク一個で持ってくるが
 		//後にVectorで持ってくるよう調整する(2018/03/27)
-		auto map = ge->GetTask_One_G<Map3d::Object>("マップ");
+		auto map = ge->GetTask_One_G<Map3d::Object>("マップ");		
 
 		//マップのあたり判定の結果
 		After_Collision Result = map->is_Collision();
+		//重力加速
+		this->speed += this->G.Accelerate(this->m);
 
 		if (this->Is_Collision())
 		{
@@ -85,7 +80,7 @@ namespace  Ball
 			{
 				//今回のフレームに衝突だったら
 				//斜め線加速をする
-				this->G.CollisionOver_Accelerate(this->speed, Result.normal);
+				this->speed = this->G.CollisionOver_Accelerate(this->speed, Result.normal);
 			}
 			else
 			{
@@ -102,12 +97,15 @@ namespace  Ball
 			{
 				//今回のフレームに衝突だったら
 				//反射角で跳ね返す
-				this->speed = this->G.Reflaction_Vector(this->speed, Result.normal);
+				this->speed = this->G.Reflaction_Vector(this->speed, Result.normal,this->m);
 				//衝突フラグを有効にする
 				this->collision_Flag = true;
 			}
 			
-		}
+		}		
+		
+		//移動
+		this->pos += this->speed;
 	}
 	//-------------------------------------------------------------------
 	//「２Ｄ描画」１フレーム毎に行う処理
@@ -120,7 +118,7 @@ namespace  Ball
 		ML::Mat4x4 matT;
 		ML::Mat4x4 matS;
 		matT.Translation(this->pos);
-		matS.Scaling(40.0f);
+		matS.Scaling(this->r);
 		DG::EffectState().param.matWorld = matS * matT;
 		DG::Mesh_Draw(this->res->meshName);
 	}

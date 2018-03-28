@@ -230,27 +230,47 @@ namespace  Map3d
 	//球とマップのあたり判定
 	void Object::Map_Check_Hit(ML::Vec3 pos, float r)
 	{
-		//今はマップ全体を判定範囲とする
-		//処理落ちがひどい場合範囲を調整する(2018/03/27)
+		//仮の範囲
+		//マップの読み込みが確立した後に再調整をかける(2018/03/28)
+		int sx, sy, sz;
+		int ex, ey, ez;
+
+		sx = (pos.x / 100) -1;
+		sy = (pos.y / 100) -1;
+		sz = (pos.z / 100) -1;
+		ex = sx + 2;
+		ey = sy + 2;
+		ez = sz + 2;
+
+		if (sx < 0 || sy < 0 || sz < 0)
+		{
+			return;
+		}
+		if (ex > this->sizeX || ey > this->sizeY || ez > this->sizeZ)
+		{
+			return;
+		}
 		
 		//判定スタート
-		for (int y = 0; y < this->sizeY; y++)
+		for (int y = sy; y <= ey; y++)
 		{
-			for (int z = 0; z < this->sizeZ; z++)
+			for (int z = sz; z <= ez; z++)
 			{
-				for (int x = 0; x < this->sizeX; x++)
+				for (int x = sx; x <= ex; x++)
 				{
-					if (this->is_Collision().collision_Flag)
-					{
-						return;
-					}
-					else if (this->arr[z][y][x].chip == 0)
+					//道は判定しない
+					if (this->arr[z][y][x].chip == 0)
 					{
 						continue;
 					}
 					//判定するマスを修得する
 					ML::Box3D Mass = this->arr[z][y][x].collision_Base.OffsetCopy(this->arr[z][y][x].pos);
 					this->collision_Tri = this->col.Hit_Check(Mass, pos, r);
+					//判定で当たったら処理を止める
+					if (this->is_Collision().collision_Flag)
+					{
+						return;
+					}
 				}
 			}
 		}

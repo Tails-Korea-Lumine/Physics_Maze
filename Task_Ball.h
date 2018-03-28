@@ -57,6 +57,8 @@ namespace Ball
 		ML::Vec3 speed;
 		//半直径
 		float r;
+		//重さ
+		float m;
 		//接触しているかを判定するフラグ
 		bool collision_Flag;
 		//重力

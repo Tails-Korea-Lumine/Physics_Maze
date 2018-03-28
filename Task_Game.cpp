@@ -3,6 +3,7 @@
 //-------------------------------------------------------------------
 #include  "MyPG.h"
 #include  "Task_Game.h"
+#include  "Task_title.h"
 #include  "Task_Map3d.h"
 #include  "Task_Ball.h"
 
@@ -49,6 +50,8 @@ namespace  Game
 		DG::EffectState().param.light[0].kind = DG_::Light::Directional;//光源の種類
 		DG::EffectState().param.light[0].direction = ML::Vec3(1, -1, 1).Normalize();//照射方向
 		DG::EffectState().param.light[0].color = ML::Color(1, 1, 1, 1);//色と強さ
+
+		DG::Font_Create("FontA", "HGSｺﾞｼｯｸM", 12, 16);
 		//★タスクの生成
 		//仮のマップ生成	
 		auto map = Map3d::Object::Create(true);
@@ -66,10 +69,12 @@ namespace  Game
 		map->Kill();
 		ball->Kill();
 
+		DG::Font_Erase("FontA");
+
 		if (!ge->QuitFlag() && this->nextTaskCreate)
 		{
 			//★引き継ぎタスクの生成
-			//auto nextTask = Game::Object::Create(true);
+			auto nextTask = Title::Object::Create(true);
 		}
 
 		return  true;
@@ -78,13 +83,25 @@ namespace  Game
 	//「更新」１フレーム毎に行う処理
 	void  Object::UpDate()
 	{
-		
+		auto in = DI::GPad_GetState("P1");
+
+		if (in.ST.down)
+		{
+			this->Kill();
+		}
 	}
 	//-------------------------------------------------------------------
 	//「２Ｄ描画」１フレーム毎に行う処理
 	void  Object::Render2D_AF()
 	{
-		
+		auto ball = ge->GetTask_One_G<Ball::Object>("ボール");
+
+		char buf[1024];
+		sprintf(buf, "pos : %4.3f , %4.3f , %4.3f \nspeed : %4.3f , %4.3f , %4.3f",
+			 ball->pos.x, ball->pos.y, ball->pos.z, ball->speed.x, ball->speed.y, ball->speed.z);
+
+		ML::Box2D moji(100, 0, 600, 600);
+		DG::Font_Draw("FontA", moji, buf, ML::Color(1, 1, 0, 1));
 	}
 
 	void  Object::Render3D_L0()

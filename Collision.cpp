@@ -120,8 +120,12 @@ bool Collision::Check_Collision(Triangle tri, ML::Vec3 p)
 	//alpha ＝ AとBの角度
 	//beta = BとCの角度
 	//gamma = AとCの角度
-	float cosAlpha, cosBeta, cosGamma;
-	float sinAlpha, sinBeta, sinGamma;
+	float cosAlpha;
+	float cosBeta;
+	float cosGamma;
+	float sinAlpha;
+	float sinBeta;
+	float sinGamma;
 
 	cosAlpha = Collision::Vector_Dot(A, B);
 	cosBeta = Collision::Vector_Dot(B, C);
@@ -136,7 +140,8 @@ bool Collision::Check_Collision(Triangle tri, ML::Vec3 p)
 	check = (cosGamma*((cosAlpha * cosBeta) - (sinAlpha * sinBeta))) - (sinGamma * ((cosAlpha*sinBeta) + (sinAlpha*cosBeta)));
 
 	//誤差まで確認(誤差の範囲は変わる余地がある 2018/03/16)
-	if (check  == 1)
+	//0.99756405026
+	if (check  >= _CMATH_::cos(ML::ToRadian(356)))
 	{
 		return true;
 	}
@@ -148,19 +153,21 @@ std::vector<ML::Vec3> Collision::Get_6Poiont_to_Sphere(ML::Vec3 pos, float r)
 {
 	std::vector<ML::Vec3> S;
 	ML::Vec3 v[6] = {};
-
-	v[0] = pos + ML::Vec3(+r, 0, 0);
-	v[1] = pos + ML::Vec3(-r, 0, 0);
-	v[2] = pos + ML::Vec3(0, +r, 0);
-	v[3] = pos + ML::Vec3(0, -r, 0);
-	v[4] = pos + ML::Vec3(0, 0, +r);
-	v[5] = pos + ML::Vec3(0, 0, -r);
-
-	for (int i = 0; i < 6; i++)
+	for (int i = r; i > r/3; i--)
 	{
-		S.push_back(v[i]);
-	}
+		v[0] = pos + ML::Vec3(+i, 0, 0);
+		v[1] = pos + ML::Vec3(-i, 0, 0);
+		v[2] = pos + ML::Vec3(0, +i, 0);
+		v[3] = pos + ML::Vec3(0, -i, 0);
+		v[4] = pos + ML::Vec3(0, 0, +i);
+		v[5] = pos + ML::Vec3(0, 0, -i);
 
+
+		for (int i = 0; i < 6; i++)
+		{
+			S.push_back(v[i]);
+		}
+	}
 	return S;
 }
 
