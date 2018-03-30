@@ -49,6 +49,8 @@ namespace  Map3d
 		this->Map_Load("./data/StageData/Map00.txt");
 
 		this->render3D_Priority[0] = 1.0f;
+
+		this->controllor_Volume = 0.0f;
 		
 		//★タスクの生成
 
@@ -82,6 +84,12 @@ namespace  Map3d
 	//「更新」１フレーム毎に行う処理
 	void  Object::UpDate()
 	{
+		auto in1 = DI::GPad_GetState("P1");
+
+		this->controllor_Volume = in1.LStick.volume;
+
+		//ワールド回転量に応じて回転
+		this->Map_Rotate();
 		//あたり判定は毎回マップのほうで行う
 		//ボールの情報を修得
 		auto ball = ge->GetTask_One_G<Ball::Object>("ボール");
@@ -98,6 +106,14 @@ namespace  Map3d
 
 	void  Object::Render3D_L0()
 	{
+		//軸回転行列
+		ML::Mat4x4 matRX, matRY, matRZ;
+
+		//ワールド回転量から行列に反映
+		matRX.RotationX(this->controllor_Volume);
+		matRY.RotationY(this->controllor_Volume);
+		matRZ.RotationZ(this->controllor_Volume);
+
 		ML::Mat4x4 matS;
 		matS.Scaling(this->chipSize / 100.0f);
 		for (int y = 0; y < this->sizeY; y++)
@@ -115,7 +131,7 @@ namespace  Map3d
 					ML::Mat4x4 matT;
 					matT.Translation(this->arr[z][y][x].pos);
 					ML::Mat4x4 matW;
-					matW = matS * matT;
+					matW = matS *  matRY  * matT;
 					DG::EffectState().param.matWorld = matW;
 					DG::Mesh_Draw(this->chipName[cn]);
 				}
@@ -159,7 +175,7 @@ namespace  Map3d
 				for (int x = 0; x < this->sizeX; x++)
 				{
 					fin >> this->arr[z][y][x].chip;
-					this->arr[z][y][x].pos = ML::Vec3(x*this->chipSize + this->chipSize / 2, y*this->chipSize + this->chipSize / 2, z*this->chipSize + this->chipSize / 2);
+					this->arr[z][y][x].pos = ML::Vec3(x*this->chipSize + this->chipSize / 2, y*this->chipSize + this->chipSize / 2, z*this->chipSize + this->chipSize / 2);					
 					this->arr[z][y][x].collision_Base = ML::Box3D(-50, -50, -50, 100, 100, 100);
 				}
 			}
@@ -275,63 +291,41 @@ namespace  Map3d
 			}
 		}
 	}
-	//---------------------------------------------------------------------------
-	//法線ベクトルをマップ情報で修得する
-	//void Object::Take_Normal_Vector(mapData& m)
-	//{
-	//	int i = 0;
-	//	for (int z = 1; z < this->sizeZ; z++)
-	//	{
-	//		for (int y = 1; y < this->sizeY; y++)
-	//		{
-	//			for (int x = 1; x < this->sizeX; x++)
-	//			{
-	//				//検索しているところが道以外なら
-	//				if (this->arr[z][y][x].chip >= 1)
-	//				{
-	//					//自分の上下左右を調べて壁だったら法線ベクトルを持つ
-	//					if (this->arr[z-1][y][x].chip < 1)
-	//					{
-	//						this->arr[z - 1][y][x].normal[i] = ML::Vec3(0, 0, -1);
-	//						i++;
-	//					}
-	//					if (this->arr[z + 1][y][x].chip < 1)
-	//					{
-	//						this->arr[z + 1][y][x].normal[i] = ML::Vec3(0, 0, +1);
-	//						i++;
-	//					}
-	//					if (this->arr[z][y-1][x].chip < 1)
-	//					{
-	//						this->arr[z][y-1][x].normal[i] = ML::Vec3(0, -1, 0);
-	//						i++;
-	//					}
-	//					if (this->arr[z][y + 1][x].chip < 1)
-	//					{
-	//						this->arr[z][y + 1][x].normal[i] = ML::Vec3(0, +1, 0);
-	//						i++;
-	//					}
-	//					if (this->arr[z][y][x-1].chip < 1)
-	//					{
-	//						this->arr[z][y][x-1].normal[i] = ML::Vec3(-1, 0, 0);
-	//						i++;
-	//					}if (this->arr[z][y][x+1].chip < 1)
-	//					{
-	//						this->arr[z][y][x+1].normal[i] = ML::Vec3(+1, 0, 0);
-	//						i++;
-	//					}
-	//				}
-	//				//検索が終わったらiを０に戻す
-	//				i = 0;
-	//			}
-	//		}
-	//	}
-	//}
+	
 
 	//-----------------------------------------------------------------------
 	//あたっているかを返す関数
 	After_Collision Object::is_Collision()
 	{
 		return this->collision_Tri;
+	}
+
+	//------------------------------------------------------------------------
+	//回転させる
+	void Object::Map_Rotate()
+	{
+		//軸回転行列
+		ML::Mat4x4 matRX, matRY, matRZ;
+
+		//ワールド回転量から行列に反映
+		matRX.RotationX(ge->World_Rotation.x);
+		matRY.RotationY(ge->World_Rotation.y);
+		matRZ.RotationZ(ge->World_Rotation.z);
+
+		for (int y = 0; y < this->sizeY; y++)
+		{
+			for (int z = 0; z < this->sizeZ; z++)
+			{
+				for (int x = 0; x < this->sizeX; x++)
+				{
+					this->arr[z][y][x].pos -= ML::Vec3(1000, 0, 1000);
+					this->arr[z][y][x].pos = matRX.TransformCoord(this->arr[z][y][x].pos);
+					this->arr[z][y][x].pos = matRY.TransformCoord(this->arr[z][y][x].pos);
+					this->arr[z][y][x].pos = matRZ.TransformCoord(this->arr[z][y][x].pos);
+					this->arr[z][y][x].pos += ML::Vec3(1000, 0, 1000);
+				}
+			}
+		}
 	}
 	//★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★
 	//以下は基本的に変更不要なメソッド

@@ -9,6 +9,15 @@ std::vector<Triangle> Collision::Get_Triangle_Box3D(ML::Box3D box)
 	Triangle t[12] = {};
 	
 	//各三角形の指定(for文でできるかな 2018/03/16)
+
+	/*vector<ML::Vec3> a = {
+		ML::Vec3(box.x,box.y,box.z),
+		ML::Vec3(box.x + box.w,box.y,box.z),
+	};
+	for (int i = 0; i < 2; ++i) {
+		t[i].a = a[i];
+	}*/
+
 	t[0] =
 	{
 		t[0].a = ML::Vec3(box.x,box.y,box.z),
@@ -141,7 +150,7 @@ bool Collision::Check_Collision(Triangle tri, ML::Vec3 p)
 
 	//誤差まで確認(誤差の範囲は変わる余地がある 2018/03/16)
 	//0.99756405026
-	if (check  >= _CMATH_::cos(ML::ToRadian(356)))
+	if (check  >= _CMATH_::cos(ML::ToRadian(359)))
 	{
 		return true;
 	}

@@ -56,6 +56,18 @@
     <Filter Include="MyPG\Tasks\game">
       <UniqueIdentifier>{0d2f1ac2-da88-41c8-b171-bbce603f253f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="MyPG\Collision">
+      <UniqueIdentifier>{7a372d06-94f8-4d60-83a9-b11365a0ee90}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="MyPG\Gravity">
+      <UniqueIdentifier>{2ce5a61e-806c-4992-80b8-ccfc0cc21bdc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="MyPG\easing">
+      <UniqueIdentifier>{a2d637b0-615c-4d81-aaaf-cf14c814a92f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="MyPG\Tasks\Player">
+      <UniqueIdentifier>{18f77494-2321-41a4-be43-db3ce631d810}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="myLib.cpp">
@@ -112,14 +124,8 @@
     <ClCompile Include="GameEngine_Ver3_7.cpp">
       <Filter>GE</Filter>
     </ClCompile>
-    <ClCompile Include="easing.cpp">
-      <Filter>MyPG</Filter>
-    </ClCompile>
     <ClCompile Include="Task_title.cpp">
       <Filter>MyPG\Tasks\title</Filter>
-    </ClCompile>
-    <ClCompile Include="Gravity.cpp">
-      <Filter>MyPG</Filter>
     </ClCompile>
     <ClCompile Include="Task_Map3d.cpp">
       <Filter>MyPG\Tasks\karimap</Filter>
@@ -127,11 +133,20 @@
     <ClCompile Include="Task_Ball.cpp">
       <Filter>MyPG\Tasks\ball</Filter>
     </ClCompile>
-    <ClCompile Include="Collision.cpp">
-      <Filter>MyPG</Filter>
-    </ClCompile>
     <ClCompile Include="Task_Game.cpp">
       <Filter>MyPG\Tasks\game</Filter>
+    </ClCompile>
+    <ClCompile Include="Collision.cpp">
+      <Filter>MyPG\Collision</Filter>
+    </ClCompile>
+    <ClCompile Include="Gravity.cpp">
+      <Filter>MyPG\Gravity</Filter>
+    </ClCompile>
+    <ClCompile Include="easing.cpp">
+      <Filter>MyPG\easing</Filter>
+    </ClCompile>
+    <ClCompile Include="Task_Player.cpp">
+      <Filter>MyPG\Tasks\Player</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -186,14 +201,8 @@
     <ClInclude Include="GameEngine_Ver3_7.h">
       <Filter>GE</Filter>
     </ClInclude>
-    <ClInclude Include="easing.h">
-      <Filter>MyPG</Filter>
-    </ClInclude>
     <ClInclude Include="Task_title.h">
       <Filter>MyPG\Tasks\title</Filter>
-    </ClInclude>
-    <ClInclude Include="Gravity.h">
-      <Filter>MyPG</Filter>
     </ClInclude>
     <ClInclude Include="Task_Map3d.h">
       <Filter>MyPG\Tasks\karimap</Filter>
@@ -201,11 +210,20 @@
     <ClInclude Include="Task_Ball.h">
       <Filter>MyPG\Tasks\ball</Filter>
     </ClInclude>
-    <ClInclude Include="Collision.h">
-      <Filter>MyPG</Filter>
-    </ClInclude>
     <ClInclude Include="Task_Game.h">
       <Filter>MyPG\Tasks\game</Filter>
+    </ClInclude>
+    <ClInclude Include="Collision.h">
+      <Filter>MyPG\Collision</Filter>
+    </ClInclude>
+    <ClInclude Include="Gravity.h">
+      <Filter>MyPG\Gravity</Filter>
+    </ClInclude>
+    <ClInclude Include="easing.h">
+      <Filter>MyPG\easing</Filter>
+    </ClInclude>
+    <ClInclude Include="Task_Player.h">
+      <Filter>MyPG\Tasks\Player</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

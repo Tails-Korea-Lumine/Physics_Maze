@@ -6,6 +6,7 @@
 #include  "Task_title.h"
 #include  "Task_Map3d.h"
 #include  "Task_Ball.h"
+#include  "Task_Player.h"
 
 namespace  Game
 {
@@ -51,11 +52,17 @@ namespace  Game
 		DG::EffectState().param.light[0].direction = ML::Vec3(1, -1, 1).Normalize();//照射方向
 		DG::EffectState().param.light[0].color = ML::Color(1, 1, 1, 1);//色と強さ
 
+		//デバッグ用の文字生成
 		DG::Font_Create("FontA", "HGSｺﾞｼｯｸM", 12, 16);
+
+		//ワールド回転量初期化
+		ge->World_Rotation = ML::Vec3(0, 0, 0);
+
 		//★タスクの生成
 		//仮のマップ生成	
 		auto map = Map3d::Object::Create(true);
 		auto ball = Ball::Object::Create(true);
+		auto player = Player::Object::Create(true);
 
 		return  true;
 	}
@@ -97,8 +104,11 @@ namespace  Game
 		auto ball = ge->GetTask_One_G<Ball::Object>("ボール");
 
 		char buf[1024];
-		sprintf(buf, "pos : %4.3f , %4.3f , %4.3f \nspeed : %4.3f , %4.3f , %4.3f",
-			 ball->pos.x, ball->pos.y, ball->pos.z, ball->speed.x, ball->speed.y, ball->speed.z);
+		sprintf(buf, "pos : %4.3f , %4.3f , %4.3f \n"
+			"speed : %4.3f , %4.3f , %4.3f \n"
+			"WorldR : %4.3f , %4.3f , %4.3f",
+			 ball->pos.x, ball->pos.y, ball->pos.z, ball->speed.x, ball->speed.y, ball->speed.z,
+			ge->World_Rotation.x, ge->World_Rotation.y, ge->World_Rotation.z);
 
 		ML::Box2D moji(100, 0, 600, 600);
 		DG::Font_Draw("FontA", moji, buf, ML::Color(1, 1, 0, 1));

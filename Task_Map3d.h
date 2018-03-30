@@ -64,13 +64,16 @@ namespace Map3d
 		After_Collision collision_Tri;//ボールのほうに渡す情報
 		Collision col;
 
+		float controllor_Volume;
+
 	public:
 		//メソッド
 		bool Map_Load(string f_);
 		bool Map_Check_Hit(const ML::Box3D& hit);
-		void Map_Check_Hit(ML::Vec3 pos, float r);//球とマップのあたり判定
+		void Map_Check_Hit(ML::Vec3 pos, float r);//球とマップのあたり判定		
+		void Map_Rotate();//Updateで呼ぶ関数
 		
-		void Take_Normal_Vector(mapData& m);
+
 		After_Collision is_Collision();
 	};
 }

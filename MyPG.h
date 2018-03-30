@@ -82,7 +82,10 @@ namespace  MyPG
 		
 		//shared_ptr<BEffect::SP> effmaneger;
 		bool gameoverFlag;
-		bool getReadyFlag;		
+		bool getReadyFlag;
+
+		//ƒ[ƒ‹ƒh‰ñ“]—Ê
+		ML::Vec3 World_Rotation; 
 
 	//----------------------------------------------
 	};
