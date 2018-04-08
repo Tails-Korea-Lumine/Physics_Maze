@@ -49,8 +49,6 @@ namespace  Map3d
 		this->Map_Load("./data/StageData/Map00.txt");
 
 		this->render3D_Priority[0] = 1.0f;
-
-		this->controllor_Volume = 0.0f;
 		
 		//★タスクの生成
 
@@ -83,13 +81,48 @@ namespace  Map3d
 	//-------------------------------------------------------------------
 	//「更新」１フレーム毎に行う処理
 	void  Object::UpDate()
-	{
+	{		
 		auto in1 = DI::GPad_GetState("P1");
+		//スティックが倒された量を更新
+		if (in1.B1.on)
+		{
+			//スティックで入力
+			if (in1.LStick.axis.x != 0)
+			{					
+				this->map_Rotation.z -= in1.LStick.axis.x;
+			}
+		}
+		//押されていない時はY軸回転とX軸回転
+		else
+		{		
 
-		this->controllor_Volume = in1.LStick.volume;
+			if (in1.LStick.axis.y != 0)
+			{
+				this->map_Rotation.x -= in1.LStick.axis.y;
+			}
+			
+			if (in1.LStick.axis.x != 0)
+			{
+				this->map_Rotation.y -= in1.LStick.axis.x;
+			}			
+		}
 
-		//ワールド回転量に応じて回転
+		//スティックを放した時の処理
+		if (in1.LStick.volume == 0)
+		{				
+			ge->World_Rotation += this->map_Rotation;
+
+
+			this->map_Rotation = ML::Vec3(0, 0, 0);
+		}
+		
+		
+		
+		
+		//回転
 		this->Map_Rotate();
+
+
 		//あたり判定は毎回マップのほうで行う
 		//ボールの情報を修得
 		auto ball = ge->GetTask_One_G<Ball::Object>("ボール");
@@ -107,12 +140,13 @@ namespace  Map3d
 	void  Object::Render3D_L0()
 	{
 		//軸回転行列
-		ML::Mat4x4 matRX, matRY, matRZ;
+		ML::QT qtM , qtW;
 
-		//ワールド回転量から行列に反映
-		matRX.RotationX(this->controllor_Volume);
-		matRY.RotationY(this->controllor_Volume);
-		matRZ.RotationZ(this->controllor_Volume);
+		//回転量から行列に反映
+		qtM.RotYPR(this->map_Rotation);		
+		qtW.RotYPR(ge->World_Rotation);
+
+		
 
 		ML::Mat4x4 matS;
 		matS.Scaling(this->chipSize / 100.0f);
@@ -130,9 +164,21 @@ namespace  Map3d
 					 
 					ML::Mat4x4 matT;
 					matT.Translation(this->arr[z][y][x].pos);
-					ML::Mat4x4 matW;
-					matW = matS *  matRY  * matT;
-					DG::EffectState().param.matWorld = matW;
+
+					ML::Mat4x4 matR;
+
+					D3DXMatrixAffineTransformation(&matR, this->chipSize / 100.0f, NULL, &qtW, NULL);
+					//matR.Inverse();
+
+					if (this->map_Rotation.Length() != 0)
+					{
+						ML::Mat4x4 matMove;
+						D3DXMatrixAffineTransformation(&matMove, this->chipSize / 100.0f, NULL, &qtM, NULL);
+						matR *= matMove;
+					}
+					matR.Inverse();
+
+					DG::EffectState().param.matWorld =  matR * matT;					
 					DG::Mesh_Draw(this->chipName[cn]);
 				}
 			}
@@ -304,28 +350,44 @@ namespace  Map3d
 	//回転させる
 	void Object::Map_Rotate()
 	{
-		//軸回転行列
-		ML::Mat4x4 matRX, matRY, matRZ;
+		//軸回転クォータニオン
+		ML::QT qtM , qtW;
 
-		//ワールド回転量から行列に反映
-		matRX.RotationX(ge->World_Rotation.x);
-		matRY.RotationY(ge->World_Rotation.y);
-		matRZ.RotationZ(ge->World_Rotation.z);
+		//回転量から行列に反映		
+		qtM.RotYPR(this->map_Rotation);
+		qtW.RotYPR(ge->World_Rotation);
 
+		ML::Mat4x4 matR;
+
+
+		ML::Mat4x4 matS;
+		matS.Scaling(this->chipSize / 100.0f);
 		for (int y = 0; y < this->sizeY; y++)
 		{
 			for (int z = 0; z < this->sizeZ; z++)
 			{
 				for (int x = 0; x < this->sizeX; x++)
 				{
-					this->arr[z][y][x].pos -= ML::Vec3(1000, 0, 1000);
-					this->arr[z][y][x].pos = matRX.TransformCoord(this->arr[z][y][x].pos);
-					this->arr[z][y][x].pos = matRY.TransformCoord(this->arr[z][y][x].pos);
-					this->arr[z][y][x].pos = matRZ.TransformCoord(this->arr[z][y][x].pos);
-					this->arr[z][y][x].pos += ML::Vec3(1000, 0, 1000);
+					
+
+					ML::Vec3 temp = ML::Vec3(x*this->chipSize + this->chipSize / 2, y*this->chipSize + this->chipSize / 2, z*this->chipSize + this->chipSize / 2);
+
+					D3DXMatrixAffineTransformation(&matR, this->chipSize / 100.0f, &ML::Vec3(1050,50,1050), &qtW, NULL);
+					//matR.Inverse();
+
+					if (this->map_Rotation.Length() != 0)
+					{
+						ML::Mat4x4 matMove;
+						D3DXMatrixAffineTransformation(&matMove, this->chipSize / 100.0f, &ML::Vec3(1050, 50, 1050), &qtM, NULL);
+						matR *= matMove;						
+					}
+
+					matR.Inverse();
+					this->arr[z][y][x].pos = matR.TransformCoord(temp);
+					
 				}
 			}
-		}
+		}		
 	}
 	//★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★
 	//以下は基本的に変更不要なメソッド

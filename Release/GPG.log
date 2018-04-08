@@ -1,8 +1,10 @@
-﻿  Task_Game.cpp
-  コード生成しています。
-  107 of 4268 functions ( 2.5%) were compiled, the rest were copied from previous compilation.
-    4 functions were new in current compilation
-    82 functions had inline decision re-evaluated but remain unchanged
-  コード生成が終了しました。
-  GPG.vcxproj -> D:\17ci0414\Release\GPG.exe
-  GPG.vcxproj -> D:\17ci0414\Release\GPG.pdb (Full PDB)
+﻿  Task_Map3d.cpp
+c:\users\lumine\desktop\fermat\3d_maze\task_map3d.cpp(300): warning C4244: '=': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\lumine\desktop\fermat\3d_maze\task_map3d.cpp(301): warning C4244: '=': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\lumine\desktop\fermat\3d_maze\task_map3d.cpp(302): warning C4244: '=': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  코드를 생성하고 있습니다.
+  4 of 3866 functions ( 0.1%) were compiled, the rest were copied from previous compilation.
+    0 functions were new in current compilation
+    1 functions had inline decision re-evaluated but remain unchanged
+  코드를 생성했습니다.
+  GPG.vcxproj -> C:\Users\Lumine\Desktop\Fermat\3d_Maze\Release\GPG.exe

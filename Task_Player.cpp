@@ -61,29 +61,29 @@ namespace  Player
 
 		//‰ñ“]‘€ì
 		//ƒ{ƒ^ƒ“1‚ª‰Ÿ‚³‚ê‚Ä‚¢‚éŠÔ‚ÍZŽ²‰ñ“]
-		if (in1.B1.on)
-		{
-			//ƒXƒeƒBƒbƒN‚Å“ü—Í
-			if (in1.LStick.axis.x != 0)
-			{
-				//matR.RotationZ(in1.LStick.volume);
-				ge->World_Rotation.z += in1.LStick.volume;
-			}
-		}
-		//‰Ÿ‚³‚ê‚Ä‚¢‚È‚¢Žž‚ÍYŽ²‰ñ“]‚ÆXŽ²‰ñ“]
-		else
-		{
-			if (in1.LStick.axis.y != 0)
-			{
-				//matR.RotationX(in1.LStick.volume);
-				ge->World_Rotation.x += in1.LStick.volume;
-			}
-			if (in1.LStick.axis.x != 0)
-			{
-				//matR.RotationY(in1.LStick.volume);
-				ge->World_Rotation.y += in1.LStick.volume;
-			}
-		}
+		//if (in1.B1.on)
+		//{
+		//	//ƒXƒeƒBƒbƒN‚Å“ü—Í
+		//	if (in1.LStick.axis.x != 0)
+		//	{
+		//		//matR.RotationZ(in1.LStick.volume);
+		//		ge->World_Rotation.z -= in1.LStick.axis.x;
+		//	}
+		//}
+		////‰Ÿ‚³‚ê‚Ä‚¢‚È‚¢Žž‚ÍYŽ²‰ñ“]‚ÆXŽ²‰ñ“]
+		//else
+		//{
+		//	if (in1.LStick.axis.y != 0)
+		//	{
+		//		//matR.RotationX(in1.LStick.volume);
+		//		ge->World_Rotation.x -= in1.LStick.axis.y;
+		//	}
+		//	if (in1.LStick.axis.x != 0)
+		//	{
+		//		//matR.RotationY(in1.LStick.volume);
+		//		ge->World_Rotation.y -= in1.LStick.axis.x;
+		//	}
+		//}
 
 		//ƒ[ƒ‹ƒh‰ñ“]—Ê‚É”½‰f
 		//ge->World_Rotation += matR.TransformCoord(ge->World_Rotation);

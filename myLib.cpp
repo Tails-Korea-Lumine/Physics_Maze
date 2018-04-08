@@ -132,6 +132,18 @@ namespace ML
 		z.RotZ(rXYZ_.z);
 		(*this)  =  x * y * z;
 	}
+
+	void QT::RotYPR(const ML::Vec3 ypr)
+	{
+		if (ypr.Length() != 0)
+		{
+			D3DXQuaternionRotationYawPitchRoll(this, ML::ToRadian(ypr.y), ML::ToRadian(ypr.x), ML::ToRadian(ypr.z));
+		}
+		else
+		{
+			D3DXQuaternionIdentity(this);
+		}
+	}
 	//çsóÒ--------------------------------------------------------------------------
 	Mat4x4::Mat4x4( ){	}
 	Mat4x4::Mat4x4(const D3DXMATRIX&  v_):D3DXMATRIX(v_){	}
@@ -167,6 +179,11 @@ namespace ML
 	void  Mat4x4::RotationZ(float  r_)
 	{ 
 		D3DXMatrixRotationZ(this, r_);
+	}
+
+	void Mat4x4::RotationYPR(float x, float y, float z)
+	{
+		D3DXMatrixRotationYawPitchRoll(this, y, x, z);
 	}
 	//îCà”é≤âÒì]çsóÒ
 	void  Mat4x4::RotationAxis(const  Vec3&  v_, float  r_)

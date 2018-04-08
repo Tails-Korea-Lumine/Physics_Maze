@@ -1,45 +1,5 @@
-﻿  Collision.cpp
-d:\3d_maze\collision.cpp(23): warning C4244: '引数': 'int' から 'const float' への変換です。データが失われる可能性があります。
-d:\3d_maze\collision.cpp(24): warning C4244: '引数': 'int' から 'const float' への変換です。データが失われる可能性があります。
-d:\3d_maze\collision.cpp(25): warning C4244: '引数': 'int' から 'const float' への変換です。データが失われる可能性があります。
-d:\3d_maze\collision.cpp(30): warning C4244: '引数': 'int' から 'const float' への変換です。データが失われる可能性があります。
-d:\3d_maze\collision.cpp(31): warning C4244: '引数': 'int' から 'const float' への変換です。データが失われる可能性があります。
-d:\3d_maze\collision.cpp(32): warning C4244: '引数': 'int' から 'const float' への変換です。データが失われる可能性があります。
-d:\3d_maze\collision.cpp(37): warning C4244: '引数': 'int' から 'const float' への変換です。データが失われる可能性があります。
-d:\3d_maze\collision.cpp(38): warning C4244: '引数': 'int' から 'const float' への変換です。データが失われる可能性があります。
-d:\3d_maze\collision.cpp(39): warning C4244: '引数': 'int' から 'const float' への変換です。データが失われる可能性があります。
-d:\3d_maze\collision.cpp(44): warning C4244: '引数': 'int' から 'const float' への変換です。データが失われる可能性があります。
-d:\3d_maze\collision.cpp(45): warning C4244: '引数': 'int' から 'const float' への変換です。データが失われる可能性があります。
-d:\3d_maze\collision.cpp(46): warning C4244: '引数': 'int' から 'const float' への変換です。データが失われる可能性があります。
-d:\3d_maze\collision.cpp(51): warning C4244: '引数': 'int' から 'const float' への変換です。データが失われる可能性があります。
-d:\3d_maze\collision.cpp(52): warning C4244: '引数': 'int' から 'const float' への変換です。データが失われる可能性があります。
-d:\3d_maze\collision.cpp(53): warning C4244: '引数': 'int' から 'const float' への変換です。データが失われる可能性があります。
-d:\3d_maze\collision.cpp(58): warning C4244: '引数': 'int' から 'const float' への変換です。データが失われる可能性があります。
-d:\3d_maze\collision.cpp(59): warning C4244: '引数': 'int' から 'const float' への変換です。データが失われる可能性があります。
-d:\3d_maze\collision.cpp(60): warning C4244: '引数': 'int' から 'const float' への変換です。データが失われる可能性があります。
-d:\3d_maze\collision.cpp(65): warning C4244: '引数': 'int' から 'const float' への変換です。データが失われる可能性があります。
-d:\3d_maze\collision.cpp(66): warning C4244: '引数': 'int' から 'const float' への変換です。データが失われる可能性があります。
-d:\3d_maze\collision.cpp(67): warning C4244: '引数': 'int' から 'const float' への変換です。データが失われる可能性があります。
-d:\3d_maze\collision.cpp(72): warning C4244: '引数': 'int' から 'const float' への変換です。データが失われる可能性があります。
-d:\3d_maze\collision.cpp(73): warning C4244: '引数': 'int' から 'const float' への変換です。データが失われる可能性があります。
-d:\3d_maze\collision.cpp(74): warning C4244: '引数': 'int' から 'const float' への変換です。データが失われる可能性があります。
-d:\3d_maze\collision.cpp(79): warning C4244: '引数': 'int' から 'const float' への変換です。データが失われる可能性があります。
-d:\3d_maze\collision.cpp(80): warning C4244: '引数': 'int' から 'const float' への変換です。データが失われる可能性があります。
-d:\3d_maze\collision.cpp(81): warning C4244: '引数': 'int' から 'const float' への変換です。データが失われる可能性があります。
-d:\3d_maze\collision.cpp(86): warning C4244: '引数': 'int' から 'const float' への変換です。データが失われる可能性があります。
-d:\3d_maze\collision.cpp(87): warning C4244: '引数': 'int' から 'const float' への変換です。データが失われる可能性があります。
-d:\3d_maze\collision.cpp(88): warning C4244: '引数': 'int' から 'const float' への変換です。データが失われる可能性があります。
-d:\3d_maze\collision.cpp(94): warning C4244: '引数': 'int' から 'const float' への変換です。データが失われる可能性があります。
-d:\3d_maze\collision.cpp(95): warning C4244: '引数': 'int' から 'const float' への変換です。データが失われる可能性があります。
-d:\3d_maze\collision.cpp(96): warning C4244: '引数': 'int' から 'const float' への変換です。データが失われる可能性があります。
-d:\3d_maze\collision.cpp(101): warning C4244: '引数': 'int' から 'const float' への変換です。データが失われる可能性があります。
-d:\3d_maze\collision.cpp(102): warning C4244: '引数': 'int' から 'const float' への変換です。データが失われる可能性があります。
-d:\3d_maze\collision.cpp(103): warning C4244: '引数': 'int' から 'const float' への変換です。データが失われる可能性があります。
-d:\3d_maze\collision.cpp(165): warning C4244: '初期化中': 'float' から 'int' への変換です。データが失われる可能性があります。
-d:\3d_maze\collision.cpp(167): warning C4244: '引数': 'int' から 'const float' への変換です。データが失われる可能性があります。
-d:\3d_maze\collision.cpp(168): warning C4244: '引数': 'int' から 'const float' への変換です。データが失われる可能性があります。
-d:\3d_maze\collision.cpp(169): warning C4244: '引数': 'int' から 'const float' への変換です。データが失われる可能性があります。
-d:\3d_maze\collision.cpp(170): warning C4244: '引数': 'int' から 'const float' への変換です。データが失われる可能性があります。
-d:\3d_maze\collision.cpp(171): warning C4244: '引数': 'int' から 'const float' への変換です。データが失われる可能性があります。
-d:\3d_maze\collision.cpp(172): warning C4244: '引数': 'int' から 'const float' への変換です。データが失われる可能性があります。
-  GPG.vcxproj -> D:\3d_Maze\Debug\GPG.exe
+﻿  Task_Map3d.cpp
+c:\users\lumine\desktop\fermat\3d_maze\task_map3d.cpp(293): warning C4244: '=': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\lumine\desktop\fermat\3d_maze\task_map3d.cpp(294): warning C4244: '=': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\lumine\desktop\fermat\3d_maze\task_map3d.cpp(295): warning C4244: '=': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  GPG.vcxproj -> C:\Users\Lumine\Desktop\Fermat\3d_Maze\Debug\GPG.exe

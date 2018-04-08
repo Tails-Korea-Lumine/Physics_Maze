@@ -84,6 +84,7 @@ namespace ML
 		void RotY(float  rY_);
 		void RotZ(float  rZ_);
 		void RotXYZ(const  ML::Vec3  rXYZ_);
+		void RotYPR(const ML::Vec3 ypr);
 		QT operator * ( const D3DXQUATERNION& ) const;
 		QT& operator *= ( const D3DXQUATERNION& );
 	};
@@ -104,6 +105,9 @@ namespace ML
 		void  RotationX(float  r_);
 		void  RotationY(float  r_);
 		void  RotationZ(float  r_);
+		//ヨウピッチロール回転
+		void  RotationYPR(float x, float y, float z);
+
 		//任意軸回転行列
 		void  RotationAxis(const  Vec3&  v_, float  r_);
 		//クオータニオンで回転行列
