@@ -49,6 +49,8 @@ namespace  Map3d
 		this->Map_Load("./data/StageData/Map00.txt");
 
 		this->render3D_Priority[0] = 1.0f;
+
+		this->map_QT = ML::QT(0.0f);
 		
 		//šƒ^ƒXƒN‚Ì¶¬
 
@@ -99,11 +101,16 @@ namespace  Map3d
 			if (in1.LStick.axis.y != 0)
 			{
 				this->map_Rotation.x -= in1.LStick.axis.y;
+
+				ML::QT temp_qt(ML::Vec3(1,0,0),ML::ToRadian(3*in1.LStick.axis.y));
+				this->map_QT *= temp_qt;
 			}
 			
 			if (in1.LStick.axis.x != 0)
 			{
 				this->map_Rotation.y -= in1.LStick.axis.x;
+				ML::QT temp_qt(ML::Vec3(0, 1, 0), ML::ToRadian(3 * in1.LStick.axis.x));
+				this->map_QT *= temp_qt;
 			}			
 		}
 
@@ -115,7 +122,6 @@ namespace  Map3d
 
 			this->map_Rotation = ML::Vec3(0, 0, 0);
 		}
-		
 		
 		
 		
@@ -166,17 +172,17 @@ namespace  Map3d
 					matT.Translation(this->arr[z][y][x].pos);
 
 					ML::Mat4x4 matR;
+					matR.RotationQuaternion(this->map_QT);
+					//D3DXMatrixAffineTransformation(&matR, this->chipSize / 100.0f, NULL, &qtW, NULL);
+					////matR.Inverse();
 
-					D3DXMatrixAffineTransformation(&matR, this->chipSize / 100.0f, NULL, &qtW, NULL);
+					//if (this->map_Rotation.Length() != 0)
+					//{
+					//	ML::Mat4x4 matMove;
+					//	D3DXMatrixAffineTransformation(&matMove, this->chipSize / 100.0f, NULL, &qtM, NULL);
+					//	matR *= matMove;
+					//}
 					//matR.Inverse();
-
-					if (this->map_Rotation.Length() != 0)
-					{
-						ML::Mat4x4 matMove;
-						D3DXMatrixAffineTransformation(&matMove, this->chipSize / 100.0f, NULL, &qtM, NULL);
-						matR *= matMove;
-					}
-					matR.Inverse();
 
 					DG::EffectState().param.matWorld =  matR * matT;					
 					DG::Mesh_Draw(this->chipName[cn]);
@@ -372,17 +378,21 @@ namespace  Map3d
 
 					ML::Vec3 temp = ML::Vec3(x*this->chipSize + this->chipSize / 2, y*this->chipSize + this->chipSize / 2, z*this->chipSize + this->chipSize / 2);
 
-					D3DXMatrixAffineTransformation(&matR, this->chipSize / 100.0f, &ML::Vec3(1050,50,1050), &qtW, NULL);
+					//D3DXMatrixAffineTransformation(&matR, this->chipSize / 100.0f, &ML::Vec3(1050,50,1050), &qtW, NULL);
 					//matR.Inverse();
 
 					if (this->map_Rotation.Length() != 0)
 					{
-						ML::Mat4x4 matMove;
-						D3DXMatrixAffineTransformation(&matMove, this->chipSize / 100.0f, &ML::Vec3(1050, 50, 1050), &qtM, NULL);
-						matR *= matMove;						
+						//ML::Mat4x4 matMove;
+						//D3DXMatrixAffineTransformation(&matMove, this->chipSize / 100.0f, &ML::Vec3(1050, 50, 1050), &qtM, NULL);
+						//matR *= matMove;						
 					}
 
-					matR.Inverse();
+					D3DXMatrixAffineTransformation(&matR, this->chipSize / 100.0f, &ML::Vec3(1050, 50, 1050), &this->map_QT, NULL);
+
+					/*ML::Mat4x4 mattmp;
+					mattmp.RotationQuaternion(this->map_QT);
+					*/matR.Inverse();
 					this->arr[z][y][x].pos = matR.TransformCoord(temp);
 					
 				}

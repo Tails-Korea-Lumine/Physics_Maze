@@ -64,6 +64,7 @@ namespace Map3d
 		After_Collision collision_Tri;//ボールのほうに渡す情報
 
 		ML::Vec3 map_Rotation;//マップの回転量
+		ML::QT map_QT;
 		Collision col;
 		
 
