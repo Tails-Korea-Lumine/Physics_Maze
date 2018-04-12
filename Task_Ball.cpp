@@ -63,13 +63,20 @@ namespace  Ball
 	//-------------------------------------------------------------------
 	//「更新」１フレーム毎に行う処理
 	void  Object::UpDate()
-	{	
+	{
+		auto in1 = DI::GPad_GetState("P1");
+
+		
 		//マップの情報を修得、今はタスク一個で持ってくるが
 		//後にVectorで持ってくるよう調整する(2018/03/27)
 		auto map = ge->GetTask_One_G<Map3d::Object>("マップ");		
 
 		//マップのあたり判定の結果
 		After_Collision Result = map->is_Collision();
+		if (in1.B2.down)
+		{
+			system("pause");
+		}
 		//重力加速
 		this->speed += this->G.Accelerate(this->m);
 
@@ -81,6 +88,7 @@ namespace  Ball
 				//今回のフレームに衝突だったら
 				//斜め線加速をする
 				this->speed = this->G.CollisionOver_Accelerate(this->speed, Result.normal);
+				//this->speed += (Result.normal*0.06f);
 			}
 			else
 			{

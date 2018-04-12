@@ -90,8 +90,9 @@ namespace  Map3d
 		{
 			//スティックで入力
 			if (in1.LStick.axis.x != 0)
-			{					
-				this->map_Rotation.z -= in1.LStick.axis.x;
+			{									
+				ML::QT temp_qt(ML::Vec3(0, 0, 1), ML::ToRadian(-in1.LStick.axis.x));
+				this->map_QT *= temp_qt;
 			}
 		}
 		//押されていない時はY軸回転とX軸回転
@@ -100,29 +101,19 @@ namespace  Map3d
 
 			if (in1.LStick.axis.y != 0)
 			{
-				this->map_Rotation.x -= in1.LStick.axis.y;
-
-				ML::QT temp_qt(ML::Vec3(1,0,0),ML::ToRadian(3*in1.LStick.axis.y));
+				ML::QT temp_qt(ML::Vec3(1,0,0),ML::ToRadian(-in1.LStick.axis.y));
 				this->map_QT *= temp_qt;
 			}
 			
 			if (in1.LStick.axis.x != 0)
-			{
-				this->map_Rotation.y -= in1.LStick.axis.x;
-				ML::QT temp_qt(ML::Vec3(0, 1, 0), ML::ToRadian(3 * in1.LStick.axis.x));
+			{				
+				ML::QT temp_qt(ML::Vec3(0, 1, 0), ML::ToRadian(-in1.LStick.axis.x));
 				this->map_QT *= temp_qt;
 			}			
 		}
 
-		//スティックを放した時の処理
-		if (in1.LStick.volume == 0)
-		{				
-			ge->World_Rotation += this->map_Rotation;
-
-
-			this->map_Rotation = ML::Vec3(0, 0, 0);
-		}
-		
+		//ワールド回転量に反映
+		ge->World_Rotation = this->map_QT;		
 		
 		
 		//回転
@@ -145,14 +136,7 @@ namespace  Map3d
 
 	void  Object::Render3D_L0()
 	{
-		//軸回転行列
-		ML::QT qtM , qtW;
-
-		//回転量から行列に反映
-		qtM.RotYPR(this->map_Rotation);		
-		qtW.RotYPR(ge->World_Rotation);
-
-		
+				
 
 		ML::Mat4x4 matS;
 		matS.Scaling(this->chipSize / 100.0f);
@@ -298,42 +282,38 @@ namespace  Map3d
 	//球とマップのあたり判定
 	void Object::Map_Check_Hit(ML::Vec3 pos, float r)
 	{
-		//仮の範囲
-		//マップの読み込みが確立した後に再調整をかける(2018/03/28)
-		int sx, sy, sz;
-		int ex, ey, ez;
-
-		sx = (pos.x / 100) -1;
-		sy = (pos.y / 100) -1;
-		sz = (pos.z / 100) -1;
-		ex = sx + 2;
-		ey = sy + 2;
-		ez = sz + 2;
-
-		if (sx < 0 || sy < 0 || sz < 0)
-		{
-			return;
-		}
-		if (ex > this->sizeX || ey > this->sizeY || ez > this->sizeZ)
-		{
-			return;
-		}
+		//接触三角形を判定前にクリアする
+		After_Collision collision_False;
+		collision_False.collision_Flag = false;
+		collision_False.normal = ML::Vec3(0, 0, 0);
 		
+		this->collision_Tri = collision_False;
+
 		//判定スタート
-		for (int y = sy; y <= ey; y++)
+		for (int y =0; y <= this->sizeY; y++)
 		{
-			for (int z = sz; z <= ez; z++)
+			for (int z = 0; z <= this->sizeZ; z++)
 			{
-				for (int x = sx; x <= ex; x++)
+				for (int x = 0; x <= this->sizeX; x++)
 				{
 					//道は判定しない
 					if (this->arr[z][y][x].chip == 0)
 					{
 						continue;
 					}
+					//一定距離以内のものだけ判定をする
+					ML::Vec3 d = this->arr[z][y][x].pos - pos;
+					if (d.Length() < 0)
+					{
+						d *= -1;
+					}
+					if (d.Length() > 200)
+					{
+						continue;
+					}
 					//判定するマスを修得する
 					ML::Box3D Mass = this->arr[z][y][x].collision_Base.OffsetCopy(this->arr[z][y][x].pos);
-					this->collision_Tri = this->col.Hit_Check(Mass, pos, r);
+					this->collision_Tri = this->col.Hit_Check(Mass, pos, r, this->map_QT);
 					//判定で当たったら処理を止める
 					if (this->is_Collision().collision_Flag)
 					{
@@ -341,7 +321,9 @@ namespace  Map3d
 					}
 				}
 			}
-		}
+		}		
+	
+		
 	}
 	
 
@@ -357,11 +339,7 @@ namespace  Map3d
 	void Object::Map_Rotate()
 	{
 		//軸回転クォータニオン
-		ML::QT qtM , qtW;
-
-		//回転量から行列に反映		
-		qtM.RotYPR(this->map_Rotation);
-		qtW.RotYPR(ge->World_Rotation);
+		ML::QT qtM , qtW;		
 
 		ML::Mat4x4 matR;
 
@@ -381,18 +359,18 @@ namespace  Map3d
 					//D3DXMatrixAffineTransformation(&matR, this->chipSize / 100.0f, &ML::Vec3(1050,50,1050), &qtW, NULL);
 					//matR.Inverse();
 
-					if (this->map_Rotation.Length() != 0)
+					/*if (this->map_Rotation.Length() != 0)
 					{
-						//ML::Mat4x4 matMove;
-						//D3DXMatrixAffineTransformation(&matMove, this->chipSize / 100.0f, &ML::Vec3(1050, 50, 1050), &qtM, NULL);
-						//matR *= matMove;						
-					}
+						ML::Mat4x4 matMove;
+						D3DXMatrixAffineTransformation(&matMove, this->chipSize / 100.0f, &ML::Vec3(1050, 50, 1050), &qtM, NULL);
+						matR *= matMove;						
+					}*/
 
 					D3DXMatrixAffineTransformation(&matR, this->chipSize / 100.0f, &ML::Vec3(1050, 50, 1050), &this->map_QT, NULL);
 
 					/*ML::Mat4x4 mattmp;
-					mattmp.RotationQuaternion(this->map_QT);
-					*/matR.Inverse();
+					mattmp.RotationQuaternion(this->map_QT);*/
+					matR.Inverse();
 					this->arr[z][y][x].pos = matR.TransformCoord(temp);
 					
 				}

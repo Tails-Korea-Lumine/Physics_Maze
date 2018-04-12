@@ -62,9 +62,8 @@ namespace Map3d
 		ML::Box3D hitBase;//マップ全体の判定範囲
 		string chipName[10];
 		After_Collision collision_Tri;//ボールのほうに渡す情報
-
-		ML::Vec3 map_Rotation;//マップの回転量
-		ML::QT map_QT;
+		
+		ML::QT map_QT;//マップの回転量
 		Collision col;
 		
 

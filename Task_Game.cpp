@@ -56,7 +56,7 @@ namespace  Game
 		DG::Font_Create("FontA", "HGSｺﾞｼｯｸM", 12, 16);
 
 		//ワールド回転量初期化
-		ge->World_Rotation = ML::Vec3(0, 0, 0);
+		ge->World_Rotation = ML::QT();
 
 		//★タスクの生成
 		//仮のマップ生成	

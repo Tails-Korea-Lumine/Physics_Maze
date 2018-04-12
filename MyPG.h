@@ -85,7 +85,7 @@ namespace  MyPG
 		bool getReadyFlag;
 
 		//ƒ[ƒ‹ƒh‰ñ“]—Ê
-		ML::Vec3 World_Rotation; 
+		ML::QT World_Rotation; 
 
 	//----------------------------------------------
 	};
