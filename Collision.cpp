@@ -165,7 +165,7 @@ bool Collision::Check_Collision(Triangle tri, ML::Vec3 p)
 
 	//誤差まで確認(誤差の範囲は変わる余地がある 2018/03/16)
 	//0.99756405026
-	if (check  >= _CMATH_::cos(ML::ToRadian(359)))
+	if (check  >= _CMATH_::cos(ML::ToRadian(358)))
 	{
 		return true;
 	}
@@ -181,6 +181,21 @@ std::vector<ML::Vec3> Collision::Get_6Poiont_to_Sphere(ML::Vec3 pos, float r, ML
 	ML::Mat4x4 matR;
 
 	matR.RotationQuaternion(rotation);
+
+	//6個だけをとるver.1
+	/*v[0] = pos + ML::Vec3(+r, 0, 0);
+	v[1] = pos + ML::Vec3(-r, 0, 0);
+	v[2] = pos + ML::Vec3(0, +r, 0);
+	v[3] = pos + ML::Vec3(0, -r, 0);
+	v[4] = pos + ML::Vec3(0, 0, +r);
+	v[5] = pos + ML::Vec3(0, 0, -r);
+
+	for (int i = 0; i < 6; i++)
+	{
+		v[i] = matR.TransformCoord(v[i]);
+		S.push_back(v[i]);
+	}*/
+	//半直径の半分の範囲までとるver.2
 	for (int i = r; i > r/2; i--)
 	{
 		v[0] = pos + ML::Vec3(+i, 0, 0);

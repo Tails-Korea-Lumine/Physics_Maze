@@ -64,15 +64,15 @@ namespace  Ball
 	//「更新」１フレーム毎に行う処理
 	void  Object::UpDate()
 	{
-		auto in1 = DI::GPad_GetState("P1");
+		auto in1 = DI::GPad_GetState("P1");		
 
-		
 		//マップの情報を修得、今はタスク一個で持ってくるが
 		//後にVectorで持ってくるよう調整する(2018/03/27)
 		auto map = ge->GetTask_One_G<Map3d::Object>("マップ");		
 
 		//マップのあたり判定の結果
-		After_Collision Result = map->is_Collision();
+		std::vector<After_Collision> Result;
+		Result= map->Get_Collision_Poligon();
 		if (in1.B2.down)
 		{
 			system("pause");
@@ -80,40 +80,63 @@ namespace  Ball
 		//重力加速
 		this->speed += this->G.Accelerate(this->m);
 
+		if (Result.size() == 0)
+		{	
+			//移動(フレーム終了する直前に行う)
+			this->pos += this->speed;
+			return;
+		}
+
+		//前回フレームのあたり判定結果を確認
 		if (this->Is_Collision())
 		{
-			//前のフレームで衝突だったら、今回のフレームでの衝突判定でやること
-			if (Result.collision_Flag)
-			{
-				//今回のフレームに衝突だったら
-				//斜め線加速をする
-				this->speed = this->G.CollisionOver_Accelerate(this->speed, Result.normal);
-				//this->speed += (Result.normal*0.06f);
-			}
-			else
-			{
-				//今回のフレームに衝突しなかったら
-				//衝突フラグを無効にする
-				this->collision_Flag = false;
-			}
+			//今回フレームで衝突があったことを確認するフラグ
+			bool cnt = false;
 
+			//結果の数分ループする
+			for (auto p : Result)
+			{				
+				//前のフレームで衝突だったら、今回のフレームでの衝突判定でやること
+				if (p.collision_Flag)
+				{
+					//今回のフレームに衝突だったら
+					//斜め線加速をする
+					this->speed = this->G.CollisionOver_Accelerate(this->speed, p.normal,this->m);
+					//フラグを立てる
+					cnt = true;
+					this->collision_Flag = true;
+					//this->speed += (Result.normal*0.06f);
+				}
+				else if(cnt == false)
+				{
+					//今回のフレームに衝突しなかったら
+					//衝突フラグを無効にする
+					this->collision_Flag = false;
+				}
+			}
 		}
 		else
 		{
-			//前のフレームで衝突ではなかったら、今回のフレームでの衝突判定でやること			
-			if (Result.collision_Flag)
+			//結果の数分ループする
+			for (auto p : Result)
 			{
-				//今回のフレームに衝突だったら
-				//反射角で跳ね返す
-				this->speed = this->G.Reflaction_Vector(this->speed, Result.normal,this->m);
-				//衝突フラグを有効にする
-				this->collision_Flag = true;
+				//前のフレームで衝突ではなかったら、今回のフレームでの衝突判定でやること			
+				if (p.collision_Flag)
+				{
+					//今回のフレームに衝突だったら
+					//反射角で跳ね返す
+
+					this->speed = this->G.Reflaction_Vector(this->speed, p.normal, this->m);
+
+					//衝突フラグを有効にする
+					this->collision_Flag = true;
+				}
 			}
-			
 		}		
 		
-		//移動
+		//移動(フレーム終了する直前に行う)
 		this->pos += this->speed;
+		
 	}
 	//-------------------------------------------------------------------
 	//「２Ｄ描画」１フレーム毎に行う処理

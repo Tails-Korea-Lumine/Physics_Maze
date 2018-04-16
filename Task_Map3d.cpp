@@ -282,12 +282,16 @@ namespace  Map3d
 	//球とマップのあたり判定
 	void Object::Map_Check_Hit(ML::Vec3 pos, float r)
 	{
+		//多重衝突まで適用したver0.3(2018/04/16)
+
 		//接触三角形を判定前にクリアする
 		After_Collision collision_False;
 		collision_False.collision_Flag = false;
 		collision_False.normal = ML::Vec3(0, 0, 0);
 		
 		this->collision_Tri = collision_False;
+
+		this->col_Poligons.clear();
 
 		//判定スタート
 		for (int y =0; y <= this->sizeY; y++)
@@ -313,12 +317,17 @@ namespace  Map3d
 					}
 					//判定するマスを修得する
 					ML::Box3D Mass = this->arr[z][y][x].collision_Base.OffsetCopy(this->arr[z][y][x].pos);
-					this->collision_Tri = this->col.Hit_Check(Mass, pos, r, this->map_QT);
+					//this->collision_Tri = this->col.Hit_Check(Mass, pos, r, this->map_QT); //(ver0.2で使った処理)
+					After_Collision poligon = this->col.Hit_Check(Mass, pos, r, this->map_QT);
+
+					this->col_Poligons.push_back(poligon);
+
+					//ver0.2で使った処理
 					//判定で当たったら処理を止める
-					if (this->is_Collision().collision_Flag)
+					/*if (this->is_Collision().collision_Flag)
 					{
 						return;
-					}
+					}*/
 				}
 			}
 		}		
@@ -331,7 +340,12 @@ namespace  Map3d
 	//あたっているかを返す関数
 	After_Collision Object::is_Collision()
 	{
-		return this->collision_Tri;
+		return this->collision_Tri;		
+	}
+
+	std::vector<After_Collision> Object::Get_Collision_Poligon()
+	{
+		return this->col_Poligons;
 	}
 
 	//------------------------------------------------------------------------

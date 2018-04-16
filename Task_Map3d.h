@@ -62,6 +62,7 @@ namespace Map3d
 		ML::Box3D hitBase;//マップ全体の判定範囲
 		string chipName[10];
 		After_Collision collision_Tri;//ボールのほうに渡す情報
+		std::vector< After_Collision> col_Poligons;
 		
 		ML::QT map_QT;//マップの回転量
 		Collision col;
@@ -76,5 +77,6 @@ namespace Map3d
 		
 
 		After_Collision is_Collision();
+		std::vector<After_Collision> Get_Collision_Poligon();
 	};
 }

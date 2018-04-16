@@ -70,7 +70,7 @@ ML::Vec3 Gravity::Accelerate(float Weight)
 	return Weight * this->G_acceleration;
 }
 
-ML::Vec3 Gravity::CollisionOver_Accelerate(ML::Vec3 speed, ML::Vec3 normal)
+ML::Vec3 Gravity::CollisionOver_Accelerate(ML::Vec3 speed, ML::Vec3 normal, float weight)
 {
 	/*//法線ベクトルと速度の角度とサイン値
 	float sin , seta;
@@ -108,6 +108,14 @@ ML::Vec3 Gravity::CollisionOver_Accelerate(ML::Vec3 speed, ML::Vec3 normal)
 	{
 		fn *= -1;
 	}
+	//マスとマス接触面でおかしい加速を防ぐ
+	float cosSN = Gravity::Vector_Dot((speed - Gravity::Accelerate(weight)), normal);
+	//cos値が1ということは内角が0度だということ、つまり物理的にあり得ない衝突
+	if (cosSN >=_CMATH_::cosf(ML::ToRadian(4)))
+	{
+		//なので加速なしでreturn
+		return speed - Gravity::Accelerate(weight);
+	}
 	
 	//長さを力に合わせた後のベクトルの大きさ
 	ML::Vec3 after_Normal;
@@ -118,8 +126,8 @@ ML::Vec3 Gravity::CollisionOver_Accelerate(ML::Vec3 speed, ML::Vec3 normal)
 	ML::Vec3 after_Collision;
 
 	after_Collision = speed + after_Normal;
-	
-	return after_Collision;
+	//重さが加速に影響を与える
+	return after_Collision * (weight * 0.1f);
 }
 
 ML::Vec3 Gravity::Reflaction_Vector(ML::Vec3 force, ML::Vec3 normal, float weight)
@@ -157,7 +165,7 @@ ML::Vec3 Gravity::Reflaction_Vector(ML::Vec3 force, ML::Vec3 normal, float weigh
 	after_Reflection = force + (2 * after_Normal);
 
 	//重さに応じて減らして返す
-	return (after_Reflection*0.6f)/weight;
+	return (after_Reflection*0.6f)/(weight * 0.1f);
 }
 
 void Gravity::Rotation_on_Gravity(float angle, ML::Vec3 centor)
