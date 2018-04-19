@@ -316,13 +316,17 @@ namespace ML
 	class Box3D
 	{
 	public:
-		int x, y, z, w, h, d;
+		float x, y, z, w, h, d;
 		Box3D( )
-		:x(0), y(0), z(0), w(0), h(0), d(0)
+		:x(0.0f), y(0.0f), z(0.0f), w(0.0f), h(0.0f), d(0.0f)
 		{
 		}
 		Box3D(int x_, int y_, int z_, int w_, int h_, int d_)
-		:x(x_), y(y_), z(z_), w(w_), h(h_), d(d_)
+		:x(float(x_)), y(float(y_)), z(float(z_)), w(float(w_)), h(float(h_)), d(float(d_))
+		{
+		}
+		Box3D(float x_, float y_, float z_, float w_, float h_, float d_)
+			:x(x_), y(y_), z(z_), w(w_), h(h_), d(d_)
 		{
 		}
 		Box3D(const Box3D&  b_)
@@ -354,8 +358,8 @@ namespace ML
 			return false;
 		}
 		void Offset(int x_, int y_, int z_){	x += x_;	y += y_;	z += z_;	}
-		void Offset(float x_, float y_, float z_){	x += (int)x_;	y += (int)y_;	z += (int)z_;	}
-		void Offset(const  Vec3&  v_){	x += (int)v_.x;	y += (int)v_.y;	z += (int)v_.z;	}
+		void Offset(float x_, float y_, float z_){	x += x_;	y += y_;	z += z_;	}
+		void Offset(const  Vec3&  v_){	x += v_.x;	y += v_.y;	z += v_.z;	}
 		Box3D OffsetCopy(int x_, int y_, int z_) const
 		{
 			Box3D r(*this);
@@ -373,6 +377,21 @@ namespace ML
 			Box3D r(*this);
 			r.Offset(v_);
 			return r;
+		}
+
+		void Rotation_Box(ML::Mat4x4 matR)
+		{
+			ML::Vec3 rotate_Position = ML::Vec3(this->x, this->y, this->z);
+			ML::Vec3 rotate_Range = ML::Vec3(this->w, this->h, this->d);
+			rotate_Position = matR.TransformCoord(rotate_Position);
+			rotate_Range = matR.TransformCoord(rotate_Range);
+
+			this->x = rotate_Position.x;
+			this->y = rotate_Position.y;
+			this->z = rotate_Position.z;
+			this->w = rotate_Range.x;
+			this->h = rotate_Range.y;
+			this->d = rotate_Range.z;
 		}
 	};
 	int	CheckStrings(TCHAR* s_[], int n_, const string& c_);

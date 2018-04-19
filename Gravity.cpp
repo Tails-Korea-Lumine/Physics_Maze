@@ -108,14 +108,15 @@ ML::Vec3 Gravity::CollisionOver_Accelerate(ML::Vec3 speed, ML::Vec3 normal, floa
 	{
 		fn *= -1;
 	}
-	//マスとマス接触面でおかしい加速を防ぐ
-	float cosSN = Gravity::Vector_Dot((speed - Gravity::Accelerate(weight)), normal);
-	//cos値が1ということは内角が0度だということ、つまり物理的にあり得ない衝突
-	if (cosSN >=_CMATH_::cosf(ML::ToRadian(4)))
-	{
-		//なので加速なしでreturn
-		return speed - Gravity::Accelerate(weight);
-	}
+	////マスとマス接触面でおかしい加速を防ぐ
+	//float cosSN = Gravity::Vector_Dot((speed - Gravity::Accelerate(weight)), normal);
+	////cos値が1ということは内角が0度だということ、つまり物理的にあり得ない衝突
+	//if (cosSN >=_CMATH_::cos(ML::ToRadian(2)))
+	//{
+	//	//なので加速なしでreturn
+	//	//return speed - Gravity::Accelerate(weight);
+	//	return speed;
+	//}
 	
 	//長さを力に合わせた後のベクトルの大きさ
 	ML::Vec3 after_Normal;
@@ -127,23 +128,11 @@ ML::Vec3 Gravity::CollisionOver_Accelerate(ML::Vec3 speed, ML::Vec3 normal, floa
 
 	after_Collision = speed + after_Normal;
 	//重さが加速に影響を与える
-	return after_Collision * (weight * 0.1f);
+	return after_Collision * (weight*0.1f);
 }
 
 ML::Vec3 Gravity::Reflaction_Vector(ML::Vec3 force, ML::Vec3 normal, float weight)
-{
-	//内積のコサイン値
-	float cos;
-	//入射角のラジアン値
-	float angle;
-	//底辺にあたるベクトル
-	ML::Vec3 n;
-
-	cos = Gravity::Vector_Dot(-force, normal);
-	angle = _CMATH_::acos(cos);	
-
-	//-------------------------------------------------------------------------
-	//この上はいらないかもしれない(2018/03/15）
+{	
 	//壁面の法線ベクトルの大きさを変更
 	float fn;
 	fn = Gravity::Get_Vector_Dot(force, normal);
@@ -154,6 +143,16 @@ ML::Vec3 Gravity::Reflaction_Vector(ML::Vec3 force, ML::Vec3 normal, float weigh
 		fn *= -1;
 	}
 	
+	////マスとマス接触面でおかしい加速を防ぐ
+	//float cosSN = Gravity::Vector_Dot((force - Gravity::Accelerate(weight)), normal);
+	////cos値が1ということは内角が0度だということ、つまり物理的にあり得ない衝突
+	//if (cosSN >= _CMATH_::cos(ML::ToRadian(2)))
+	//{
+	//	//なので加速なしでreturn
+	//	//return force - Gravity::Accelerate(weight);
+	//	return force;
+	//}
+
 	//長さを力に合わせた後のベクトルの大きさ
 	ML::Vec3 after_Normal;
 
@@ -165,7 +164,7 @@ ML::Vec3 Gravity::Reflaction_Vector(ML::Vec3 force, ML::Vec3 normal, float weigh
 	after_Reflection = force + (2 * after_Normal);
 
 	//重さに応じて減らして返す
-	return (after_Reflection*0.6f)/(weight * 0.1f);
+	return (after_Reflection*0.6f)/(weight*0.1f);
 }
 
 void Gravity::Rotation_on_Gravity(float angle, ML::Vec3 centor)

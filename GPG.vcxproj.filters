@@ -68,6 +68,9 @@
     <Filter Include="MyPG\Tasks\Player">
       <UniqueIdentifier>{18f77494-2321-41a4-be43-db3ce631d810}</UniqueIdentifier>
     </Filter>
+    <Filter Include="MyPG\Bbox">
+      <UniqueIdentifier>{6affa42c-fd48-4ee0-a97c-93cc8549cd94}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="myLib.cpp">
@@ -148,6 +151,9 @@
     <ClCompile Include="Task_Player.cpp">
       <Filter>MyPG\Tasks\Player</Filter>
     </ClCompile>
+    <ClCompile Include="Bbox.cpp">
+      <Filter>MyPG\Bbox</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="myLib.h">
@@ -224,6 +230,9 @@
     </ClInclude>
     <ClInclude Include="Task_Player.h">
       <Filter>MyPG\Tasks\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="Bbox.h">
+      <Filter>MyPG\Bbox</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -122,7 +122,7 @@ std::vector<Triangle> Collision::Get_Triangle_Box3D(ML::Box3D box, ML::QT rotati
 	//std::vectorでまとめた後に
 	for (int i = 0; i < 12; i++)
 	{
-		t[i].normal.Normalize();
+		t[i].normal = t[i].normal.Normalize();
 		tri.push_back(t[i]);
 	}
 	//戻り値で返す
@@ -140,6 +140,15 @@ bool Collision::Check_Collision(Triangle tri, ML::Vec3 p)
 	A = tri.a - p;
 	B = tri.b - p;
 	C = tri.c - p;
+
+	//三角形の頂点と同じくなった場合
+	if (A.Length() == 0.0f || B.Length() == 0.0f || C.Length() == 0.0f)
+	{
+		return true; //計算不可能かつ三角形に内包されているのであたってる判定で返す
+	}
+	//辺の上の時
+	
+	
 
 	//alpha ＝ AとBの角度
 	//beta = BとCの角度
@@ -165,7 +174,7 @@ bool Collision::Check_Collision(Triangle tri, ML::Vec3 p)
 
 	//誤差まで確認(誤差の範囲は変わる余地がある 2018/03/16)
 	//0.99756405026
-	if (check  >= _CMATH_::cos(ML::ToRadian(358)))
+	if (check  >= _CMATH_::cos(ML::ToRadian(359)))
 	{
 		return true;
 	}
@@ -173,7 +182,7 @@ bool Collision::Check_Collision(Triangle tri, ML::Vec3 p)
 	return false;
 }
 
-std::vector<ML::Vec3> Collision::Get_6Poiont_to_Sphere(ML::Vec3 pos, float r, ML::QT rotation)
+std::vector<ML::Vec3> Collision::Get_Poionts_to_Sphere(ML::Vec3 pos, float r, ML::QT rotation)
 {
 	std::vector<ML::Vec3> S;
 	ML::Vec3 v[6] = {};
@@ -196,7 +205,7 @@ std::vector<ML::Vec3> Collision::Get_6Poiont_to_Sphere(ML::Vec3 pos, float r, ML
 		S.push_back(v[i]);
 	}*/
 	//半直径の半分の範囲までとるver.2
-	for (int i = r; i > r/2; i--)
+	for (float i = r; i > r/2; i-=0.5f)
 	{
 		v[0] = pos + ML::Vec3(+i, 0, 0);
 		v[1] = pos + ML::Vec3(-i, 0, 0);
@@ -215,10 +224,10 @@ std::vector<ML::Vec3> Collision::Get_6Poiont_to_Sphere(ML::Vec3 pos, float r, ML
 }
 
 //マス別に呼ばれる関数
-After_Collision Collision::Hit_Check(ML::Box3D box, ML::Vec3 pos, float r, ML::QT worldR)
+After_Collision Collision::Hit_Check(ML::Box3D box, ML::Vec3 pos, float r, ML::Vec3 speed, ML::QT worldR)
 {
 	//球の6個の頂点座標
-	std::vector<ML::Vec3> sp = Collision::Get_6Poiont_to_Sphere(pos, r, worldR);
+	std::vector<ML::Vec3> sp = Collision::Get_Poionts_to_Sphere(pos, r, worldR);
 	//一個のマスにある12個の三角形
 	std::vector<Triangle> all_Tri;
 	all_Tri = Collision::Get_Triangle_Box3D(box, worldR);
@@ -232,6 +241,17 @@ After_Collision Collision::Hit_Check(ML::Box3D box, ML::Vec3 pos, float r, ML::Q
 		{
 			if (collision_Flag = Collision::Check_Collision(tri, p))
 			{
+				//マスとマス接触面でおかしい加速を防ぐ
+				//移動ベクトルと衝突した三角形の法線ベクトルのcos値
+				float cosSN = Gravity::Vector_Dot(speed , tri.normal);
+				//cos値が1ということは内角が0度だということ、つまり物理的にあり得ない衝突
+				//もしものために誤差範囲まで確認
+				if (cosSN >= _CMATH_::cos(ML::ToRadian(2)))
+				{
+					//なので判定はあたっているが無視する
+					continue;
+				}
+				//以下あたった三角形の法線ベクトルとフラグを返す処理
 				After_Collision collision_True;
 				collision_True.collision_Flag = collision_Flag;
 				collision_True.normal = tri.normal.Normalize();
@@ -239,7 +259,7 @@ After_Collision Collision::Hit_Check(ML::Box3D box, ML::Vec3 pos, float r, ML::Q
 			}
 		}
 	}
-
+	//あたらなかったらゼロベクトルの法線ベクトルとフラグを返す
 	After_Collision collision_False;
 	collision_False.collision_Flag = false;
 	collision_False.normal = ML::Vec3(0, 0, 0);

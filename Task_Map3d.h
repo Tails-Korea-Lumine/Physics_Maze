@@ -5,13 +5,9 @@
 //-------------------------------------------------------------------
 #include "GameEngine_Ver3_7.h"
 #include  "Collision.h"
+#include "Bbox.h"
 
-struct mapData
-{
-	int chip;//マスのマップチップ
-	ML::Vec3 pos;//中心点の座標
-	ML::Box3D collision_Base;//一個一個の判定範囲
-};
+
 
 namespace Map3d
 {
@@ -33,7 +29,7 @@ namespace Map3d
 		//共有する変数はここに追加する
 	};
 	//-------------------------------------------------------------------
-	class  Object : public  BTask
+	class  Object : public Bbox
 	{
 	//変更不可◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆
 	public:
@@ -54,28 +50,10 @@ namespace Map3d
 		void  Render3D_L0();
 		//変更可◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇
 	
-		//追加したい変数・メソッドはここに追加する
-		//変数
-		mapData arr[30][30][30];
-		int sizeZ, sizeY, sizeX;
-		float chipSize;
-		ML::Box3D hitBase;//マップ全体の判定範囲
-		string chipName[10];
-		After_Collision collision_Tri;//ボールのほうに渡す情報
-		std::vector< After_Collision> col_Poligons;
+		//追加したい変数・メソッドはここに追加する		
+	
 		
-		ML::QT map_QT;//マップの回転量
-		Collision col;
-		
-
 	public:
-		//メソッド
-		bool Map_Load(string f_);
-		bool Map_Check_Hit(const ML::Box3D& hit);
-		void Map_Check_Hit(ML::Vec3 pos, float r);//球とマップのあたり判定		
-		void Map_Rotate();//Updateで呼ぶ関数
-		
-
 		After_Collision is_Collision();
 		std::vector<After_Collision> Get_Collision_Poligon();
 	};

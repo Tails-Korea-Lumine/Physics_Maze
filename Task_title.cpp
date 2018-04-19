@@ -43,7 +43,7 @@ namespace  Title
 			ML::Vec3(0.0f, 1.0f, 0.0f),					//	カメラの上方向ベクトル
 			ML::ToRadian(35), 10.0f, 4000.0f,	//	視野角・視野距離
 			(float)ge->screenWidth / (float)ge->screenHeight);		//	画面比率		
-		DG::EffectState().param.bgColor = ML::Color(1, 1, 1, 1);
+		DG::EffectState().param.bgColor = ML::Color(1, 0, 0, 0);
 		//★タスクの生成
 		
 
