@@ -86,7 +86,8 @@ namespace  MyPG
 
 		//ワールド回転量
 		ML::QT World_Rotation; 
-
+		//マップ全体の中心
+		ML::Vec3 Map_center;
 	//----------------------------------------------
 	};
 }

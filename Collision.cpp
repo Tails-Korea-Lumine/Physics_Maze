@@ -246,7 +246,7 @@ After_Collision Collision::Hit_Check(ML::Box3D box, ML::Vec3 pos, float r, ML::V
 				float cosSN = Gravity::Vector_Dot(speed , tri.normal);
 				//cos値が1ということは内角が0度だということ、つまり物理的にあり得ない衝突
 				//もしものために誤差範囲まで確認
-				if (cosSN >= _CMATH_::cos(ML::ToRadian(2)))
+				if (cosSN >= _CMATH_::cos(ML::ToRadian(1)))
 				{
 					//なので判定はあたっているが無視する
 					continue;

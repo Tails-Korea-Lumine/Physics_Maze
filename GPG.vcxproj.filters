@@ -47,9 +47,6 @@
     <Filter Include="MyPG\Tasks\title">
       <UniqueIdentifier>{f8490f6c-d2ea-46b0-9851-991bfb65c97c}</UniqueIdentifier>
     </Filter>
-    <Filter Include="MyPG\Tasks\karimap">
-      <UniqueIdentifier>{ec3c490b-8940-4f06-8f03-23dbaf343a33}</UniqueIdentifier>
-    </Filter>
     <Filter Include="MyPG\Tasks\ball">
       <UniqueIdentifier>{28324957-9d68-42a0-b881-81eaddac8eb6}</UniqueIdentifier>
     </Filter>
@@ -70,6 +67,9 @@
     </Filter>
     <Filter Include="MyPG\Bbox">
       <UniqueIdentifier>{6affa42c-fd48-4ee0-a97c-93cc8549cd94}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="MyPG\Tasks\map">
+      <UniqueIdentifier>{ec3c490b-8940-4f06-8f03-23dbaf343a33}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -130,9 +130,6 @@
     <ClCompile Include="Task_title.cpp">
       <Filter>MyPG\Tasks\title</Filter>
     </ClCompile>
-    <ClCompile Include="Task_Map3d.cpp">
-      <Filter>MyPG\Tasks\karimap</Filter>
-    </ClCompile>
     <ClCompile Include="Task_Ball.cpp">
       <Filter>MyPG\Tasks\ball</Filter>
     </ClCompile>
@@ -153,6 +150,12 @@
     </ClCompile>
     <ClCompile Include="Bbox.cpp">
       <Filter>MyPG\Bbox</Filter>
+    </ClCompile>
+    <ClCompile Include="Task_MapSide.cpp">
+      <Filter>MyPG\Tasks\map</Filter>
+    </ClCompile>
+    <ClCompile Include="Task_MapCore.cpp">
+      <Filter>MyPG\Tasks\map</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -210,9 +213,6 @@
     <ClInclude Include="Task_title.h">
       <Filter>MyPG\Tasks\title</Filter>
     </ClInclude>
-    <ClInclude Include="Task_Map3d.h">
-      <Filter>MyPG\Tasks\karimap</Filter>
-    </ClInclude>
     <ClInclude Include="Task_Ball.h">
       <Filter>MyPG\Tasks\ball</Filter>
     </ClInclude>
@@ -233,6 +233,12 @@
     </ClInclude>
     <ClInclude Include="Bbox.h">
       <Filter>MyPG\Bbox</Filter>
+    </ClInclude>
+    <ClInclude Include="Task_MapSide.h">
+      <Filter>MyPG\Tasks\map</Filter>
+    </ClInclude>
+    <ClInclude Include="Task_MapCore.h">
+      <Filter>MyPG\Tasks\map</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

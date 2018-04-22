@@ -4,7 +4,8 @@
 #include  "MyPG.h"
 #include  "Task_Game.h"
 #include  "Task_title.h"
-#include  "Task_Map3d.h"
+#include  "Task_MapSide.h"
+#include  "Task_MapCore.h"
 #include  "Task_Ball.h"
 #include  "Task_Player.h"
 
@@ -59,8 +60,12 @@ namespace  Game
 		ge->World_Rotation = ML::QT();
 
 		//★タスクの生成
-		//仮のマップ生成	
-		auto map = Map3d::Object::Create(true);
+		//マップの中心地
+		ge->Map_center = ML::Vec3(1050, 50, 1050);
+		auto core = Map_Core::Object::Create(true);
+		//仮のマップ生成
+		//auto map = Map3d::Object::Create(true);
+
 		auto ball = Ball::Object::Create(true);
 		auto player = Player::Object::Create(true);
 
@@ -71,10 +76,8 @@ namespace  Game
 	bool  Object::Finalize()
 	{
 		//★データ＆タスク解放
-		auto map = ge->GetTask_One_G<Map3d::Object>("マップ");
-		auto ball = ge->GetTask_One_G<Ball::Object>("ボール");
-		map->Kill();
-		ball->Kill();
+		ge->KillAll_G("マップ");
+		ge->KillAll_G("ボール");
 
 		DG::Font_Erase("FontA");
 
@@ -102,7 +105,10 @@ namespace  Game
 	void  Object::Render2D_AF()
 	{
 		auto ball = ge->GetTask_One_G<Ball::Object>("ボール");
-
+		if (ball == nullptr)
+		{
+			return;
+		}
 		char buf[1024];
 		sprintf(buf, "pos : %4.3f , %4.3f , %4.3f \n"
 			"speed : %4.3f , %4.3f , %4.3f \n"

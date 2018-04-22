@@ -3,7 +3,8 @@
 //-------------------------------------------------------------------
 #include  "MyPG.h"
 #include  "Task_Ball.h"
-#include  "Task_Map3d.h"
+#include  "Task_MapSide.h"
+#include  "Task_MapCore.h"
 
 namespace  Ball
 {
@@ -34,7 +35,7 @@ namespace  Ball
 		this->res = Resource::Create();
 
 		//★データ初期化
-		this->pos = ML::Vec3(1050, 300, 450);//仮の位置後で調整をかける(2018/03/15)
+		this->pos = ML::Vec3(1050, 900, 900);//仮の位置後で調整をかける(2018/03/15)
 		this->speed = ML::Vec3(0, 0, 0);
 		this->r = 20.0f;
 		this->m = 10.0f;
@@ -68,11 +69,19 @@ namespace  Ball
 
 		//マップの情報を修得、今はタスク一個で持ってくるが
 		//後にVectorで持ってくるよう調整する(2018/03/27)
-		auto map = ge->GetTask_One_G<Map3d::Object>("マップ");		
-
+		auto map = ge->GetTask_Group_GN<Map3d::Object>("マップ","Side");		
+		auto core = ge->GetTask_One_G<Map_Core::Object>("マップ");
 		//マップのあたり判定の結果
 		std::vector<After_Collision> Result;
-		Result= map->Get_Collision_Poligon();
+		Result = core->Get_Collision_Poligon();
+		for (auto i = map->begin(); i != map->end(); i++)
+		{
+			for (auto it : (*i)->Get_Collision_Poligon())
+			{
+				Result.push_back(it);
+			}			
+		}
+
 		if (in1.B2.down)
 		{
 			system("pause");

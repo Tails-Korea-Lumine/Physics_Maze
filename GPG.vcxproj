@@ -103,7 +103,8 @@
     <ClCompile Include="MyPG.cpp" />
     <ClCompile Include="Task_Ball.cpp" />
     <ClCompile Include="Task_Game.cpp" />
-    <ClCompile Include="Task_Map3d.cpp" />
+    <ClCompile Include="Task_MapCore.cpp" />
+    <ClCompile Include="Task_MapSide.cpp" />
     <ClCompile Include="Task_Player.cpp" />
     <ClCompile Include="Task_title.cpp" />
     <ClCompile Include="WinMain.cpp" />
@@ -132,7 +133,8 @@
     <ClInclude Include="MyPG.h" />
     <ClInclude Include="Task_Ball.h" />
     <ClInclude Include="Task_Game.h" />
-    <ClInclude Include="Task_Map3d.h" />
+    <ClInclude Include="Task_MapCore.h" />
+    <ClInclude Include="Task_MapSide.h" />
     <ClInclude Include="Task_Player.h" />
     <ClInclude Include="Task_title.h" />
     <ClInclude Include="xnacollision.h" />
