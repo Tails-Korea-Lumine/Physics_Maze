@@ -39,12 +39,24 @@ namespace  Map_Core
 		//コアの初期化
 		this->core = Bbox(BoxType::Core, ge->Map_center, ML::Box3D(-50 * this->mapSize, -50 * this->mapSize, -50 * this->mapSize, 100 * this->mapSize, 100 * this->mapSize, 100 * this->mapSize), this->map_QT);
 		//バリアの初期化
-		this->barrier[0] = Bbox(BoxType::Barrier, ge->Map_center , ML::Box3D(-50 * (this->mapSize + 1), 50 * (this->mapSize + 1), -50 * (this->mapSize + 1), 100 * (this->mapSize + 2),1, 100 * (this->mapSize + 2)), this->map_QT);
-		this->barrier[1] = Bbox(BoxType::Barrier, ge->Map_center , ML::Box3D(-50 * (this->mapSize + 1), -50 * (this->mapSize + 1), 50 * (this->mapSize + 1), 100 * (this->mapSize + 2), 100 * (this->mapSize + 2), 1), this->map_QT);
-		this->barrier[2] = Bbox(BoxType::Barrier, ge->Map_center , ML::Box3D(-50 * (this->mapSize + 1), -50 * (this->mapSize + 1), -50 * (this->mapSize + 1),1, 100 * (this->mapSize + 2), 100 * (this->mapSize + 2)), this->map_QT);
-		this->barrier[3] = Bbox(BoxType::Barrier, ge->Map_center , ML::Box3D(-50 * (this->mapSize + 1), -50 * (this->mapSize + 1), -50 * (this->mapSize + 1), 100 * (this->mapSize + 2), 100 * (this->mapSize + 2),1), this->map_QT);
-		this->barrier[4] = Bbox(BoxType::Barrier, ge->Map_center , ML::Box3D(50 * (this->mapSize + 1), -50 * (this->mapSize + 1), -50 * (this->mapSize + 1), 1, 100 * (this->mapSize + 2), 100 * (this->mapSize + 2)), this->map_QT);
-		this->barrier[5] = Bbox(BoxType::Barrier, ge->Map_center , ML::Box3D(-50 * (this->mapSize + 1), -50 * (this->mapSize + 1), -50 * (this->mapSize + 1), 100 * (this->mapSize + 2), 1, 100 * (this->mapSize + 2)), this->map_QT);
+		ML::Box3D XZ, XY, YZ;
+		XZ = ML::Box3D(-100 * (this->mapSize -2), -50 , -100 * (this->mapSize -2), 100 * (this->mapSize + 4), 100, 100 * (this->mapSize + 4));
+		XY = ML::Box3D(-100 * (this->mapSize - 2), -100 * (this->mapSize - 2), -50 , 100 * (this->mapSize + 4), 100 * (this->mapSize + 4), 100);
+		YZ = ML::Box3D(-50 , -100 * (this->mapSize - 2), -100 * (this->mapSize - 2), 100, 100 * (this->mapSize + 4), 100 * (this->mapSize + 4));
+
+		this->b_ini_pos[0] = ge->Map_center + ML::Vec3(0, 50 * (this->mapSize + 4), 0);
+		this->b_ini_pos[1] = ge->Map_center + ML::Vec3(0, 0, 50 * (this->mapSize + 4));
+		this->b_ini_pos[2] = ge->Map_center + ML::Vec3(-50 * (this->mapSize + 4), 0, 0);
+		this->b_ini_pos[3] = ge->Map_center + ML::Vec3(50 * (this->mapSize + 4), 0, 0);
+		this->b_ini_pos[4] = ge->Map_center + ML::Vec3(0, 0, -50 * (this->mapSize + 4));
+		this->b_ini_pos[5] = ge->Map_center + ML::Vec3(0, -50 * (this->mapSize + 4), 0);
+
+		this->barrier[0] = Bbox(BoxType::Barrier, b_ini_pos[0] , XZ, this->map_QT);
+		this->barrier[1] = Bbox(BoxType::Barrier, b_ini_pos[1] , XY, this->map_QT);
+		this->barrier[2] = Bbox(BoxType::Barrier, b_ini_pos[2] , YZ, this->map_QT);
+		this->barrier[3] = Bbox(BoxType::Barrier, b_ini_pos[3] , YZ, this->map_QT);
+		this->barrier[4] = Bbox(BoxType::Barrier, b_ini_pos[4] , XY, this->map_QT);
+		this->barrier[5] = Bbox(BoxType::Barrier, b_ini_pos[5] , XZ, this->map_QT);
 
 		//★タスクの生成
 
@@ -126,11 +138,20 @@ namespace  Map_Core
 
 		matS.Scaling(this->mapSize);
 		matR.RotationQuaternion(this->map_QT);
+		/*for (int i = 0; i < 6; i++)
+		{
+			matT.Translation(this->barrier[i].Get_Pos());
+
+			DG::EffectState().param.matWorld = matS * matR * matT;
+
+			DG::Mesh_Draw(this->res->meshName);
+		}*/
 		matT.Translation(this->core.Get_Pos());
 
 		DG::EffectState().param.matWorld = matS * matR * matT;
 
 		DG::Mesh_Draw(this->res->meshName);
+
 	}
 
 	//-----------------------------------------------------------------------------------
@@ -148,7 +169,8 @@ namespace  Map_Core
 		this->core.Rotate_Box(temp, this->map_QT);
 		for (int b = 0; b < 6; b++)
 		{
-			this->barrier[b].Rotate_Box(temp, this->map_QT);
+			ML::Vec3 btemp = matR.TransformCoord(this->b_ini_pos[b]);
+			this->barrier[b].Rotate_Box(btemp, this->map_QT);
 		}
 	}
 

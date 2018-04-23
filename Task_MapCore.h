@@ -54,6 +54,8 @@ namespace Map_Core
 		//変数
 		//真ん中のキューブと外に飛ばされないようにする外壁
 		Bbox core, barrier[6];
+		//バリアの初期位置
+		ML::Vec3 b_ini_pos[6];
 		//マップの大きさ、難易度で変わる
 		int mapSize;
 		//ボールに渡す情報	

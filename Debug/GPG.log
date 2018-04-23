@@ -1,3 +1,2 @@
-﻿  Task_MapCore.cpp
-c:\users\lumine\desktop\fermat\3d_maze\task_mapcore.cpp(127): warning C4244: '인수': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-  GPG.vcxproj -> C:\Users\Lumine\Desktop\Fermat\3d_Maze\Debug\GPG.exe
+﻿  Collision.cpp
+  GPG.vcxproj -> D:\17ci0414\maze\Debug\GPG.exe

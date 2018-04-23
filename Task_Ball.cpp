@@ -35,7 +35,7 @@ namespace  Ball
 		this->res = Resource::Create();
 
 		//★データ初期化
-		this->pos = ML::Vec3(1050, 900, 900);//仮の位置後で調整をかける(2018/03/15)
+		this->pos = ML::Vec3(1050, 500, 900);//仮の位置後で調整をかける(2018/03/15)
 		this->speed = ML::Vec3(0, 0, 0);
 		this->r = 20.0f;
 		this->m = 10.0f;

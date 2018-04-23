@@ -24,7 +24,9 @@ std::vector<Triangle> Collision::Get_Triangle_Box3D(ML::Box3D box, ML::QT rotati
 	//各頂点をワールド回転量で回転させる
 	ML::Mat4x4 matR;
 	//回転行列を作る
-	matR.RotationQuaternion(rotation);
+	//matR.RotationQuaternion(rotation);
+	ML::Vec3 center = { box.x + (box.w / 2), box.y + (box.h / 2), box.z + (box.d / 2) };
+	D3DXMatrixAffineTransformation(&matR, 1, &center, &rotation, NULL);
 	
 	for (int i = 0; i < 8; i++)
 	{
@@ -189,7 +191,8 @@ std::vector<ML::Vec3> Collision::Get_Poionts_to_Sphere(ML::Vec3 pos, float r, ML
 
 	ML::Mat4x4 matR;
 
-	matR.RotationQuaternion(rotation);
+	//matR.RotationQuaternion(rotation);	
+	D3DXMatrixAffineTransformation(&matR, 1, &pos, &rotation, NULL);
 
 	//6個だけをとるver.1
 	/*v[0] = pos + ML::Vec3(+r, 0, 0);
@@ -205,7 +208,7 @@ std::vector<ML::Vec3> Collision::Get_Poionts_to_Sphere(ML::Vec3 pos, float r, ML
 		S.push_back(v[i]);
 	}*/
 	//半直径の半分の範囲までとるver.2
-	for (float i = r; i > r/2; i-=0.5f)
+	for (float i = r; i > r-6; i-=0.5f)
 	{
 		v[0] = pos + ML::Vec3(+i, 0, 0);
 		v[1] = pos + ML::Vec3(-i, 0, 0);
@@ -235,9 +238,9 @@ After_Collision Collision::Hit_Check(ML::Box3D box, ML::Vec3 pos, float r, ML::V
 	bool collision_Flag;
 
 	//衝突判定スタート
-	for (auto tri : all_Tri)
+	for (const auto& tri : all_Tri)
 	{
-		for (auto p : sp)
+		for (const auto& p : sp)
 		{
 			if (collision_Flag = Collision::Check_Collision(tri, p))
 			{
@@ -246,7 +249,7 @@ After_Collision Collision::Hit_Check(ML::Box3D box, ML::Vec3 pos, float r, ML::V
 				float cosSN = Gravity::Vector_Dot(speed , tri.normal);
 				//cos値が1ということは内角が0度だということ、つまり物理的にあり得ない衝突
 				//もしものために誤差範囲まで確認
-				if (cosSN >= _CMATH_::cos(ML::ToRadian(1)))
+				if (cosSN >= _CMATH_::cos(ML::ToRadian(15)))
 				{
 					//なので判定はあたっているが無視する
 					continue;
