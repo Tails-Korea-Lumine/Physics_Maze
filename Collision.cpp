@@ -230,7 +230,7 @@ std::vector<ML::Vec3> Collision::Get_Poionts_to_Sphere(ML::Vec3 pos, float r, ML
 After_Collision Collision::Hit_Check(ML::Box3D box, ML::Vec3 pos, float r, ML::Vec3 speed, ML::QT worldR)
 {
 	//球の6個の頂点座標
-	std::vector<ML::Vec3> sp = Collision::Get_Poionts_to_Sphere(pos, r, worldR);
+	std::vector<ML::Vec3> sphere_Points = Collision::Get_Poionts_to_Sphere(pos, r, worldR);
 	//一個のマスにある12個の三角形
 	std::vector<Triangle> all_Tri;
 	all_Tri = Collision::Get_Triangle_Box3D(box, worldR);
@@ -240,7 +240,7 @@ After_Collision Collision::Hit_Check(ML::Box3D box, ML::Vec3 pos, float r, ML::V
 	//衝突判定スタート
 	for (const auto& tri : all_Tri)
 	{
-		for (const auto& p : sp)
+		for (const auto& p : sphere_Points)
 		{
 			if (collision_Flag = Collision::Check_Collision(tri, p))
 			{

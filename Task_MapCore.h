@@ -61,7 +61,8 @@ namespace Map_Core
 		//ボールに渡す情報	
 		std::vector< After_Collision> col_Poligons;		
 		//回転量
-		ML::QT map_QT;		
+		ML::QT map_QT;
+		ML::QT frame_QT;
 
 	public:
 		//メソッド
@@ -69,5 +70,7 @@ namespace Map_Core
 		void Core_Check_Hit(ML::Vec3 pos, float r, ML::Vec3 speed);//球とマップのあたり判定
 		//ほかのプログラムにあたり判定が終わったポリゴンを渡す関数
 		std::vector<After_Collision> Get_Collision_Poligon();
+		//今回フレームの回転量を返す
+		ML::QT Get_Frame_QT();
 	};
 }

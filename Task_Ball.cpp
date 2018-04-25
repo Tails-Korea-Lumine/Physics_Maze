@@ -35,7 +35,7 @@ namespace  Ball
 		this->res = Resource::Create();
 
 		//★データ初期化
-		this->pos = ML::Vec3(1050, 500, 900);//仮の位置後で調整をかける(2018/03/15)
+		this->pos = ML::Vec3(1050, 500, 900);//仮の位置後で調整をかける(2018/04/20)
 		this->speed = ML::Vec3(0, 0, 0);
 		this->r = 20.0f;
 		this->m = 10.0f;
@@ -71,7 +71,7 @@ namespace  Ball
 		//後にVectorで持ってくるよう調整する(2018/03/27)
 		auto map = ge->GetTask_Group_GN<Map3d::Object>("マップ","Side");		
 		auto core = ge->GetTask_One_G<Map_Core::Object>("マップ");
-		//マップのあたり判定の結果
+		//マップのあたり判定の結果を保存する
 		std::vector<After_Collision> Result;
 		Result = core->Get_Collision_Poligon();
 		for (auto i = map->begin(); i != map->end(); i++)
@@ -82,13 +82,19 @@ namespace  Ball
 			}			
 		}
 
+		//-------------------------------------
+		//デバッグ用ポーズ
 		if (in1.B2.down)
 		{
 			system("pause");
 		}
+		//-------------------------------------
+
 		//重力加速
 		this->speed += this->G.Accelerate(this->m);
 
+		//もし,どこもあたり判定をせずに動いた場合
+		//処理せずに次のフレームに移る
 		if (Result.size() == 0)
 		{	
 			//移動(フレーム終了する直前に行う)
@@ -114,7 +120,16 @@ namespace  Ball
 					//フラグを立てる
 					cnt = true;
 					this->collision_Flag = true;
-					//this->speed += (Result.normal*0.06f);
+					//どこかでくっついているときの回転反応
+					if (in1.LStick.volume != 0)
+					{
+						//マップのフレーム回転量で回転させる
+						ML::Mat4x4 matR;
+						D3DXMatrixAffineTransformation(&matR, 1, &ge->Map_center, &core->Get_Frame_QT(), NULL);
+						
+						this->pos = matR.TransformCoord(this->pos);
+					}
+
 				}
 				else if(cnt == false)
 				{

@@ -18,8 +18,7 @@ namespace  Map3d
 	//-------------------------------------------------------------------
 	//リソースの解放
 	bool  Resource::Finalize()
-	{
-		
+	{		
 		return true;
 	}
 	//-------------------------------------------------------------------
@@ -125,7 +124,10 @@ namespace  Map3d
 		auto ball = ge->GetTask_One_G<Ball::Object>("ボール");
 		
 		//ボールとマップのあたり判定
-		this->Map_Check_Hit(ball->pos, ball->r,ball->speed);
+		if (ball != nullptr)
+		{
+			this->Map_Check_Hit(ball->pos, ball->r, ball->speed);
+		}
 	}
 	//-------------------------------------------------------------------
 	//「２Ｄ描画」１フレーム毎に行う処理
@@ -206,7 +208,7 @@ namespace  Map3d
 		}
 		//マップ配列サイズの読み込み
 		fin >> this->sizeX >> this->sizeY >> this->sizeZ;
-		//マップ配列データの読みおこみ
+		//マップ配列データの読みこみ
 		for (int y = 0; y < this->sizeY; y++)
 		{
 			for (int z = this->sizeZ - 1; z >= 0; z--)

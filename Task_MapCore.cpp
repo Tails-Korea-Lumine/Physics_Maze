@@ -38,19 +38,21 @@ namespace  Map_Core
 		
 		//コアの初期化
 		this->core = Bbox(BoxType::Core, ge->Map_center, ML::Box3D(-50 * this->mapSize, -50 * this->mapSize, -50 * this->mapSize, 100 * this->mapSize, 100 * this->mapSize, 100 * this->mapSize), this->map_QT);
-		//バリアの初期化
+		//バリアの初期化		
+		//各面に価するあたり判定範囲
 		ML::Box3D XZ, XY, YZ;
 		XZ = ML::Box3D(-100 * (this->mapSize -2), -50 , -100 * (this->mapSize -2), 100 * (this->mapSize + 4), 100, 100 * (this->mapSize + 4));
 		XY = ML::Box3D(-100 * (this->mapSize - 2), -100 * (this->mapSize - 2), -50 , 100 * (this->mapSize + 4), 100 * (this->mapSize + 4), 100);
 		YZ = ML::Box3D(-50 , -100 * (this->mapSize - 2), -100 * (this->mapSize - 2), 100, 100 * (this->mapSize + 4), 100 * (this->mapSize + 4));
-
+		//面ごとの初期位置
+		//後で初期位置を変更する可能性あり(2018/04/24)
 		this->b_ini_pos[0] = ge->Map_center + ML::Vec3(0, 50 * (this->mapSize + 4), 0);
 		this->b_ini_pos[1] = ge->Map_center + ML::Vec3(0, 0, 50 * (this->mapSize + 4));
 		this->b_ini_pos[2] = ge->Map_center + ML::Vec3(-50 * (this->mapSize + 4), 0, 0);
 		this->b_ini_pos[3] = ge->Map_center + ML::Vec3(50 * (this->mapSize + 4), 0, 0);
 		this->b_ini_pos[4] = ge->Map_center + ML::Vec3(0, 0, -50 * (this->mapSize + 4));
 		this->b_ini_pos[5] = ge->Map_center + ML::Vec3(0, -50 * (this->mapSize + 4), 0);
-
+		//Bbox初期化
 		this->barrier[0] = Bbox(BoxType::Barrier, b_ini_pos[0] , XZ, this->map_QT);
 		this->barrier[1] = Bbox(BoxType::Barrier, b_ini_pos[1] , XY, this->map_QT);
 		this->barrier[2] = Bbox(BoxType::Barrier, b_ini_pos[2] , YZ, this->map_QT);
@@ -81,6 +83,7 @@ namespace  Map_Core
 	//「更新」１フレーム毎に行う処理
 	void  Object::UpDate()
 	{
+		this->frame_QT = ML::QT(0.0f);
 		auto in1 = DI::GPad_GetState("P1");
 		//スティックが倒された量を更新
 		if (in1.B1.on)
@@ -88,8 +91,8 @@ namespace  Map_Core
 			//スティックで入力
 			if (in1.LStick.axis.x != 0)
 			{
-				ML::QT temp_qt(ML::Vec3(0, 0, 1), ML::ToRadian(-in1.LStick.axis.x));
-				this->map_QT *= temp_qt;
+				this->frame_QT = ML::QT(ML::Vec3(0, 0, 1), ML::ToRadian(-in1.LStick.axis.x));
+				this->map_QT *= this->frame_QT;
 			}
 		}
 		//押されていない時はY軸回転とX軸回転
@@ -98,14 +101,14 @@ namespace  Map_Core
 
 			if (in1.LStick.axis.y != 0)
 			{
-				ML::QT temp_qt(ML::Vec3(1, 0, 0), ML::ToRadian(-in1.LStick.axis.y));
-				this->map_QT *= temp_qt;
+				this->frame_QT = ML::QT(ML::Vec3(1, 0, 0), ML::ToRadian(-in1.LStick.axis.y));
+				this->map_QT *= this->frame_QT;
 			}
 
 			if (in1.LStick.axis.x != 0)
 			{
-				ML::QT temp_qt(ML::Vec3(0, 1, 0), ML::ToRadian(-in1.LStick.axis.x));
-				this->map_QT *= temp_qt;
+				this->frame_QT = ML::QT(ML::Vec3(0, 1, 0), ML::ToRadian(-in1.LStick.axis.x));
+				this->map_QT *= this->frame_QT;
 			}
 		}
 
@@ -120,8 +123,10 @@ namespace  Map_Core
 		//あたり判定は毎回マップのほうで行う
 		//ボールの情報を修得
 		auto ball = ge->GetTask_One_G<Ball::Object>("ボール");
-
-		this->Core_Check_Hit(ball->pos, ball->r, ball->speed);
+		if (ball != nullptr)
+		{
+			this->Core_Check_Hit(ball->pos, ball->r, ball->speed);
+		}
 
 	}
 	//-------------------------------------------------------------------
@@ -194,6 +199,12 @@ namespace  Map_Core
 		}
 	}
 
+	//---------------------------------------------------------------------------------
+	//今回フレームの回転量を返す
+	ML::QT Object::Get_Frame_QT()
+	{
+		return this->frame_QT;
+	}
 	//-----------------------------------------------------------------------------------
 	//ほかのプログラムにあたり判定が終わったポリゴンを渡す関数
 	std::vector<After_Collision> Object::Get_Collision_Poligon()

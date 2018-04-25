@@ -128,7 +128,7 @@ ML::Vec3 Gravity::CollisionOver_Accelerate(ML::Vec3 speed, ML::Vec3 normal, floa
 
 	after_Collision = speed + after_Normal;
 	//d‚³‚ª‰Á‘¬‚É‰e‹¿‚ğ—^‚¦‚é
-	return after_Collision * (weight*0.1f);
+	return after_Collision;
 }
 
 ML::Vec3 Gravity::Reflaction_Vector(ML::Vec3 force, ML::Vec3 normal, float weight)
@@ -164,7 +164,7 @@ ML::Vec3 Gravity::Reflaction_Vector(ML::Vec3 force, ML::Vec3 normal, float weigh
 	after_Reflection = force + (2 * after_Normal);
 
 	//d‚³‚É‰‚¶‚ÄŒ¸‚ç‚µ‚Ä•Ô‚·
-	return (after_Reflection*0.6f)/(weight*0.1f);
+	return after_Reflection*0.6f;
 }
 
 void Gravity::Rotation_on_Gravity(float angle, ML::Vec3 centor)
