@@ -1,12 +1,2 @@
-﻿  Task_Ball.cpp
-  Task_MapCore.cpp
-c:\users\lumine\desktop\fermat\3d_maze\task_mapcore.cpp(49): warning C4244: '인수': 'int'에서 'const float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-c:\users\lumine\desktop\fermat\3d_maze\task_mapcore.cpp(50): warning C4244: '인수': 'int'에서 'const float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-c:\users\lumine\desktop\fermat\3d_maze\task_mapcore.cpp(51): warning C4244: '인수': 'int'에서 'const float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-c:\users\lumine\desktop\fermat\3d_maze\task_mapcore.cpp(52): warning C4244: '인수': 'int'에서 'const float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-c:\users\lumine\desktop\fermat\3d_maze\task_mapcore.cpp(53): warning C4244: '인수': 'int'에서 'const float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-c:\users\lumine\desktop\fermat\3d_maze\task_mapcore.cpp(54): warning C4244: '인수': 'int'에서 'const float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-c:\users\lumine\desktop\fermat\3d_maze\task_mapcore.cpp(144): warning C4244: '인수': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-  Task_MapSide.cpp
-  코드를 생성하고 있습니다...
+﻿  Task_Game.cpp
   GPG.vcxproj -> C:\Users\Lumine\Desktop\Fermat\3d_Maze\Debug\GPG.exe

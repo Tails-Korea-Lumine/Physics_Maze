@@ -1,7 +1,25 @@
-﻿  Collision.cpp
+﻿  Bbox.cpp
+  Collision.cpp
+  GameEngine_Ver3_7.cpp
+  Gravity.cpp
+  MyPG.cpp
+  Task_Ball.cpp
+  Task_Game.cpp
+  Task_MapCore.cpp
+c:\users\lumine\desktop\fermat\3d_maze\task_mapcore.cpp(49): warning C4244: '인수': 'int'에서 'const float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\lumine\desktop\fermat\3d_maze\task_mapcore.cpp(50): warning C4244: '인수': 'int'에서 'const float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\lumine\desktop\fermat\3d_maze\task_mapcore.cpp(51): warning C4244: '인수': 'int'에서 'const float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\lumine\desktop\fermat\3d_maze\task_mapcore.cpp(52): warning C4244: '인수': 'int'에서 'const float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\lumine\desktop\fermat\3d_maze\task_mapcore.cpp(53): warning C4244: '인수': 'int'에서 'const float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\lumine\desktop\fermat\3d_maze\task_mapcore.cpp(54): warning C4244: '인수': 'int'에서 'const float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\lumine\desktop\fermat\3d_maze\task_mapcore.cpp(144): warning C4244: '인수': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  Task_MapSide.cpp
+  Task_Player.cpp
+  Task_title.cpp
+  WinMain.cpp
   코드를 생성하고 있습니다.
-  2 of 3945 functions ( 0.1%) were compiled, the rest were copied from previous compilation.
-    0 functions were new in current compilation
-    1 functions had inline decision re-evaluated but remain unchanged
+  609 of 4150 functions (14.7%) were compiled, the rest were copied from previous compilation.
+    219 functions were new in current compilation
+    369 functions had inline decision re-evaluated but remain unchanged
   코드를 생성했습니다.
   GPG.vcxproj -> C:\Users\Lumine\Desktop\Fermat\3d_Maze\Release\GPG.exe

@@ -37,13 +37,13 @@ namespace Map3d
 		typedef  shared_ptr<Object>		SP;
 		typedef  weak_ptr<Object>		WP;
 		//生成窓口 引数はtrueでタスクシステムへ自動登録
-		static  Object::SP  Create(bool flagGameEnginePushBack_);
+		static  Object::SP  Create(bool flagGameEnginePushBack_,int sideNum);
 		Resource::SP	res;
 	private:
 		Object();
-		bool  B_Initialize();
+		bool  B_Initialize(int sideNum);
 		bool  B_Finalize();
-		bool  Initialize();	//「初期化」タスク生成時に１回だけ行う処理
+		bool  Initialize(int sideNum);	//「初期化」タスク生成時に１回だけ行う処理
 		void  UpDate();		//「実行」１フレーム毎に行う処理
 		void  Render2D_AF();	//「2D描画」１フレーム毎に行う処理
 		bool  Finalize();		//「終了」タスク消滅時に１回だけ行う処理
@@ -54,12 +54,15 @@ namespace Map3d
 		//変数
 		Bbox arr[30][30][30];
 		int sizeZ, sizeY, sizeX;
+		int mapSize;
+		int sideNumber;
 		float chipSize;
 		string chipName[10];		
 		//ボールのほうに渡す情報
 		std::vector< After_Collision> col_Poligons;
 		//回転量
 		ML::QT map_QT;
+		ML::QT frame_QT;
 		
 	public:
 		//メソッド

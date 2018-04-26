@@ -63,8 +63,11 @@ namespace  Game
 		//マップの中心地
 		ge->Map_center = ML::Vec3(1050, 50, 1050);
 		auto core = Map_Core::Object::Create(true);
-		//仮のマップ生成
-		//auto map = Map3d::Object::Create(true);
+		//マップ生成
+		for (int i = 0; i < 6; i++)
+		{
+			auto map = Map3d::Object::Create(true,i);
+		}
 
 		auto ball = Ball::Object::Create(true);
 		auto player = Player::Object::Create(true);

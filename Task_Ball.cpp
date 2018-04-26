@@ -152,6 +152,16 @@ namespace  Ball
 
 					this->speed = this->G.Reflaction_Vector(this->speed, p.normal, this->m);
 
+					//衝突支店の時の回転反応テスト
+					if (in1.LStick.volume != 0)
+					{
+						//マップのフレーム回転量で回転させる
+						ML::Mat4x4 matR;
+						D3DXMatrixAffineTransformation(&matR, 1, &ge->Map_center, &core->Get_Frame_QT(), NULL);
+
+						this->speed = matR.TransformNormal(this->speed);
+					}
+
 					//衝突フラグを有効にする
 					this->collision_Flag = true;
 				}

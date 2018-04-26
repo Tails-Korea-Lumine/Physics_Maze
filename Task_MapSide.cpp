@@ -23,7 +23,7 @@ namespace  Map3d
 	}
 	//-------------------------------------------------------------------
 	//「初期化」タスク生成時に１回だけ行う処理
-	bool  Object::Initialize()
+	bool  Object::Initialize(int sideNum)
 	{
 		//スーパークラス初期化
 		__super::Initialize(defGroupName, defName, true);
@@ -32,9 +32,31 @@ namespace  Map3d
 
 
 		//★データ初期化
+		this->sideNumber = sideNum;
+		this->mapSize = 8;//基本は8X8難易度によって増加される(2018/04/21)
 		this->render3D_Priority[0] = 1.0f;
 		//面ごとに別の初期値を与える
-		//this->map_QT = ML::QT(0.0f);
+		switch(sideNumber)
+		{
+		case 0:
+			this->map_QT = ML::QT(0.0f);
+			break;
+		case 1:
+			this->map_QT = ML::QT(ML::Vec3(1, 0, 0), ML::ToRadian(90));
+			break;
+		case 2:
+			this->map_QT = ML::QT(ML::Vec3(0, 0, 1), ML::ToRadian(90));
+			break;
+		case 3:
+			this->map_QT = ML::QT(ML::Vec3(0, 0, 1), ML::ToRadian(-90));
+			break;
+		case 4:
+			this->map_QT = ML::QT(ML::Vec3(1, 0, 0), ML::ToRadian(-90));
+			break;
+		case 5:
+			this->map_QT = ML::QT(ML::Vec3(1, 0, 0), ML::ToRadian(180));
+			break;
+		}
 		//データのゼロクリア
 		ZeroMemory(this->arr, sizeof(this->arr));
 		this->sizeX = 0;
@@ -46,7 +68,7 @@ namespace  Map3d
 			this->chipName[i] = "";
 		}
 		this->col_Poligons.clear();
-		this->Map_Load("./data/StageData/Map00.txt");		
+		this->Map_Load("./data/map/map1.txt");		
 
 		//★タスクの生成
 
@@ -79,7 +101,8 @@ namespace  Map3d
 	//-------------------------------------------------------------------
 	//「更新」１フレーム毎に行う処理
 	void  Object::UpDate()
-	{		
+	{
+		this->frame_QT = ML::QT(0.0f);
 		auto in1 = DI::GPad_GetState("P1");
 		//スティックが倒された量を更新
 		if (in1.B1.on)
@@ -87,8 +110,8 @@ namespace  Map3d
 			//スティックで入力
 			if (in1.LStick.axis.x != 0)
 			{									
-				ML::QT temp_qt(ML::Vec3(0, 0, 1), ML::ToRadian(-in1.LStick.axis.x));
-				this->map_QT *= temp_qt;
+				this->frame_QT = ML::QT(ML::Vec3(0, 0, 1), ML::ToRadian(-in1.LStick.axis.x));
+				this->map_QT *= this->frame_QT;
 			}
 		}
 		//押されていない時はY軸回転とX軸回転
@@ -97,14 +120,14 @@ namespace  Map3d
 
 			if (in1.LStick.axis.y != 0)
 			{
-				ML::QT temp_qt(ML::Vec3(1,0,0),ML::ToRadian(-in1.LStick.axis.y));
-				this->map_QT *= temp_qt;
+				this->frame_QT = ML::QT(ML::Vec3(1,0,0),ML::ToRadian(-in1.LStick.axis.y));
+				this->map_QT *= this->frame_QT;
 			}
 			
 			if (in1.LStick.axis.x != 0)
 			{				
-				ML::QT temp_qt(ML::Vec3(0, 1, 0), ML::ToRadian(-in1.LStick.axis.x));
-				this->map_QT *= temp_qt;
+				this->frame_QT = ML::QT(ML::Vec3(0, 1, 0), ML::ToRadian(-in1.LStick.axis.x));
+				this->map_QT *= this->frame_QT;
 			}			
 		}
 
@@ -218,7 +241,8 @@ namespace  Map3d
 					int chip;
 					fin >> chip;
 					ML::Vec3 pos = ML::Vec3(x*this->chipSize + this->chipSize / 2, y*this->chipSize + this->chipSize / 2, z*this->chipSize + this->chipSize / 2);
-					ML::Box3D base = ML::Box3D(-this->chipSize / 2, -this->chipSize / 2, -this->chipSize / 2, this->chipSize, this->chipSize, this->chipSize);
+					ML::Box3D base = ML::Box3D(-this->chipSize / 2, -this->chipSize / 2, -this->chipSize / 2, this->chipSize, this->chipSize, this->chipSize);				
+
 
 					this->arr[z][y][x] = Bbox(BoxType(chip), pos, base, this->map_QT);
 				}
@@ -286,8 +310,8 @@ namespace  Map3d
 				for (int x = 0; x < this->sizeX; x++)
 				{
 
-					ML::Vec3 temp = ML::Vec3(x*this->chipSize + this->chipSize / 2, y*this->chipSize + this->chipSize / 2, z*this->chipSize + this->chipSize / 2);
-
+					ML::Vec3 pos = ML::Vec3(x*this->chipSize + this->chipSize / 2, y*this->chipSize + this->chipSize / 2, z*this->chipSize + this->chipSize / 2);
+					pos += ge->Map_center - ML::Vec3((this->mapSize*this->chipSize / 2), -400, (this->mapSize*this->chipSize / 2));
 					//D3DXMatrixAffineTransformation(&matR, this->chipSize / 100.0f, &ML::Vec3(1050,50,1050), &qtW, NULL);
 					//matR.Inverse();
 
@@ -299,10 +323,11 @@ namespace  Map3d
 					}*/
 					ML::Mat4x4 matR;
 					D3DXMatrixAffineTransformation(&matR, this->chipSize / 100.0f, &ge->Map_center, &this->map_QT, NULL);
-					temp = matR.TransformCoord(temp);
+					//ML::Vec3 temp = matR.TransformCoord(this->arr[z][y][x].Get_Pos());
+					pos = matR.TransformCoord(pos);
 
 					//matR.Inverse();
-					this->arr[z][y][x].Rotate_Box(temp , this->map_QT);
+					this->arr[z][y][x].Rotate_Box(pos, this->map_QT);
 				}
 			}
 		}
@@ -314,7 +339,7 @@ namespace  Map3d
 	//★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★
 	//-------------------------------------------------------------------
 	//タスク生成窓口
-	Object::SP  Object::Create(bool  flagGameEnginePushBack_)
+	Object::SP  Object::Create(bool  flagGameEnginePushBack_, int sideNum)
 	{
 		Object::SP  ob = Object::SP(new  Object());
 		if (ob) {
@@ -322,7 +347,7 @@ namespace  Map3d
 			if (flagGameEnginePushBack_) {
 				ge->PushBack(ob);//ゲームエンジンに登録
 			}
-			if (!ob->B_Initialize()) {
+			if (!ob->B_Initialize(sideNum)) {
 				ob->Kill();//イニシャライズに失敗したらKill
 			}
 			return  ob;
@@ -330,9 +355,9 @@ namespace  Map3d
 		return nullptr;
 	}
 	//-------------------------------------------------------------------
-	bool  Object::B_Initialize()
+	bool  Object::B_Initialize(int sideNum)
 	{
-		return  this->Initialize();
+		return  this->Initialize(sideNum);
 	}
 	//-------------------------------------------------------------------
 	Object::~Object() { this->B_Finalize(); }
