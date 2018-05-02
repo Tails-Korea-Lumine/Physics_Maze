@@ -20,7 +20,8 @@ namespace  Map_Core
 	//-------------------------------------------------------------------
 	//リソースの解放
 	bool  Resource::Finalize()
-	{		
+	{
+		DG::Mesh_Erase(this->meshName);
 		return true;
 	}
 	//-------------------------------------------------------------------
@@ -83,51 +84,65 @@ namespace  Map_Core
 	//「更新」１フレーム毎に行う処理
 	void  Object::UpDate()
 	{
-		this->frame_QT = ML::QT(0.0f);
-		auto in1 = DI::GPad_GetState("P1");
-		//スティックが倒された量を更新
-		if (in1.B1.on)
-		{
-			//スティックで入力
-			if (in1.LStick.axis.x != 0)
-			{
-				this->frame_QT = ML::QT(ML::Vec3(0, 0, 1), ML::ToRadian(-in1.LStick.axis.x));
-				this->map_QT *= this->frame_QT;
-			}
-		}
-		//押されていない時はY軸回転とX軸回転
-		else
-		{
+		//auto ball = ge->GetTask_One_G<Ball::Object>("ボール");
+		//this->frame_QT = ML::QT(0.0f);
+		//auto in1 = DI::GPad_GetState("P1");
 
-			if (in1.LStick.axis.y != 0)
-			{
-				this->frame_QT = ML::QT(ML::Vec3(1, 0, 0), ML::ToRadian(-in1.LStick.axis.y));
-				this->map_QT *= this->frame_QT;
-			}
+		////あたり判定の精密調整を仕掛けた ver0.5
+		//
+		//{
+		//	//スティックが倒された量を更新
+		//	if (in1.B1.on)
+		//	{
+		//		//スティックで入力
+		//		if (in1.LStick.axis.x != 0)
+		//		{
+		//			this->frame_QT = ML::QT(ML::Vec3(0, 0, 1), ML::ToRadian(-in1.LStick.axis.x ));
+		//			this->map_QT *= this->frame_QT;
+		//		}
+		//	}
+		//	//押されていない時はY軸回転とX軸回転
+		//	else
+		//	{
 
-			if (in1.LStick.axis.x != 0)
-			{
-				this->frame_QT = ML::QT(ML::Vec3(0, 1, 0), ML::ToRadian(-in1.LStick.axis.x));
-				this->map_QT *= this->frame_QT;
-			}
-		}
+		//		if (in1.LStick.axis.y != 0)
+		//		{
+		//			this->frame_QT = ML::QT(ML::Vec3(1, 0, 0), ML::ToRadian(-in1.LStick.axis.y));
+		//			this->map_QT *= this->frame_QT;
+		//		}
 
-		//ワールド回転量に反映
-		ge->World_Rotation = this->map_QT;
+		//		if (in1.LStick.axis.x != 0)
+		//		{
+		//			this->frame_QT = ML::QT(ML::Vec3(0, 1, 0), ML::ToRadian(-in1.LStick.axis.x));
+		//			this->map_QT *= this->frame_QT;
+		//		}
+		//	}
+
+		//	//ワールド回転量に反映
+		//	ge->World_Rotation = this->map_QT;
 
 
-		//回転
-		this->Rotate_Core_and_Barrier();
+		//	//回転
+		//	this->Rotate_Core_and_Barrier();
 
 
-		//あたり判定は毎回マップのほうで行う
-		//ボールの情報を修得
-		auto ball = ge->GetTask_One_G<Ball::Object>("ボール");
-		if (ball != nullptr)
-		{
-			this->Core_Check_Hit(ball->pos, ball->r, ball->speed);
-		}
+		//	//あたり判定は毎回マップのほうで行う
+		//	//ボールの情報を修得
 
+		//	if (ball != nullptr)
+		//	{
+		//		this->Core_Check_Hit(ball->Get_Pos(), ball->Get_Radious(), ball->Get_Speed());
+		//	}
+		//	//位置補正を仕掛ける
+		//	/*for (auto p : this->col_Poligons)
+		//	{
+		//		if (p.collision_Flag)
+		//		{
+		//			ball->Fix_Position_for_Rotate(this->frame_QT);
+		//			break;
+		//		}
+		//	}*/
+		//}
 	}
 	//-------------------------------------------------------------------
 	//「２Ｄ描画」１フレーム毎に行う処理
@@ -188,14 +203,21 @@ namespace  Map_Core
 		this->col_Poligons.clear();
 
 		//判定関数
-		After_Collision poligon0 = this->core.Get_Collision_Poligon(pos, r, speed);
+		std::vector<After_Collision> poligonC = this->core.Get_Collision_Poligon(pos, r, speed);
 
 
 		//判定の結果を保存
-		this->col_Poligons.push_back(poligon0);
+		for (auto i : poligonC)
+		{
+			this->col_Poligons.push_back(i);
+		}
 		for (int b = 0; b < 6; b++)
 		{
-			this->col_Poligons.push_back(this->barrier[b].Get_Collision_Poligon(pos,r,speed));
+			std::vector<After_Collision> poligonB = this->barrier[b].Get_Collision_Poligon(pos, r, speed);
+			for (auto i : poligonB)
+			{
+				this->col_Poligons.push_back(i);
+			}
 		}
 	}
 
@@ -205,11 +227,46 @@ namespace  Map_Core
 	{
 		return this->frame_QT;
 	}
+
+	ML::QT Object::Get_Frame_QT(float f)
+	{
+		auto in1 = DI::GPad_GetState("P1");
+		//スティックが倒された量を更新
+		if (in1.B1.on)
+		{
+			//スティックで入力
+			if (in1.LStick.axis.x != 0)
+			{
+				this->frame_QT = ML::QT(ML::Vec3(0, 0, 1), ML::ToRadian(-in1.LStick.axis.x/f));
+			}
+		}
+		//押されていない時はY軸回転とX軸回転
+		else
+		{
+
+			if (in1.LStick.axis.y != 0)
+			{
+				this->frame_QT = ML::QT(ML::Vec3(1, 0, 0), ML::ToRadian(-in1.LStick.axis.y/f));
+			}
+
+			if (in1.LStick.axis.x != 0)
+			{
+				return ML::QT(ML::Vec3(0, 1, 0), ML::ToRadian(-in1.LStick.axis.x/f));
+			}
+		}
+	}
 	//-----------------------------------------------------------------------------------
 	//ほかのプログラムにあたり判定が終わったポリゴンを渡す関数
 	std::vector<After_Collision> Object::Get_Collision_Poligon()
 	{
 		return this->col_Poligons;
+	}
+
+	//-------------------------------------------------------------------------------------------
+	//クォータニオンを更新する関数
+	void Object::UpDate_Quartanion(ML::QT qt)
+	{
+		this->map_QT *= qt;
 	}
 	//★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★
 	//以下は基本的に変更不要なメソッド

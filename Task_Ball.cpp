@@ -5,6 +5,7 @@
 #include  "Task_Ball.h"
 #include  "Task_MapSide.h"
 #include  "Task_MapCore.h"
+#include  "Task_MapFence.h"
 
 namespace  Ball
 {
@@ -35,9 +36,10 @@ namespace  Ball
 		this->res = Resource::Create();
 
 		//★データ初期化
-		this->pos = ML::Vec3(1050, 500, 900);//仮の位置後で調整をかける(2018/04/20)
+		this->pos = ML::Vec3(1000, 500, 900);//仮の位置後で調整をかける(2018/04/20)
 		this->speed = ML::Vec3(0, 0, 0);
-		this->r = 20.0f;
+		this->moveVec = ML::Vec3(0, 0, 0);
+		this->r = 30.0f;
 		this->m = 10.0f;
 		this->collision_Flag = false;
 
@@ -68,108 +70,140 @@ namespace  Ball
 		auto in1 = DI::GPad_GetState("P1");		
 
 		//マップの情報を修得、今はタスク一個で持ってくるが
-		//後にVectorで持ってくるよう調整する(2018/03/27)
+		//後ほどあたり判定の結果をゲームエンジンに常駐させる予定(2018/05/03)
 		auto map = ge->GetTask_Group_GN<Map3d::Object>("マップ","Side");		
+		auto fence = ge->GetTask_Group_GN<MapFence::Object>("マップ", "Fence");
 		auto core = ge->GetTask_One_G<Map_Core::Object>("マップ");
-		//マップのあたり判定の結果を保存する
-		std::vector<After_Collision> Result;
-		Result = core->Get_Collision_Poligon();
-		for (auto i = map->begin(); i != map->end(); i++)
-		{
-			for (auto it : (*i)->Get_Collision_Poligon())
-			{
-				Result.push_back(it);
-			}			
-		}
-
-		//-------------------------------------
-		//デバッグ用ポーズ
-		if (in1.B2.down)
-		{
-			system("pause");
-		}
-		//-------------------------------------
-
 		//重力加速
 		this->speed += this->G.Accelerate(this->m);
+		
+		//for (int i = 0; i < 15; i++)
+		
+			////判定スタート
+			//core->Core_Check_Hit(this->pos, this->r, this->speed);
+			//for (auto m = map->begin(); m != map->end(); m++)
+			//{
+			//	(*m)->Map_Check_Hit(this->pos, this->r, this->speed);
+			//}
+			//マップのあたり判定の結果を保存する
+			std::vector<After_Collision> Result;
+			Result = core->Get_Collision_Poligon();
+			for (auto i = map->begin(); i != map->end(); i++)
+			{
+				for (auto it : (*i)->Get_Collision_Poligon())
+				{
+					Result.push_back(it);
+				}
+			}
+			for (auto i = fence->begin(); i != fence->end(); i++)
+			{
+				for (auto it : (*i)->Get_Collision_Poligon())
+				{
+					Result.push_back(it);
+				}
+			}
 
-		//もし,どこもあたり判定をせずに動いた場合
-		//処理せずに次のフレームに移る
-		if (Result.size() == 0)
-		{	
+			//-------------------------------------
+			//デバッグ用ポーズ
+			if (in1.B2.down)
+			{
+				system("pause");
+			}
+			//-------------------------------------
+
+			//もし,どこもあたり判定をせずに動いた場合
+			//処理せずに次のフレームに移る
+			if (Result.size() == 0)
+			{
+				//移動(フレーム終了する直前に行う)
+				this->pos += this->speed;
+				return;
+			}
+			//前回フレームのあたり判定結果を確認
+			if (this->Is_Collision())
+			{
+				//今回フレームで衝突があったことを確認するフラグ
+				bool cnt = false;
+
+				//結果の数分ループする
+				for (auto p : Result)
+				{
+					//前のフレームで衝突だったら、今回のフレームでの衝突判定でやること
+					if (p.collision_Flag)
+					{
+						//今回のフレームに衝突だったら
+						//斜め線加速をする
+						this->speed = this->G.CollisionOver_Accelerate(this->speed, p.normal, this->m);
+						//フラグを立てる
+						cnt = true;
+						this->collision_Flag = true;
+
+					}
+					else if (cnt == false)
+					{
+						//今回のフレームに衝突しなかったら
+						//衝突フラグを無効にする
+						this->collision_Flag = false;
+					}
+				}				
+			}
+			else
+			{
+				//結果の数分ループする
+				for (auto p : Result)
+				{
+					//前のフレームで衝突ではなかったら、今回のフレームでの衝突判定でやること			
+					if (p.collision_Flag)
+					{
+						//今回のフレームに衝突だったら
+						//反射角で跳ね返す
+
+						this->speed = this->G.Reflaction_Vector(this->speed, p.normal, this->m);
+
+
+						//衝突フラグを有効にする
+						this->collision_Flag = true;
+					}
+				}				
+				
+			}			
+			
+			//終端速度を指定
+			if (this->speed.Length() > 4.0f)
+			{
+				this->speed = this->speed.Normalize();
+				this->speed *= 4.0f;
+			}
+
 			//移動(フレーム終了する直前に行う)
 			this->pos += this->speed;
-			return;
-		}
 
-		//前回フレームのあたり判定結果を確認
-		if (this->Is_Collision())
-		{
-			//今回フレームで衝突があったことを確認するフラグ
-			bool cnt = false;
+			//回転に対しての反応
+			//if (in1.LStick.volume != 0)
+			//{
+			//	ML::QT tqt = core->Get_Frame_QT(15.0f);
 
-			//結果の数分ループする
-			for (auto p : Result)
-			{				
-				//前のフレームで衝突だったら、今回のフレームでの衝突判定でやること
-				if (p.collision_Flag)
-				{
-					//今回のフレームに衝突だったら
-					//斜め線加速をする
-					this->speed = this->G.CollisionOver_Accelerate(this->speed, p.normal,this->m);
-					//フラグを立てる
-					cnt = true;
-					this->collision_Flag = true;
-					//どこかでくっついているときの回転反応
-					if (in1.LStick.volume != 0)
-					{
-						//マップのフレーム回転量で回転させる
-						ML::Mat4x4 matR;
-						D3DXMatrixAffineTransformation(&matR, 1, &ge->Map_center, &core->Get_Frame_QT(), NULL);
-						
-						this->pos = matR.TransformCoord(this->pos);
-					}
+			//	//どこかでくっついているときの回転反応
+			//	if (this->Is_Collision())
+			//	{
+			//		//マップのフレーム回転量で回転させる
+			//		ML::Mat4x4 matR;
+			//		D3DXMatrixAffineTransformation(&matR, 1, &ge->Map_center, &tqt, NULL);
 
-				}
-				else if(cnt == false)
-				{
-					//今回のフレームに衝突しなかったら
-					//衝突フラグを無効にする
-					this->collision_Flag = false;
-				}
-			}
-		}
-		else
-		{
-			//結果の数分ループする
-			for (auto p : Result)
-			{
-				//前のフレームで衝突ではなかったら、今回のフレームでの衝突判定でやること			
-				if (p.collision_Flag)
-				{
-					//今回のフレームに衝突だったら
-					//反射角で跳ね返す
+			//		this->pos = matR.TransformCoord(this->pos);
+			//	}
+			//	//衝突支店の時の回転反応テスト
+			//	//else
+			//	//{
+			//	//	//マップのフレーム回転量で回転させる
+			//	//	ML::Mat4x4 matR;
+			//	//	D3DXMatrixAffineTransformation(&matR, 1, &ge->Map_center, &core->Get_Frame_QT(), NULL);
 
-					this->speed = this->G.Reflaction_Vector(this->speed, p.normal, this->m);
-
-					//衝突支店の時の回転反応テスト
-					if (in1.LStick.volume != 0)
-					{
-						//マップのフレーム回転量で回転させる
-						ML::Mat4x4 matR;
-						D3DXMatrixAffineTransformation(&matR, 1, &ge->Map_center, &core->Get_Frame_QT(), NULL);
-
-						this->speed = matR.TransformNormal(this->speed);
-					}
-
-					//衝突フラグを有効にする
-					this->collision_Flag = true;
-				}
-			}
-		}		
+			//	//	this->speed = matR.TransformNormal(this->speed);
+			//	//}
+			//}
 		
-		//移動(フレーム終了する直前に行う)
-		this->pos += this->speed;
+	
 		
 	}
 	//-------------------------------------------------------------------
@@ -196,6 +230,34 @@ namespace  Ball
 		return this->collision_Flag;
 	}
 
+	//---------------------------------------------------------------------
+	//その時のボールの情報を返す関数
+	//位置
+	ML::Vec3 Object::Get_Pos()
+	{
+		return this->pos;
+	}
+	//半直径
+	float Object::Get_Radious()
+	{
+		return this->r;
+	}
+	//速度
+	ML::Vec3 Object::Get_Speed()
+	{
+		return this->speed;
+	}
+
+	//--------------------------------------------------------------------
+	//位置補正用回転関数
+	void Object::Fix_Position_for_Rotate(ML::QT qt)
+	{
+		//マップのフレーム回転量で回転させる
+		ML::Mat4x4 matR;
+		D3DXMatrixAffineTransformation(&matR, 1, &ge->Map_center, &qt, NULL);
+
+		this->pos = matR.TransformCoord(this->pos);
+	}
 	//★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★
 	//以下は基本的に変更不要なメソッド
 	//★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★

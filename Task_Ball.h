@@ -47,7 +47,7 @@ namespace Ball
 		bool  Finalize();		//「終了」タスク消滅時に１回だけ行う処理
 		void  Render3D_L0();
 		//変更可◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇
-	public:
+	
 		//追加したい変数・メソッドはここに追加する
 		//変数
 
@@ -55,6 +55,8 @@ namespace Ball
 		ML::Vec3 pos;
 		//移動量
 		ML::Vec3 speed;
+		//フレーム内の移動量変化を全部計算したベクトル
+		ML::Vec3 moveVec;
 		//半直径
 		float r;
 		//重さ
@@ -64,10 +66,19 @@ namespace Ball
 		//重力
 		Gravity G;
 
-
+	public:
 		//メソッド
 		//一個前のフレームで衝突したかを返す
 		bool Is_Collision();
+		//その時のボールの情報を返す関数
+		//位置
+		ML::Vec3 Get_Pos();
+		//半直径
+		float Get_Radious();
+		//速度
+		ML::Vec3 Get_Speed();
+		//位置補正用回転関数 引数 : (マップのフレーム回転量)
+		void Fix_Position_for_Rotate(ML::QT qt);
 
 	};
 }

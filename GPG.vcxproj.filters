@@ -71,6 +71,9 @@
     <Filter Include="MyPG\Tasks\map">
       <UniqueIdentifier>{ec3c490b-8940-4f06-8f03-23dbaf343a33}</UniqueIdentifier>
     </Filter>
+    <Filter Include="MyPG\Tasks\map\object">
+      <UniqueIdentifier>{59f6b83f-fd8a-4c69-a0dd-63210ed15681}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="myLib.cpp">
@@ -151,10 +154,16 @@
     <ClCompile Include="Bbox.cpp">
       <Filter>MyPG\Bbox</Filter>
     </ClCompile>
-    <ClCompile Include="Task_MapSide.cpp">
-      <Filter>MyPG\Tasks\map</Filter>
-    </ClCompile>
     <ClCompile Include="Task_MapCore.cpp">
+      <Filter>MyPG\Tasks\map\object</Filter>
+    </ClCompile>
+    <ClCompile Include="Task_MapFence.cpp">
+      <Filter>MyPG\Tasks\map\object</Filter>
+    </ClCompile>
+    <ClCompile Include="Task_MapSide.cpp">
+      <Filter>MyPG\Tasks\map\object</Filter>
+    </ClCompile>
+    <ClCompile Include="Task_Map_Manager.cpp">
       <Filter>MyPG\Tasks\map</Filter>
     </ClCompile>
   </ItemGroup>
@@ -234,10 +243,16 @@
     <ClInclude Include="Bbox.h">
       <Filter>MyPG\Bbox</Filter>
     </ClInclude>
-    <ClInclude Include="Task_MapSide.h">
-      <Filter>MyPG\Tasks\map</Filter>
-    </ClInclude>
     <ClInclude Include="Task_MapCore.h">
+      <Filter>MyPG\Tasks\map\object</Filter>
+    </ClInclude>
+    <ClInclude Include="Task_MapFence.h">
+      <Filter>MyPG\Tasks\map\object</Filter>
+    </ClInclude>
+    <ClInclude Include="Task_MapSide.h">
+      <Filter>MyPG\Tasks\map\object</Filter>
+    </ClInclude>
+    <ClInclude Include="Task_Map_Manager.h">
       <Filter>MyPG\Tasks\map</Filter>
     </ClInclude>
   </ItemGroup>

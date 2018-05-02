@@ -32,7 +32,7 @@ public:
 
 	//球体と立方体衝突判定関数
 	//引数：(判定するマス、ボールの位置、ボールの直径の半分、ボールの移動ベクトル、ワールド回転量)
-	After_Collision Hit_Check(ML::Box3D box, ML::Vec3 pos, float r , ML::Vec3 speed, ML::QT worldR);
+	std::vector<After_Collision> Hit_Check(ML::Box3D box, ML::Vec3 pos, float r , ML::Vec3 speed, ML::QT worldR);
 	//めり込んだ時の位置補正関数
 	//引数 : ()
 	void Fix_Position();

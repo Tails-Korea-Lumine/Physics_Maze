@@ -8,6 +8,8 @@
 #include  "Task_MapCore.h"
 #include  "Task_Ball.h"
 #include  "Task_Player.h"
+#include  "Task_MapFence.h"
+#include  "Task_Map_Manager.h"
 
 namespace  Game
 {
@@ -51,7 +53,7 @@ namespace  Game
 		DG::EffectState().param.light[0].enable = true;
 		DG::EffectState().param.light[0].kind = DG_::Light::Directional;//光源の種類
 		DG::EffectState().param.light[0].direction = ML::Vec3(1, -1, 1).Normalize();//照射方向
-		DG::EffectState().param.light[0].color = ML::Color(1, 1, 1, 1);//色と強さ
+		DG::EffectState().param.light[0].color = ML::Color(1, 0.89f, 0.89f, 0.89f);//色と強さ
 
 		//デバッグ用の文字生成
 		DG::Font_Create("FontA", "HGSｺﾞｼｯｸM", 12, 16);
@@ -62,15 +64,22 @@ namespace  Game
 		//★タスクの生成
 		//マップの中心地
 		ge->Map_center = ML::Vec3(1050, 50, 1050);
+		//中心の元なるキューブ
 		auto core = Map_Core::Object::Create(true);
 		//マップ生成
 		for (int i = 0; i < 6; i++)
 		{
-			auto map = Map3d::Object::Create(true,i);
+			auto map = Map3d::Object::Create(true, i);
 		}
-
+		//フェンス生成
+		for (int f = 0; f < 12; f++)
+		{
+			auto fence = MapFence::Object::Create(true, f);
+		}
+		//マップマネージャ生成
+		auto manager = Map_Manager::Object::Create(true);
 		auto ball = Ball::Object::Create(true);
-		auto player = Player::Object::Create(true);
+		
 
 		return  true;
 	}
@@ -116,7 +125,7 @@ namespace  Game
 		sprintf(buf, "pos : %4.3f , %4.3f , %4.3f \n"
 			"speed : %4.3f , %4.3f , %4.3f \n"
 			"WorldR : %4.3f , %4.3f , %4.3f",
-			 ball->pos.x, ball->pos.y, ball->pos.z, ball->speed.x, ball->speed.y, ball->speed.z,
+			 ball->Get_Pos().x, ball->Get_Pos().y, ball->Get_Pos().z, ball->Get_Speed().x, ball->Get_Speed().y, ball->Get_Speed().z,
 			ge->World_Rotation.x, ge->World_Rotation.y, ge->World_Rotation.z);
 
 		ML::Box2D moji(100, 0, 600, 600);

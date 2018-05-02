@@ -72,5 +72,9 @@ namespace Map_Core
 		std::vector<After_Collision> Get_Collision_Poligon();
 		//今回フレームの回転量を返す
 		ML::QT Get_Frame_QT();
+		ML::QT Get_Frame_QT(float f);
+
+		//クォータニオンを更新する関数
+		void UpDate_Quartanion(ML::QT qt);
 	};
 }

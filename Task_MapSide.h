@@ -52,7 +52,7 @@ namespace Map3d
 	
 		//追加したい変数・メソッドはここに追加する	
 		//変数
-		Bbox arr[30][30][30];
+		Bbox arr[16][1][16];
 		int sizeZ, sizeY, sizeX;
 		int mapSize;
 		int sideNumber;
@@ -71,6 +71,9 @@ namespace Map3d
 		void Map_Rotate();
 		
 		std::vector<After_Collision> Get_Collision_Poligon();
+
+		//クォータニオンを更新する関数
+		void UpDate_Quartanion(ML::QT qt);
 		
 	};
 }

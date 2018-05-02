@@ -164,7 +164,7 @@ ML::Vec3 Gravity::Reflaction_Vector(ML::Vec3 force, ML::Vec3 normal, float weigh
 	after_Reflection = force + (2 * after_Normal);
 
 	//d‚³‚É‰‚¶‚ÄŒ¸‚ç‚µ‚Ä•Ô‚·
-	return after_Reflection*0.6f;
+	return after_Reflection *0.3f;
 }
 
 void Gravity::Rotation_on_Gravity(float angle, ML::Vec3 centor)

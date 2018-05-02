@@ -68,7 +68,7 @@ namespace  Map3d
 			this->chipName[i] = "";
 		}
 		this->col_Poligons.clear();
-		this->Map_Load("./data/map/map1.txt");		
+		this->Map_Load("./data/map/map" + to_string(sideNum) + ".txt");		
 
 		//★タスクの生成
 
@@ -102,55 +102,69 @@ namespace  Map3d
 	//「更新」１フレーム毎に行う処理
 	void  Object::UpDate()
 	{
-		this->frame_QT = ML::QT(0.0f);
-		auto in1 = DI::GPad_GetState("P1");
-		//スティックが倒された量を更新
-		if (in1.B1.on)
-		{
-			//スティックで入力
-			if (in1.LStick.axis.x != 0)
-			{									
-				this->frame_QT = ML::QT(ML::Vec3(0, 0, 1), ML::ToRadian(-in1.LStick.axis.x));
-				this->map_QT *= this->frame_QT;
-			}
-		}
-		//押されていない時はY軸回転とX軸回転
-		else
-		{		
-
-			if (in1.LStick.axis.y != 0)
-			{
-				this->frame_QT = ML::QT(ML::Vec3(1,0,0),ML::ToRadian(-in1.LStick.axis.y));
-				this->map_QT *= this->frame_QT;
-			}
-			
-			if (in1.LStick.axis.x != 0)
-			{				
-				this->frame_QT = ML::QT(ML::Vec3(0, 1, 0), ML::ToRadian(-in1.LStick.axis.x));
-				this->map_QT *= this->frame_QT;
-			}			
-		}
-
-		//ワールド回転量に反映
-		//ge->World_Rotation = this->map_QT;		
-		
-		
-		//回転
-		
-		this->Map_Rotate();
-		
-		
-
-
-		//あたり判定は毎回マップのほうで行う
 		//ボールの情報を修得
-		auto ball = ge->GetTask_One_G<Ball::Object>("ボール");
-		
-		//ボールとマップのあたり判定
-		if (ball != nullptr)
-		{
-			this->Map_Check_Hit(ball->pos, ball->r, ball->speed);
-		}
+		//auto ball = ge->GetTask_One_G<Ball::Object>("ボール");
+
+		//this->frame_QT = ML::QT(0.0f);
+		//auto in1 = DI::GPad_GetState("P1");
+
+		//for (int i = 0; i < 10; i++)
+		//{
+		//	//スティックが倒された量を更新
+		//	if (in1.B1.on)
+		//	{
+		//		//スティックで入力
+		//		if (in1.LStick.axis.x != 0)
+		//		{
+		//			this->frame_QT = ML::QT(ML::Vec3(0, 0, 1), ML::ToRadian(-in1.LStick.axis.x / 10.0f));
+		//			this->map_QT *= this->frame_QT;
+		//		}
+		//	}
+		//	//押されていない時はY軸回転とX軸回転
+		//	else
+		//	{
+
+		//		if (in1.LStick.axis.y != 0)
+		//		{
+		//			this->frame_QT = ML::QT(ML::Vec3(1, 0, 0), ML::ToRadian(-in1.LStick.axis.y / 10.0f));
+		//			this->map_QT *= this->frame_QT;
+		//		}
+
+		//		if (in1.LStick.axis.x != 0)
+		//		{
+		//			this->frame_QT = ML::QT(ML::Vec3(0, 1, 0), ML::ToRadian(-in1.LStick.axis.x / 10.0f));
+		//			this->map_QT *= this->frame_QT;
+		//		}
+		//	}
+
+		//	//ワールド回転量に反映
+		//	//ge->World_Rotation = this->map_QT;		
+
+
+		//	//回転
+
+		//	this->Map_Rotate();
+
+
+
+		//	//あたり判定は毎回マップのほうで行う	
+
+		//	//ボールとマップのあたり判定
+		//	if (ball != nullptr)
+		//	{
+		//		this->Map_Check_Hit(ball->Get_Pos(), ball->Get_Radious(), ball->Get_Speed());
+		//	}
+
+		//	//位置補正を仕掛ける
+		//	for (auto p : this->col_Poligons)
+		//	{
+		//		if (p.collision_Flag)
+		//		{
+		//			ball->Fix_Position_for_Rotate(this->frame_QT);
+		//			break;
+		//		}
+		//	}
+		//}
 	}
 	//-------------------------------------------------------------------
 	//「２Ｄ描画」１フレーム毎に行う処理
@@ -277,14 +291,17 @@ namespace  Map3d
 					{
 						d *= -1;
 					}
-					if (d.Length() > 200)
+					if (d.Length() > 100)
 					{
 						continue;
 					}				
 					//this->collision_Tri = this->col.Hit_Check(Mass, pos, r, this->map_QT); //(ver0.2で使った処理)
-					After_Collision poligon = this->arr[z][y][x].Get_Collision_Poligon(pos, r, speed);
+					std::vector<After_Collision> poligon = this->arr[z][y][x].Get_Collision_Poligon(pos, r, speed);
 
-					this->col_Poligons.push_back(poligon);
+					for (auto i : poligon)
+					{
+						this->col_Poligons.push_back(i);
+					}
 
 					//ver0.2で使った処理
 					//判定で当たったら処理を止める
@@ -311,7 +328,7 @@ namespace  Map3d
 				{
 
 					ML::Vec3 pos = ML::Vec3(x*this->chipSize + this->chipSize / 2, y*this->chipSize + this->chipSize / 2, z*this->chipSize + this->chipSize / 2);
-					pos += ge->Map_center - ML::Vec3((this->mapSize*this->chipSize / 2), -400, (this->mapSize*this->chipSize / 2));
+					pos += ge->Map_center - ML::Vec3((this->mapSize*this->chipSize / 2), -(this->mapSize*this->chipSize / 2), (this->mapSize*this->chipSize / 2));
 					//D3DXMatrixAffineTransformation(&matR, this->chipSize / 100.0f, &ML::Vec3(1050,50,1050), &qtW, NULL);
 					//matR.Inverse();
 
@@ -333,7 +350,12 @@ namespace  Map3d
 		}
 	}
 
-	
+	//-------------------------------------------------------------------------------------------
+	//クォータニオンを更新する関数
+	void Object::UpDate_Quartanion(ML::QT qt)
+	{
+		this->map_QT *= qt;
+	}
 	//★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★
 	//以下は基本的に変更不要なメソッド
 	//★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★

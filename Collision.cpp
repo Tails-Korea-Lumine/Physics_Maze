@@ -187,7 +187,7 @@ bool Collision::Check_Collision(Triangle tri, ML::Vec3 p)
 std::vector<ML::Vec3> Collision::Get_Poionts_to_Sphere(ML::Vec3 pos, float r, ML::QT rotation)
 {
 	std::vector<ML::Vec3> S;
-	ML::Vec3 v[6] = {};
+	ML::Vec3 v[26] = {};//ver0.3では6個だった(2018/05/01)
 
 	ML::Mat4x4 matR;
 
@@ -208,9 +208,10 @@ std::vector<ML::Vec3> Collision::Get_Poionts_to_Sphere(ML::Vec3 pos, float r, ML
 		S.push_back(v[i]);
 	}*/
 	//半直径の半分の範囲までとるver.2
-	for (float i = r; i > r-6; i-=0.5f)
+	for (float i = r; i > r-3; i-=0.5f)
 	{
-		v[0] = pos + ML::Vec3(+i, 0, 0);
+		//ver0.3
+	/*	v[0] = pos + ML::Vec3(+i, 0, 0);
 		v[1] = pos + ML::Vec3(-i, 0, 0);
 		v[2] = pos + ML::Vec3(0, +i, 0);
 		v[3] = pos + ML::Vec3(0, -i, 0);
@@ -221,13 +222,49 @@ std::vector<ML::Vec3> Collision::Get_Poionts_to_Sphere(ML::Vec3 pos, float r, ML
 		{
 			v[i] = matR.TransformCoord(v[i]);
 			S.push_back(v[i]);
+		}*/
+
+		//ver 0.4
+		v[0] = pos + ML::Vec3(+i, 0, 0);
+		v[1] = pos + ML::Vec3(-i, 0, 0);
+		v[2] = pos + ML::Vec3(0, +i, 0);
+		v[3] = pos + ML::Vec3(0, -i, 0);
+		v[4] = pos + ML::Vec3(0, 0, +i);
+		v[5] = pos + ML::Vec3(0, 0, -i);
+		v[6] = pos + ML::Vec3(_CMATH_::cosf(ML::ToRadian(45))*i, _CMATH_::sinf(ML::ToRadian(45))*i, 0);
+		v[7] = pos + ML::Vec3(_CMATH_::cosf(ML::ToRadian(135))*i, _CMATH_::sinf(ML::ToRadian(135))*i, 0);
+		v[8] = pos + ML::Vec3(_CMATH_::cosf(ML::ToRadian(-45))*i, _CMATH_::sinf(ML::ToRadian(-45))*i, 0);
+		v[9] = pos + ML::Vec3(_CMATH_::cosf(ML::ToRadian(-135))*i, _CMATH_::sinf(ML::ToRadian(-135))*i, 0);
+		v[10] = pos + ML::Vec3(0,_CMATH_::cosf(ML::ToRadian(45))*i, _CMATH_::sinf(ML::ToRadian(45))*i);
+		v[11] = pos + ML::Vec3(0,_CMATH_::cosf(ML::ToRadian(135))*i, _CMATH_::sinf(ML::ToRadian(135))*i);
+		v[12] = pos + ML::Vec3(0, _CMATH_::cosf(ML::ToRadian(-45))*i, _CMATH_::sinf(ML::ToRadian(-45))*i);
+		v[13] = pos + ML::Vec3(0, _CMATH_::cosf(ML::ToRadian(-135))*i, _CMATH_::sinf(ML::ToRadian(-135))*i);
+		v[14] = pos + ML::Vec3(_CMATH_::cosf(ML::ToRadian(45))*i,0, _CMATH_::sinf(ML::ToRadian(45))*i);
+		v[15] = pos + ML::Vec3(_CMATH_::cosf(ML::ToRadian(135))*i, 0, _CMATH_::sinf(ML::ToRadian(135))*i);
+		v[16] = pos + ML::Vec3(_CMATH_::cosf(ML::ToRadian(-45))*i, 0, _CMATH_::sinf(ML::ToRadian(-45))*i);
+		v[17] = pos + ML::Vec3(_CMATH_::cosf(ML::ToRadian(-135))*i, 0, _CMATH_::sinf(ML::ToRadian(-135))*i);
+		v[18] = pos + ML::Vec3(_CMATH_::cosf(ML::ToRadian(45))*i, _CMATH_::sinf(ML::ToRadian(45))*i, _CMATH_::cosf(ML::ToRadian(45))*i);
+		v[19] = pos + ML::Vec3(_CMATH_::cosf(ML::ToRadian(135))*i, _CMATH_::sinf(ML::ToRadian(135))*i, _CMATH_::cosf(ML::ToRadian(135))*i);
+		v[20] = pos + ML::Vec3(_CMATH_::cosf(ML::ToRadian(45))*i, _CMATH_::sinf(ML::ToRadian(45))*i, _CMATH_::cosf(ML::ToRadian(-45))*i);
+		v[21] = pos + ML::Vec3(_CMATH_::cosf(ML::ToRadian(135))*i, _CMATH_::sinf(ML::ToRadian(135))*i, _CMATH_::cosf(ML::ToRadian(-135))*i);
+		v[22] = pos + ML::Vec3(_CMATH_::cosf(ML::ToRadian(-45))*i, _CMATH_::sinf(ML::ToRadian(-45))*i, _CMATH_::cosf(ML::ToRadian(45))*i);
+		v[23] = pos + ML::Vec3(_CMATH_::cosf(ML::ToRadian(-135))*i, _CMATH_::sinf(ML::ToRadian(-135))*i, _CMATH_::cosf(ML::ToRadian(135))*i);
+		v[24] = pos + ML::Vec3(_CMATH_::cosf(ML::ToRadian(-45))*i, _CMATH_::sinf(ML::ToRadian(-45))*i, _CMATH_::cosf(ML::ToRadian(-45))*i);
+		v[25] = pos + ML::Vec3(_CMATH_::cosf(ML::ToRadian(-135))*i, _CMATH_::sinf(ML::ToRadian(-135))*i, _CMATH_::cosf(ML::ToRadian(-135))*i);
+	
+		for (auto j : v)
+		{			
+			j = matR.TransformCoord(j);
+			S.push_back(j);
 		}
+	
+
 	}
 	return S;
 }
 
 //マス別に呼ばれる関数
-After_Collision Collision::Hit_Check(ML::Box3D box, ML::Vec3 pos, float r, ML::Vec3 speed, ML::QT worldR)
+std::vector<After_Collision> Collision::Hit_Check(ML::Box3D box, ML::Vec3 pos, float r, ML::Vec3 speed, ML::QT worldR)
 {
 	//球の6個の頂点座標
 	std::vector<ML::Vec3> sphere_Points = Collision::Get_Poionts_to_Sphere(pos, r, worldR);
@@ -236,7 +273,8 @@ After_Collision Collision::Hit_Check(ML::Box3D box, ML::Vec3 pos, float r, ML::V
 	all_Tri = Collision::Get_Triangle_Box3D(box, worldR);
 
 	bool collision_Flag;
-
+	//戻り値
+	std::vector<After_Collision> R;
 	//衝突判定スタート
 	for (const auto& tri : all_Tri)
 	{
@@ -246,25 +284,31 @@ After_Collision Collision::Hit_Check(ML::Box3D box, ML::Vec3 pos, float r, ML::V
 			{
 				//マスとマス接触面でおかしい加速を防ぐ
 				//移動ベクトルと衝突した三角形の法線ベクトルのcos値
-				float cosSN = Gravity::Vector_Dot(speed , tri.normal);
-				//cos値が1ということは内角が0度だということ、つまり物理的にあり得ない衝突
-				//もしものために誤差範囲まで確認
-				if (cosSN >= _CMATH_::cos(ML::ToRadian(15)))
-				{
-					//なので判定はあたっているが無視する
-					continue;
-				}
+				//float cosSN = Gravity::Vector_Dot(speed , tri.normal);
+				////cos値が1ということは内角が0度だということ、つまり物理的にあり得ない衝突
+				////もしものために誤差範囲まで確認
+				//if (cosSN >= _CMATH_::cos(ML::ToRadian(6)))
+				//{
+				//	//なので判定はあたっているが無視する
+				//	continue;
+				//}
 				//以下あたった三角形の法線ベクトルとフラグを返す処理
 				After_Collision collision_True;
 				collision_True.collision_Flag = collision_Flag;
 				collision_True.normal = tri.normal.Normalize();
-				return collision_True;
+				R.push_back(collision_True);
+				//return collision_True;
 			}
+		}
+		if (R.size() != 0)
+		{
+			return R;
 		}
 	}
 	//あたらなかったらゼロベクトルの法線ベクトルとフラグを返す
 	After_Collision collision_False;
 	collision_False.collision_Flag = false;
 	collision_False.normal = ML::Vec3(0, 0, 0);
-	return collision_False;
+	R.push_back(collision_False);
+	return R;
 }

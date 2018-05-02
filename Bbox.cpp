@@ -7,7 +7,7 @@ void Bbox::Rotate_Box(ML::Vec3 pos, ML::QT q)
 	this->boxQT = q;
 }
 
-After_Collision Bbox::Get_Collision_Poligon(ML::Vec3 pos, float r, ML::Vec3 speed)
+std::vector<After_Collision> Bbox::Get_Collision_Poligon(ML::Vec3 pos, float r, ML::Vec3 speed)
 {
 	return this->col.Hit_Check(this->collision_Base.OffsetCopy(this->pos), pos, r, speed, this->boxQT);
 }

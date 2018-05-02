@@ -40,7 +40,7 @@ public:
 	//位置を返す関数
 	ML::Vec3 Get_Pos();
 	//衝突判定
-	After_Collision Get_Collision_Poligon(ML::Vec3 pos, float r, ML::Vec3 speed);
+	std::vector<After_Collision> Get_Collision_Poligon(ML::Vec3 pos, float r, ML::Vec3 speed);
 
 	//コンストラクタ・デストラクタ
 	Bbox();
