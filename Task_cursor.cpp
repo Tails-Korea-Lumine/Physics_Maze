@@ -35,7 +35,9 @@ namespace  Cursor
 
 		//★データ初期化
 		this->pos = ML::Vec2(300, -1000);
-		this->select_pos = -1;
+		this->select_pos.x = 0;
+		this->select_pos.y = -1;
+		this->now = Start_Tutorial;
 
 		//★タスクの生成
 
@@ -71,7 +73,15 @@ namespace  Cursor
 		auto in1 = DI::GPad_GetState("P1");
 		if (in1.B3.down || in1.ST.down)
 		{
-			this->Kill();
+			if (this->now == Start_Tutorial)
+			{
+				this->now = nowMenu(this->select_pos.y);
+				this->select_pos.x = this->select_pos.y;
+			}
+			else
+			{
+				this->Kill();
+			}
 		}
 		
 	}
@@ -93,29 +103,48 @@ namespace  Cursor
 
 	//------------------------------------------------------------------------------------
 	//追加メソッド
-	int Object::Move_Cursor(int& select)
+	int Object::Move_Cursor(POINT& select)
 	{
 		auto in1 = DI::GPad_GetState("P1");
 
 		if (in1.LStick.U.down || in1.HU.down)
 		{
-			select -= 2;
+			select.y -= 2;
 		}
 		if (in1.LStick.D.down || in1.HD.down)
 		{
-			select += 2;
+			select.y += 2;
 		}
-
-		if (select < -1)
+		if (this->now == Start_Tutorial)
 		{
-			select = -1;
+			if (select.y < -1)
+			{
+				select.y = -1;
+			}
+			else if (this->select_pos.y > 1)
+			{
+				select.y = 1;
+			}
 		}
-		else if (this->select_pos > 1)
+		else
 		{
-			select = 1;
+			if (select.y < -1)
+			{
+				select.y = -1;
+			}
+			else if (this->select_pos.y > 3)
+			{
+				select.y = 3;
+			}
 		}
+		return 500 + (select.y * 45);
+	}
 
-		return 500 + (select * 45);
+	//---------------------------------------------------------------------------------
+	//現在メニューを返す関数
+	nowMenu Object::Get_Now_Menu()
+	{
+		return this->now;
 	}
 
 	//★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★

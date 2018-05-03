@@ -6,6 +6,7 @@
 #include "GameEngine_Ver3_7.h"
 #include "Collision.h"
 #include "Bbox.h"
+#include "Task_title.h"
 
 namespace Map_Core
 {
@@ -37,13 +38,13 @@ namespace Map_Core
 		typedef  shared_ptr<Object>		SP;
 		typedef  weak_ptr<Object>		WP;
 		//生成窓口 引数はtrueでタスクシステムへ自動登録
-		static  Object::SP  Create(bool flagGameEnginePushBack_);
+		static  Object::SP  Create(bool flagGameEnginePushBack_, Difficult_Range di);
 		Resource::SP	res;
 	private:
 		Object();
-		bool  B_Initialize();
+		bool  B_Initialize(Difficult_Range di);
 		bool  B_Finalize();
-		bool  Initialize();	//「初期化」タスク生成時に１回だけ行う処理
+		bool  Initialize(Difficult_Range di);	//「初期化」タスク生成時に１回だけ行う処理
 		void  UpDate();		//「実行」１フレーム毎に行う処理
 		void  Render2D_AF();	//「2D描画」１フレーム毎に行う処理
 		bool  Finalize();		//「終了」タスク消滅時に１回だけ行う処理
@@ -67,7 +68,7 @@ namespace Map_Core
 	public:
 		//メソッド
 		void Rotate_Core_and_Barrier();
-		void Core_Check_Hit(ML::Vec3 pos, float r, ML::Vec3 speed);//球とマップのあたり判定
+		void Core_Check_Hit(const ML::Vec3& pos, const float& r, const ML::Vec3& speed);//球とマップのあたり判定
 		//ほかのプログラムにあたり判定が終わったポリゴンを渡す関数
 		std::vector<After_Collision> Get_Collision_Poligon();
 		//今回フレームの回転量を返す

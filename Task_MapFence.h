@@ -6,6 +6,7 @@
 #include "GameEngine_Ver3_7.h"
 #include  "Collision.h"
 #include "Bbox.h"
+#include "Task_title.h"
 
 
 
@@ -37,13 +38,13 @@ namespace MapFence
 		typedef  shared_ptr<Object>		SP;
 		typedef  weak_ptr<Object>		WP;
 		//生成窓口 引数はtrueでタスクシステムへ自動登録
-		static  Object::SP  Create(bool flagGameEnginePushBack_,int sideNum);
+		static  Object::SP  Create(bool flagGameEnginePushBack_,int sideNum, Difficult_Range di);
 		Resource::SP	res;
 	private:
 		Object();
-		bool  B_Initialize(int sideNum);
+		bool  B_Initialize(int sideNum, Difficult_Range di);
 		bool  B_Finalize();
-		bool  Initialize(int sideNum);	//「初期化」タスク生成時に１回だけ行う処理
+		bool  Initialize(int sideNum, Difficult_Range di);	//「初期化」タスク生成時に１回だけ行う処理
 		void  UpDate();		//「実行」１フレーム毎に行う処理
 		void  Render2D_AF();	//「2D描画」１フレーム毎に行う処理
 		bool  Finalize();		//「終了」タスク消滅時に１回だけ行う処理
@@ -69,7 +70,7 @@ namespace MapFence
 		//外部ファイルからの読み込み
 		bool Map_Load(string f_);
 		//球とマップのあたり判定
-		void Map_Check_Hit(ML::Vec3 pos, float r, ML::Vec3 speed);
+		void Map_Check_Hit(const ML::Vec3& pos, const float& r, const ML::Vec3& speed);
 		//マップの回転
 		void Map_Rotate();
 		//あたり判定の結果を返す関数

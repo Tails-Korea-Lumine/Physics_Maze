@@ -23,7 +23,7 @@ namespace  MapFence
 	}
 	//-------------------------------------------------------------------
 	//「初期化」タスク生成時に１回だけ行う処理
-	bool  Object::Initialize(int sideNum)
+	bool  Object::Initialize(int sideNum, Difficult_Range di)
 	{
 		//スーパークラス初期化
 		__super::Initialize(defGroupName, defName, true);
@@ -32,8 +32,17 @@ namespace  MapFence
 
 
 		//★データ初期化
+		int plusSize;
+		if (di == Difficult_Range::Hard)
+		{
+			plusSize = 8;
+		}
+		else
+		{
+			plusSize = 0;
+		}
 		this->fenceNumber = sideNum;
-		this->mapSize = 8;//基本は8X8難易度によって増加される(2018/04/21)
+		this->mapSize = 8 + plusSize;//基本は8X8難易度によって増加される(2018/04/21)
 		this->render3D_Priority[0] = 1.0f;
 		//面ごとに別の初期値を与える
 		switch(fenceNumber)
@@ -81,7 +90,19 @@ namespace  MapFence
 			this->chipName[i] = "";
 		}
 		this->col_Poligons.clear();
-		this->Map_Load("./data/fence/line" + to_string(sideNum) + ".txt");		
+		switch (di)
+		{
+		case Difficult_Range::Easy:
+			this->Map_Load("./data/fence/Easy/line" + to_string(sideNum) + ".txt");
+			break;
+		case Difficult_Range::Normal:
+			this->Map_Load("./data/fence/Normal/line" + to_string(sideNum) + ".txt");
+			break;
+		case Difficult_Range::Hard:
+			this->Map_Load("./data/fence/Hard/line" + to_string(sideNum) + ".txt");
+			break;
+		}
+		
 
 		//★タスクの生成
 
@@ -279,7 +300,7 @@ namespace  MapFence
 		return true;
 	}
 	//-----------------------------------------------------------------------
-	void Object::Map_Check_Hit(ML::Vec3 pos, float r, ML::Vec3 speed)
+	void Object::Map_Check_Hit(const ML::Vec3& pos, const float& r, const ML::Vec3& speed)
 	{
 		//多重衝突まで適用したver0.3(2018/04/16)
 
@@ -382,7 +403,7 @@ namespace  MapFence
 	//★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★
 	//-------------------------------------------------------------------
 	//タスク生成窓口
-	Object::SP  Object::Create(bool  flagGameEnginePushBack_, int sideNum)
+	Object::SP  Object::Create(bool  flagGameEnginePushBack_, int sideNum, Difficult_Range di)
 	{
 		Object::SP  ob = Object::SP(new  Object());
 		if (ob) {
@@ -390,7 +411,7 @@ namespace  MapFence
 			if (flagGameEnginePushBack_) {
 				ge->PushBack(ob);//ゲームエンジンに登録
 			}
-			if (!ob->B_Initialize(sideNum)) {
+			if (!ob->B_Initialize(sideNum,di)) {
 				ob->Kill();//イニシャライズに失敗したらKill
 			}
 			return  ob;
@@ -398,9 +419,9 @@ namespace  MapFence
 		return nullptr;
 	}
 	//-------------------------------------------------------------------
-	bool  Object::B_Initialize(int sideNum)
+	bool  Object::B_Initialize(int sideNum, Difficult_Range di)
 	{
-		return  this->Initialize(sideNum);
+		return  this->Initialize(sideNum,di);
 	}
 	//-------------------------------------------------------------------
 	Object::~Object() { this->B_Finalize(); }

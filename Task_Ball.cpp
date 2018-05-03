@@ -40,7 +40,7 @@ namespace  Ball
 		this->speed = ML::Vec3(0, 0, 0);
 		this->moveVec = ML::Vec3(0, 0, 0);
 		this->r = 30.0f;
-		this->m = 10.0f;
+		this->m = 30.0f;
 		this->collision_Flag = false;
 
 	
@@ -69,14 +69,11 @@ namespace  Ball
 	{
 		auto in1 = DI::GPad_GetState("P1");		
 
-		//マップの情報を修得、今はタスク一個で持ってくるが
-		//後ほどあたり判定の結果をゲームエンジンに常駐させる予定(2018/05/03)
-		auto map = ge->GetTask_Group_GN<Map3d::Object>("マップ","Side");		
-		auto fence = ge->GetTask_Group_GN<MapFence::Object>("マップ", "Fence");
-		auto core = ge->GetTask_One_G<Map_Core::Object>("マップ");
+		//マップの情報を修得、今はタスク一個で持ってくるが		
 		//重力加速
 		this->speed += this->G.Accelerate(this->m);
 		
+		//ver0.4の残骸ベクトル計算の精密調整が必要となればまた使うかもしれない(2018/05/03)
 		//for (int i = 0; i < 15; i++)
 		
 			////判定スタート
@@ -85,23 +82,8 @@ namespace  Ball
 			//{
 			//	(*m)->Map_Check_Hit(this->pos, this->r, this->speed);
 			//}
-			//マップのあたり判定の結果を保存する
-			std::vector<After_Collision> Result;
-			Result = core->Get_Collision_Poligon();
-			for (auto i = map->begin(); i != map->end(); i++)
-			{
-				for (auto it : (*i)->Get_Collision_Poligon())
-				{
-					Result.push_back(it);
-				}
-			}
-			for (auto i = fence->begin(); i != fence->end(); i++)
-			{
-				for (auto it : (*i)->Get_Collision_Poligon())
-				{
-					Result.push_back(it);
-				}
-			}
+			
+			
 
 			//-------------------------------------
 			//デバッグ用ポーズ
@@ -113,7 +95,7 @@ namespace  Ball
 
 			//もし,どこもあたり判定をせずに動いた場合
 			//処理せずに次のフレームに移る
-			if (Result.size() == 0)
+			if (ge->collision_Result.size() == 0)
 			{
 				//移動(フレーム終了する直前に行う)
 				this->pos += this->speed;
@@ -126,7 +108,7 @@ namespace  Ball
 				bool cnt = false;
 
 				//結果の数分ループする
-				for (auto p : Result)
+				for (auto p : ge->collision_Result)
 				{
 					//前のフレームで衝突だったら、今回のフレームでの衝突判定でやること
 					if (p.collision_Flag)
@@ -145,12 +127,12 @@ namespace  Ball
 						//衝突フラグを無効にする
 						this->collision_Flag = false;
 					}
-				}				
+				}
 			}
 			else
 			{
 				//結果の数分ループする
-				for (auto p : Result)
+				for (auto p : ge->collision_Result)
 				{
 					//前のフレームで衝突ではなかったら、今回のフレームでの衝突判定でやること			
 					if (p.collision_Flag)
@@ -169,42 +151,16 @@ namespace  Ball
 			}			
 			
 			//終端速度を指定
-			if (this->speed.Length() > 4.0f)
+			if (this->speed.Length() > 6.0f)
 			{
 				this->speed = this->speed.Normalize();
-				this->speed *= 4.0f;
+				this->speed *= 6.0f;
 			}
 
 			//移動(フレーム終了する直前に行う)
 			this->pos += this->speed;
 
-			//回転に対しての反応
-			//if (in1.LStick.volume != 0)
-			//{
-			//	ML::QT tqt = core->Get_Frame_QT(15.0f);
-
-			//	//どこかでくっついているときの回転反応
-			//	if (this->Is_Collision())
-			//	{
-			//		//マップのフレーム回転量で回転させる
-			//		ML::Mat4x4 matR;
-			//		D3DXMatrixAffineTransformation(&matR, 1, &ge->Map_center, &tqt, NULL);
-
-			//		this->pos = matR.TransformCoord(this->pos);
-			//	}
-			//	//衝突支店の時の回転反応テスト
-			//	//else
-			//	//{
-			//	//	//マップのフレーム回転量で回転させる
-			//	//	ML::Mat4x4 matR;
-			//	//	D3DXMatrixAffineTransformation(&matR, 1, &ge->Map_center, &core->Get_Frame_QT(), NULL);
-
-			//	//	this->speed = matR.TransformNormal(this->speed);
-			//	//}
-			//}
-		
-	
-		
+			
 	}
 	//-------------------------------------------------------------------
 	//「２Ｄ描画」１フレーム毎に行う処理

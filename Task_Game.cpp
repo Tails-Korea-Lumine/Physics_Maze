@@ -28,7 +28,7 @@ namespace  Game
 	}
 	//-------------------------------------------------------------------
 	//「初期化」タスク生成時に１回だけ行う処理
-	bool  Object::Initialize()
+	bool  Object::Initialize(Difficult_Range di)
 	{
 		//スーパークラス初期化
 		__super::Initialize(defGroupName, defName, true);
@@ -64,21 +64,26 @@ namespace  Game
 		//★タスクの生成
 		//マップの中心地
 		ge->Map_center = ML::Vec3(1050, 50, 1050);
+		//判定の結果をゼロクリア
+		ge->collision_Result.clear();
 		//中心の元なるキューブ
-		auto core = Map_Core::Object::Create(true);
+		auto core = Map_Core::Object::Create(true , di);
 		//マップ生成
 		for (int i = 0; i < 6; i++)
 		{
-			auto map = Map3d::Object::Create(true, i);
+			auto map = Map3d::Object::Create(true, i,di);
 		}
 		//フェンス生成
 		for (int f = 0; f < 12; f++)
 		{
-			auto fence = MapFence::Object::Create(true, f);
+			auto fence = MapFence::Object::Create(true, f,di);
 		}
+
+		auto ball = Ball::Object::Create(true);
+
 		//マップマネージャ生成
 		auto manager = Map_Manager::Object::Create(true);
-		auto ball = Ball::Object::Create(true);
+		
 		
 
 		return  true;
@@ -141,7 +146,7 @@ namespace  Game
 	//★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★
 	//-------------------------------------------------------------------
 	//タスク生成窓口
-	Object::SP  Object::Create(bool  flagGameEnginePushBack_)
+	Object::SP  Object::Create(bool  flagGameEnginePushBack_, Difficult_Range di)
 	{
 		Object::SP  ob = Object::SP(new  Object());
 		if (ob) {
@@ -149,7 +154,7 @@ namespace  Game
 			if (flagGameEnginePushBack_) {
 				ge->PushBack(ob);//ゲームエンジンに登録
 			}
-			if (!ob->B_Initialize()) {
+			if (!ob->B_Initialize(di)) {
 				ob->Kill();//イニシャライズに失敗したらKill
 			}
 			return  ob;
@@ -157,9 +162,9 @@ namespace  Game
 		return nullptr;
 	}
 	//-------------------------------------------------------------------
-	bool  Object::B_Initialize()
+	bool  Object::B_Initialize(Difficult_Range di)
 	{
-		return  this->Initialize();
+		return  this->Initialize(di);
 	}
 	//-------------------------------------------------------------------
 	Object::~Object() { this->B_Finalize(); }

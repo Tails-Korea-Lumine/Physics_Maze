@@ -5,6 +5,14 @@
 //-------------------------------------------------------------------
 #include "GameEngine_Ver3_7.h"
 
+enum nowMenu
+{
+	clear = -10,
+	Start_Tutorial = 0,
+	difficult = -1,
+	TutorialCalum = 1,
+};
+
 namespace Cursor
 {
 	//タスクに割り当てるグループ名と固有名
@@ -50,10 +58,12 @@ namespace Cursor
 		//追加したい変数・メソッドはここに追加する
 		//変数
 		ML::Vec2 pos;//描画する座標
-		int select_pos;
+		POINT select_pos;
+		nowMenu now;
 
 		//メソッド
-		int Move_Cursor(int& select);
+		int Move_Cursor(POINT& select);
 
+		nowMenu Get_Now_Menu();
 	};
 }

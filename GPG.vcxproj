@@ -102,6 +102,7 @@
     <ClCompile Include="myLib.cpp" />
     <ClCompile Include="MyPG.cpp" />
     <ClCompile Include="Task_Ball.cpp" />
+    <ClCompile Include="Task_cursor.cpp" />
     <ClCompile Include="Task_Game.cpp" />
     <ClCompile Include="Task_MapCore.cpp" />
     <ClCompile Include="Task_MapFence.cpp" />
@@ -134,6 +135,7 @@
     <ClInclude Include="myLib.h" />
     <ClInclude Include="MyPG.h" />
     <ClInclude Include="Task_Ball.h" />
+    <ClInclude Include="Task_cursor.h" />
     <ClInclude Include="Task_Game.h" />
     <ClInclude Include="Task_MapCore.h" />
     <ClInclude Include="Task_MapFence.h" />

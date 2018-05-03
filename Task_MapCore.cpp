@@ -1,5 +1,5 @@
 //-------------------------------------------------------------------
-//タイトル画面
+//マップのコア
 //-------------------------------------------------------------------
 #include  "MyPG.h"
 #include  "Task_MapCore.h"
@@ -26,15 +26,24 @@ namespace  Map_Core
 	}
 	//-------------------------------------------------------------------
 	//「初期化」タスク生成時に１回だけ行う処理
-	bool  Object::Initialize()
+	bool  Object::Initialize(Difficult_Range di)
 	{
 		//スーパークラス初期化
 		__super::Initialize(defGroupName, defName, true);
 		//リソースクラス生成orリソース共有
 		this->res = Resource::Create();
 
-		//★データ初期化	
-		this->mapSize = 8;//基本は8X8難易度によって増加される(2018/04/21)		
+		//★データ初期化
+		int plusSize;
+		if (di == Difficult_Range::Hard)
+		{
+			plusSize = 8;
+		}
+		else
+		{
+			plusSize = 0;
+		}
+		this->mapSize = 8 + plusSize;//基本は8X8難易度によって増加される	
 		this->map_QT = ML::QT(0.0f);
 		
 		//コアの初期化
@@ -197,7 +206,7 @@ namespace  Map_Core
 	//------------------------------------------------------------------------------------
 	//あたり判定
 
-	void Object::Core_Check_Hit(ML::Vec3 pos, float r, ML::Vec3 speed)
+	void Object::Core_Check_Hit(const ML::Vec3& pos, const float& r, const ML::Vec3& speed)
 	{
 		//接触三角形を判定前にクリアする	
 		this->col_Poligons.clear();
@@ -273,7 +282,7 @@ namespace  Map_Core
 	//★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★
 	//-------------------------------------------------------------------
 	//タスク生成窓口
-	Object::SP  Object::Create(bool  flagGameEnginePushBack_)
+	Object::SP  Object::Create(bool  flagGameEnginePushBack_, Difficult_Range di)
 	{
 		Object::SP  ob = Object::SP(new  Object());
 		if (ob) {
@@ -281,7 +290,7 @@ namespace  Map_Core
 			if (flagGameEnginePushBack_) {
 				ge->PushBack(ob);//ゲームエンジンに登録
 			}
-			if (!ob->B_Initialize()) {
+			if (!ob->B_Initialize(di)) {
 				ob->Kill();//イニシャライズに失敗したらKill
 			}
 			return  ob;
@@ -289,9 +298,9 @@ namespace  Map_Core
 		return nullptr;
 	}
 	//-------------------------------------------------------------------
-	bool  Object::B_Initialize()
+	bool  Object::B_Initialize(Difficult_Range di)
 	{
-		return  this->Initialize();
+		return  this->Initialize(di);
 	}
 	//-------------------------------------------------------------------
 	Object::~Object() { this->B_Finalize(); }

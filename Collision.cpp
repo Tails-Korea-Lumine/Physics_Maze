@@ -208,7 +208,7 @@ std::vector<ML::Vec3> Collision::Get_Poionts_to_Sphere(ML::Vec3 pos, float r, ML
 		S.push_back(v[i]);
 	}*/
 	//”¼’¼Œa‚Ì”¼•ª‚Ì”ÍˆÍ‚Ü‚Å‚Æ‚éver.2
-	for (float i = r; i > r-3; i-=0.5f)
+	for (float i = r; i > r-2; i-=0.5f)
 	{
 		//ver0.3
 	/*	v[0] = pos + ML::Vec3(+i, 0, 0);

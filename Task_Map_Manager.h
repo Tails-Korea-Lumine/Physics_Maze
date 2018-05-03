@@ -48,6 +48,8 @@ namespace Map_Manager
 		//変更可◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇
 	public:
 		//追加したい変数・メソッドはここに追加する
-		
+		//メソッド
+		//マップの処理をいっぺんに管理する 引数 : (精密度)
+		void Managing_All_Map(const unsigned int delicate);
 	};
 }

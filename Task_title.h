@@ -4,6 +4,21 @@
 //タイトル画面
 //-------------------------------------------------------------------
 #include "GameEngine_Ver3_7.h"
+#include "Task_cursor.h"
+
+enum Difficult_Range
+{
+	Easy = -1,
+	Normal = 1,
+	Hard = 3,
+};
+
+enum Tutorial_Column
+{
+	OutLine = -1,
+	Control = 1,
+	Obstacle = 3,
+};
 
 namespace Title
 {
@@ -23,7 +38,12 @@ namespace Title
 		static   WP  instance;
 		static  Resource::SP  Create();
 		//共有する変数はここに追加する
-		string imageName;
+		string Title_Name_Image[9];
+		string press_Any_Key_Image;
+		string start_Image;
+		string tutorial_Image;
+		string select_Guide_Image;
+		string BG_ImageName;
 	};
 	//-------------------------------------------------------------------
 	class  Object : public  BTask
@@ -48,6 +68,26 @@ namespace Title
 		//変更可◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇
 	public:
 		//追加したい変数・メソッドはここに追加する
-		int logoPosY; //タイトル画面スクロール用のカウンター
+		//変数
+		//タイトル文字の移動および描画座標
+		ML::Vec2 Title_Name[9];
+
+		bool select_now;
+		int timeCnt;
+		unsigned int moving_Menu;
+		unsigned int moving_Title_Name;
+		POINT next_Task_Index;
+		nowMenu n;
+
+		//メソッド
+		bool Press_Any_Key();//スティック以外のボタンを押すのかを判別
+		void UpDate_Title_Name();
+		void Draw_Title_Name();
+		void Draw_PAK();
+		void Draw_Menu();
+		void Draw_Dif_Col(nowMenu now);
+
+		//次のタスクを決める関数
+		void I_Select(POINT select);
 	};
 }
