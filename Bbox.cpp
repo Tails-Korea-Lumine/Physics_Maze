@@ -37,3 +37,16 @@ Bbox::Bbox(BoxType chip, ML::Vec3 pos, ML::Box3D base, ML::QT qt)
 	this->collision_Base = base;
 	this->boxQT = qt;
 }
+
+//クリア判定
+bool Bbox::Player_was_Clear_the_Game(ML::Vec3 pos, float r, ML::Vec3 speed)
+{
+	//あたり判定の結果をもらう
+	std::vector<After_Collision> check = this->col.Hit_Check(this->collision_Base.OffsetCopy(this->pos), pos, r, speed, this->boxQT);
+	//結果のサイズが０ではないならクリア
+	if (check.size() != 0)
+	{
+		return true;
+	}
+	return false;
+}

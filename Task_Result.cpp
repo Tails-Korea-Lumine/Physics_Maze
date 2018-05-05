@@ -18,11 +18,16 @@ namespace  Result
 		this->result = "result";
 		this->Number_Image = "resultNumber";
 		this->presS = "pressS";
+
+		this->bgmName = "ResultBgmName";
+
 		DG::Image_Create(this->thisTime, "./data/image/thisTime.png");
 		DG::Image_Create(this->yourScore, "./data/image/yourScore.png");
 		DG::Image_Create(this->result, "./data/image/result.png");
 		DG::Image_Create(this->Number_Image, "./data/image/Number.png");
 		DG::Image_Create(this->presS, "./data/image/pressS.png");
+
+		DM::Sound_CreateStream(this->bgmName, "./data/sound/ending.wav");
 
 		return true;
 	}
@@ -34,6 +39,8 @@ namespace  Result
 		DG::Image_Erase(this->yourScore);
 		DG::Image_Erase(this->result);
 		DG::Image_Erase(this->Number_Image);
+
+		DM::Sound_Erase(this->bgmName);
 		return true;
 	}
 	//-------------------------------------------------------------------
@@ -48,6 +55,9 @@ namespace  Result
 		//★データ初期化
 		this->countdown = 0;
 		this->countdownFlag = false;
+		//bgm再生
+		DM::Sound_Play(this->res->bgmName, true);
+
 		//点数計算式 : 1000-プレー時間(秒単位)
 		this->score = 1000-(playTime/60);
 		this->timeCnt = 0;
@@ -73,7 +83,9 @@ namespace  Result
 	bool  Object::Finalize()
 	{
 		//★データ＆タスク解放
+		ge->KillAll_G("UI");
 
+		DM::Sound_Stop(this->res->bgmName);
 
 		if (!ge->QuitFlag() && this->nextTaskCreate)
 		{

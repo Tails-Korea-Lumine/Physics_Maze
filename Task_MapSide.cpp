@@ -1,9 +1,10 @@
 //-------------------------------------------------------------------
-//タイトル画面
+//キューブ外壁のマップ
 //-------------------------------------------------------------------
 #include  "MyPG.h"
 #include  "Task_MapSide.h"
 #include  "Task_Ball.h"
+#include  "Task_Game.h"
 
 namespace  Map3d
 {
@@ -200,7 +201,7 @@ namespace  Map3d
 		
 
 		ML::Mat4x4 matS;
-		matS.Scaling(this->chipSize / 100.0f);
+		matS.Scaling(this->chipSize);
 		for (int y = 0; y < this->sizeY; y++)
 		{
 			for (int z = 0; z < this->sizeZ; z++)
@@ -229,7 +230,7 @@ namespace  Map3d
 					//}
 					//matR.Inverse();
 
-					DG::EffectState().param.matWorld =  matR * matT;					
+					DG::EffectState().param.matWorld = matS * matR * matT;
 					DG::Mesh_Draw(this->chipName[(int)this->arr[z][y][x].What_Type_Is_this_Box()]);
 				}
 			}
@@ -262,7 +263,7 @@ namespace  Map3d
 			string chipFileName, chipFilePath;
 			fin >> chipFileName;
 			chipFilePath = "./data/mesh/" + chipFileName;
-			this->chipName[c] = "MapChip" + std::to_string(c);
+			this->chipName[c] = "Map" + to_string(this->sideNumber) + "Chip" + std::to_string(c);
 			DG::Mesh_CreateFromSOBFile(this->chipName[c], chipFilePath);
 		}
 		//マップ配列サイズの読み込み
@@ -294,6 +295,7 @@ namespace  Map3d
 
 		//接触三角形を判定前にクリアする
 		this->col_Poligons.clear();
+		std::vector<After_Collision> poligon;
 
 		//判定スタート
 		for (int y = 0; y <= this->sizeY; y++)
@@ -302,11 +304,6 @@ namespace  Map3d
 			{
 				for (int x = 0; x <= this->sizeX; x++)
 				{
-					//道は判定しない
-					if (this->arr[z][y][x].What_Type_Is_this_Box() == BoxType::Road)
-					{
-						continue;
-					}
 					//一定距離以内のものだけ判定をする
 					ML::Vec3 d = this->arr[z][y][x].Get_Pos() - pos;
 					if (d.Length() < 0)
@@ -316,9 +313,32 @@ namespace  Map3d
 					if (d.Length() > 100)
 					{
 						continue;
-					}				
+					}
+					//boxType別に処理を分ける
+					switch (this->arr[z][y][x].What_Type_Is_this_Box())
+					{
+					//道は判定なし
+					case BoxType::Road:
+						continue;
+						break;
+					//ゴール旗はクリア判定
+					case BoxType::Goal:
+						if (this->arr[z][y][x].Player_was_Clear_the_Game(pos, r, speed))
+						{
+							auto game = ge->GetTask_One_G<Game::Object>("ゲーム");
+							if (game != nullptr)
+							{
+								game->Game_Clear();
+							}
+						}
+						break;
+					//壁はただのあたり判定
+					case BoxType::Wall:
+						poligon = this->arr[z][y][x].Get_Collision_Poligon(pos, r, speed);
+						break;
+					}
 					//this->collision_Tri = this->col.Hit_Check(Mass, pos, r, this->map_QT); //(ver0.2で使った処理)
-					std::vector<After_Collision> poligon = this->arr[z][y][x].Get_Collision_Poligon(pos, r, speed);
+					
 
 					for (auto i : poligon)
 					{

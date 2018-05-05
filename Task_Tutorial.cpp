@@ -15,9 +15,9 @@ namespace  Tutorial
 		this->imageName[0] = "Tutorial_Outline_Img";
 		this->imageName[1] = "Tutorial_Control_Img";
 		this->imageName[2] = "Tutorial_Obstacle_Img";
-		DG::Image_Create(this->imageName[0], "./data/image/tutorialTest.png");//仮のイメージ
-		DG::Image_Create(this->imageName[1], "./data/image/tutorialTest.png");//仮のイメージ
-		DG::Image_Create(this->imageName[2], "./data/image/tutorialTest.png");//仮のイメージ
+		DG::Image_Create(this->imageName[0], "./data/image/tutorial_text.png");//仮のイメージ
+		DG::Image_Create(this->imageName[1], "./data/image/tutorial_text.png");//仮のイメージ
+		DG::Image_Create(this->imageName[2], "./data/image/tutorial_text.png");//仮のイメージ
 	
 		return true;
 	}

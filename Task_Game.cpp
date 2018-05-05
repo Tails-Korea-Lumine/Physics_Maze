@@ -19,13 +19,16 @@ namespace  Game
 	//-------------------------------------------------------------------
 	//リソースの初期化
 	bool  Resource::Initialize()
-	{		
+	{
+		this->bgmName = "stageBgm";
+		DM::Sound_CreateStream(this->bgmName, "./data/sound/stage.wav");
 		return true;
 	}
 	//-------------------------------------------------------------------
 	//リソースの解放
 	bool  Resource::Finalize()
-	{	
+	{
+		DM::Sound_Erase(this->bgmName);
 		return true;
 	}
 	//-------------------------------------------------------------------
@@ -41,6 +44,7 @@ namespace  Game
 		this->countdown = 0;
 		this->countdownFlag = false;
 		this->timeCnt = 0;
+		ge->gameClearFlag = false;
 
 		//カメラの設定
 		ge->camera[0] = MyPG::Camera::Create(
@@ -49,7 +53,7 @@ namespace  Game
 			ML::Vec3(0.0f, 1.0f, 0.0f),					//	カメラの上方向ベクトル
 			ML::ToRadian(35), 10.0f, 4000.0f,	//	視野角・視野距離
 			(float)ge->screenWidth / (float)ge->screenHeight);		//	画面比率		
-		DG::EffectState().param.bgColor = ML::Color(1, 0, 0, 0);
+		DG::EffectState().param.bgColor = ML::Color(0.5f, 0.0f, 0.4f, 0.0f);
 		//ライティング有効化
 		DG::EffectState().param.lightsEnable = true;
 		//環境光の強さを設定する
@@ -62,6 +66,9 @@ namespace  Game
 
 		//デバッグ用の文字生成
 		DG::Font_Create("FontA", "HGSｺﾞｼｯｸM", 12, 16);
+
+		//bgm再生
+		DM::Sound_Play(this->res->bgmName, true);
 
 		//ワールド回転量初期化
 		ge->World_Rotation = ML::QT();
@@ -105,6 +112,7 @@ namespace  Game
 
 		DG::Font_Erase("FontA");
 
+		DM::Sound_Stop(this->res->bgmName);
 		if (!ge->QuitFlag() && this->nextTaskCreate)
 		{
 			//★引き継ぎタスクの生成
@@ -118,9 +126,9 @@ namespace  Game
 	//「更新」１フレーム毎に行う処理
 	void  Object::UpDate()
 	{
-		auto in = DI::GPad_GetState("P1");
+		//auto in = DI::GPad_GetState("P1");
 
-		if (in.ST.down)
+		if (this->IS_Cleared())
 		{
 			ge->GetTask_One_G<UI::Object>("UI")->Start_WipeIn();
 			this->countdownFlag = true;
@@ -165,10 +173,25 @@ namespace  Game
 	}
 
 	//--------------------------------------------------------------------------------------
+	//追加メソッド
 	//カウントダウンフラグを返す関数
 	bool Object::Is_Count_Down()
 	{
 		return this->countdownFlag;
+	}
+
+	//------------------------------------------------------------------------------------
+	//クリアフラグを立てる
+	void Object::Game_Clear()
+	{
+		ge->gameClearFlag = true;
+	}
+
+	//---------------------------------------------------------------------------------------
+	//クリアしたのかを確認
+	bool Object::IS_Cleared()
+	{
+		return ge->gameClearFlag;
 	}
 	//★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★
 	//以下は基本的に変更不要なメソッド

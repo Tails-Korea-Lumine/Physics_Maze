@@ -1,7 +1,5 @@
-3
-Box1.sob
-Box2.sob
-Box3.sob
+1
+Fence.SOB
 
 9 1 1
 

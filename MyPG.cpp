@@ -123,7 +123,7 @@ namespace MyPG
 	//	入力装置の更新
 		DI::UpDate();
 	////	サウンドの更新(ストリーミング監視）
-	//	dm->Check_Stream( );
+		DM::Check_Stream( );
 	}
 
 	//2D描画環境のデフォルトパラメータ設定

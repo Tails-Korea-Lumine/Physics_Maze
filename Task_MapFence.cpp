@@ -212,7 +212,7 @@ namespace  MapFence
 		
 
 		ML::Mat4x4 matS;
-		matS.Scaling(this->chipSize / 100.0f);
+		matS.Scaling(this->chipSize);
 		for (int y = 0; y < this->sizeY; y++)
 		{
 			for (int z = 0; z < this->sizeZ; z++)
@@ -241,7 +241,7 @@ namespace  MapFence
 					//}
 					//matR.Inverse();
 
-					DG::EffectState().param.matWorld =  matR * matT;					
+					DG::EffectState().param.matWorld =  matS * matR * matT;					
 					DG::Mesh_Draw(this->chipName[(int)this->arr[z][y][x].What_Type_Is_this_Box()]);
 				}
 			}
@@ -274,7 +274,7 @@ namespace  MapFence
 			string chipFileName, chipFilePath;
 			fin >> chipFileName;
 			chipFilePath = "./data/mesh/" + chipFileName;
-			this->chipName[c] = "MapChip" + std::to_string(c);
+			this->chipName[c] = "Fence" + to_string(this->fenceNumber) + "Chip" + std::to_string(c);
 			DG::Mesh_CreateFromSOBFile(this->chipName[c], chipFilePath);
 		}
 		//マップ配列サイズの読み込み

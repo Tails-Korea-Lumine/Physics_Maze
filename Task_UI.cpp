@@ -63,7 +63,7 @@ namespace  UI
 			this->src_Number[i].h = 140;
 		}
 		//時計の表し方
-		easing::Set("Up_to_Down", easing::SINEOUT, -50, 0, 110);		
+		easing::Set("Up_to_Down", easing::SINEOUT, -50, 0, 30);		
 		easing::Start("Up_to_Down");
 
 		//幕のeasingSet
@@ -96,7 +96,7 @@ namespace  UI
 	void  Object::UpDate()
 	{
 		//easing更新
-		if (!ge->GetTask_One_G<Title::Object>("タイトル"))
+		if (ge->GetTask_One_G<Title::Object>("タイトル") == nullptr)
 		{
 			easing::UpDate();
 		}
@@ -135,13 +135,18 @@ namespace  UI
 		sec10 = this->timeCnt / 60 % 60 / 10;
 		sec1 = this->timeCnt / 60 % 60 % 10;
 
+		ML::Box2D draw_UI_Time(0, 0, 200, 64);
+		ML::Box2D src_UI_Time(0, 0, 430, 140);
 		ML::Box2D draw_Min10(200, 0, 64, 64);
 		ML::Box2D draw_Min1(250, 0, 64, 64);
 		ML::Box2D draw_Sec10(310, 0, 64, 64);
 		ML::Box2D draw_Sec1(360, 0, 64, 64);
 		ML::Box2D draw_colon(280, 0, 50, 64);
 
+		draw_UI_Time.Offset(this->ui_Time);
+
 		//描画
+		DG::Image_Draw(this->res->uI_Time_Img, draw_UI_Time, src_UI_Time);
 		DG::Image_Draw(this->res->number_Img, draw_Min10, this->src_Number[min10]);
 		DG::Image_Draw(this->res->number_Img, draw_Min1, this->src_Number[min1]);
 		DG::Image_Draw(this->res->number_Img, draw_Sec10, this->src_Number[sec10]);

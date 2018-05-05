@@ -1,7 +1,8 @@
-3
-Box1.sob
+2
+
 Box2.sob
-Box3.sob
+Goal.sob
+
 8 1 8
 
 0 1 0 0 0 0 1 0

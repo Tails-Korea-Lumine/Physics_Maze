@@ -13,8 +13,8 @@ namespace  Map_Core
 	bool  Resource::Initialize()
 	{
 		this->meshName = "MapCore";
-		//仮のメッシュ
-		DG::Mesh_CreateFromSOBFile(this->meshName, "./data/mesh/box3.sob");
+		
+		DG::Mesh_CreateFromSOBFile(this->meshName, "./data/mesh/Core.sob");
 		return true;
 	}
 	//-------------------------------------------------------------------
@@ -165,7 +165,7 @@ namespace  Map_Core
 		//レンダリング処理、バリアはレンダリングをしない
 		ML::Mat4x4 matS, matR, matT;
 
-		matS.Scaling(this->mapSize);
+		matS.Scaling(this->mapSize * 100.0f);
 		matR.RotationQuaternion(this->map_QT);
 		/*for (int i = 0; i < 6; i++)
 		{

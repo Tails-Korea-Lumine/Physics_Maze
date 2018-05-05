@@ -81,10 +81,9 @@ namespace  MyPG
 		D3D10_VIEWPORT			vp3D_L2;
 		D3D10_VIEWPORT			vp3D_L3;
 		D3D10_VIEWPORT			vp3D_BF;
-		D3D10_VIEWPORT			vp3D_AF;
+		D3D10_VIEWPORT			vp3D_AF;		
 		
-		//shared_ptr<BEffect::SP> effmaneger;
-		bool gameoverFlag;
+		bool gameClearFlag;
 		bool getReadyFlag;
 
 		//ÉèÅ[ÉãÉhâÒì]ó 

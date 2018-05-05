@@ -10,7 +10,7 @@ enum BoxType
 	Clear = -1, //何もない
 	Road = 0, //道
 	Wall = 1, //壁
-	Obstacle0 = 2, //障害物０番(未定)
+	Goal = 2, //ゴール位置
 	Obstacle1 = 3, //障害物０番(未定)
 	Obstacle2 = 4, //障害物０番(未定)
 	Obstacle3 = 5, //障害物０番(未定)
@@ -41,6 +41,8 @@ public:
 	ML::Vec3 Get_Pos();
 	//衝突判定
 	std::vector<After_Collision> Get_Collision_Poligon(ML::Vec3 pos, float r, ML::Vec3 speed);
+	//ゲームクリア判定
+	bool Player_was_Clear_the_Game(ML::Vec3 pos, float r, ML::Vec3 speed);
 
 	//コンストラクタ・デストラクタ
 	Bbox();

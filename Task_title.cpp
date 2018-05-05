@@ -45,7 +45,7 @@ namespace  Title
 		DG::Image_Create(this->Title_Name_Image[6], "./data/image/A.png");
 		DG::Image_Create(this->Title_Name_Image[7], "./data/image/M.png");
 		DG::Image_Create(this->Title_Name_Image[8], "./data/image/E.png");
-
+		//bgm‰Šú‰»
 		DM::Sound_CreateStream(this->bgm_Title, "./data/sound/title.wav");
 
 		return true;

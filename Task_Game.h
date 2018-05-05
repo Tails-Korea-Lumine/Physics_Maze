@@ -23,7 +23,8 @@ namespace Game
 		typedef  weak_ptr<Resource>		WP;
 		static   WP  instance;
 		static  Resource::SP  Create();
-		//共有する変数はここに追加する		
+		//共有する変数はここに追加する
+		string bgmName;
 	};
 	//-------------------------------------------------------------------
 	class  Object : public  BTask
@@ -51,7 +52,7 @@ namespace Game
 		//変数
 		//タスク消滅までのカウンタとフラグ	
 		int countdown;
-		bool countdownFlag;
+		bool countdownFlag;	
 
 		//遊んだプレー時間Resultタスクに渡すもの
 		int timeCnt;
@@ -59,5 +60,9 @@ namespace Game
 	public:
 		//カウントダウンフラグを返す関数
 		bool Is_Count_Down();
+		//クリアフラグを立てる関数
+		void Game_Clear();
+		//クリアしたのかを返す関数
+		bool IS_Cleared();
 	};
 }

@@ -28,6 +28,7 @@ namespace Result
 		string yourScore;
 		string Number_Image;
 		string presS;
+		string bgmName;
 	};
 	//-------------------------------------------------------------------
 	class  Object : public  BTask
