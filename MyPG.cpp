@@ -42,6 +42,12 @@ namespace MyPG
 				return false;
 			}
 		}
+		//	サウンド環境の初期化
+		if (false == DM::Initialize(wnd_)) {
+			//	環境の初期化に失敗
+			DestroyWindow(wnd_);
+			return false;
+		}
 		//デバッグ用フォントの準備
 		DG::Font_Create("Debug", "ＭＳ Ｐゴシック", 4, 16);
 

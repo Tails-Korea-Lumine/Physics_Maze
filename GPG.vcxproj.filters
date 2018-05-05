@@ -77,6 +77,18 @@
     <Filter Include="MyPG\Tasks\Cursor">
       <UniqueIdentifier>{4dfe7fba-b287-4a9d-ae9b-a09075da0b76}</UniqueIdentifier>
     </Filter>
+    <Filter Include="MyPG\Tasks\Rsult">
+      <UniqueIdentifier>{f5fc417a-c27b-4a87-a8d2-facb878928dc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="MyPG\Tasks\Tutorial">
+      <UniqueIdentifier>{0c8a68bc-efec-458f-a21c-0fbb146c5d26}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="MyPG\Tasks\UI">
+      <UniqueIdentifier>{ab4500eb-35cd-4f5b-afe7-c449a8069d85}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="LIB\DM2008">
+      <UniqueIdentifier>{bcc152c4-b55c-43ae-b512-0f7a24036ad8}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="myLib.cpp">
@@ -172,6 +184,18 @@
     <ClCompile Include="Task_cursor.cpp">
       <Filter>MyPG\Tasks\Cursor</Filter>
     </ClCompile>
+    <ClCompile Include="Task_Tutorial.cpp">
+      <Filter>MyPG\Tasks\Tutorial</Filter>
+    </ClCompile>
+    <ClCompile Include="Task_Result.cpp">
+      <Filter>MyPG\Tasks\Rsult</Filter>
+    </ClCompile>
+    <ClCompile Include="Task_UI.cpp">
+      <Filter>MyPG\Tasks\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="Dm2008_Ver1_3.cpp">
+      <Filter>LIB\DM2008</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="myLib.h">
@@ -263,6 +287,21 @@
     </ClInclude>
     <ClInclude Include="Task_cursor.h">
       <Filter>MyPG\Tasks\Cursor</Filter>
+    </ClInclude>
+    <ClInclude Include="Task_Tutorial.h">
+      <Filter>MyPG\Tasks\Tutorial</Filter>
+    </ClInclude>
+    <ClInclude Include="Task_Result.h">
+      <Filter>MyPG\Tasks\Rsult</Filter>
+    </ClInclude>
+    <ClInclude Include="Task_UI.h">
+      <Filter>MyPG\Tasks\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="Dm2008_Ver1_3.h">
+      <Filter>LIB\DM2008</Filter>
+    </ClInclude>
+    <ClInclude Include="library.h">
+      <Filter>LIB</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

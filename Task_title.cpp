@@ -3,9 +3,9 @@
 //-------------------------------------------------------------------
 #include  "MyPG.h"
 #include  "Task_Title.h"
-
+#include  "Task_UI.h"
 #include  "Task_Game.h"
-//#include "Task_Tutorial.h"
+#include "Task_Tutorial.h"
 #include  "easing.h"
 
 namespace  Title
@@ -29,6 +29,7 @@ namespace  Title
 		this->Title_Name_Image[7] = "Title_M";
 		this->Title_Name_Image[8] = "Title_E";		
 		this->BG_ImageName = "BG";
+		this->bgm_Title = "BGM_Title";
 		
 		DG::Image_Create(this->select_Guide_Image, "./data/image/moveSelect.png");
 		DG::Image_Create(this->press_Any_Key_Image, "./data/image/preaaAny.png");
@@ -44,6 +45,8 @@ namespace  Title
 		DG::Image_Create(this->Title_Name_Image[6], "./data/image/A.png");
 		DG::Image_Create(this->Title_Name_Image[7], "./data/image/M.png");
 		DG::Image_Create(this->Title_Name_Image[8], "./data/image/E.png");
+
+		DM::Sound_CreateStream(this->bgm_Title, "./data/sound/title.wav");
 
 		return true;
 	}
@@ -61,6 +64,7 @@ namespace  Title
 			DG::Image_Erase(this->Title_Name_Image[i]);
 		}
 
+		DM::Sound_Erase(this->bgm_Title);
 		return true;
 	}
 	//-------------------------------------------------------------------
@@ -123,7 +127,11 @@ namespace  Title
 			ML::ToRadian(35), 10.0f, 4000.0f,	//	視野角・視野距離
 			(float)ge->screenWidth / (float)ge->screenHeight);		//	画面比率		
 		DG::EffectState().param.bgColor = ML::Color(1, 0, 0, 0);
+
+		//bgm再生
+		DM::Sound_Play(this->res->bgm_Title, false);
 		//★タスクの生成
+		auto ui = UI::Object::Create(true);
 
 		return  true;
 	}
@@ -132,7 +140,8 @@ namespace  Title
 	bool  Object::Finalize()
 	{
 		//★データ＆タスク解放
-
+		ge->KillAll_G("UI");
+		DM::Sound_Stop(this->res->bgm_Title);
 
 		if (!ge->QuitFlag() && this->nextTaskCreate)
 		{
@@ -145,7 +154,7 @@ namespace  Title
 			else if (this->next_Task_Index.x == 1)
 			{
 				//テュートリアルタスクに移る
-				//auto nextTask = Tutorial::Object::Create(true);
+				auto nextTask = Tutorial::Object::Create(true,Tutorial_Column(this->next_Task_Index.y));
 			}
 		}
 

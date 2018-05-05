@@ -54,16 +54,22 @@ namespace Cursor
 		bool  Finalize();		//「終了」タスク消滅時に１回だけ行う処理
 		void  Render3D_L0();
 		//変更可◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇
-	public:
+	
 		//追加したい変数・メソッドはここに追加する
 		//変数
 		ML::Vec2 pos;//描画する座標
 		POINT select_pos;
 		nowMenu now;
+		//タスク消滅までのカウンタとフラグ
+		int countdown;
+		bool countdownFlag;
 
+	public:
 		//メソッド
 		int Move_Cursor(POINT& select);
-
+		//現在メニューを返す関数
 		nowMenu Get_Now_Menu();
+		//カウントダウンフラグを返す関数
+		bool Is_Count_Down();
 	};
 }

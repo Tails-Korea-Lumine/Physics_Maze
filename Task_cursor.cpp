@@ -4,6 +4,7 @@
 #include  "MyPG.h"
 #include  "Task_cursor.h"
 #include "Task_Title.h"
+#include "Task_UI.h"
 
 namespace  Cursor
 {
@@ -37,6 +38,8 @@ namespace  Cursor
 		this->pos = ML::Vec2(300, -1000);
 		this->select_pos.x = 0;
 		this->select_pos.y = -1;
+		this->countdown = 0;
+		this->countdownFlag = false;
 		this->now = Start_Tutorial;
 
 		//★タスクの生成
@@ -80,10 +83,21 @@ namespace  Cursor
 			}
 			else
 			{
-				this->Kill();
+				//UIタスクに画面隠しを頼む
+				ge->GetTask_One_G<UI::Object>("UI")->Start_WipeIn();
+				this->countdownFlag = true;
 			}
 		}
-		
+		//フラグが立ったらカウントダウン開始
+		if (this->Is_Count_Down())
+		{
+			this->countdown++;
+		}
+		//1秒後にタスク消滅
+		if (this->countdown > 60)
+		{
+			this->Kill();
+		}
 	}
 	//-------------------------------------------------------------------
 	//「２Ｄ描画」１フレーム毎に行う処理
@@ -147,6 +161,12 @@ namespace  Cursor
 		return this->now;
 	}
 
+	//---------------------------------------------------------------------------------
+	//カウントダウンフラグを返す関数
+	bool Object::Is_Count_Down()
+	{
+		return this->countdownFlag;
+	}
 	//★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★
 	//以下は基本的に変更不要なメソッド
 	//★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★

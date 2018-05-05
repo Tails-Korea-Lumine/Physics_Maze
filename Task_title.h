@@ -44,6 +44,7 @@ namespace Title
 		string tutorial_Image;
 		string select_Guide_Image;
 		string BG_ImageName;
+		string bgm_Title;
 	};
 	//-------------------------------------------------------------------
 	class  Object : public  BTask

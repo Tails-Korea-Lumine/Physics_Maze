@@ -46,8 +46,18 @@ namespace Game
 		bool  Finalize();		//「終了」タスク消滅時に１回だけ行う処理
 		void  Render3D_L0();
 		//変更可◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇
-	public:
+	
 		//追加したい変数・メソッドはここに追加する
-		
+		//変数
+		//タスク消滅までのカウンタとフラグ	
+		int countdown;
+		bool countdownFlag;
+
+		//遊んだプレー時間Resultタスクに渡すもの
+		int timeCnt;
+
+	public:
+		//カウントダウンフラグを返す関数
+		bool Is_Count_Down();
 	};
 }

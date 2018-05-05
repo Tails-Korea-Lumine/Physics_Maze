@@ -10,6 +10,8 @@
 #include  "Task_Player.h"
 #include  "Task_MapFence.h"
 #include  "Task_Map_Manager.h"
+#include  "Task_Result.h"
+#include  "Task_UI.h"
 
 namespace  Game
 {
@@ -35,7 +37,10 @@ namespace  Game
 		//リソースクラス生成orリソース共有
 		this->res = Resource::Create();
 
-		//★データ初期化		
+		//★データ初期化
+		this->countdown = 0;
+		this->countdownFlag = false;
+		this->timeCnt = 0;
 
 		//カメラの設定
 		ge->camera[0] = MyPG::Camera::Create(
@@ -78,13 +83,14 @@ namespace  Game
 		{
 			auto fence = MapFence::Object::Create(true, f,di);
 		}
-
+		//ボールの生成
 		auto ball = Ball::Object::Create(true);
 
 		//マップマネージャ生成
 		auto manager = Map_Manager::Object::Create(true);
 		
-		
+		//UIの生成
+		auto ui = UI::Object::Create(true);
 
 		return  true;
 	}
@@ -95,13 +101,15 @@ namespace  Game
 		//★データ＆タスク解放
 		ge->KillAll_G("マップ");
 		ge->KillAll_G("ボール");
+		ge->KillAll_G("UI");
 
 		DG::Font_Erase("FontA");
 
 		if (!ge->QuitFlag() && this->nextTaskCreate)
 		{
 			//★引き継ぎタスクの生成
-			auto nextTask = Title::Object::Create(true);
+			//引数のマジックナンバーは仮の数値後でuiからもらう時間を引数にする予定(2018/05/04)
+			auto nextTask = Result::Object::Create(true,this->timeCnt);
 		}
 
 		return  true;
@@ -114,8 +122,22 @@ namespace  Game
 
 		if (in.ST.down)
 		{
+			ge->GetTask_One_G<UI::Object>("UI")->Start_WipeIn();
+			this->countdownFlag = true;
+		}
+
+		//カウントダウン
+		if (this->Is_Count_Down())
+		{
+			this->countdown++;
+		}
+		//1秒後にタスク消滅
+		if (this->countdown > 60)
+		{
 			this->Kill();
 		}
+		//時間を更新
+		this->timeCnt++;
 	}
 	//-------------------------------------------------------------------
 	//「２Ｄ描画」１フレーム毎に行う処理
@@ -140,6 +162,13 @@ namespace  Game
 	void  Object::Render3D_L0()
 	{
 		
+	}
+
+	//--------------------------------------------------------------------------------------
+	//カウントダウンフラグを返す関数
+	bool Object::Is_Count_Down()
+	{
+		return this->countdownFlag;
 	}
 	//★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★
 	//以下は基本的に変更不要なメソッド

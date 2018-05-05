@@ -222,6 +222,15 @@ namespace  Map_Core
 		}
 		for (int b = 0; b < 6; b++)
 		{
+			ML::Vec3 d = this->barrier[b].Get_Pos() - pos;
+			if (d.Length() < 0)
+			{
+				d *= -1;
+			}
+			if (d.Length() > (this->mapSize + 4) * 50)
+			{
+				continue;
+			}
 			std::vector<After_Collision> poligonB = this->barrier[b].Get_Collision_Poligon(pos, r, speed);
 			for (auto i : poligonB)
 			{

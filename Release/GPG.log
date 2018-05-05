@@ -1,14 +1,9 @@
-﻿  Task_Game.cpp
-  Task_title.cpp
-c:\users\lumine\desktop\fermat\3d_maze\task_title.cpp(236): warning C4146: 단항 빼기 연산자가 부호 없는 형식에 적용되었습니다. 결과는 역시 unsigned입니다.
-c:\users\lumine\desktop\fermat\3d_maze\task_title.cpp(297): warning C4146: 단항 빼기 연산자가 부호 없는 형식에 적용되었습니다. 결과는 역시 unsigned입니다.
-c:\users\lumine\desktop\fermat\3d_maze\task_title.cpp(298): warning C4146: 단항 빼기 연산자가 부호 없는 형식에 적용되었습니다. 결과는 역시 unsigned입니다.
-c:\users\lumine\desktop\fermat\3d_maze\task_title.cpp(317): warning C4146: 단항 빼기 연산자가 부호 없는 형식에 적용되었습니다. 결과는 역시 unsigned입니다.
-c:\users\lumine\desktop\fermat\3d_maze\task_title.cpp(318): warning C4146: 단항 빼기 연산자가 부호 없는 형식에 적용되었습니다. 결과는 역시 unsigned입니다.
-c:\users\lumine\desktop\fermat\3d_maze\task_title.cpp(319): warning C4146: 단항 빼기 연산자가 부호 없는 형식에 적용되었습니다. 결과는 역시 unsigned입니다.
+﻿  Task_UI.cpp
+c:\users\lumine\desktop\fermat\3d_maze\task_ui.cpp(167): warning C4244: '=': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\lumine\desktop\fermat\3d_maze\task_ui.cpp(176): warning C4244: '=': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
   코드를 생성하고 있습니다.
-  4 of 4797 functions ( 0.1%) were compiled, the rest were copied from previous compilation.
+  4 of 5391 functions ( 0.1%) were compiled, the rest were copied from previous compilation.
     0 functions were new in current compilation
-    1 functions had inline decision re-evaluated but remain unchanged
+    4 functions had inline decision re-evaluated but remain unchanged
   코드를 생성했습니다.
   GPG.vcxproj -> C:\Users\Lumine\Desktop\Fermat\3d_Maze\Release\GPG.exe

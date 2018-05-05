@@ -96,6 +96,7 @@
     <ClCompile Include="DG2014\DG2014_VertexBuffer.cpp" />
     <ClCompile Include="DG2014\DG2014_VertexContainer.cpp" />
     <ClCompile Include="DI2014_Ver3_4.cpp" />
+    <ClCompile Include="Dm2008_Ver1_3.cpp" />
     <ClCompile Include="easing.cpp" />
     <ClCompile Include="GameEngine_Ver3_7.cpp" />
     <ClCompile Include="Gravity.cpp" />
@@ -109,7 +110,10 @@
     <ClCompile Include="Task_MapSide.cpp" />
     <ClCompile Include="Task_Map_Manager.cpp" />
     <ClCompile Include="Task_Player.cpp" />
+    <ClCompile Include="Task_Result.cpp" />
     <ClCompile Include="Task_title.cpp" />
+    <ClCompile Include="Task_Tutorial.cpp" />
+    <ClCompile Include="Task_UI.cpp" />
     <ClCompile Include="WinMain.cpp" />
     <ClCompile Include="xnacollision.cpp" />
   </ItemGroup>
@@ -128,10 +132,12 @@
     <ClInclude Include="DG2014\DG2014_VertexBuffer.h" />
     <ClInclude Include="DG2014\DG2014_VertexContainer.h" />
     <ClInclude Include="DI2014_Ver3_4.h" />
+    <ClInclude Include="Dm2008_Ver1_3.h" />
     <ClInclude Include="easing.h" />
     <ClInclude Include="EFile.h" />
     <ClInclude Include="GameEngine_Ver3_7.h" />
     <ClInclude Include="Gravity.h" />
+    <ClInclude Include="library.h" />
     <ClInclude Include="myLib.h" />
     <ClInclude Include="MyPG.h" />
     <ClInclude Include="Task_Ball.h" />
@@ -142,7 +148,10 @@
     <ClInclude Include="Task_MapSide.h" />
     <ClInclude Include="Task_Map_Manager.h" />
     <ClInclude Include="Task_Player.h" />
+    <ClInclude Include="Task_Result.h" />
     <ClInclude Include="Task_title.h" />
+    <ClInclude Include="Task_Tutorial.h" />
+    <ClInclude Include="Task_UI.h" />
     <ClInclude Include="xnacollision.h" />
   </ItemGroup>
   <ItemGroup>
