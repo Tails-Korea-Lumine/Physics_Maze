@@ -1,3 +1,4 @@
+#pragma warning(disable:4996)
 #pragma once
 //Base of Box Class
 
@@ -17,6 +18,7 @@ enum BoxType
 
 	Core = 40, //真ん中のでかいキューブ
 	Barrier = 50, //外に飛ばさないようにする透明な壁
+	Start = 60,//スタート位置
 	//追加の余地あり
 };
 

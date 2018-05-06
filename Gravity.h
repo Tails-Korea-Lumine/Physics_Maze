@@ -1,4 +1,5 @@
 #pragma once
+#pragma warning(disable:4996)
 #include "GameEngine_Ver3_7.h"
 
 //d—ÍƒNƒ‰ƒX
@@ -37,7 +38,7 @@ public:
 
 	}
 
-	~Gravity()
+	virtual ~Gravity()
 	{
 
 	}

@@ -141,7 +141,7 @@ namespace  Title
 	{
 		//★データ＆タスク解放
 		ge->KillAll_G("UI");
-		DM::Sound_Stop(this->res->bgm_Title);
+		DM::Sound_Stop(this->res->bgm_Title);		
 
 		if (!ge->QuitFlag() && this->nextTaskCreate)
 		{
@@ -176,23 +176,37 @@ namespace  Title
 
 		auto cur = ge->GetTask_One_G<Cursor::Object>("カーソル");
 		
+		//カーソルが生きている間に
 		if (cur != nullptr)
 		{
+			//現在メニューに対しての処理
 			this->n = cur->Get_Now_Menu();
-			if (this->n != nowMenu::Start_Tutorial)
+			switch(n)						
 			{
-				this->moving_Menu += 22;				
+			case nowMenu::Start_Tutorial:
+				this->moving_Menu -= 22;
+				if (this->moving_Menu < 0)
+				{
+					this->moving_Menu = 0;
+				}
+				break;
+			case nowMenu::difficult:
+			case nowMenu::TutorialCalum:
+				this->moving_Menu += 22;
+				if (this->moving_Menu > ge->screen2DWidth)
+				{
+					this->moving_Menu = ge->screen2DWidth;
+				}
+				break;
 			}
+			//メニューは関係なくカーソルが生きている間タイトル名は上に上がっている
 			this->moving_Title_Name += 6;
 		}
 
 				
 		this->timeCnt++;
-		//カウンタの上限指定
-		if (this->moving_Menu > ge->screen2DWidth)
-		{
-			this->moving_Menu = ge->screen2DWidth;
-		}
+		//カウンタの上限指定		
+		
 		if (this->moving_Title_Name > 160)
 		{
 			this->moving_Title_Name = 160;

@@ -44,6 +44,8 @@ namespace  Game
 		this->countdown = 0;
 		this->countdownFlag = false;
 		this->timeCnt = 0;
+		this->nowdi = di;
+
 		ge->gameClearFlag = false;
 
 		//カメラの設定
@@ -65,7 +67,7 @@ namespace  Game
 		DG::EffectState().param.light[0].color = ML::Color(1, 0.89f, 0.89f, 0.89f);//色と強さ
 
 		//デバッグ用の文字生成
-		DG::Font_Create("FontA", "HGSｺﾞｼｯｸM", 12, 16);
+		//DG::Font_Create("FontA", "HGSｺﾞｼｯｸM", 12, 16);
 
 		//bgm再生
 		DM::Sound_Play(this->res->bgmName, true);
@@ -78,6 +80,8 @@ namespace  Game
 		ge->Map_center = ML::Vec3(1050, 50, 1050);
 		//判定の結果をゼロクリア
 		ge->collision_Result.clear();
+		//ボールの生成
+		auto ball = Ball::Object::Create(true);
 		//中心の元なるキューブ
 		auto core = Map_Core::Object::Create(true , di);
 		//マップ生成
@@ -89,9 +93,7 @@ namespace  Game
 		for (int f = 0; f < 12; f++)
 		{
 			auto fence = MapFence::Object::Create(true, f,di);
-		}
-		//ボールの生成
-		auto ball = Ball::Object::Create(true);
+		}		
 
 		//マップマネージャ生成
 		auto manager = Map_Manager::Object::Create(true);
@@ -110,14 +112,14 @@ namespace  Game
 		ge->KillAll_G("ボール");
 		ge->KillAll_G("UI");
 
-		DG::Font_Erase("FontA");
+		//DG::Font_Erase("FontA");
 
 		DM::Sound_Stop(this->res->bgmName);
 		if (!ge->QuitFlag() && this->nextTaskCreate)
 		{
 			//★引き継ぎタスクの生成
-			//引数のマジックナンバーは仮の数値後でuiからもらう時間を引数にする予定(2018/05/04)
-			auto nextTask = Result::Object::Create(true,this->timeCnt);
+			
+			auto nextTask = Result::Object::Create(true,this->timeCnt,this->nowdi);
 		}
 
 		return  true;
@@ -151,7 +153,7 @@ namespace  Game
 	//「２Ｄ描画」１フレーム毎に行う処理
 	void  Object::Render2D_AF()
 	{
-		auto ball = ge->GetTask_One_G<Ball::Object>("ボール");
+		/*auto ball = ge->GetTask_One_G<Ball::Object>("ボール");
 		if (ball == nullptr)
 		{
 			return;
@@ -164,7 +166,7 @@ namespace  Game
 			ge->World_Rotation.x, ge->World_Rotation.y, ge->World_Rotation.z);
 
 		ML::Box2D moji(100, 0, 600, 600);
-		DG::Font_Draw("FontA", moji, buf, ML::Color(1, 1, 0, 1));
+		DG::Font_Draw("FontA", moji, buf, ML::Color(1, 1, 0, 1));*/
 	}
 
 	void  Object::Render3D_L0()

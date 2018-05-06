@@ -112,6 +112,7 @@ namespace  Map3d
 		this->sizeX = 0;
 		this->sizeY = 0;
 		this->sizeZ = 0;
+		this->col_Poligons.clear();
 
 		if (!ge->QuitFlag() && this->nextTaskCreate)
 		{
@@ -280,6 +281,19 @@ namespace  Map3d
 					ML::Vec3 pos = ML::Vec3(x*this->chipSize + this->chipSize / 2, y*this->chipSize + this->chipSize / 2, z*this->chipSize + this->chipSize / 2);
 					ML::Box3D base = ML::Box3D(-this->chipSize / 2, -this->chipSize / 2, -this->chipSize / 2, this->chipSize, this->chipSize, this->chipSize);				
 
+					//スタート位置を発見したらボールを移動させてタイプを道に変換
+					if (BoxType(chip) == BoxType::Start)
+					{
+						ML::Vec3 objectPos = pos + ge->Map_center - ML::Vec3((this->mapSize*this->chipSize / 2), -(this->mapSize*this->chipSize / 2), (this->mapSize*this->chipSize / 2));
+						ML::Mat4x4 matR;
+						D3DXMatrixAffineTransformation(&matR, this->chipSize / 100.0f, &ge->Map_center, &this->map_QT, NULL);
+						
+						objectPos = matR.TransformCoord(objectPos);
+
+						ge->GetTask_One_G<Ball::Object>("ボール")->Teleportation(objectPos);
+						chip = int(BoxType::Road);
+					}
+
 
 					this->arr[z][y][x] = Bbox(BoxType(chip), pos, base, this->map_QT);
 				}
@@ -306,10 +320,12 @@ namespace  Map3d
 				{
 					//一定距離以内のものだけ判定をする
 					ML::Vec3 d = this->arr[z][y][x].Get_Pos() - pos;
+					//dは絶対値の距離(distance)
 					if (d.Length() < 0)
 					{
 						d *= -1;
 					}
+					//距離が100以上だったら判定せず次に項目に
 					if (d.Length() > 100)
 					{
 						continue;

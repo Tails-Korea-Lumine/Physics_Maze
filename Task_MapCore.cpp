@@ -79,6 +79,7 @@ namespace  Map_Core
 	bool  Object::Finalize()
 	{
 		//★データ＆タスク解放
+		this->col_Poligons.clear();
 
 
 		if (!ge->QuitFlag() && this->nextTaskCreate)

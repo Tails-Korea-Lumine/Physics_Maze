@@ -143,15 +143,15 @@ ML::Vec3 Gravity::Reflaction_Vector(ML::Vec3 force, ML::Vec3 normal, float weigh
 		fn *= -1;
 	}
 	
-	////マスとマス接触面でおかしい加速を防ぐ
-	//float cosSN = Gravity::Vector_Dot((force - Gravity::Accelerate(weight)), normal);
-	////cos値が1ということは内角が0度だということ、つまり物理的にあり得ない衝突
-	//if (cosSN >= _CMATH_::cos(ML::ToRadian(2)))
-	//{
-	//	//なので加速なしでreturn
-	//	//return force - Gravity::Accelerate(weight);
-	//	return force;
-	//}
+	//マスとマス接触面でおかしい加速を防ぐ
+	float cosSN = Gravity::Vector_Dot((force - Gravity::Accelerate(weight)), normal);
+	//cos値が1ということは内角が0度だということ、つまり物理的にあり得ない衝突
+	if (cosSN >= _CMATH_::cos(ML::ToRadian(2)))
+	{
+		//なので加速なしでreturn
+		//return force - Gravity::Accelerate(weight);
+		return force;
+	}
 
 	//長さを力に合わせた後のベクトルの大きさ
 	ML::Vec3 after_Normal;

@@ -74,22 +74,33 @@ namespace  Cursor
 		this->pos.y = (float)this->Move_Cursor(this->select_pos);
 
 		auto in1 = DI::GPad_GetState("P1");
-		if (in1.B3.down || in1.ST.down)
+		//カウントダウンフラグが立っていない場合のみ選択と取り消し処理を行う
+		if (!this->Is_Count_Down())
 		{
-			if (this->now == Start_Tutorial)
+			//カーソルの選択処理
+			if (in1.B3.down || in1.ST.down)
 			{
-				this->now = nowMenu(this->select_pos.y);
-				this->select_pos.x = this->select_pos.y;
+				if (this->now == Start_Tutorial)
+				{
+					this->now = nowMenu(this->select_pos.y);
+					this->select_pos.x = this->select_pos.y;
+				}
+				else
+				{
+					//UIタスクに画面隠しを頼む
+					ge->GetTask_One_G<UI::Object>("UI")->Start_WipeIn();
+					this->countdownFlag = true;
+				}
 			}
-			else
+			//カーソルの取り消し処理
+			if (in1.B2.down)
 			{
-				//UIタスクに画面隠しを頼む
-				ge->GetTask_One_G<UI::Object>("UI")->Start_WipeIn();
-				this->countdownFlag = true;
+				this->now = Start_Tutorial;
+				this->select_pos.x = 0;
 			}
 		}
 		//フラグが立ったらカウントダウン開始
-		if (this->Is_Count_Down())
+		else
 		{
 			this->countdown++;
 		}

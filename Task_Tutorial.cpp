@@ -42,7 +42,7 @@ namespace  Tutorial
 
 		//★データ初期化
 		this->posy = 0;
-		this->column = Tutorial_Column::OutLine;
+		this->column = tc;
 			
 		DG::EffectState().param.bgColor = ML::Color(1, 0, 0, 0);
 		//★タスクの生成

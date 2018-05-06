@@ -3,7 +3,6 @@
 //-------------------------------------------------------------------
 #include  "MyPG.h"
 #include  "Task_Result.h"
-#include  "Task_Title.h"
 #include  "Task_UI.h"
 
 namespace  Result
@@ -45,7 +44,7 @@ namespace  Result
 	}
 	//-------------------------------------------------------------------
 	//「初期化」タスク生成時に１回だけ行う処理
-	bool  Object::Initialize(int playTime)
+	bool  Object::Initialize(int playTime, Difficult_Range di)
 	{
 		//スーパークラス初期化
 		__super::Initialize(defGroupName, defName, true);
@@ -58,8 +57,19 @@ namespace  Result
 		//bgm再生
 		DM::Sound_Play(this->res->bgmName, true);
 
-		//点数計算式 : 1000-プレー時間(秒単位)
-		this->score = 1000-(playTime/60);
+		//点数計算式 : 難易度別の基準点数-プレー時間(秒単位)
+		switch (di)
+		{
+		case Difficult_Range::Easy:
+			this->score = 300 - (playTime / 60);
+			break;
+		case Difficult_Range::Normal:
+			this->score = 600 - (playTime / 60);
+			break;
+		case Difficult_Range::Hard:
+			this->score = 1000 - (playTime / 60);
+			break;
+		}
 		this->timeCnt = 0;
 		for (int i = 0; i < 10; i++)
 		{
@@ -204,7 +214,7 @@ namespace  Result
 	//★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★
 	//-------------------------------------------------------------------
 	//タスク生成窓口
-	Object::SP  Object::Create(bool  flagGameEnginePushBack_, int playTime)
+	Object::SP  Object::Create(bool  flagGameEnginePushBack_, int playTime, Difficult_Range di)
 	{
 		Object::SP  ob = Object::SP(new  Object());
 		if (ob) {
@@ -212,7 +222,7 @@ namespace  Result
 			if (flagGameEnginePushBack_) {
 				ge->PushBack(ob);//ゲームエンジンに登録
 			}
-			if (!ob->B_Initialize(playTime)) {
+			if (!ob->B_Initialize(playTime,di)) {
 				ob->Kill();//イニシャライズに失敗したらKill
 			}
 			return  ob;
@@ -220,9 +230,9 @@ namespace  Result
 		return nullptr;
 	}
 	//-------------------------------------------------------------------
-	bool  Object::B_Initialize(int playTime)
+	bool  Object::B_Initialize(int playTime, Difficult_Range di)
 	{
-		return  this->Initialize(playTime);
+		return  this->Initialize(playTime,di);
 	}
 	//-------------------------------------------------------------------
 	Object::~Object() { this->B_Finalize(); }

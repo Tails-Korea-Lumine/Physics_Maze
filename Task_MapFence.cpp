@@ -123,6 +123,7 @@ namespace  MapFence
 		this->sizeX = 0;
 		this->sizeY = 0;
 		this->sizeZ = 0;
+		this->col_Poligons.clear();
 
 		if (!ge->QuitFlag() && this->nextTaskCreate)
 		{
@@ -274,7 +275,7 @@ namespace  MapFence
 			string chipFileName, chipFilePath;
 			fin >> chipFileName;
 			chipFilePath = "./data/mesh/" + chipFileName;
-			this->chipName[c] = "Fence" + to_string(this->fenceNumber) + "Chip" + std::to_string(c);
+			this->chipName[c] = "Fence_Chip" + std::to_string(c);
 			DG::Mesh_CreateFromSOBFile(this->chipName[c], chipFilePath);
 		}
 		//マップ配列サイズの読み込み
@@ -321,10 +322,12 @@ namespace  MapFence
 					}
 					//一定距離以内のものだけ判定をする
 					ML::Vec3 d = this->arr[z][y][x].Get_Pos() - pos;
+					//dは絶対値の距離
 					if (d.Length() < 0)
 					{
 						d *= -1;
 					}
+					//距離が100以上だったら判定せず次に項目に
 					if (d.Length() > 100)
 					{
 						continue;

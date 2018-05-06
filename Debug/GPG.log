@@ -1,8 +1,8 @@
 ﻿  Task_title.cpp
-c:\users\lumine\desktop\fermat\3d_maze\task_title.cpp(245): warning C4146: 단항 빼기 연산자가 부호 없는 형식에 적용되었습니다. 결과는 역시 unsigned입니다.
-c:\users\lumine\desktop\fermat\3d_maze\task_title.cpp(306): warning C4146: 단항 빼기 연산자가 부호 없는 형식에 적용되었습니다. 결과는 역시 unsigned입니다.
-c:\users\lumine\desktop\fermat\3d_maze\task_title.cpp(307): warning C4146: 단항 빼기 연산자가 부호 없는 형식에 적용되었습니다. 결과는 역시 unsigned입니다.
-c:\users\lumine\desktop\fermat\3d_maze\task_title.cpp(326): warning C4146: 단항 빼기 연산자가 부호 없는 형식에 적용되었습니다. 결과는 역시 unsigned입니다.
-c:\users\lumine\desktop\fermat\3d_maze\task_title.cpp(327): warning C4146: 단항 빼기 연산자가 부호 없는 형식에 적용되었습니다. 결과는 역시 unsigned입니다.
-c:\users\lumine\desktop\fermat\3d_maze\task_title.cpp(328): warning C4146: 단항 빼기 연산자가 부호 없는 형식에 적용되었습니다. 결과는 역시 unsigned입니다.
+c:\users\lumine\desktop\fermat\3d_maze\task_title.cpp(258): warning C4146: 단항 빼기 연산자가 부호 없는 형식에 적용되었습니다. 결과는 역시 unsigned입니다.
+c:\users\lumine\desktop\fermat\3d_maze\task_title.cpp(319): warning C4146: 단항 빼기 연산자가 부호 없는 형식에 적용되었습니다. 결과는 역시 unsigned입니다.
+c:\users\lumine\desktop\fermat\3d_maze\task_title.cpp(320): warning C4146: 단항 빼기 연산자가 부호 없는 형식에 적용되었습니다. 결과는 역시 unsigned입니다.
+c:\users\lumine\desktop\fermat\3d_maze\task_title.cpp(339): warning C4146: 단항 빼기 연산자가 부호 없는 형식에 적용되었습니다. 결과는 역시 unsigned입니다.
+c:\users\lumine\desktop\fermat\3d_maze\task_title.cpp(340): warning C4146: 단항 빼기 연산자가 부호 없는 형식에 적용되었습니다. 결과는 역시 unsigned입니다.
+c:\users\lumine\desktop\fermat\3d_maze\task_title.cpp(341): warning C4146: 단항 빼기 연산자가 부호 없는 형식에 적용되었습니다. 결과는 역시 unsigned입니다.
   GPG.vcxproj -> C:\Users\Lumine\Desktop\Fermat\3d_Maze\Debug\GPG.exe

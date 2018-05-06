@@ -52,7 +52,9 @@ namespace Game
 		//変数
 		//タスク消滅までのカウンタとフラグ	
 		int countdown;
-		bool countdownFlag;	
+		bool countdownFlag;
+
+		Difficult_Range nowdi;
 
 		//遊んだプレー時間Resultタスクに渡すもの
 		int timeCnt;
