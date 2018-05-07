@@ -34,8 +34,8 @@ namespace  Map_Manager
 		this->res = Resource::Create();
 
 		//★データ初期化
-		easing::Set("StickVolume", easing::QUINTIN, 0,1.22f, 300);
-		easing::Start("StickVolume");
+	
+
 		//★タスクの生成
 
 		return  true;
@@ -58,9 +58,8 @@ namespace  Map_Manager
 	//-------------------------------------------------------------------
 	//「更新」１フレーム毎に行う処理
 	void  Object::UpDate()
-	{
+	{		
 		
-		easing::Reset("StickVolume");
 		//マップに関することは全部マネージャ側でやる ver0.6
 		this->Managing_All_Map(15);
 		
@@ -123,27 +122,30 @@ namespace  Map_Manager
 			//	}
 			//}
 
+			easing::UpDate();
 			//スティックだけで回転させるver0.2
 			//スティックが倒された量を更新
 			//各軸の回転量にそれぞれ値が入る
-			easing::UpDate();
-			if(in1.LStick.axis.y !=0)
+
+			if (in1.LStick.axis.y != 0)
 			{
-				frame_QTx = ML::QT(ML::Vec3(1, 0, 0), ML::ToRadian(-in1.LStick.axis.y * easing::GetPos("StickVolume") / float(delicate)));				
-			}			
+				frame_QTx = ML::QT(ML::Vec3(1, 0, 0), ML::ToRadian(-in1.LStick.axis.y  / float(delicate)));
+			}
 			if (in1.RStick.axis.y != 0)
 			{
-				frame_QTx = ML::QT(ML::Vec3(1, 0, 0), ML::ToRadian(-in1.RStick.axis.y * easing::GetPos("StickVolume") / float(delicate)));
+				frame_QTx = ML::QT(ML::Vec3(1, 0, 0), ML::ToRadian(-in1.RStick.axis.y  / float(delicate)));
 			}
 			if (in1.LStick.axis.x != 0)
 			{
-				frame_QTy = ML::QT(ML::Vec3(0, 1, 0), ML::ToRadian(-in1.LStick.axis.x  * easing::GetPos("StickVolume") / float(delicate)));
-			}			
+				frame_QTy = ML::QT(ML::Vec3(0, 1, 0), ML::ToRadian(-in1.LStick.axis.x  / float(delicate)));
+			}
 			if (in1.RStick.axis.x != 0)
 			{
-				frame_QTz = ML::QT(ML::Vec3(0, 0, 1), ML::ToRadian(-in1.RStick.axis.x  * easing::GetPos("StickVolume") / float(delicate)));
-			}		
-			
+				frame_QTz = ML::QT(ML::Vec3(0, 0, 1), ML::ToRadian(-in1.RStick.axis.x  / float(delicate)));
+			}
+	
+
+
 			
 
 			//各タスクの回転量を更新

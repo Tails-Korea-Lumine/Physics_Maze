@@ -71,9 +71,6 @@
     <Filter Include="MyPG\Bbox">
       <UniqueIdentifier>{6affa42c-fd48-4ee0-a97c-93cc8549cd94}</UniqueIdentifier>
     </Filter>
-    <Filter Include="MyPG\Effect">
-      <UniqueIdentifier>{d10f0e10-cd4e-4720-93ec-90be6d5e56da}</UniqueIdentifier>
-    </Filter>
     <Filter Include="MyPG\Tasks\Cursor">
       <UniqueIdentifier>{4dfe7fba-b287-4a9d-ae9b-a09075da0b76}</UniqueIdentifier>
     </Filter>

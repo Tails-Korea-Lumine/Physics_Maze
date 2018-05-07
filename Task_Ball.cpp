@@ -40,7 +40,7 @@ namespace  Ball
 		this->speed = ML::Vec3(0, 0, 0);
 		this->moveVec = ML::Vec3(0, 0, 0);
 		this->r = 30.0f;
-		this->m = 200.0f;
+		this->m = 100.0f;
 		this->collision_Flag = false;
 
 	

@@ -349,9 +349,9 @@ namespace  Title
 			return;
 		}
 
-		ML::Box2D draw_Start(400, 410, 380, 100);
+		ML::Box2D draw_Start(400, 310, 380, 100);
 		ML::Box2D src_Start(0, 0, 420, 140);
-		ML::Box2D draw_Tutorial(400, 500, 520, 100);
+		ML::Box2D draw_Tutorial(400, 400, 520, 100);
 		ML::Box2D src_Tutorial(0, 0, 560, 140);		
 
 		ML::Box2D draw_Guide(400, 660, 500, 50);
@@ -370,9 +370,9 @@ namespace  Title
 	void Object::Draw_Dif_Col(nowMenu now)
 	{
 		//•\Ž¦”ÍˆÍ‚Í‰æ‘œ‚ðì‚Á‚½Œã‚É•ÏX‚·‚é(2018/05/04)
-		ML::Box2D draw_Dif_Col0(400 + ge->screen2DWidth, 410, 380, 100);//Easy and OutLine
-		ML::Box2D draw_Dif_Col1(400 + ge->screen2DWidth, 500, 380, 100);//Normal and Control
-		ML::Box2D draw_Dif_Col2(400 + ge->screen2DWidth, 590, 380, 100);//Hard and Obstacle
+		ML::Box2D draw_Dif_Col0(400 + ge->screen2DWidth, 310, 380, 100);//Easy and OutLine
+		ML::Box2D draw_Dif_Col1(400 + ge->screen2DWidth, 400, 380, 100);//Normal and Control
+		ML::Box2D draw_Dif_Col2(400 + ge->screen2DWidth, 490, 380, 100);//Hard and Obstacle
 
 		//‰¼‚Ìsrc
 		ML::Box2D src_Dif_col0(0, 0, 700, 140);
