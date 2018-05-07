@@ -47,7 +47,7 @@ namespace  UI
 		this->res = Resource::Create();
 
 		//šƒf[ƒ^‰Šú‰»
-		this->render2D_Priority[0] = 1.0f;
+		this->render2D_Priority[0] = 0.1f;
 		this->timeCnt = 0;
 		this->wipe = WipeInOut::Wipe_Out;
 		this->wipe_Alpha = 1.0f;

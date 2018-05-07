@@ -36,6 +36,7 @@ namespace  Cursor
 
 		//šƒf[ƒ^‰Šú‰»
 		this->pos = ML::Vec2(300, -1000);
+		this->render2D_Priority[0] = 0.9f;
 		this->select_pos.x = 0;
 		this->select_pos.y = -1;
 		this->countdown = 0;

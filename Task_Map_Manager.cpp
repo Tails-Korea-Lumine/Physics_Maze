@@ -59,7 +59,7 @@ namespace  Map_Manager
 	void  Object::UpDate()
 	{
 		//マップに関することは全部マネージャ側でやる ver0.6
-		this->Managing_All_Map(15);
+		this->Managing_All_Map(20);
 		
 	}
 	//-------------------------------------------------------------------

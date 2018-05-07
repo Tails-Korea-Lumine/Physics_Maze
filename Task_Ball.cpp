@@ -6,6 +6,7 @@
 #include  "Task_MapSide.h"
 #include  "Task_MapCore.h"
 #include  "Task_MapFence.h"
+#include  "Task_Map_Manager.h"
 
 namespace  Ball
 {
@@ -40,7 +41,7 @@ namespace  Ball
 		this->speed = ML::Vec3(0, 0, 0);
 		this->moveVec = ML::Vec3(0, 0, 0);
 		this->r = 30.0f;
-		this->m = 30.0f;
+		this->m = 150.0f;
 		this->collision_Flag = false;
 
 	
@@ -68,22 +69,17 @@ namespace  Ball
 	void  Object::UpDate()
 	{
 		auto in1 = DI::GPad_GetState("P1");		
-
+		auto manager = ge->GetTask_One_GN<Map_Manager::Object>("マップ", "Manager");
 		//マップの情報を修得、今はタスク一個で持ってくるが		
 		//重力加速
 		this->speed += this->G.Accelerate(this->m);
 		
 		//ver0.4の残骸ベクトル計算の精密調整が必要となればまた使うかもしれない(2018/05/03)
-		//for (int i = 0; i < 15; i++)
-		
-			////判定スタート
-			//core->Core_Check_Hit(this->pos, this->r, this->speed);
-			//for (auto m = map->begin(); m != map->end(); m++)
-			//{
-			//	(*m)->Map_Check_Hit(this->pos, this->r, this->speed);
-			//}
+		//for (int i = 0; i < 3; i++)
+		{
+			//判定スタート
 			
-			
+			//manager->Managing_All_Map(5);
 
 			//-------------------------------------
 			//デバッグ用ポーズ
@@ -146,21 +142,21 @@ namespace  Ball
 						//衝突フラグを有効にする
 						this->collision_Flag = true;
 					}
-				}				
-				
-			}			
-			
+				}
+
+			}
+
 			//終端速度を指定
-			if (this->speed.Length() > 6.0f)
+			if (this->speed.Length() > 9.0f)
 			{
 				this->speed = this->speed.Normalize();
-				this->speed *= 6.0f;
+				this->speed *= 9.0f;
 			}
 
 			//移動(フレーム終了する直前に行う)
-			this->pos += this->speed;
+			this->pos += this->speed/3.0f;
 
-			
+		}
 	}
 	//-------------------------------------------------------------------
 	//「２Ｄ描画」１フレーム毎に行う処理
