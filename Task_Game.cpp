@@ -23,7 +23,7 @@ namespace  Game
 		this->bgmName = "stageBgm";
 		this->BG_Image = "GameBG";
 		DM::Sound_CreateStream(this->bgmName, "./data/sound/stage.wav");
-		DG::Image_Create(this->BG_Image, "./data/image/GameBG.jpg");
+		//DG::Image_Create(this->BG_Image, "./data/image/GameBG.jpg");
 		return true;
 	}
 	//-------------------------------------------------------------------
@@ -58,7 +58,7 @@ namespace  Game
 			ML::Vec3(0.0f, 1.0f, 0.0f),					//	カメラの上方向ベクトル
 			ML::ToRadian(35), 10.0f, 4000.0f,	//	視野角・視野距離
 			(float)ge->screenWidth / (float)ge->screenHeight);		//	画面比率		
-		DG::EffectState().param.bgColor = ML::Color(0.5f, 0.0f, 0.4f, 0.0f);
+		DG::EffectState().param.bgColor = ML::Color(1, 0.0f, 0.0f, 0.0f);
 		//ライティング有効化
 		DG::EffectState().param.lightsEnable = true;
 		//環境光の強さを設定する
@@ -173,7 +173,7 @@ namespace  Game
 		ML::Box2D draw(0, 0, ge->screenWidth, ge->screenHeight);
 		ML::Box2D src(0, 0, 960, 539);
 
-		DG::Image_Draw(this->res->BG_Image, draw, src);
+		//DG::Image_Draw(this->res->BG_Image, draw, src);
 	}
 
 	void  Object::Render3D_L0()

@@ -284,14 +284,14 @@ std::vector<After_Collision> Collision::Hit_Check(ML::Box3D box, ML::Vec3 pos, f
 			{
 				//マスとマス接触面でおかしい加速を防ぐ
 				//移動ベクトルと衝突した三角形の法線ベクトルのcos値
-				//float cosSN = Gravity::Vector_Dot(speed , tri.normal);
-				////cos値が1ということは内角が0度だということ、つまり物理的にあり得ない衝突
-				////もしものために誤差範囲まで確認
-				//if (cosSN >= _CMATH_::cos(ML::ToRadian(6)))
-				//{
-				//	//なので判定はあたっているが無視する
-				//	continue;
-				//}
+				float cosSN = Gravity::Vector_Dot(speed , tri.normal);
+				//cos値が1ということは内角が0度だということ、つまり物理的にあり得ない衝突
+				//もしものために誤差範囲まで確認
+				if (cosSN >= _CMATH_::cos(ML::ToRadian(6)))
+				{
+					//なので判定はあたっているが無視する
+					continue;
+				}
 				//以下あたった三角形の法線ベクトルとフラグを返す処理
 				After_Collision collision_True;
 				collision_True.collision_Flag = collision_Flag;
@@ -300,10 +300,10 @@ std::vector<After_Collision> Collision::Hit_Check(ML::Box3D box, ML::Vec3 pos, f
 				//return collision_True;
 			}
 		}
-		if (R.size() != 0)
-		{
-			return R;
-		}
+	}
+	if (R.size() != 0)
+	{
+		return R;
 	}
 	//あたらなかったらゼロベクトルの法線ベクトルとフラグを返す
 	After_Collision collision_False;

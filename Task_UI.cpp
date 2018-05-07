@@ -5,6 +5,7 @@
 #include  "Task_UI.h"
 #include  "easing.h"
 #include  "Task_Game.h"
+#include "Task_Result.h"
 
 namespace  UI
 {
@@ -96,7 +97,7 @@ namespace  UI
 	void  Object::UpDate()
 	{
 		//easing更新
-		if (ge->GetTask_One_G<Title::Object>("タイトル") == nullptr)
+		if (ge->GetTask_One_G<Result::Object>("結果画面") != nullptr)
 		{
 			easing::UpDate();
 		}

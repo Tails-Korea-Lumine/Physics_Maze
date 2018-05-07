@@ -1,7 +1,7 @@
-﻿  Task_Game.cpp
+﻿  Task_Map_Manager.cpp
   コード生成しています。
-  0 of 5419 functions ( 0.0%) were compiled, the rest were copied from previous compilation.
+  325 of 5446 functions ( 6.0%) were compiled, the rest were copied from previous compilation.
     0 functions were new in current compilation
-    0 functions had inline decision re-evaluated but remain unchanged
+    55 functions had inline decision re-evaluated but remain unchanged
   コード生成が終了しました。
-  GPG.vcxproj -> D:\17ci0414\3d maze\Release\GPG.exe
+  GPG.vcxproj -> D:\17ci0414\asdf\Release\GPG.exe
