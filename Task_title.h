@@ -38,8 +38,10 @@ namespace Title
 		static   WP  instance;
 		static  Resource::SP  Create();
 		//共有する変数はここに追加する
-		string Title_Name_Image[9];
+		string Title_Name_Image[12];
 		string press_Any_Key_Image;
+		string Difficalt_Image[3];
+		string Column_Image[3];
 		string start_Image;
 		string tutorial_Image;
 		string select_Guide_Image;
@@ -71,7 +73,7 @@ namespace Title
 		//追加したい変数・メソッドはここに追加する
 		//変数
 		//タイトル文字の移動および描画座標
-		ML::Vec2 Title_Name[9];
+		ML::Vec2 Title_Name[12];
 
 		bool select_now;
 		int timeCnt;

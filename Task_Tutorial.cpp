@@ -15,9 +15,11 @@ namespace  Tutorial
 		this->imageName[0] = "Tutorial_Outline_Img";
 		this->imageName[1] = "Tutorial_Control_Img";
 		this->imageName[2] = "Tutorial_Obstacle_Img";
-		DG::Image_Create(this->imageName[0], "./data/image/tutorial_text.png");//仮のイメージ
-		DG::Image_Create(this->imageName[1], "./data/image/tutorial_text.png");//仮のイメージ
-		DG::Image_Create(this->imageName[2], "./data/image/tutorial_text.png");//仮のイメージ
+		this->Bg_Img = "Tutorial_BG";
+		DG::Image_Create(this->imageName[0], "./data/image/Tutorial_Outline.png");//概要のテュートリアル
+		DG::Image_Create(this->imageName[1], "./data/image/Tutorial_Control.png");//操作のテュートリアル
+		DG::Image_Create(this->imageName[2], "./data/image/Tutorial_Obstacle.png");//障害物のテュートリアル
+		DG::Image_Create(this->Bg_Img, "./data/image/background.jpg");
 	
 		return true;
 	}
@@ -29,6 +31,7 @@ namespace  Tutorial
 		{
 			DG::Image_Erase(this->imageName[i]);
 		}
+		DG::Image_Erase(this->Bg_Img);
 		return true;
 	}
 	//-------------------------------------------------------------------
@@ -102,6 +105,11 @@ namespace  Tutorial
 	//「２Ｄ描画」１フレーム毎に行う処理
 	void  Object::Render2D_AF()
 	{
+		ML::Box2D drawBG(0, 0, 1280, 720);
+		ML::Box2D srcBG(0, 0, 1280, 960);
+
+		DG::Image_Draw(this->res->Bg_Img, drawBG, srcBG);
+
 		ML::Box2D draw(0, 0, 1280, 1248);
 		ML::Box2D src(0, 0,1280, 1248);
 

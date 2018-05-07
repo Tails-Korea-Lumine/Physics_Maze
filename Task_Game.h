@@ -24,6 +24,7 @@ namespace Game
 		static   WP  instance;
 		static  Resource::SP  Create();
 		//‹¤—L‚·‚é•Ï”‚Í‚±‚±‚É’Ç‰Á‚·‚é
+		string BG_Image;
 		string bgmName;
 	};
 	//-------------------------------------------------------------------

@@ -20,31 +20,49 @@ namespace  Title
 		this->start_Image = "SI";
 		this->tutorial_Image = "TI";
 		this->Title_Name_Image[0] = "Title_S";
-		this->Title_Name_Image[1] = "Title_N";
-		this->Title_Name_Image[2] = "Title_A";
-		this->Title_Name_Image[3] = "Title_K";
-		this->Title_Name_Image[4] = "Title_E";
-		this->Title_Name_Image[5] = "Title_G";
-		this->Title_Name_Image[6] = "Title_A";
-		this->Title_Name_Image[7] = "Title_M";
-		this->Title_Name_Image[8] = "Title_E";		
+		this->Title_Name_Image[1] = "Title_P";
+		this->Title_Name_Image[2] = "Title_I";
+		this->Title_Name_Image[3] = "Title_N";
+		this->Title_Name_Image[4] = "Title_N";
+		this->Title_Name_Image[5] = "Title_I";
+		this->Title_Name_Image[6] = "Title_N";
+		this->Title_Name_Image[7] = "Title_G";
+		this->Title_Name_Image[8] = "Title_C";		
+		this->Title_Name_Image[9] = "Title_U";
+		this->Title_Name_Image[10] = "Title_B";
+		this->Title_Name_Image[11] = "Title_E";
 		this->BG_ImageName = "BG";
+		this->Difficalt_Image[0] = "Easy";
+		this->Difficalt_Image[1] = "Normal";
+		this->Difficalt_Image[2] = "Hard";
+		this->Column_Image[0] = "Outline";
+		this->Column_Image[1] = "Control";
+		this->Column_Image[2] = "Obstacle";
 		this->bgm_Title = "BGM_Title";
 		
 		DG::Image_Create(this->select_Guide_Image, "./data/image/moveSelect.png");
 		DG::Image_Create(this->press_Any_Key_Image, "./data/image/preaaAny.png");
 		DG::Image_Create(this->start_Image, "./data/image/start.png");
 		DG::Image_Create(this->tutorial_Image, "./data/image/tutorial.png");
-		DG::Image_Create(this->BG_ImageName, "./data/image/TItleBG.jpg");
+		DG::Image_Create(this->BG_ImageName, "./data/image/background.jpg");
 		DG::Image_Create(this->Title_Name_Image[0], "./data/image/S.png");
-		DG::Image_Create(this->Title_Name_Image[1], "./data/image/N.png");
-		DG::Image_Create(this->Title_Name_Image[2], "./data/image/A.png");
-		DG::Image_Create(this->Title_Name_Image[3], "./data/image/K.png");
-		DG::Image_Create(this->Title_Name_Image[4], "./data/image/E.png");
-		DG::Image_Create(this->Title_Name_Image[5], "./data/image/G.png");
-		DG::Image_Create(this->Title_Name_Image[6], "./data/image/A.png");
-		DG::Image_Create(this->Title_Name_Image[7], "./data/image/M.png");
-		DG::Image_Create(this->Title_Name_Image[8], "./data/image/E.png");
+		DG::Image_Create(this->Title_Name_Image[1], "./data/image/P.png");
+		DG::Image_Create(this->Title_Name_Image[2], "./data/image/I.png");
+		DG::Image_Create(this->Title_Name_Image[3], "./data/image/N.png");
+		DG::Image_Create(this->Title_Name_Image[4], "./data/image/N.png");
+		DG::Image_Create(this->Title_Name_Image[5], "./data/image/I.png");
+		DG::Image_Create(this->Title_Name_Image[6], "./data/image/N.png");
+		DG::Image_Create(this->Title_Name_Image[7], "./data/image/G.png");
+		DG::Image_Create(this->Title_Name_Image[8], "./data/image/C.png");
+		DG::Image_Create(this->Title_Name_Image[9], "./data/image/U.png");
+		DG::Image_Create(this->Title_Name_Image[10], "./data/image/B.png");
+		DG::Image_Create(this->Title_Name_Image[11], "./data/image/E.png");
+		DG::Image_Create(this->Difficalt_Image[0], "./data/image/Easy.png");
+		DG::Image_Create(this->Difficalt_Image[1], "./data/image/Normal.png");
+		DG::Image_Create(this->Difficalt_Image[2], "./data/image/Hard.png");
+		DG::Image_Create(this->Column_Image[0], "./data/image/Outline.png");
+		DG::Image_Create(this->Column_Image[1], "./data/image/Control.png");
+		DG::Image_Create(this->Column_Image[2], "./data/image/Obstacle.png");
 		//bgm初期化
 		DM::Sound_CreateStream(this->bgm_Title, "./data/sound/title.wav");
 
@@ -59,9 +77,14 @@ namespace  Title
 		DG::Image_Erase(this->start_Image);
 		DG::Image_Erase(this->tutorial_Image);
 		DG::Image_Erase(this->BG_ImageName);
-		for (int i = 0; i < 9; i++)
+		for (int i = 0; i < 12; i++)
 		{
 			DG::Image_Erase(this->Title_Name_Image[i]);
+		}
+		for (int i = 0; i < 3; i++)
+		{
+			DG::Image_Erase(this->Difficalt_Image[i]);
+			DG::Image_Erase(this->Column_Image[i]);
 		}
 
 		DM::Sound_Erase(this->bgm_Title);
@@ -84,38 +107,45 @@ namespace  Title
 		this->moving_Title_Name = 0;
 		this->n = nowMenu::Start_Tutorial;
 
-		for (int i = 0; i < 9; i++)
+		for (int i = 0; i < 12; i++)
 		{
 			this->Title_Name[i].x = -140;
 			this->Title_Name[i].y = -140;
 		}
 
 		//easing function set
-		//SNAKE
-		easing::Set("Title_0_x", easing::QUARTINOUT, 1280, 100, 100);
-		easing::Set("Title_1_x", easing::QUARTINOUT, 1280, 240, 110);
+		//SPINNING CUBE
+
+		//0からの偶数
+		for (int i = 0; i < 12; i += 2)
+		{
+			easing::Set("Title_x" + to_string(i), easing::QUARTINOUT, -140+(100*i), 60 + (100 * i), 100);
+		}
+		//1からの奇数
+		for (int j = 1; j < 12; j++)
+		{
+			easing::Set("Title_x" + to_string(j), easing::QUARTINOUT, -140 + (100 * j), 60 + (100 * j), 100);
+		}
+		
+		/*easing::Set("Title_1_x", easing::QUARTINOUT, 1280, 240, 110);
 		easing::Set("Title_2_x", easing::QUARTINOUT, 1280, 380, 120);
 		easing::Set("Title_3_x", easing::QUARTINOUT, 1280, 520, 130);
-		easing::Set("Title_4_x", easing::QUARTINOUT, 1280, 660, 140);
-		easing::Set("Title_0_y", easing::QUINTOUT, 720, 40, 100);
+		easing::Set("Title_4_x", easing::QUARTINOUT, 1280, 660, 140);*/
+		easing::Set("Title_0_y", easing::QUINTOUT, -140, 160, 100);
 
-		//GAME
-		easing::Set("Title_5_x", easing::QUARTINOUT, -140, 640, 180);
+		
+		/*easing::Set("Title_5_x", easing::QUARTINOUT, -140, 640, 180);
 		easing::Set("Title_6_x", easing::QUARTINOUT, -140, 780, 170);
 		easing::Set("Title_7_x", easing::QUARTINOUT, -140, 920, 160);
-		easing::Set("Title_8_x", easing::QUARTINOUT, -140, 1060, 150);
-		easing::Set("Title_1_y", easing::QUINTOUT, 720, 220, 150);
+		easing::Set("Title_8_x", easing::QUARTINOUT, -140, 1060, 150);*/
+		easing::Set("Title_1_y", easing::QUINTOUT, 720, 160, 150);
 
-		easing::Start("Title_0_x");
-		easing::Start("Title_1_x");
-		easing::Start("Title_2_x");
-		easing::Start("Title_3_x");
-		easing::Start("Title_4_x");
+		//easing start
+		for (int i = 0; i < 12; i++)
+		{
+			easing::Start("Title_x" + to_string(i));
+		}
 		easing::Start("Title_0_y");
-		easing::Start("Title_5_x");
-		easing::Start("Title_6_x");
-		easing::Start("Title_7_x");
-		easing::Start("Title_8_x");
 		easing::Start("Title_1_y");
 
 
@@ -218,7 +248,7 @@ namespace  Title
 	{		
 
 		ML::Box2D draw_BG(0, 0, 1280, 720);
-		ML::Box2D src_BG(0, 0, 2560, 1600);
+		ML::Box2D src_BG(0, 0, 1280, 960);
 		DG::Image_Draw(this->res->BG_ImageName, draw_BG, src_BG);
 		this->Draw_Title_Name();
 		this->Draw_PAK();
@@ -253,11 +283,11 @@ namespace  Title
 	//タイトル名を表示
 	void Object::Draw_Title_Name()
 	{
-		ML::Box2D draw(0, 0, 140, 140);
+		ML::Box2D draw(0, 0, 100, 100);
 		ML::Box2D src(0, 0, 140, 140);
 
 		draw.Offset(0, -this->moving_Title_Name);
-		for (int i = 0; i < 9; i++)
+		for (int i = 0; i < 12; i++)
 		{
 			DG::Image_Draw(this->res->Title_Name_Image[i], draw.OffsetCopy(this->Title_Name[i]), src);
 		}
@@ -267,7 +297,7 @@ namespace  Title
 	void Object::UpDate_Title_Name()
 	{
 		//X座標更新
-		this->Title_Name[0].x = easing::GetPos("Title_0_x");
+		/*this->Title_Name[0].x = easing::GetPos("Title_0_x");
 		this->Title_Name[1].x = easing::GetPos("Title_1_x");
 		this->Title_Name[2].x = easing::GetPos("Title_2_x");
 		this->Title_Name[3].x = easing::GetPos("Title_3_x");
@@ -275,16 +305,26 @@ namespace  Title
 		this->Title_Name[5].x = easing::GetPos("Title_5_x");
 		this->Title_Name[6].x = easing::GetPos("Title_6_x");
 		this->Title_Name[7].x = easing::GetPos("Title_7_x");
-		this->Title_Name[8].x = easing::GetPos("Title_8_x");
+		this->Title_Name[8].x = easing::GetPos("Title_8_x");*/
 
-		for (int i = 0; i < 5; i++)
+		for (int i = 0; i < 12; i++)
 		{
-			this->Title_Name[i].y = easing::GetPos("Title_0_y");
+			this->Title_Name[i].x = easing::GetPos("Title_x" + to_string(i));
 		}
-		for (int i = 5; i < 9; i++)
-		{
-			this->Title_Name[i].y = easing::GetPos("Title_1_y");
-		}
+
+		for (int i = 0; i < 12; i++)
+		{			
+			switch (i%2)
+			{
+			case 0:
+				this->Title_Name[i].y = easing::GetPos("Title_0_y");
+				break;
+			case 1:
+				this->Title_Name[i].y = easing::GetPos("Title_1_y");
+				break;
+			}
+			
+		}		
 	}
 	//----------------------------------------------------------------------------------
 	//press any key を表示
@@ -335,15 +375,24 @@ namespace  Title
 		ML::Box2D draw_Dif_Col2(400 + ge->screen2DWidth, 590, 380, 100);//Hard and Obstacle
 
 		//仮のsrc
-		ML::Box2D src_Dif_col0(0, 0, 420, 140);
+		ML::Box2D src_Dif_col0(0, 0, 700, 140);
 
 		draw_Dif_Col0.Offset(-this->moving_Menu, 0);
 		draw_Dif_Col1.Offset(-this->moving_Menu, 0);
 		draw_Dif_Col2.Offset(-this->moving_Menu, 0);
-
-		DG::Image_Draw(this->res->start_Image, draw_Dif_Col0, src_Dif_col0);
-		DG::Image_Draw(this->res->start_Image, draw_Dif_Col1, src_Dif_col0);
-		DG::Image_Draw(this->res->start_Image, draw_Dif_Col2, src_Dif_col0);
+		switch (now)
+		{
+		case nowMenu::difficult:
+			DG::Image_Draw(this->res->Difficalt_Image[0], draw_Dif_Col0, src_Dif_col0);
+			DG::Image_Draw(this->res->Difficalt_Image[1], draw_Dif_Col1, src_Dif_col0);
+			DG::Image_Draw(this->res->Difficalt_Image[2], draw_Dif_Col2, src_Dif_col0);
+			break;
+		case nowMenu::TutorialCalum:
+			DG::Image_Draw(this->res->Column_Image[0], draw_Dif_Col0, src_Dif_col0);
+			DG::Image_Draw(this->res->Column_Image[1], draw_Dif_Col1, src_Dif_col0);
+			DG::Image_Draw(this->res->Column_Image[2], draw_Dif_Col2, src_Dif_col0);
+			break;
+		}
 	}
 
 	//----------------------------------------------------------------------------

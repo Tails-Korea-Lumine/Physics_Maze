@@ -26,6 +26,7 @@ namespace Tutorial
 		//‹¤—L‚·‚é•Ï”‚Í‚±‚±‚É’Ç‰Á‚·‚é
 		//‘I‘ğ‰Â”\‚È–ÚŸ‚ª3ŒÂ
 		string imageName[3];
+		string Bg_Img;
 	};
 	//-------------------------------------------------------------------
 	class  Object : public  BTask

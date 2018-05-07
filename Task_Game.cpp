@@ -21,7 +21,9 @@ namespace  Game
 	bool  Resource::Initialize()
 	{
 		this->bgmName = "stageBgm";
+		this->BG_Image = "GameBG";
 		DM::Sound_CreateStream(this->bgmName, "./data/sound/stage.wav");
+		DG::Image_Create(this->BG_Image, "./data/image/GameBG.jpg");
 		return true;
 	}
 	//-------------------------------------------------------------------
@@ -29,6 +31,7 @@ namespace  Game
 	bool  Resource::Finalize()
 	{
 		DM::Sound_Erase(this->bgmName);
+		DG::Image_Erase(this->BG_Image);
 		return true;
 	}
 	//-------------------------------------------------------------------
@@ -45,7 +48,7 @@ namespace  Game
 		this->countdownFlag = false;
 		this->timeCnt = 0;
 		this->nowdi = di;
-
+		this->render2D_Priority[1] = 1.0f;
 		ge->gameClearFlag = false;
 
 		//ƒJƒƒ‰‚ÌÝ’è
@@ -167,6 +170,10 @@ namespace  Game
 
 		ML::Box2D moji(100, 0, 600, 600);
 		DG::Font_Draw("FontA", moji, buf, ML::Color(1, 1, 0, 1));*/
+		ML::Box2D draw(0, 0, ge->screenWidth, ge->screenHeight);
+		ML::Box2D src(0, 0, 960, 539);
+
+		DG::Image_Draw(this->res->BG_Image, draw, src);
 	}
 
 	void  Object::Render3D_L0()
