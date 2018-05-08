@@ -34,7 +34,27 @@ namespace  Map_Manager
 		this->res = Resource::Create();
 
 		//★データ初期化	
-				
+		this->frame_QTxp = ML::QT(0.0f);
+		this->frame_QTxm = ML::QT(0.0f);
+		this->frame_QTyp = ML::QT(0.0f);
+		this->frame_QTym = ML::QT(0.0f);
+		this->frame_QTzp = ML::QT(0.0f);
+		this->frame_QTzm = ML::QT(0.0f);
+	
+		//easing set
+		easing::Set("Decrese_StickVolumeXP", easing::CIRCIN, 0.6f, 0, 10);
+		easing::Set("Decrese_StickVolumeXM", easing::CIRCIN, 0.6f, 0, 10);
+		easing::Set("Decrese_StickVolumeYP", easing::CIRCIN, 0.6f, 0, 10);
+		easing::Set("Decrese_StickVolumeYM", easing::CIRCIN, 0.6f, 0, 10);
+		easing::Set("Decrese_StickVolumeZP", easing::CIRCIN, 0.6f, 0, 10);
+		easing::Set("Decrese_StickVolumeZM", easing::CIRCIN, 0.6f, 0, 10);
+		//easing start
+		easing::Pause("Decrese_StickVolumeXP");
+		easing::Pause("Decrese_StickVolumeXM");
+		easing::Pause("Decrese_StickVolumeYP");
+		easing::Pause("Decrese_StickVolumeYM");
+		easing::Pause("Decrese_StickVolumeZP");
+		easing::Pause("Decrese_StickVolumeZM");
 
 		//★タスクの生成
 
@@ -88,9 +108,9 @@ namespace  Map_Manager
 		auto core = ge->GetTask_One_G<Map_Core::Object>("マップ");
 		auto ball = ge->GetTask_One_G<Ball::Object>("ボール");
 
-		ML::QT frame_QTx = ML::QT(0.0f);
+		/*ML::QT frame_QTx = ML::QT(0.0f);
 		ML::QT frame_QTy = ML::QT(0.0f);
-		ML::QT frame_QTz = ML::QT(0.0f);
+		ML::QT frame_QTz = ML::QT(0.0f);*/
 		std::vector<After_Collision> Result;
 		for (unsigned int i = 0; i < delicate; i++)
 		{
@@ -124,34 +144,67 @@ namespace  Map_Manager
 			//スティックだけで回転させるver0.2
 			//スティックが倒された量を更新
 			//各軸の回転量にそれぞれ値が入る
-
-			if (in1.LStick.axis.y != 0)
+			if (in1.LStick.axis.y > 0 || in1.RStick.axis.y >0)
 			{
-				frame_QTx = ML::QT(ML::Vec3(1, 0, 0), ML::ToRadian(-in1.LStick.axis.y  / float(delicate)));
-			}			
-			if (in1.RStick.axis.y != 0)
-			{
-				frame_QTx = ML::QT(ML::Vec3(1, 0, 0), ML::ToRadian(-in1.RStick.axis.y  / float(delicate)));
+				easing::Reset("Decrese_StickVolumeXM");
+				easing::Start("Decrese_StickVolumeXM");
 			}
-			if (in1.LStick.axis.x != 0)
+			else if (in1.LStick.axis.y < 0 || in1.RStick.axis.y <0)
 			{
-				frame_QTy = ML::QT(ML::Vec3(0, 1, 0), ML::ToRadian(-in1.LStick.axis.x  / float(delicate)));
-			}			
-			if (in1.RStick.axis.x != 0)
+				easing::Reset("Decrese_StickVolumeXP");
+				easing::Start("Decrese_StickVolumeXP");
+			}
+			if (in1.LStick.axis.x > 0)
 			{
-				frame_QTz = ML::QT(ML::Vec3(0, 0, 1), ML::ToRadian(-in1.RStick.axis.x  / float(delicate)));
-			}	
+				easing::Reset("Decrese_StickVolumeYM");
+				easing::Start("Decrese_StickVolumeYM");
+			}
+			else if (in1.LStick.axis.x < 0)
+			{
+				easing::Reset("Decrese_StickVolumeYP");
+				easing::Start("Decrese_StickVolumeYP");
+			}
+			if (in1.RStick.axis.x > 0)
+			{
+				easing::Reset("Decrese_StickVolumeZM");
+				easing::Start("Decrese_StickVolumeZM");
+			}
+			else if (in1.RStick.axis.x < 0)
+			{
+				easing::Reset("Decrese_StickVolumeZP");
+				easing::Start("Decrese_StickVolumeZP");
+			}
+
+		
+			this->frame_QTxp = ML::QT(ML::Vec3(1, 0, 0), ML::ToRadian(-easing::GetPos("Decrese_StickVolumeXM")  / float(delicate)));
+			
+			
+			this->frame_QTxm = ML::QT(ML::Vec3(1, 0, 0), ML::ToRadian(easing::GetPos("Decrese_StickVolumeXP") / float(delicate)));
+			
+
+			//this->frame_QTxp = ML::QT(ML::Vec3(1, 0, 0), ML::ToRadian(-in1.RStick.axis.y  / float(delicate)));
+			
+			
+			this->frame_QTym = ML::QT(ML::Vec3(0, 1, 0), ML::ToRadian(-easing::GetPos("Decrese_StickVolumeYM") / float(delicate)));
+
+			this->frame_QTyp = ML::QT(ML::Vec3(0, 1, 0), ML::ToRadian(easing::GetPos("Decrese_StickVolumeYP") / float(delicate)));
+						
+			
+			this->frame_QTzm = ML::QT(ML::Vec3(0, 0, 1), ML::ToRadian(-easing::GetPos("Decrese_StickVolumeZM") / float(delicate)));
+
+			this->frame_QTzp = ML::QT(ML::Vec3(0, 0, 1), ML::ToRadian(easing::GetPos("Decrese_StickVolumeZP") / float(delicate)));
+				
 			
 
 			//各タスクの回転量を更新
-			core->UpDate_Quartanion(frame_QTx * frame_QTy * frame_QTz);
+			core->UpDate_Quartanion(this->frame_QTxp * this->frame_QTxm * this->frame_QTyp * this->frame_QTym *this->frame_QTzm * this->frame_QTzp);
 			for (auto m = map->begin(); m != map->end(); m++)
 			{
-				(*m)->UpDate_Quartanion(frame_QTx * frame_QTy * frame_QTz);
+				(*m)->UpDate_Quartanion(this->frame_QTxp * this->frame_QTxm * this->frame_QTyp* this->frame_QTym *this->frame_QTzm * this->frame_QTzp);
 			}
 			for (auto f = fence->begin(); f != fence->end(); f++)
 			{
-				(*f)->UpDate_Quartanion(frame_QTx * frame_QTy * frame_QTz);
+				(*f)->UpDate_Quartanion(this->frame_QTxp * this->frame_QTxm * this->frame_QTyp* this->frame_QTym *this->frame_QTzm * this->frame_QTzp);
 			}
 			
 
@@ -213,7 +266,7 @@ namespace  Map_Manager
 			{
 				if (p.collision_Flag)
 				{
-					ball->Fix_Position_for_Rotate(frame_QTx * frame_QTy * frame_QTz);
+					ball->Fix_Position_for_Rotate(this->frame_QTxp * this->frame_QTxm * this->frame_QTyp* this->frame_QTym *this->frame_QTzm * this->frame_QTzp);
 					break;
 				}
 			}

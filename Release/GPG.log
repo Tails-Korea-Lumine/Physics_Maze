@@ -1,43 +1,7 @@
-﻿  Bbox.cpp
-  Collision.cpp
-  DG2014_DGObject.cpp
-  DG2014_Effect.cpp
-  DG2014_Font.cpp
-  DG2014_Image.cpp
-  DG2014_IndexBuffer.cpp
-  DG2014_InputLayout.cpp
-  DG2014_Mesh.cpp
-  DG2014_MeshSOBFile.cpp
-  DG2014_Texture.cpp
-  DG2014_Ver3_51.cpp
-  DG2014_VertexBuffer.cpp
-  DG2014_VertexContainer.cpp
-  DI2014_Ver3_4.cpp
-  Dm2008_Ver1_3.cpp
-  easing.cpp
-  GameEngine_Ver3_7.cpp
-  Gravity.cpp
-  myLib.cpp
-  コンパイル中...
-  MyPG.cpp
-  Task_Ball.cpp
-  Task_cursor.cpp
-  Task_Game.cpp
-  Task_MapCore.cpp
-  Task_MapFence.cpp
-  Task_MapSide.cpp
-  Task_Map_Manager.cpp
-  Task_Result.cpp
-  Task_title.cpp
-Task_title.cpp(122): warning C4244: '引数': 'float' から 'const int' への変換です。データが失われる可能性があります。
-Task_title.cpp(127): warning C4244: '引数': 'float' から 'const int' への変換です。データが失われる可能性があります。
-Task_title.cpp(226): warning C4018: '>': signed と unsigned の数値を比較しようとしました。
-Task_title.cpp(289): warning C4146: 符号付きの値を代入する変数は、符号付き型にキャストしなければなりません。
-  Task_Tutorial.cpp
-  Task_UI.cpp
-  WinMain.cpp
-  xnacollision.cpp
-  コード生成しています。
-  All 5396 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
-  コード生成が終了しました。
-  GPG.vcxproj -> D:\17ci0414\asdf\Release\GPG.exe
+﻿  Task_Map_Manager.cpp
+  코드를 생성하고 있습니다.
+  4 of 5415 functions ( 0.1%) were compiled, the rest were copied from previous compilation.
+    0 functions were new in current compilation
+    5 functions had inline decision re-evaluated but remain unchanged
+  코드를 생성했습니다.
+  GPG.vcxproj -> C:\Users\Lumine\Desktop\Fermat\3d_Maze\Release\GPG.exe

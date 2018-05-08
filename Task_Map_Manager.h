@@ -48,7 +48,14 @@ namespace Map_Manager
 		//変更可◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇
 		//追加したい変数・メソッドはここに追加する
 		//変数
-		
+		ML::QT frame_QTxp;
+		ML::QT frame_QTxm;
+		ML::QT frame_QTyp;
+		ML::QT frame_QTym;
+		ML::QT frame_QTzp;
+		ML::QT frame_QTzm;
+
+
 	public:		
 		//メソッド
 		//マップの処理をいっぺんに管理する 引数 : (精密度)
