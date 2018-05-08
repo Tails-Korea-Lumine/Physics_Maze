@@ -35,7 +35,7 @@ namespace  Cursor
 		this->res = Resource::Create();
 
 		//★データ初期化
-		this->pos = ML::Vec2(300, -1000);
+		this->pos = ML::Vec2(300, -32);
 		this->select_pos.x = 0;
 		this->select_pos.y = -1;
 		this->countdown = 0;
@@ -71,8 +71,9 @@ namespace  Cursor
 	//「更新」１フレーム毎に行う処理
 	void  Object::UpDate()
 	{
-		this->pos.y = (float)this->Move_Cursor(this->select_pos);
-
+		//カーソルの目的地を設定
+		this->destination.y = (float)this->Move_Cursor(this->select_pos);
+		
 		auto in1 = DI::GPad_GetState("P1");
 		//カウントダウンフラグが立っていない場合のみ選択と取り消し処理を行う
 		if (!this->Is_Count_Down())
@@ -103,12 +104,15 @@ namespace  Cursor
 		else
 		{
 			this->countdown++;
+			this->destination.y = -32;
 		}
 		//1秒後にタスク消滅
 		if (this->countdown > 60)
 		{
 			this->Kill();
 		}
+		//25％ずつ移動
+		this->pos.y += (this->destination.y - this->pos.y) *0.25f;
 	}
 	//-------------------------------------------------------------------
 	//「２Ｄ描画」１フレーム毎に行う処理

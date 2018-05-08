@@ -109,7 +109,6 @@
     <ClCompile Include="Task_MapFence.cpp" />
     <ClCompile Include="Task_MapSide.cpp" />
     <ClCompile Include="Task_Map_Manager.cpp" />
-    <ClCompile Include="Task_Player.cpp" />
     <ClCompile Include="Task_Result.cpp" />
     <ClCompile Include="Task_title.cpp" />
     <ClCompile Include="Task_Tutorial.cpp" />
@@ -147,7 +146,6 @@
     <ClInclude Include="Task_MapFence.h" />
     <ClInclude Include="Task_MapSide.h" />
     <ClInclude Include="Task_Map_Manager.h" />
-    <ClInclude Include="Task_Player.h" />
     <ClInclude Include="Task_Result.h" />
     <ClInclude Include="Task_title.h" />
     <ClInclude Include="Task_Tutorial.h" />

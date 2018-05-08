@@ -1,8 +1,51 @@
-﻿  Task_title.cpp
-c:\users\lumine\desktop\fermat\3d_maze\task_title.cpp(258): warning C4146: 단항 빼기 연산자가 부호 없는 형식에 적용되었습니다. 결과는 역시 unsigned입니다.
-c:\users\lumine\desktop\fermat\3d_maze\task_title.cpp(319): warning C4146: 단항 빼기 연산자가 부호 없는 형식에 적용되었습니다. 결과는 역시 unsigned입니다.
-c:\users\lumine\desktop\fermat\3d_maze\task_title.cpp(320): warning C4146: 단항 빼기 연산자가 부호 없는 형식에 적용되었습니다. 결과는 역시 unsigned입니다.
-c:\users\lumine\desktop\fermat\3d_maze\task_title.cpp(339): warning C4146: 단항 빼기 연산자가 부호 없는 형식에 적용되었습니다. 결과는 역시 unsigned입니다.
-c:\users\lumine\desktop\fermat\3d_maze\task_title.cpp(340): warning C4146: 단항 빼기 연산자가 부호 없는 형식에 적용되었습니다. 결과는 역시 unsigned입니다.
-c:\users\lumine\desktop\fermat\3d_maze\task_title.cpp(341): warning C4146: 단항 빼기 연산자가 부호 없는 형식에 적용되었습니다. 결과는 역시 unsigned입니다.
-  GPG.vcxproj -> C:\Users\Lumine\Desktop\Fermat\3d_Maze\Debug\GPG.exe
+﻿  xnacollision.cpp
+  WinMain.cpp
+  Task_UI.cpp
+d:\17ci0414\asdf\task_ui.cpp(173): warning C4244: '=': 'float' から 'int' への変換です。データが失われる可能性があります。
+d:\17ci0414\asdf\task_ui.cpp(182): warning C4244: '=': 'float' から 'int' への変換です。データが失われる可能性があります。
+  Task_Tutorial.cpp
+  Task_title.cpp
+d:\17ci0414\asdf\task_title.cpp(122): warning C4244: '引数': 'int' から 'const float' への変換です。データが失われる可能性があります。
+d:\17ci0414\asdf\task_title.cpp(127): warning C4244: '引数': 'int' から 'const float' への変換です。データが失われる可能性があります。
+d:\17ci0414\asdf\task_title.cpp(226): warning C4018: '>': signed と unsigned の数値を比較しようとしました。
+d:\17ci0414\asdf\task_title.cpp(289): warning C4146: 符号付きの値を代入する変数は、符号付き型にキャストしなければなりません。
+  Task_Result.cpp
+  Task_Map_Manager.cpp
+  Task_MapSide.cpp
+  Task_MapFence.cpp
+  Task_MapCore.cpp
+d:\17ci0414\asdf\task_mapcore.cpp(59): warning C4244: '引数': 'int' から 'const float' への変換です。データが失われる可能性があります。
+d:\17ci0414\asdf\task_mapcore.cpp(60): warning C4244: '引数': 'int' から 'const float' への変換です。データが失われる可能性があります。
+d:\17ci0414\asdf\task_mapcore.cpp(61): warning C4244: '引数': 'int' から 'const float' への変換です。データが失われる可能性があります。
+d:\17ci0414\asdf\task_mapcore.cpp(62): warning C4244: '引数': 'int' から 'const float' への変換です。データが失われる可能性があります。
+d:\17ci0414\asdf\task_mapcore.cpp(63): warning C4244: '引数': 'int' から 'const float' への変換です。データが失われる可能性があります。
+d:\17ci0414\asdf\task_mapcore.cpp(64): warning C4244: '引数': 'int' から 'const float' への変換です。データが失われる可能性があります。
+  Task_Game.cpp
+  Task_cursor.cpp
+  Task_Ball.cpp
+  MyPG.cpp
+  myLib.cpp
+  Gravity.cpp
+  GameEngine_Ver3_7.cpp
+  easing.cpp
+  Dm2008_Ver1_3.cpp
+  DI2014_Ver3_4.cpp
+  コードを生成中...
+d:\17ci0414\asdf\task_mapcore.cpp(276): warning C4715: 'Map_Core::Object::Get_Frame_QT': 値を返さないコントロール パスがあります。
+  コンパイル中...
+  DG2014_VertexContainer.cpp
+  DG2014_VertexBuffer.cpp
+  DG2014_Ver3_51.cpp
+  DG2014_Texture.cpp
+  DG2014_MeshSOBFile.cpp
+  DG2014_Mesh.cpp
+  DG2014_InputLayout.cpp
+  DG2014_IndexBuffer.cpp
+  DG2014_Image.cpp
+  DG2014_Font.cpp
+  DG2014_Effect.cpp
+  DG2014_DGObject.cpp
+  Collision.cpp
+  Bbox.cpp
+  コードを生成中...
+  GPG.vcxproj -> D:\17ci0414\asdf\Debug\GPG.exe

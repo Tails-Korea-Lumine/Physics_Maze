@@ -87,10 +87,10 @@ namespace  Ball
 
 			//-------------------------------------
 			//デバッグ用ポーズ
-			if (in1.B2.down)
+			/*if (in1.B2.down)
 			{
 				system("pause");
-			}
+			}*/
 			//-------------------------------------
 
 			//もし,どこもあたり判定をせずに動いた場合
@@ -151,10 +151,10 @@ namespace  Ball
 			}			
 			
 			//終端速度を指定
-			if (this->speed.Length() > 6.0f)
+			if (this->speed.Length() > 8.0f)
 			{
 				this->speed = this->speed.Normalize();
-				this->speed *= 6.0f;
+				this->speed *= 8.0f;
 			}
 
 			//移動(フレーム終了する直前に行う)

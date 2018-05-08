@@ -46,8 +46,10 @@ namespace Map_Manager
 		bool  Finalize();		//「終了」タスク消滅時に１回だけ行う処理
 		void  Render3D_L0();
 		//変更可◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇
-	public:
 		//追加したい変数・メソッドはここに追加する
+		//変数
+		
+	public:		
 		//メソッド
 		//マップの処理をいっぺんに管理する 引数 : (精密度)
 		void Managing_All_Map(const unsigned int delicate);

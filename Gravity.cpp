@@ -60,11 +60,6 @@ float Gravity::Vector_Cross(ML::Vec3 v1, ML::Vec3 v2)
 	return sin;
 }
 
-float Gravity::Cheak_angle(ML::Vec3 normal)
-{
-	return Gravity::Vector_Dot(this->G_acceleration, normal);
-}
-
 ML::Vec3 Gravity::Accelerate(float Weight)
 {
 	return Weight * this->G_acceleration;
@@ -98,7 +93,7 @@ ML::Vec3 Gravity::CollisionOver_Accelerate(ML::Vec3 speed, ML::Vec3 normal, floa
 	speed *= force;*/
 
 	//----------------------------------------------------------------------------
-	//このうえはver.1
+	//このうえはver0.1
 
 	float fn;
 	fn = Gravity::Get_Vector_Dot(speed, normal);
@@ -107,16 +102,7 @@ ML::Vec3 Gravity::CollisionOver_Accelerate(ML::Vec3 speed, ML::Vec3 normal, floa
 	if (fn < 0)
 	{
 		fn *= -1;
-	}
-	////マスとマス接触面でおかしい加速を防ぐ
-	//float cosSN = Gravity::Vector_Dot((speed - Gravity::Accelerate(weight)), normal);
-	////cos値が1ということは内角が0度だということ、つまり物理的にあり得ない衝突
-	//if (cosSN >=_CMATH_::cos(ML::ToRadian(2)))
-	//{
-	//	//なので加速なしでreturn
-	//	//return speed - Gravity::Accelerate(weight);
-	//	return speed;
-	//}
+	}	
 	
 	//長さを力に合わせた後のベクトルの大きさ
 	ML::Vec3 after_Normal;
@@ -144,14 +130,7 @@ ML::Vec3 Gravity::Reflaction_Vector(ML::Vec3 force, ML::Vec3 normal, float weigh
 	}
 	
 	//マスとマス接触面でおかしい加速を防ぐ
-	float cosSN = Gravity::Vector_Dot((force - Gravity::Accelerate(weight)), normal);
-	//cos値が1ということは内角が0度だということ、つまり物理的にあり得ない衝突
-	if (cosSN >= _CMATH_::cos(ML::ToRadian(2)))
-	{
-		//なので加速なしでreturn
-		//return force - Gravity::Accelerate(weight);
-		return force;
-	}
+	float cosSN = Gravity::Vector_Dot((force - Gravity::Accelerate(weight)), normal);	
 
 	//長さを力に合わせた後のベクトルの大きさ
 	ML::Vec3 after_Normal;
@@ -165,9 +144,4 @@ ML::Vec3 Gravity::Reflaction_Vector(ML::Vec3 force, ML::Vec3 normal, float weigh
 
 	//重さに応じて減らして返す
 	return after_Reflection *0.3f;
-}
-
-void Gravity::Rotation_on_Gravity(float angle, ML::Vec3 centor)
-{
-	//マップの設計が終わった後に実装予定(2018/03/15)
 }

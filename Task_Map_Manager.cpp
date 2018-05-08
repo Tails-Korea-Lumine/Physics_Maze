@@ -33,8 +33,8 @@ namespace  Map_Manager
 		//リソースクラス生成orリソース共有
 		this->res = Resource::Create();
 
-		//★データ初期化
-	
+		//★データ初期化	
+				
 
 		//★タスクの生成
 
@@ -58,8 +58,7 @@ namespace  Map_Manager
 	//-------------------------------------------------------------------
 	//「更新」１フレーム毎に行う処理
 	void  Object::UpDate()
-	{		
-		
+	{				
 		//マップに関することは全部マネージャ側でやる ver0.6
 		this->Managing_All_Map(15);
 		
@@ -121,8 +120,7 @@ namespace  Map_Manager
 			//		//this->map_QT *= frame_QT;
 			//	}
 			//}
-
-			easing::UpDate();
+			
 			//スティックだけで回転させるver0.2
 			//スティックが倒された量を更新
 			//各軸の回転量にそれぞれ値が入る
@@ -130,7 +128,7 @@ namespace  Map_Manager
 			if (in1.LStick.axis.y != 0)
 			{
 				frame_QTx = ML::QT(ML::Vec3(1, 0, 0), ML::ToRadian(-in1.LStick.axis.y  / float(delicate)));
-			}
+			}			
 			if (in1.RStick.axis.y != 0)
 			{
 				frame_QTx = ML::QT(ML::Vec3(1, 0, 0), ML::ToRadian(-in1.RStick.axis.y  / float(delicate)));
@@ -138,14 +136,11 @@ namespace  Map_Manager
 			if (in1.LStick.axis.x != 0)
 			{
 				frame_QTy = ML::QT(ML::Vec3(0, 1, 0), ML::ToRadian(-in1.LStick.axis.x  / float(delicate)));
-			}
+			}			
 			if (in1.RStick.axis.x != 0)
 			{
 				frame_QTz = ML::QT(ML::Vec3(0, 0, 1), ML::ToRadian(-in1.RStick.axis.x  / float(delicate)));
-			}
-	
-
-
+			}	
 			
 
 			//各タスクの回転量を更新

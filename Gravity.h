@@ -15,13 +15,8 @@ public:
 	float Vector_Dot(ML::Vec3 v1, ML::Vec3 v2);//引数：（a,b)　a・b
 	float Vector_Cross(ML::Vec3 v1, ML::Vec3 v2);//引数：（a,b)　a X b
 	ML::Vec3 Get_Normal_to_Vector_Cross(ML::Vec3 v1, ML::Vec3 v2);//法線ベクトルを求める関数
-	float Get_Vector_Dot(ML::Vec3 v1, ML::Vec3 v2);//内積を求める関数
-	
+	float Get_Vector_Dot(ML::Vec3 v1, ML::Vec3 v2);//内積を求める関数	
 
-	//外壁の面の傾きを調べる
-	float Cheak_angle(ML::Vec3 Normal);
-	//重力に対して回転させるf
-	void Rotation_on_Gravity(float angle,ML::Vec3 centor);
 
 	//加速させる
 	ML::Vec3 Accelerate(float Weight);

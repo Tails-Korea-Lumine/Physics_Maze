@@ -97,7 +97,7 @@ namespace  UI
 	void  Object::UpDate()
 	{
 		//easing更新
-		if (ge->GetTask_One_G<Result::Object>("結果画面") != nullptr)
+		if (ge->GetTask_One_G<Title::Object>("タイトル") == nullptr)
 		{
 			easing::UpDate();
 		}
@@ -170,7 +170,7 @@ namespace  UI
 
 			this->wipe_Alpha -= 0.01f;
 			
-			drawOut.x = easing::GetPos("wipeOut");
+			drawOut.x = int(easing::GetPos("wipeOut"));
 
 			DG::Image_Draw(this->res->wipeOut_Img, drawOut, src, ML::Color(this->wipe_Alpha,1,1,1));
 			break;
@@ -179,7 +179,7 @@ namespace  UI
 		case WipeInOut::Wipe_In:
 			
 
-			drawIN.x = easing::GetPos("wipeIn");
+			drawIN.x = int(easing::GetPos("wipeIn"));
 			this->wipe_Alpha += 0.02f;			
 
 			DG::Image_Draw(this->res->wipeIn_Img, drawIN, src, ML::Color(this->wipe_Alpha, 1, 1, 1));

@@ -7,7 +7,6 @@
 #include  "Task_MapSide.h"
 #include  "Task_MapCore.h"
 #include  "Task_Ball.h"
-#include  "Task_Player.h"
 #include  "Task_MapFence.h"
 #include  "Task_Map_Manager.h"
 #include  "Task_Result.h"

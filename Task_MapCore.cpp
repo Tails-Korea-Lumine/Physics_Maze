@@ -56,12 +56,12 @@ namespace  Map_Core
 		YZ = ML::Box3D(-50 , -100 * (this->mapSize - 2), -100 * (this->mapSize - 2), 100, 100 * (this->mapSize + 4), 100 * (this->mapSize + 4));
 		//面ごとの初期位置
 		//後で初期位置を変更する可能性あり(2018/04/24)
-		this->b_ini_pos[0] = ge->Map_center + ML::Vec3(0, 50 * (this->mapSize + 4), 0);
-		this->b_ini_pos[1] = ge->Map_center + ML::Vec3(0, 0, 50 * (this->mapSize + 4));
-		this->b_ini_pos[2] = ge->Map_center + ML::Vec3(-50 * (this->mapSize + 4), 0, 0);
-		this->b_ini_pos[3] = ge->Map_center + ML::Vec3(50 * (this->mapSize + 4), 0, 0);
-		this->b_ini_pos[4] = ge->Map_center + ML::Vec3(0, 0, -50 * (this->mapSize + 4));
-		this->b_ini_pos[5] = ge->Map_center + ML::Vec3(0, -50 * (this->mapSize + 4), 0);
+		this->b_ini_pos[0] = ge->Map_center + ML::Vec3(0.0f, 50.0f * (this->mapSize + 4), 0.0f);
+		this->b_ini_pos[1] = ge->Map_center + ML::Vec3(0.0f, 0.0f, 50.0f * (this->mapSize + 4));
+		this->b_ini_pos[2] = ge->Map_center + ML::Vec3(-50.0f * (this->mapSize + 4), 0.0f, 0.0f);
+		this->b_ini_pos[3] = ge->Map_center + ML::Vec3(50.0f * (this->mapSize + 4), 0.0f, 0.0f);
+		this->b_ini_pos[4] = ge->Map_center + ML::Vec3(0.0f, 0.0f, -50.0f * (this->mapSize + 4));
+		this->b_ini_pos[5] = ge->Map_center + ML::Vec3(0.0f, -50.0f * (this->mapSize + 4), 0.0f);
 		//Bbox初期化
 		this->barrier[0] = Bbox(BoxType::Barrier, b_ini_pos[0] , XZ, this->map_QT);
 		this->barrier[1] = Bbox(BoxType::Barrier, b_ini_pos[1] , XY, this->map_QT);

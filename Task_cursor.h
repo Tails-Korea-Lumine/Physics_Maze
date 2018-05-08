@@ -58,6 +58,7 @@ namespace Cursor
 		//追加したい変数・メソッドはここに追加する
 		//変数
 		ML::Vec2 pos;//描画する座標
+		ML::Vec2 destination;//目的地
 		POINT select_pos;
 		nowMenu now;
 		//タスク消滅までのカウンタとフラグ
