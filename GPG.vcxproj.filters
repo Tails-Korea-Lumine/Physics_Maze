@@ -83,6 +83,9 @@
     <Filter Include="LIB\DM2008">
       <UniqueIdentifier>{bcc152c4-b55c-43ae-b512-0f7a24036ad8}</UniqueIdentifier>
     </Filter>
+    <Filter Include="MyPG\Tasks\Cameraman">
+      <UniqueIdentifier>{e1628e60-a95e-40c7-abb1-539c3d10964e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="myLib.cpp">
@@ -187,6 +190,9 @@
     <ClCompile Include="Dm2008_Ver1_3.cpp">
       <Filter>LIB\DM2008</Filter>
     </ClCompile>
+    <ClCompile Include="Task_CameraMan.cpp">
+      <Filter>MyPG\Tasks\Cameraman</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="myLib.h">
@@ -290,6 +296,9 @@
     </ClInclude>
     <ClInclude Include="library.h">
       <Filter>LIB</Filter>
+    </ClInclude>
+    <ClInclude Include="Task_CameraMan.h">
+      <Filter>MyPG\Tasks\Cameraman</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

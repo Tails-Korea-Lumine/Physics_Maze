@@ -42,19 +42,19 @@ namespace  Map_Manager
 		this->frame_QTzm = ML::QT(0.0f);
 	
 		//easing set
-		easing::Set("Decrese_StickVolumeXP", easing::CIRCIN, 0.6f, 0, 10);
-		easing::Set("Decrese_StickVolumeXM", easing::CIRCIN, 0.6f, 0, 10);
-		easing::Set("Decrese_StickVolumeYP", easing::CIRCIN, 0.6f, 0, 10);
-		easing::Set("Decrese_StickVolumeYM", easing::CIRCIN, 0.6f, 0, 10);
-		easing::Set("Decrese_StickVolumeZP", easing::CIRCIN, 0.6f, 0, 10);
-		easing::Set("Decrese_StickVolumeZM", easing::CIRCIN, 0.6f, 0, 10);
-		//easing start
-		easing::Pause("Decrese_StickVolumeXP");
-		easing::Pause("Decrese_StickVolumeXM");
-		easing::Pause("Decrese_StickVolumeYP");
-		easing::Pause("Decrese_StickVolumeYM");
-		easing::Pause("Decrese_StickVolumeZP");
-		easing::Pause("Decrese_StickVolumeZM");
+		easing::Set("Decrese_StickVolumeXP", easing::QUARTIN, 1.1f, 0, 10);
+		easing::Set("Decrese_StickVolumeXM", easing::QUARTIN, 1.1f, 0, 10);
+		easing::Set("Decrese_StickVolumeYP", easing::QUARTIN, 1.1f, 0, 10);
+		easing::Set("Decrese_StickVolumeYM", easing::QUARTIN, 1.1f, 0, 10);
+		easing::Set("Decrese_StickVolumeZP", easing::QUARTIN, 1.1f, 0, 10);
+		easing::Set("Decrese_StickVolumeZM", easing::QUARTIN, 1.1f, 0, 10);
+		//easing set end						 
+		easing::Set_End("Decrese_StickVolumeXP");
+		easing::Set_End("Decrese_StickVolumeXM");
+		easing::Set_End("Decrese_StickVolumeYP");
+		easing::Set_End("Decrese_StickVolumeYM");
+		easing::Set_End("Decrese_StickVolumeZP");
+		easing::Set_End("Decrese_StickVolumeZM");
 
 		//★タスクの生成
 
@@ -108,9 +108,7 @@ namespace  Map_Manager
 		auto core = ge->GetTask_One_G<Map_Core::Object>("マップ");
 		auto ball = ge->GetTask_One_G<Ball::Object>("ボール");
 
-		/*ML::QT frame_QTx = ML::QT(0.0f);
-		ML::QT frame_QTy = ML::QT(0.0f);
-		ML::QT frame_QTz = ML::QT(0.0f);*/
+
 		std::vector<After_Collision> Result;
 		for (unsigned int i = 0; i < delicate; i++)
 		{
@@ -141,15 +139,15 @@ namespace  Map_Manager
 			//	}
 			//}
 			
-			//スティックだけで回転させるver0.2
-			//スティックが倒された量を更新
-			//各軸の回転量にそれぞれ値が入る
-			if (in1.LStick.axis.y > 0 || in1.RStick.axis.y >0)
+			//回転をeasingで減速運動させるver0.3
+			
+			//入力されてる所のeasingデータをリセットさせる
+			if (in1.LStick.axis.y > 0)
 			{
 				easing::Reset("Decrese_StickVolumeXM");
 				easing::Start("Decrese_StickVolumeXM");
 			}
-			else if (in1.LStick.axis.y < 0 || in1.RStick.axis.y <0)
+			else if (in1.LStick.axis.y < 0)
 			{
 				easing::Reset("Decrese_StickVolumeXP");
 				easing::Start("Decrese_StickVolumeXP");
@@ -164,25 +162,21 @@ namespace  Map_Manager
 				easing::Reset("Decrese_StickVolumeYP");
 				easing::Start("Decrese_StickVolumeYP");
 			}
-			if (in1.RStick.axis.x > 0)
+			if (in1.R2.on)
 			{
 				easing::Reset("Decrese_StickVolumeZM");
 				easing::Start("Decrese_StickVolumeZM");
 			}
-			else if (in1.RStick.axis.x < 0)
+			else if (in1.L2.on)
 			{
 				easing::Reset("Decrese_StickVolumeZP");
 				easing::Start("Decrese_StickVolumeZP");
 			}
 
-		
+			//easingデータが回転量で更新される
 			this->frame_QTxp = ML::QT(ML::Vec3(1, 0, 0), ML::ToRadian(-easing::GetPos("Decrese_StickVolumeXM")  / float(delicate)));
-			
-			
+						
 			this->frame_QTxm = ML::QT(ML::Vec3(1, 0, 0), ML::ToRadian(easing::GetPos("Decrese_StickVolumeXP") / float(delicate)));
-			
-
-			//this->frame_QTxp = ML::QT(ML::Vec3(1, 0, 0), ML::ToRadian(-in1.RStick.axis.y  / float(delicate)));
 			
 			
 			this->frame_QTym = ML::QT(ML::Vec3(0, 1, 0), ML::ToRadian(-easing::GetPos("Decrese_StickVolumeYM") / float(delicate)));

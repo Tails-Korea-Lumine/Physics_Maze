@@ -11,6 +11,7 @@
 #include  "Task_Map_Manager.h"
 #include  "Task_Result.h"
 #include  "Task_UI.h"
+#include  "Task_CameraMan.h"
 
 namespace  Game
 {
@@ -50,10 +51,16 @@ namespace  Game
 		this->render2D_Priority[1] = 1.0f;
 		ge->gameClearFlag = false;
 
+		float size_destance = 0.0f;
+
+		if (di == Difficult_Range::Hard)
+		{
+			size_destance = 1100.0f;
+		}
 		//カメラの設定
 		ge->camera[0] = MyPG::Camera::Create(
-			ML::Vec3(1000.0f, 0.0f, 1000.0f),				//	ターゲット位置
-			ML::Vec3(1000.0f, 1400.0f, -1000.0f),			//	カメラ位置
+			ML::Vec3(1050.0f, 50.0f, 1050.0f),				//	ターゲット位置
+			ML::Vec3(1050.0f, 50.0f, -1000.0f - size_destance),//	カメラ位置
 			ML::Vec3(0.0f, 1.0f, 0.0f),					//	カメラの上方向ベクトル
 			ML::ToRadian(35), 10.0f, 4000.0f,	//	視野角・視野距離
 			(float)ge->screenWidth / (float)ge->screenHeight);		//	画面比率		
@@ -68,6 +75,9 @@ namespace  Game
 		DG::EffectState().param.light[0].direction = ML::Vec3(1, -1, 1).Normalize();//照射方向
 		DG::EffectState().param.light[0].color = ML::Color(1, 0.89f, 0.89f, 0.89f);//色と強さ
 
+		//カメラマンを生成
+		auto cameraman = CameraMan::Object::Create(true);
+		
 		//デバッグ用の文字生成
 		//DG::Font_Create("FontA", "HGSｺﾞｼｯｸM", 12, 16);
 
@@ -113,6 +123,7 @@ namespace  Game
 		ge->KillAll_G("マップ");
 		ge->KillAll_G("ボール");
 		ge->KillAll_G("UI");
+		ge->KillAll_G("カメラマン");
 
 		//DG::Font_Erase("FontA");
 

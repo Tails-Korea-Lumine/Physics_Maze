@@ -500,5 +500,18 @@ easing::EQ_STATE easing::GetState(const std::string& name) {
   return EQ_STATE::EQ_END;
 }
 
-
+//------------------------------------------------------------
+//強制的に終了させる
+void easing::Set_End(const std::string& name)
+{
+	//リストで探す
+	auto it = easingList.find(name);
+	//見つかったら
+	if (it != easingList.end())
+	{
+		//強制的に終了視点と状態になる
+		it->second.eq_state = EQ_STATE::EQ_END;
+		it->second.pos = it->second.end;
+	}
+}
 

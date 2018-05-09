@@ -103,6 +103,7 @@
     <ClCompile Include="myLib.cpp" />
     <ClCompile Include="MyPG.cpp" />
     <ClCompile Include="Task_Ball.cpp" />
+    <ClCompile Include="Task_CameraMan.cpp" />
     <ClCompile Include="Task_cursor.cpp" />
     <ClCompile Include="Task_Game.cpp" />
     <ClCompile Include="Task_MapCore.cpp" />
@@ -140,6 +141,7 @@
     <ClInclude Include="myLib.h" />
     <ClInclude Include="MyPG.h" />
     <ClInclude Include="Task_Ball.h" />
+    <ClInclude Include="Task_CameraMan.h" />
     <ClInclude Include="Task_cursor.h" />
     <ClInclude Include="Task_Game.h" />
     <ClInclude Include="Task_MapCore.h" />

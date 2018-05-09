@@ -187,7 +187,7 @@ bool Collision::Check_Collision(Triangle tri, ML::Vec3 p)
 std::vector<ML::Vec3> Collision::Get_Poionts_to_Sphere(ML::Vec3 pos, float r, ML::QT rotation)
 {
 	std::vector<ML::Vec3> S;
-	ML::Vec3 v[26] = {};//ver0.3では6個だった(2018/05/01)
+	ML::Vec3 v[6] = {};//ver0.3では6個だった(2018/05/01)
 
 	ML::Mat4x4 matR;
 
@@ -207,25 +207,20 @@ std::vector<ML::Vec3> Collision::Get_Poionts_to_Sphere(ML::Vec3 pos, float r, ML
 		v[i] = matR.TransformCoord(v[i]);
 		S.push_back(v[i]);
 	}*/
-	//半直径の半分の範囲までとるver.2
+	//半直径の誤差範囲を含めて取るver.2
 	for (float i = r; i > r-3; i-=0.5f)
 	{
 		//ver0.3
-	/*	v[0] = pos + ML::Vec3(+i, 0, 0);
+		v[0] = pos + ML::Vec3(+i, 0, 0);
 		v[1] = pos + ML::Vec3(-i, 0, 0);
 		v[2] = pos + ML::Vec3(0, +i, 0);
 		v[3] = pos + ML::Vec3(0, -i, 0);
 		v[4] = pos + ML::Vec3(0, 0, +i);
 		v[5] = pos + ML::Vec3(0, 0, -i);
-
-		for (int i = 0; i < 6; i++)
-		{
-			v[i] = matR.TransformCoord(v[i]);
-			S.push_back(v[i]);
-		}*/
+		
 
 		//ver 0.4
-		v[0] = pos + ML::Vec3(+i, 0, 0);
+	/*	v[0] = pos + ML::Vec3(+i, 0, 0);
 		v[1] = pos + ML::Vec3(-i, 0, 0);
 		v[2] = pos + ML::Vec3(0, +i, 0);
 		v[3] = pos + ML::Vec3(0, -i, 0);
@@ -251,7 +246,7 @@ std::vector<ML::Vec3> Collision::Get_Poionts_to_Sphere(ML::Vec3 pos, float r, ML
 		v[23] = pos + ML::Vec3(_CMATH_::cosf(ML::ToRadian(-135))*i, _CMATH_::sinf(ML::ToRadian(-135))*i, _CMATH_::cosf(ML::ToRadian(135))*i);
 		v[24] = pos + ML::Vec3(_CMATH_::cosf(ML::ToRadian(-45))*i, _CMATH_::sinf(ML::ToRadian(-45))*i, _CMATH_::cosf(ML::ToRadian(-45))*i);
 		v[25] = pos + ML::Vec3(_CMATH_::cosf(ML::ToRadian(-135))*i, _CMATH_::sinf(ML::ToRadian(-135))*i, _CMATH_::cosf(ML::ToRadian(-135))*i);
-	
+	*/
 		for (auto j : v)
 		{			
 			j = matR.TransformCoord(j);
@@ -264,10 +259,16 @@ std::vector<ML::Vec3> Collision::Get_Poionts_to_Sphere(ML::Vec3 pos, float r, ML
 }
 
 //マス別に呼ばれる関数
-std::vector<After_Collision> Collision::Hit_Check(ML::Box3D box, ML::Vec3 pos, float r, ML::Vec3 speed, ML::QT worldR)
+std::vector<After_Collision> Collision::Hit_Check(const ML::Box3D& box, const ML::Vec3& pos, const float& r, const ML::Vec3& speed, const ML::QT& worldR)
 {
-	//球の6個の頂点座標
+	//球の頂点座標
 	std::vector<ML::Vec3> sphere_Points = Collision::Get_Poionts_to_Sphere(pos, r, worldR);
+	//最短距離の座標も追加
+	std::vector<ML::Vec3> shortist_Points = Collision::Get_ShortisetPoints_BoxtoSphere(box, pos, r);
+	for (auto p : sphere_Points)
+	{
+		shortist_Points.push_back(p);
+	}
 	//一個のマスにある12個の三角形
 	std::vector<Triangle> all_Tri;
 	all_Tri = Collision::Get_Triangle_Box3D(box, worldR);
@@ -278,7 +279,7 @@ std::vector<After_Collision> Collision::Hit_Check(ML::Box3D box, ML::Vec3 pos, f
 	//衝突判定スタート
 	for (const auto& tri : all_Tri)
 	{
-		for (const auto& p : sphere_Points)
+		for (const auto& p : shortist_Points)
 		{
 			if (collision_Flag = Collision::Check_Collision(tri, p))
 			{
@@ -297,7 +298,7 @@ std::vector<After_Collision> Collision::Hit_Check(ML::Box3D box, ML::Vec3 pos, f
 				collision_True.collision_Flag = collision_Flag;
 				collision_True.normal = tri.normal.Normalize();
 				R.push_back(collision_True);
-				//return collision_True;
+				//ポリゴン1個あたり1つの点の衝突が起きたらそれで次のポリゴンの判定をする
 				break;
 			}
 		}
@@ -312,4 +313,27 @@ std::vector<After_Collision> Collision::Hit_Check(ML::Box3D box, ML::Vec3 pos, f
 	collision_False.normal = ML::Vec3(0, 0, 0);
 	R.push_back(collision_False);
 	return R;
+}
+
+//Box3dと球体の最短距離の点を取る
+std::vector<ML::Vec3> Collision::Get_ShortisetPoints_BoxtoSphere(ML::Box3D box, ML::Vec3 pos, float r)
+{
+	//ボックスの中心を確保する
+	ML::Vec3 center_of_Box = ML::Vec3(box.x + box.w / 2, box.y + box.h / 2, box.z + box.d / 2);
+	//二つの中心の相対距離を算出
+	ML::Vec3 relative_Distance = center_of_Box - pos;
+
+	//相対距離を方向性だけを残すために正規化する
+	relative_Distance = relative_Distance.Normalize();
+
+	//戻り値で返すP
+	std::vector<ML::Vec3> P;
+	//最短距離が出る方向のベクトルに半直径を掛けて
+	//最短距離の点を返す(for文は誤差範囲今は多めに点を取る 2018/05/09)
+	for (float d = r; d > r - 1; d -= 0.2f)
+	{
+		P.push_back(pos + (relative_Distance * d));
+	}
+
+	return P;
 }

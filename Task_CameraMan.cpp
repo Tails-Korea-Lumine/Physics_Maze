@@ -1,9 +1,8 @@
 //-------------------------------------------------------------------
-//追尾カメラマン
+//カメラマン
 //-------------------------------------------------------------------
 #include  "MyPG.h"
-#include "Task_CameraMan.h"
-#include "Task_Player.h"
+#include  "Task_CameraMan.h"
 
 namespace  CameraMan
 {
@@ -17,7 +16,7 @@ namespace  CameraMan
 	//-------------------------------------------------------------------
 	//リソースの解放
 	bool  Resource::Finalize()
-	{
+	{		
 		return true;
 	}
 	//-------------------------------------------------------------------
@@ -30,15 +29,14 @@ namespace  CameraMan
 		this->res = Resource::Create();
 
 		//★データ初期化
-		this->dist = ML::Vec3(-600, +300, 0);
-		//カメラの設定
-		ge->camera[0] = MyPG::Camera::Create(
-			ML::Vec3(600,300,600),				//	ターゲット位置
-			ML::Vec3(0,400,600),			//	カメラ位置
-			ML::Vec3(0.0f, 1.0f, 0.0f),					//	カメラの上方向ベクトル
-			ML::ToRadian(35), 10.0f, 4000.0f,	//	視野角・視野距離
-			(float)ge->screenWidth / (float)ge->screenHeight);		//	画面比率		
-		DG::EffectState().param.bgColor = ML::Color(1, 0, 0, 0);
+		//カメラの初期設定はTask_Gameの方で行う
+
+		this->nowPos = ge->camera[0]->pos;
+		this->initPos = ge->camera[0]->pos;
+		this->distance = 2050.0f;
+		this->angle = ML::Vec3(0, 0, 0);
+		this->maxAngle = 30;
+		
 		//★タスクの生成
 
 		return  true;
@@ -63,37 +61,59 @@ namespace  CameraMan
 	void  Object::UpDate()
 	{
 		auto in1 = DI::GPad_GetState("P1");
-		auto p = ge->GetTask_One_G<Player::Object>("プレイヤ");
 
-		if (p == nullptr || ge->gameoverFlag) { return; }
+		this->nowPos = ge->Map_center - ML::Vec3(0, 0, this->distance);
 
-		this->angle.y = in1.LStick.axis.x * ML::ToRadian(4);
-		if (in1.HL.on)
+		//Rstickの動きでカメラを移動
+		if (in1.RStick.axis.x != 0)
 		{
-			this->angle.y -= ML::ToRadian(4);			
+			this->angle.x += in1.RStick.axis.x;
 		}
-		if (in1.HR.on)
+		if (in1.RStick.axis.y != 0)
 		{
-			this->angle.y += ML::ToRadian(4);			
+			this->angle.y -= in1.RStick.axis.y;
 		}
 
+		//移動範囲設定
+		if (this->angle.x < -this->maxAngle)
+		{
+			this->angle.x = -this->maxAngle;
+		}
+		else if (this->angle.x > this->maxAngle)
+		{
+			this->angle.x = this->maxAngle;
+		}
+		if (this->angle.y < -this->maxAngle)
+		{
+			this->angle.y = -this->maxAngle;
+		}
+		else if (this->angle.y > this->maxAngle)
+		{
+			this->angle.y = this->maxAngle;
+		}
+
+		//回転クォータニオン生成
+		ML::QT rotationY = ML::QT(ML::Vec3(0, 1, 0), ML::ToRadian(this->angle.x));
+		ML::QT rotationX = ML::QT(ML::Vec3(1, 0, 0), ML::ToRadian(this->angle.y));
+
+		//アフィン変換
 		ML::Mat4x4 matR;
-		matR.RotationY(this->angle.y);
-		this->dist = matR.TransformCoord(this->dist);
+		D3DXMatrixAffineTransformation(&matR, 1, &ge->Map_center, &(rotationX*rotationY), NULL);
 
-		ge->camera[0]->target = p->pos + ML::Vec3(0, 200, 0);;
-		ge->camera[0]->pos = p->pos + this->dist;
+		this->nowPos = matR.TransformCoord(this->nowPos);
 
+		//カメラ位置の更新
+		ge->camera[0]->pos = this->nowPos;
 	}
 	//-------------------------------------------------------------------
 	//「２Ｄ描画」１フレーム毎に行う処理
 	void  Object::Render2D_AF()
-	{
+	{		
 	}
 
 	void  Object::Render3D_L0()
 	{
-
+		
 	}
 	//★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★
 	//以下は基本的に変更不要なメソッド

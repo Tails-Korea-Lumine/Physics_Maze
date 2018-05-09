@@ -1,9 +1,9 @@
 #pragma warning(disable:4996)
 #pragma once
 //-------------------------------------------------------------------
-//追尾カメラマン
+//カメラマン
 //-------------------------------------------------------------------
-#include "BChara.h"
+#include "GameEngine_Ver3_7.h"
 
 namespace CameraMan
 {
@@ -22,10 +22,10 @@ namespace CameraMan
 		typedef  weak_ptr<Resource>		WP;
 		static   WP  instance;
 		static  Resource::SP  Create();
-		//共有する変数はここに追加する
+		//共有する変数はここに追加する		
 	};
 	//-------------------------------------------------------------------
-	class  Object : public  BChara
+	class  Object : public  BTask
 	{
 	//変更不可◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆
 	public:
@@ -45,8 +45,22 @@ namespace CameraMan
 		bool  Finalize();		//「終了」タスク消滅時に１回だけ行う処理
 		void  Render3D_L0();
 		//変更可◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇
-	public:
 		//追加したい変数・メソッドはここに追加する
-		ML::Vec3 dist; //プレイヤとカメラマンの距離
+		//変数
+
+		//カメラアングル
+		ML::Vec3 angle;
+		//アングルの最大値
+		float maxAngle;
+		//現在カメラの位置
+		ML::Vec3 nowPos;
+		//カメラの初期位置
+		ML::Vec3 initPos;
+		//カメラとマップ中心の距離
+		float distance;
+
+	public:
+		//メソッド
+		
 	};
 }

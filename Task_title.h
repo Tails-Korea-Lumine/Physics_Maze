@@ -78,7 +78,7 @@ namespace Title
 		bool select_now;
 		int timeCnt;
 		int moving_Menu;
-		unsigned int moving_Title_Name;
+		int moving_Title_Name;
 		POINT next_Task_Index;
 		nowMenu n;
 

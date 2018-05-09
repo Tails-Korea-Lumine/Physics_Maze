@@ -86,6 +86,10 @@ namespace easing{
   //-----------------------------------------------------------
   EQ_STATE GetState(const std::string& name);
 
+  //-----------------------------------------------------------
+  //ã≠êßìIÇ…èIóπÇ≥ÇπÇÈ
+  void Set_End(const std::string& name);
+
 }
 
 
