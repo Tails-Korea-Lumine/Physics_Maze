@@ -42,12 +42,12 @@ namespace  Map_Manager
 		this->frame_QTzm = ML::QT(0.0f);
 	
 		//easing set
-		easing::Set("Decrese_StickVolumeXP", easing::QUARTIN, 1.1f, 0, 10);
-		easing::Set("Decrese_StickVolumeXM", easing::QUARTIN, 1.1f, 0, 10);
-		easing::Set("Decrese_StickVolumeYP", easing::QUARTIN, 1.1f, 0, 10);
-		easing::Set("Decrese_StickVolumeYM", easing::QUARTIN, 1.1f, 0, 10);
-		easing::Set("Decrese_StickVolumeZP", easing::QUARTIN, 1.1f, 0, 10);
-		easing::Set("Decrese_StickVolumeZM", easing::QUARTIN, 1.1f, 0, 10);
+		easing::Set("Decrese_StickVolumeXP", easing::QUARTIN, 1.1f, 0, 4);
+		easing::Set("Decrese_StickVolumeXM", easing::QUARTIN, 1.1f, 0, 4);
+		easing::Set("Decrese_StickVolumeYP", easing::QUARTIN, 1.1f, 0, 4);
+		easing::Set("Decrese_StickVolumeYM", easing::QUARTIN, 1.1f, 0, 4);
+		easing::Set("Decrese_StickVolumeZP", easing::QUARTIN, 1.1f, 0, 4);
+		easing::Set("Decrese_StickVolumeZM", easing::QUARTIN, 1.1f, 0, 4);
 		//easing set end						 
 		easing::Set_End("Decrese_StickVolumeXP");
 		easing::Set_End("Decrese_StickVolumeXM");

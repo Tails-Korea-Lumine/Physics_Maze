@@ -60,7 +60,7 @@ namespace  Game
 		//カメラの設定
 		ge->camera[0] = MyPG::Camera::Create(
 			ML::Vec3(1050.0f, 50.0f, 1050.0f),				//	ターゲット位置
-			ML::Vec3(1050.0f, 50.0f, -1000.0f - size_destance),//	カメラ位置
+			ML::Vec3(1050.0f, 50.0f, -1500.0f - size_destance),//	カメラ位置
 			ML::Vec3(0.0f, 1.0f, 0.0f),					//	カメラの上方向ベクトル
 			ML::ToRadian(35), 10.0f, 4000.0f,	//	視野角・視野距離
 			(float)ge->screenWidth / (float)ge->screenHeight);		//	画面比率		

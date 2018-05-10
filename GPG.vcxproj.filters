@@ -86,6 +86,12 @@
     <Filter Include="MyPG\Tasks\Cameraman">
       <UniqueIdentifier>{e1628e60-a95e-40c7-abb1-539c3d10964e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="MyPG\Obstacle">
+      <UniqueIdentifier>{b89a33fd-07c6-46c6-a23d-36b3b7c49133}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="MyPG\Obstacle\Teleportaion">
+      <UniqueIdentifier>{21cac853-36af-483b-8619-cc2c3385d4c9}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="myLib.cpp">
@@ -193,6 +199,9 @@
     <ClCompile Include="Task_CameraMan.cpp">
       <Filter>MyPG\Tasks\Cameraman</Filter>
     </ClCompile>
+    <ClCompile Include="Teleportation_Manager.cpp">
+      <Filter>MyPG\Obstacle\Teleportaion</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="myLib.h">
@@ -299,6 +308,9 @@
     </ClInclude>
     <ClInclude Include="Task_CameraMan.h">
       <Filter>MyPG\Tasks\Cameraman</Filter>
+    </ClInclude>
+    <ClInclude Include="Teleportation_Manager.h">
+      <Filter>MyPG\Obstacle\Teleportaion</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

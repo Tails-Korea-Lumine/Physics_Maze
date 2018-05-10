@@ -309,7 +309,7 @@ namespace  Map3d
 
 		//接触三角形を判定前にクリアする
 		this->col_Poligons.clear();
-		std::vector<After_Collision> poligon;
+		//std::vector<After_Collision> poligon;
 
 		//判定スタート
 		for (int y = 0; y <= this->sizeY; y++)
@@ -350,16 +350,12 @@ namespace  Map3d
 						break;
 					//壁はただのあたり判定
 					case BoxType::Wall:
-						poligon = this->arr[z][y][x].Get_Collision_Poligon(pos, r, speed);
+						this->arr[z][y][x].Get_Collision_Poligon(&this->col_Poligons, pos, r, speed);
 						break;
 					}
-					//this->collision_Tri = this->col.Hit_Check(Mass, pos, r, this->map_QT); //(ver0.2で使った処理)
-					
+					//this->collision_Tri = this->col.Hit_Check(Mass, pos, r, this->map_QT); //(ver0.2で使った処理)				
 
-					for (auto i : poligon)
-					{
-						this->col_Poligons.push_back(i);
-					}
+					
 
 					//ver0.2で使った処理
 					//判定で当たったら処理を止める

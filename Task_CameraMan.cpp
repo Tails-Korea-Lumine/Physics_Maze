@@ -33,7 +33,7 @@ namespace  CameraMan
 
 		this->nowPos = ge->camera[0]->pos;
 		this->initPos = ge->camera[0]->pos;
-		this->distance = 2050.0f;
+		this->distance = 3050.0f;
 		this->angle = ML::Vec3(0, 0, 0);
 		this->maxAngle = 30;
 		
@@ -67,11 +67,11 @@ namespace  CameraMan
 		//Rstick‚Ì“®‚«‚ÅƒJƒƒ‰‚ğˆÚ“®
 		if (in1.RStick.axis.x != 0)
 		{
-			this->angle.x += in1.RStick.axis.x;
+			this->angle.x += in1.RStick.axis.x * 3;
 		}
 		if (in1.RStick.axis.y != 0)
 		{
-			this->angle.y -= in1.RStick.axis.y;
+			this->angle.y -= in1.RStick.axis.y * 3;
 		}
 
 		//ˆÚ“®”ÍˆÍİ’è

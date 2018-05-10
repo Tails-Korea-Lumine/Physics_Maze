@@ -42,7 +42,7 @@ public:
 	//位置を返す関数
 	ML::Vec3 Get_Pos();
 	//衝突判定
-	std::vector<After_Collision> Get_Collision_Poligon(ML::Vec3 pos, float r, ML::Vec3 speed);
+	void Get_Collision_Poligon(std::vector<After_Collision>* result, ML::Vec3 pos, float r, ML::Vec3 speed);
 	//ゲームクリア判定
 	bool Player_was_Clear_the_Game(ML::Vec3 pos, float r, ML::Vec3 speed);
 
