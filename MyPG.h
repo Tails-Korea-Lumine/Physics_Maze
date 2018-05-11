@@ -4,6 +4,7 @@
 #include <sstream>
 #include "Collision.h"
 #include "Dm2008_Ver1_3.h"
+#include "Teleportation_Manager.h"
 
 
 //ゲーム内全域で使用する構造体などを定義する
@@ -92,6 +93,8 @@ namespace  MyPG
 		ML::Vec3 Map_center;
 		//あたり判定の結果
 		std::vector<After_Collision> collision_Result;
+		//テレポーテーションマネージャー
+		Teleportation_Manager TM;
 	//----------------------------------------------
 	};
 }

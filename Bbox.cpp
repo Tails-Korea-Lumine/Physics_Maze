@@ -7,7 +7,7 @@ void Bbox::Rotate_Box(ML::Vec3 pos, ML::QT q)
 	this->boxQT = q;
 }
 
-void Bbox::Get_Collision_Poligon(std::vector<After_Collision>* result, ML::Vec3 pos, float r, ML::Vec3 speed)
+void Bbox::Get_Collision_Poligon(std::vector<After_Collision>* result, const ML::Vec3& pos, const float& r, const ML::Vec3& speed)
 {
 	//当たらなかった時だけゼロベクトルリザルトをpushbackする
 	if (!this->col.Hit_Check(result, this->collision_Base.OffsetCopy(this->pos), pos, r, speed, this->boxQT))
@@ -43,7 +43,21 @@ Bbox::Bbox(BoxType chip, ML::Vec3 pos, ML::Box3D base, ML::QT qt)
 }
 
 //クリア判定
-bool Bbox::Player_was_Clear_the_Game(ML::Vec3 pos, float r, ML::Vec3 speed)
+bool Bbox::Player_was_Clear_the_Game(const ML::Vec3& pos, const float& r, const ML::Vec3 speed)
+{
+	//あたり判定の結果をもらう
+	std::vector<After_Collision> check;
+	this->col.Hit_Check(&check, this->collision_Base.OffsetCopy(this->pos), pos, r, speed, this->boxQT);
+	//結果のサイズが０ではないならクリア
+	if (check.size() != 0)
+	{
+		return true;
+	}
+	return false;
+}
+
+//テレポートさせるかを判定
+bool Bbox::Player_was_Hit_the_Door(const ML::Vec3& pos, const float& r, const ML::Vec3 speed)
 {
 	//あたり判定の結果をもらう
 	std::vector<After_Collision> check;

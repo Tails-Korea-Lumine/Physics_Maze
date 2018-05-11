@@ -12,7 +12,7 @@ enum BoxType
 	Road = 0, //道
 	Wall = 1, //壁
 	Goal = 2, //ゴール位置
-	Obstacle1 = 3, //障害物０番(未定)
+	Teleportaion = 3, //テレポーテーション
 	Obstacle2 = 4, //障害物０番(未定)
 	Obstacle3 = 5, //障害物０番(未定)
 
@@ -42,9 +42,11 @@ public:
 	//位置を返す関数
 	ML::Vec3 Get_Pos();
 	//衝突判定
-	void Get_Collision_Poligon(std::vector<After_Collision>* result, ML::Vec3 pos, float r, ML::Vec3 speed);
+	void Get_Collision_Poligon(std::vector<After_Collision>* result, const ML::Vec3& pos, const float& r, const ML::Vec3& speed);
 	//ゲームクリア判定
-	bool Player_was_Clear_the_Game(ML::Vec3 pos, float r, ML::Vec3 speed);
+	bool Player_was_Clear_the_Game(const ML::Vec3& pos, const float& r, const ML::Vec3 speed);
+	//テレポートするかを判定
+	bool Player_was_Hit_the_Door(const ML::Vec3& pos, const float& r, const ML::Vec3 speed);
 
 	//コンストラクタ・デストラクタ
 	Bbox();

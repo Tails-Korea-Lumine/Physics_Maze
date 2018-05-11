@@ -280,18 +280,26 @@ namespace  Map3d
 					fin >> chip;
 					ML::Vec3 pos = ML::Vec3(x*this->chipSize + this->chipSize / 2, y*this->chipSize + this->chipSize / 2, z*this->chipSize + this->chipSize / 2);
 					ML::Box3D base = ML::Box3D(-this->chipSize / 2, -this->chipSize / 2, -this->chipSize / 2, this->chipSize, this->chipSize, this->chipSize);				
-
-					//スタート位置を発見したらボールを移動させてタイプを道に変換
-					if (BoxType(chip) == BoxType::Start)
+					ML::Mat4x4 matR;
+					ML::Vec3 objectPos;
+					//生成すること以外に何か処理を加える必要があるもの
+					switch (BoxType(chip))
 					{
-						ML::Vec3 objectPos = pos + ge->Map_center - ML::Vec3((this->mapSize*this->chipSize / 2), -(this->mapSize*this->chipSize / 2), (this->mapSize*this->chipSize / 2));
-						ML::Mat4x4 matR;
+					//スタート位置
+					case  BoxType::Start:
+						objectPos = pos + ge->Map_center - ML::Vec3((this->mapSize*this->chipSize / 2), -(this->mapSize*this->chipSize / 2), (this->mapSize*this->chipSize / 2));
 						D3DXMatrixAffineTransformation(&matR, this->chipSize / 100.0f, &ge->Map_center, &this->map_QT, NULL);
 						
 						objectPos = matR.TransformCoord(objectPos);
 
 						ge->GetTask_One_G<Ball::Object>("ボール")->Teleportation(objectPos);
 						chip = int(BoxType::Road);
+						break;
+					//テレポート
+					case BoxType::Teleportaion:		
+
+						ge->TM.Update_Door_Position(this->sideNumber, pos);
+						break;
 					}
 
 
@@ -348,6 +356,18 @@ namespace  Map3d
 							}
 						}
 						break;
+					//扉はテレポート
+					case BoxType::Teleportaion:
+						if (this->arr[z][y][x].Player_was_Hit_the_Door(pos, r, speed))
+						{
+							auto ball = ge->GetTask_One_G<Ball::Object>("ボール");
+							ML::Vec3 exitpos;
+							if (ge->TM.Find_Exit(this->sideNumber,&exitpos))
+							{
+								ball->Teleportation(exitpos);
+							}
+						}
+						break;
 					//壁はただのあたり判定
 					case BoxType::Wall:
 						this->arr[z][y][x].Get_Collision_Poligon(&this->col_Poligons, pos, r, speed);
@@ -399,6 +419,11 @@ namespace  Map3d
 
 					//matR.Inverse();
 					this->arr[z][y][x].Rotate_Box(pos, this->map_QT);
+					//テレポート扉の位置更新
+					if (this->arr[z][y][x].What_Type_Is_this_Box() == BoxType::Teleportaion)
+					{
+						ge->TM.Update_Door_Position(this->sideNumber, pos);
+					}
 				}
 			}
 		}

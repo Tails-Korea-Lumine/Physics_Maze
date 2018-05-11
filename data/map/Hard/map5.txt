@@ -1,9 +1,11 @@
-1
-Box5.sob
+3
+Box0.sob
+Goal.sob
+DestroyTail.SOB
 
 8 1 8
 
-1 1 0 1 1 1 0 0
+1 1 0 1 1 1 0 3
 0 1 0 0 1 0 1 0
 0 0 1 0 0 0 0 0
 1 0 0 1 1 0 1 1

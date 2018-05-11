@@ -79,7 +79,7 @@ namespace  Game
 		auto cameraman = CameraMan::Object::Create(true);
 		
 		//デバッグ用の文字生成
-		//DG::Font_Create("FontA", "HGSｺﾞｼｯｸM", 12, 16);
+		DG::Font_Create("FontA", "HGSｺﾞｼｯｸM", 12, 16);
 
 		//bgm再生
 		DM::Sound_Play(this->res->bgmName, true);
@@ -125,7 +125,7 @@ namespace  Game
 		ge->KillAll_G("UI");
 		ge->KillAll_G("カメラマン");
 
-		//DG::Font_Erase("FontA");
+		DG::Font_Erase("FontA");
 
 		DM::Sound_Stop(this->res->bgmName);
 		if (!ge->QuitFlag() && this->nextTaskCreate)
@@ -159,6 +159,9 @@ namespace  Game
 		{
 			this->Kill();
 		}
+
+		ge->TM.Increse_Counter();
+
 		//時間を更新
 		this->timeCnt++;
 	}
@@ -166,7 +169,7 @@ namespace  Game
 	//「２Ｄ描画」１フレーム毎に行う処理
 	void  Object::Render2D_AF()
 	{
-		/*auto ball = ge->GetTask_One_G<Ball::Object>("ボール");
+		auto ball = ge->GetTask_One_G<Ball::Object>("ボール");
 		if (ball == nullptr)
 		{
 			return;
@@ -179,7 +182,8 @@ namespace  Game
 			ge->World_Rotation.x, ge->World_Rotation.y, ge->World_Rotation.z);
 
 		ML::Box2D moji(100, 0, 600, 600);
-		DG::Font_Draw("FontA", moji, buf, ML::Color(1, 1, 0, 1));*/
+		DG::Font_Draw("FontA", moji, buf, ML::Color(1, 1, 0, 1));
+
 		ML::Box2D draw(0, 0, ge->screenWidth, ge->screenHeight);
 		ML::Box2D src(0, 0, 960, 539);
 

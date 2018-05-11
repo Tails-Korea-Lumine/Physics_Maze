@@ -90,7 +90,7 @@ namespace  Tutorial
 		if (this->posy > 0)
 		{
 			this->posy = 0;
-		}
+		}		
 
 		if (in.ST.down)
 		{
