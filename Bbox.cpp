@@ -69,3 +69,17 @@ bool Bbox::Player_was_Hit_the_Door(const ML::Vec3& pos, const float& r, const ML
 	}
 	return false;
 }
+
+//ライトをオフするかを判定
+bool Bbox::Player_Turnoff_the_Switch(const ML::Vec3& pos, const float& r, const ML::Vec3 speed)
+{
+	//あたり判定の結果をもらう
+	std::vector<After_Collision> check;
+	this->col.Hit_Check(&check, this->collision_Base.OffsetCopy(this->pos), pos, r, speed, this->boxQT);
+	//結果のサイズが０ではないならクリア
+	if (check.size() != 0)
+	{
+		return true;
+	}
+	return false;
+}

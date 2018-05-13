@@ -40,70 +40,70 @@ void Collision::Get_Triangle_Box3D(std::vector<Triangle>* result, const ML::Box3
 		t[0].a = vertex_Index[0],
 		t[0].b = vertex_Index[3],
 		t[0].c = vertex_Index[4],
-		t[0].normal = Gravity::Get_Normal_to_Vector_Cross((t[0].c - t[0].a), (t[0].b - t[0].a))
+		t[0].normal = this->Get_Normal_to_Vector_Cross((t[0].c - t[0].a), (t[0].b - t[0].a))
 	};
 	t[1] =
 	{
 		t[1].a = vertex_Index[3],
 		t[1].b = vertex_Index[4],
 		t[1].c = vertex_Index[7],
-		t[1].normal = Gravity::Get_Normal_to_Vector_Cross((t[1].b - t[1].a), (t[1].c - t[1].a))
+		t[1].normal = this->Get_Normal_to_Vector_Cross((t[1].b - t[1].a), (t[1].c - t[1].a))
 	};
 	t[2] =
 	{
 		t[2].a = vertex_Index[1],
 		t[2].b = vertex_Index[0],		
 		t[2].c = vertex_Index[5],
-		t[2].normal = Gravity::Get_Normal_to_Vector_Cross((t[2].c - t[2].a), (t[2].b - t[2].a))
+		t[2].normal = this->Get_Normal_to_Vector_Cross((t[2].c - t[2].a), (t[2].b - t[2].a))
 	};
 	t[3] =
 	{
 		t[3].a = vertex_Index[0],
 		t[3].b = vertex_Index[5],
 		t[3].c = vertex_Index[4],
-		t[3].normal = Gravity::Get_Normal_to_Vector_Cross((t[3].b - t[3].a), (t[3].c - t[3].a))
+		t[3].normal = this->Get_Normal_to_Vector_Cross((t[3].b - t[3].a), (t[3].c - t[3].a))
 	};
 	t[4] =
 	{
 		t[4].a = vertex_Index[1],
 		t[4].b = vertex_Index[5],
 		t[4].c = vertex_Index[2],
-		t[4].normal = Gravity::Get_Normal_to_Vector_Cross((t[4].c - t[4].a), (t[4].b - t[4].a))
+		t[4].normal = this->Get_Normal_to_Vector_Cross((t[4].c - t[4].a), (t[4].b - t[4].a))
 	};
 	t[5] =
 	{
 		t[5].a = vertex_Index[5],
 		t[5].b = vertex_Index[2],
 		t[5].c = vertex_Index[6],
-		t[5].normal = Gravity::Get_Normal_to_Vector_Cross((t[5].b - t[5].a), (t[5].c - t[5].a))
+		t[5].normal = this->Get_Normal_to_Vector_Cross((t[5].b - t[5].a), (t[5].c - t[5].a))
 	};
 	t[6] =
 	{
 		t[6].a = vertex_Index[3],
 		t[6].b = vertex_Index[7],
 		t[6].c = vertex_Index[2],
-		t[6].normal = Gravity::Get_Normal_to_Vector_Cross((t[6].b - t[6].a),(t[4].c - t[6].a))
+		t[6].normal = this->Get_Normal_to_Vector_Cross((t[6].b - t[6].a),(t[4].c - t[6].a))
 	};
 	t[7] =
 	{
 		t[7].a = vertex_Index[7],
 		t[7].b = vertex_Index[2],
 		t[7].c = vertex_Index[6],
-		t[7].normal = Gravity::Get_Normal_to_Vector_Cross((t[7].c - t[7].a), (t[7].b - t[7].a))
+		t[7].normal = this->Get_Normal_to_Vector_Cross((t[7].c - t[7].a), (t[7].b - t[7].a))
 	};
 	t[8] =
 	{
 		t[8].a = vertex_Index[4],
 		t[8].b = vertex_Index[7],
 		t[8].c = vertex_Index[5],
-		t[8].normal = Gravity::Get_Normal_to_Vector_Cross((t[8].c - t[8].a), (t[8].b - t[8].a))
+		t[8].normal = this->Get_Normal_to_Vector_Cross((t[8].c - t[8].a), (t[8].b - t[8].a))
 	};
 	t[9] =
 	{
 		t[9].a = vertex_Index[7],
 		t[9].b = vertex_Index[5],
 		t[9].c = vertex_Index[6],
-		t[9].normal = Gravity::Get_Normal_to_Vector_Cross((t[9].b - t[9].a),(t[9].c - t[9].a))
+		t[9].normal = this->Get_Normal_to_Vector_Cross((t[9].b - t[9].a),(t[9].c - t[9].a))
 
 	};
 	t[10] =
@@ -111,14 +111,14 @@ void Collision::Get_Triangle_Box3D(std::vector<Triangle>* result, const ML::Box3
 		t[10].a = vertex_Index[0],
 		t[10].b = vertex_Index[3],
 		t[10].c = vertex_Index[1],
-		t[10].normal = Gravity::Get_Normal_to_Vector_Cross((t[10].b - t[10].a),(t[10].c - t[10].a))
+		t[10].normal = this->Get_Normal_to_Vector_Cross((t[10].b - t[10].a),(t[10].c - t[10].a))
 	};
 	t[11] =
 	{
 		t[11].a = vertex_Index[3],
 		t[11].b = vertex_Index[1],
 		t[11].c = vertex_Index[2],
-		t[11].normal = Gravity::Get_Normal_to_Vector_Cross((t[11].c - t[11].a), (t[11].b - t[11].a))
+		t[11].normal = this->Get_Normal_to_Vector_Cross((t[11].c - t[11].a), (t[11].b - t[11].a))
 	};
 
 	//std::vectorでまとめた後に
@@ -162,12 +162,12 @@ bool Collision::Check_Collision(const Triangle& tri, const ML::Vec3& p)
 	float sinBeta;
 	float sinGamma;
 
-	cosAlpha = Collision::Vector_Dot(A, B);
-	cosBeta = Collision::Vector_Dot(B, C);
-	cosGamma = Collision::Vector_Dot(A, C);
-	sinAlpha = Collision::Vector_Cross(A, B);
-	sinBeta = Collision::Vector_Cross(B, C);
-	sinGamma = Collision::Vector_Cross(A, C);
+	cosAlpha = this->Vector_Dot(A, B);
+	cosBeta = this->Vector_Dot(B, C);
+	cosGamma = this->Vector_Dot(A, C);
+	sinAlpha = this->Vector_Cross(A, B);
+	sinBeta = this->Vector_Cross(B, C);
+	sinGamma = this->Vector_Cross(A, C);
 
 	float check;
 
@@ -263,13 +263,13 @@ bool Collision::Hit_Check(std::vector<After_Collision>* result, const ML::Box3D&
 {
 	std::vector<ML::Vec3> all_Points;
 	//球の頂点座標
-	Collision::Get_Poionts_to_Sphere(&all_Points, pos, r, worldR);
+	this->Get_Poionts_to_Sphere(&all_Points, pos, r, worldR);
 	//最短距離の座標も追加
-	Collision::Get_ShortisetPoints_BoxtoSphere(&all_Points, box, pos, r);
+	this->Get_ShortisetPoints_BoxtoSphere(&all_Points, box, pos, r);
 	
 	//一個のマスにある12個の三角形
 	std::vector<Triangle> all_Tri;
-	Collision::Get_Triangle_Box3D(&all_Tri, box, worldR);
+	this->Get_Triangle_Box3D(&all_Tri, box, worldR);
 
 	bool collision_Flag;
 	//戻り値
@@ -282,7 +282,7 @@ bool Collision::Hit_Check(std::vector<After_Collision>* result, const ML::Box3D&
 		collision_True = After_Collision();
 		for (const auto& p : all_Points)
 		{
-			if (collision_Flag = Collision::Check_Collision(tri, p))
+			if (collision_Flag = this->Check_Collision(tri, p))
 			{
 				//マスとマス接触面でおかしい加速を防ぐ
 				//移動ベクトルと衝突した三角形の法線ベクトルのcos値

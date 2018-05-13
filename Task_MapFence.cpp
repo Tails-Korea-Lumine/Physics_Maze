@@ -35,7 +35,7 @@ namespace  MapFence
 		int plusSize;
 		if (di == Difficult_Range::Hard)
 		{
-			plusSize = 8;
+			plusSize = 4;
 		}
 		else
 		{
@@ -253,9 +253,12 @@ namespace  MapFence
 	//追加メソッド	
 	//あたっているかを返す関数	
 
-	std::vector<After_Collision> Object::Get_Collision_Poligon()
+	void Object::Get_Collision_Poligon(std::vector<After_Collision>* result)
 	{
-		return this->col_Poligons;
+		for (auto p : this->col_Poligons)
+		{
+			result->push_back(p);
+		}
 	}
 	//---------------------------------------------------------------------------------------
 	//外部ファイルからのマップロード
@@ -393,7 +396,7 @@ namespace  MapFence
 
 	//-------------------------------------------------------------------------------------------
 	//クォータニオンを更新する関数
-	void Object::UpDate_Quartanion(ML::QT qt)
+	void Object::UpDate_Quartanion(const ML::QT& qt)
 	{
 		this->map_QT *= qt;
 	}

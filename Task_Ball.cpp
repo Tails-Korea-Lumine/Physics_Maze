@@ -40,7 +40,7 @@ namespace  Ball
 		this->speed = ML::Vec3(0, 0, 0);
 		this->moveVec = ML::Vec3(0, 0, 0);
 		this->r = 30.0f;
-		this->m = 60.0f;
+		this->m = 100.0f;
 		this->collision_Flag = false;
 
 	
@@ -115,7 +115,7 @@ namespace  Ball
 					{
 						//今回のフレームに衝突だったら
 						//斜め線加速をする
-						this->speed = this->G.CollisionOver_Accelerate(this->speed, p.normal, this->m);
+						this->G.CollisionOver_Accelerate(&this->speed, p.normal);
 						//フラグを立てる
 						cnt = true;
 						this->collision_Flag = true;
@@ -140,7 +140,7 @@ namespace  Ball
 						//今回のフレームに衝突だったら
 						//反射角で跳ね返す
 
-						this->speed = this->G.Reflaction_Vector(this->speed, p.normal, this->m);
+						this->G.Reflaction_Vector(&this->speed, p.normal, this->m);
 
 
 						//衝突フラグを有効にする
@@ -206,7 +206,7 @@ namespace  Ball
 
 	//--------------------------------------------------------------------
 	//位置補正用回転関数
-	void Object::Fix_Position_for_Rotate(ML::QT qt)
+	void Object::Fix_Position_for_Rotate(const ML::QT& qt)
 	{
 		//マップのフレーム回転量で回転させる
 		ML::Mat4x4 matR;
@@ -217,7 +217,7 @@ namespace  Ball
 
 	//----------------------------------------------------------------------------
 	//テレポート(指定した場所に即移動する)
-	void Object::Teleportation(ML::Vec3 objectPos)
+	void Object::Teleportation(const ML::Vec3& objectPos)
 	{
 		this->pos = objectPos;
 	}

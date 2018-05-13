@@ -78,9 +78,9 @@ namespace Ball
 		//速度
 		ML::Vec3 Get_Speed();
 		//位置補正用回転関数 引数 : (マップのフレーム回転量)
-		void Fix_Position_for_Rotate(ML::QT qt);
+		void Fix_Position_for_Rotate(const ML::QT& qt);
 		//テレポート(指定した場所に即移動する)引数 : (目的地)
-		void Teleportation(ML::Vec3 objectPos);
+		void Teleportation(const ML::Vec3& objectPos);
 
 	};
 }

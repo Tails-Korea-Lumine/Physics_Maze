@@ -50,6 +50,7 @@ namespace  Game
 		this->nowdi = di;
 		this->render2D_Priority[1] = 1.0f;
 		ge->gameClearFlag = false;
+		
 
 		float size_destance = 0.0f;
 
@@ -68,18 +69,18 @@ namespace  Game
 		//ライティング有効化
 		DG::EffectState().param.lightsEnable = true;
 		//環境光の強さを設定する
-		DG::EffectState().param.lightAmbient = ML::Color(1, 0.3f, 0.3f, 0.3f);
+		DG::EffectState().param.lightAmbient = ML::Color(1, 0.1f, 0.1f, 0.1f);
 		//平行光源の設定
-		DG::EffectState().param.light[0].enable = true;
+		//DG::EffectState().param.light[0].enable = true;
 		DG::EffectState().param.light[0].kind = DG_::Light::Directional;//光源の種類
 		DG::EffectState().param.light[0].direction = ML::Vec3(1, -1, 1).Normalize();//照射方向
-		DG::EffectState().param.light[0].color = ML::Color(1, 0.89f, 0.89f, 0.89f);//色と強さ
+		DG::EffectState().param.light[0].color = ML::Color(1, 1,1,1);//色と強さ
 
 		//カメラマンを生成
 		auto cameraman = CameraMan::Object::Create(true);
 		
 		//デバッグ用の文字生成
-		DG::Font_Create("FontA", "HGSｺﾞｼｯｸM", 12, 16);
+		//DG::Font_Create("FontA", "HGSｺﾞｼｯｸM", 12, 16);
 
 		//bgm再生
 		DM::Sound_Play(this->res->bgmName, true);
@@ -125,7 +126,7 @@ namespace  Game
 		ge->KillAll_G("UI");
 		ge->KillAll_G("カメラマン");
 
-		DG::Font_Erase("FontA");
+	//	DG::Font_Erase("FontA");
 
 		DM::Sound_Stop(this->res->bgmName);
 		if (!ge->QuitFlag() && this->nextTaskCreate)
@@ -158,8 +159,7 @@ namespace  Game
 		if (this->countdown > 60)
 		{
 			this->Kill();
-		}
-
+		}		
 		ge->TM.Increse_Counter();
 
 		//時間を更新
@@ -169,7 +169,7 @@ namespace  Game
 	//「２Ｄ描画」１フレーム毎に行う処理
 	void  Object::Render2D_AF()
 	{
-		auto ball = ge->GetTask_One_G<Ball::Object>("ボール");
+		/*auto ball = ge->GetTask_One_G<Ball::Object>("ボール");
 		if (ball == nullptr)
 		{
 			return;
@@ -185,7 +185,7 @@ namespace  Game
 		DG::Font_Draw("FontA", moji, buf, ML::Color(1, 1, 0, 1));
 
 		ML::Box2D draw(0, 0, ge->screenWidth, ge->screenHeight);
-		ML::Box2D src(0, 0, 960, 539);
+		ML::Box2D src(0, 0, 960, 539);*/
 
 		//DG::Image_Draw(this->res->BG_Image, draw, src);
 	}

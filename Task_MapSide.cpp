@@ -36,7 +36,7 @@ namespace  Map3d
 		int plusSize;
 		if (di == Difficult_Range::Hard)
 		{
-			plusSize = 8;
+			plusSize = 4;
 		}
 		else
 		{
@@ -242,9 +242,12 @@ namespace  Map3d
 	//追加メソッド	
 	//あたっているかを返す関数	
 
-	std::vector<After_Collision> Object::Get_Collision_Poligon()
+	void Object::Get_Collision_Poligon(std::vector<After_Collision>* result)
 	{
-		return this->col_Poligons;
+		for (auto p : this->col_Poligons)
+		{
+			result->push_back(p);
+		}
 	}
 	//---------------------------------------------------------------------------------------
 	//外部ファイルからのマップロード
@@ -368,6 +371,12 @@ namespace  Map3d
 							}
 						}
 						break;
+					case BoxType::LightSwitch:
+						if (this->arr[z][y][x].Player_Turnoff_the_Switch(pos, r, speed))
+						{
+							//カメラマンにライトを3秒間オフする命令を送る
+						}
+						break;
 					//壁はただのあたり判定
 					case BoxType::Wall:
 						this->arr[z][y][x].Get_Collision_Poligon(&this->col_Poligons, pos, r, speed);
@@ -431,7 +440,7 @@ namespace  Map3d
 
 	//-------------------------------------------------------------------------------------------
 	//クォータニオンを更新する関数
-	void Object::UpDate_Quartanion(ML::QT qt)
+	void Object::UpDate_Quartanion(const ML::QT& qt)
 	{
 		this->map_QT *= qt;
 	}

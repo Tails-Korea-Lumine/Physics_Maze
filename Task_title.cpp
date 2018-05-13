@@ -159,7 +159,7 @@ namespace  Title
 		DG::EffectState().param.bgColor = ML::Color(1, 0, 0, 0);
 
 		//bgmÄ¶
-		DM::Sound_Play(this->res->bgm_Title, false);
+		DM::Sound_Play(this->res->bgm_Title, true);
 		//šƒ^ƒXƒN‚Ì¶¬
 		auto ui = UI::Object::Create(true);
 

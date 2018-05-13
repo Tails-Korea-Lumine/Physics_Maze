@@ -34,6 +34,8 @@ namespace  Map_Manager
 		this->res = Resource::Create();
 
 		//★データ初期化	
+		easing::Init();
+
 		this->frame_QTxp = ML::QT(0.0f);
 		this->frame_QTxm = ML::QT(0.0f);
 		this->frame_QTyp = ML::QT(0.0f);
@@ -42,12 +44,12 @@ namespace  Map_Manager
 		this->frame_QTzm = ML::QT(0.0f);
 	
 		//easing set
-		easing::Set("Decrese_StickVolumeXP", easing::QUARTIN, 1.1f, 0, 4);
-		easing::Set("Decrese_StickVolumeXM", easing::QUARTIN, 1.1f, 0, 4);
-		easing::Set("Decrese_StickVolumeYP", easing::QUARTIN, 1.1f, 0, 4);
-		easing::Set("Decrese_StickVolumeYM", easing::QUARTIN, 1.1f, 0, 4);
-		easing::Set("Decrese_StickVolumeZP", easing::QUARTIN, 1.1f, 0, 4);
-		easing::Set("Decrese_StickVolumeZM", easing::QUARTIN, 1.1f, 0, 4);
+		easing::Set("Decrese_StickVolumeXP", easing::QUARTIN, 1.7f, 0, 4);
+		easing::Set("Decrese_StickVolumeXM", easing::QUARTIN, 1.7f, 0, 4);
+		easing::Set("Decrese_StickVolumeYP", easing::QUARTIN, 1.7f, 0, 4);
+		easing::Set("Decrese_StickVolumeYM", easing::QUARTIN, 1.7f, 0, 4);
+		easing::Set("Decrese_StickVolumeZP", easing::QUARTIN, 1.7f, 0, 4);
+		easing::Set("Decrese_StickVolumeZM", easing::QUARTIN, 1.7f, 0, 4);
 		//easing set end						 
 		easing::Set_End("Decrese_StickVolumeXP");
 		easing::Set_End("Decrese_StickVolumeXM");
@@ -65,7 +67,6 @@ namespace  Map_Manager
 	bool  Object::Finalize()
 	{
 		//★データ＆タスク解放
-
 
 		if (!ge->QuitFlag() && this->nextTaskCreate)
 		{
@@ -109,7 +110,7 @@ namespace  Map_Manager
 		auto ball = ge->GetTask_One_G<Ball::Object>("ボール");
 
 
-		std::vector<After_Collision> Result;
+		//std::vector<After_Collision> Result;
 		for (unsigned int i = 0; i < delicate; i++)
 		{
 			//z軸回転がボタンを押しながらやるver0.1
@@ -221,7 +222,7 @@ namespace  Map_Manager
 
 
 			//あたり判定は毎回マップのほうで行う	
-
+			ge->collision_Result.clear();
 			//ボールとマップのあたり判定
 			if (ball != nullptr)
 			{
@@ -238,25 +239,19 @@ namespace  Map_Manager
 			}
 
 			//判定の結果を保存
-			Result = core->Get_Collision_Poligon();
+			core->Get_Collision_Poligon(&ge->collision_Result);
 			for (auto i = map->begin(); i != map->end(); i++)
 			{
-				for (auto it : (*i)->Get_Collision_Poligon())
-				{
-					Result.push_back(it);
-				}
+				(*i)->Get_Collision_Poligon(&ge->collision_Result);
 			}
 			for (auto i = fence->begin(); i != fence->end(); i++)
 			{
-				for (auto it : (*i)->Get_Collision_Poligon())
-				{
-					Result.push_back(it);
-				}
+				(*i)->Get_Collision_Poligon(&ge->collision_Result);
 			}
-			ge->collision_Result = Result;
+			//ge->collision_Result = Result;
 
 			//位置補正を仕掛ける
-			for (auto p : Result)
+			for (auto p : ge->collision_Result)
 			{
 				if (p.collision_Flag)
 				{

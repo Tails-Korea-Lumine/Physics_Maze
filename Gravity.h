@@ -12,19 +12,19 @@ private:
 
 public:
 	//内積、外積
-	float Vector_Dot(ML::Vec3 v1, ML::Vec3 v2);//引数：（a,b)　a・b
-	float Vector_Cross(ML::Vec3 v1, ML::Vec3 v2);//引数：（a,b)　a X b
-	ML::Vec3 Get_Normal_to_Vector_Cross(ML::Vec3 v1, ML::Vec3 v2);//法線ベクトルを求める関数
-	float Get_Vector_Dot(ML::Vec3 v1, ML::Vec3 v2);//内積を求める関数	
+	float Vector_Dot(const ML::Vec3& v1, const ML::Vec3& v2);//引数：（a,b)　a・b
+	float Vector_Cross(const ML::Vec3& v1, const ML::Vec3& v2);//引数：（a,b)　a X b
+	ML::Vec3 Get_Normal_to_Vector_Cross(const ML::Vec3& v1, const ML::Vec3& v2);//法線ベクトルを求める関数
+	float Get_Vector_Dot(const ML::Vec3& v1, const ML::Vec3& v2);//内積を求める関数	
 
 
 	//加速させる
-	ML::Vec3 Accelerate(float Weight);
+	ML::Vec3 Accelerate(const float& Weight);
 	//壁とぶつかった後の移動方向と速度を返す
-	ML::Vec3 CollisionOver_Accelerate(ML::Vec3 speed, ML::Vec3 normal , float weight);
+	void CollisionOver_Accelerate(ML::Vec3* speed, const ML::Vec3& normal);
 
 	//反射ベクトルを求める
-	ML::Vec3 Reflaction_Vector(ML::Vec3 force, ML::Vec3 normal, float weight);
+	void Reflaction_Vector(ML::Vec3* force, const ML::Vec3& normal, const float& weight);
 
 
 //生成消滅字

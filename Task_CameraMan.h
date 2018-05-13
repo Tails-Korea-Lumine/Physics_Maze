@@ -58,9 +58,14 @@ namespace CameraMan
 		ML::Vec3 initPos;
 		//カメラとマップ中心の距離
 		float distance;
+		//ライトオンまでの時間を計るカウンタ
+		int timeCnt;
 
 	public:
 		//メソッド
-		
+		//ライトをオフする処理
+		void Turnoff_the_Light();
+		//3秒がたったのかを判定
+		bool It_Passed_3sec();
 	};
 }

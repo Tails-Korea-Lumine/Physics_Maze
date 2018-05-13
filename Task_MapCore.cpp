@@ -37,7 +37,7 @@ namespace  Map_Core
 		int plusSize;
 		if (di == Difficult_Range::Hard)
 		{
-			plusSize = 8;
+			plusSize = 4;
 		}
 		else
 		{
@@ -168,14 +168,15 @@ namespace  Map_Core
 
 		matS.Scaling(this->mapSize * 100.0f);
 		matR.RotationQuaternion(this->map_QT);
-		/*for (int i = 0; i < 6; i++)
-		{
-			matT.Translation(this->barrier[i].Get_Pos());
+		//for (int i = 0; i < 6; i++)
+		//{
+		//	matT.Translation(this->barrier[i].Get_Pos());
 
-			DG::EffectState().param.matWorld = matS * matR * matT;
+		//	DG::EffectState().param.matWorld = matS * matR * matT;
 
-			DG::Mesh_Draw(this->res->meshName);
-		}*/
+		//	DG::Mesh_Draw(this->res->meshName);
+		//}
+
 		matT.Translation(this->core.Get_Pos());
 
 		DG::EffectState().param.matWorld = matS * matR * matT;
@@ -269,14 +270,17 @@ namespace  Map_Core
 	}
 	//-----------------------------------------------------------------------------------
 	//ほかのプログラムにあたり判定が終わったポリゴンを渡す関数
-	std::vector<After_Collision> Object::Get_Collision_Poligon()
+	void Object::Get_Collision_Poligon(std::vector<After_Collision>* result)
 	{
-		return this->col_Poligons;
+		for (auto p : this->col_Poligons)
+		{
+			result->push_back(p);
+		}
 	}
 
 	//-------------------------------------------------------------------------------------------
 	//クォータニオンを更新する関数
-	void Object::UpDate_Quartanion(ML::QT qt)
+	void Object::UpDate_Quartanion(const ML::QT& qt)
 	{
 		this->map_QT *= qt;
 	}

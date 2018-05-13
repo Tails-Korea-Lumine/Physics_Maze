@@ -74,9 +74,9 @@ namespace MapFence
 		//マップの回転
 		void Map_Rotate();
 		//あたり判定の結果を返す関数
-		std::vector<After_Collision> Get_Collision_Poligon();
+		void Get_Collision_Poligon(std::vector<After_Collision>* result);
 		//クォータニオンを更新する関数
-		void UpDate_Quartanion(ML::QT qt);
+		void UpDate_Quartanion(const ML::QT& qt);
 		
 	};
 }

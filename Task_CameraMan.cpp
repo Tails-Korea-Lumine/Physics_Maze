@@ -33,10 +33,12 @@ namespace  CameraMan
 
 		this->nowPos = ge->camera[0]->pos;
 		this->initPos = ge->camera[0]->pos;
-		this->distance = 3050.0f;
+		this->distance = 2750.0f;
 		this->angle = ML::Vec3(0, 0, 0);
 		this->maxAngle = 30;
-		
+		this->timeCnt = 0;
+
+
 		//★タスクの生成
 
 		return  true;
@@ -104,6 +106,14 @@ namespace  CameraMan
 
 		//カメラ位置の更新
 		ge->camera[0]->pos = this->nowPos;
+
+		//ライトがオフされてから3秒後に、ライトをオンする
+		if (this->It_Passed_3sec())
+		{
+			DG::EffectState().param.light[0].enable = true;
+			DG::EffectState().param.lightAmbient = ML::Color(1, 0.3f, 0.3f, 0.3f);
+		}
+		this->timeCnt++;
 	}
 	//-------------------------------------------------------------------
 	//「２Ｄ描画」１フレーム毎に行う処理
@@ -115,6 +125,27 @@ namespace  CameraMan
 	{
 		
 	}
+
+	//---------------------------------------------------------------------
+	//追加メソッド
+	//ライトオフ
+	void Object::Turnoff_the_Light()
+	{
+		DG::EffectState().param.light[0].enable = true;
+		DG::EffectState().param.lightAmbient = ML::Color(1, 0, 0, 0);
+		this->timeCnt = 0;
+	}
+	//-----------------------------------------------------------------
+	//3秒がたったのかを確認
+	bool Object::It_Passed_3sec()
+	{
+		if (this->timeCnt > 180)
+		{
+			return true;
+		}
+		return false;
+	}
+
 	//★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★
 	//以下は基本的に変更不要なメソッド
 	//★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★

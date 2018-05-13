@@ -1,6 +1,7 @@
-2
+3
 Box4.sob
 Goal.sob
+Door.SOB
 
 8 1 8
 

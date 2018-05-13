@@ -1,7 +1,8 @@
-3
+4
 Box0.sob
 Goal.sob
-DestroyTail.SOB
+Door.SOB
+Switch.SOB
 
 8 1 8
 
@@ -9,7 +10,7 @@ DestroyTail.SOB
 0 1 0 1 1 0 1 0
 0 0 0 0 1 0 1 0
 1 1 1 0 0 1 1 0
-0 0 0 0 1 0 1 1
+0 0 4 0 1 0 1 1
 0 1 1 1 0 0 0 1
 3 0 0 1 0 1 0 1
 0 1 0 0 0 1 0 0

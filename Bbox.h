@@ -13,7 +13,7 @@ enum BoxType
 	Wall = 1, //壁
 	Goal = 2, //ゴール位置
 	Teleportaion = 3, //テレポーテーション
-	Obstacle2 = 4, //障害物０番(未定)
+	LightSwitch = 4, //ライトのスイッチ//スイッチは絶対に行き止まりに設置しない
 	Obstacle3 = 5, //障害物０番(未定)
 
 	Core = 40, //真ん中のでかいキューブ
@@ -47,6 +47,8 @@ public:
 	bool Player_was_Clear_the_Game(const ML::Vec3& pos, const float& r, const ML::Vec3 speed);
 	//テレポートするかを判定
 	bool Player_was_Hit_the_Door(const ML::Vec3& pos, const float& r, const ML::Vec3 speed);
+	//ライトのスイッチを押したかを判別
+	bool Player_Turnoff_the_Switch(const ML::Vec3& pos, const float& r, const ML::Vec3 speed);
 
 	//コンストラクタ・デストラクタ
 	Bbox();

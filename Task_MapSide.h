@@ -71,10 +71,10 @@ namespace Map3d
 		void Map_Check_Hit(const ML::Vec3& pos, const float& r, const ML::Vec3& speed);//球とマップのあたり判定
 		void Map_Rotate();
 		
-		std::vector<After_Collision> Get_Collision_Poligon();
+		void Get_Collision_Poligon(std::vector<After_Collision>* result);
 
 		//クォータニオンを更新する関数
-		void UpDate_Quartanion(ML::QT qt);
+		void UpDate_Quartanion(const ML::QT& qt);
 		
 	};
 }

@@ -1,44 +1,4 @@
-﻿  xnacollision.cpp
-  WinMain.cpp
-  Teleportation_Manager.cpp
-  Task_UI.cpp
-  Task_Tutorial.cpp
-  Task_title.cpp
-d:\17ci0414\asdf\task_title.cpp(122): warning C4244: '引数': 'float' から 'const int' への変換です。データが失われる可能性があります。
-d:\17ci0414\asdf\task_title.cpp(127): warning C4244: '引数': 'float' から 'const int' への変換です。データが失われる可能性があります。
-d:\17ci0414\asdf\task_title.cpp(226): warning C4018: '>': signed と unsigned の数値を比較しようとしました。
-  Task_Result.cpp
+﻿  Task_Game.cpp
   Task_Map_Manager.cpp
-  Task_MapSide.cpp
-  Task_MapFence.cpp
-  Task_MapCore.cpp
-  Task_Game.cpp
-  Task_cursor.cpp
-  Task_CameraMan.cpp
-  Task_Ball.cpp
-  MyPG.cpp
-  myLib.cpp
-  Gravity.cpp
-  GameEngine_Ver3_7.cpp
-  easing.cpp
-  コードを生成中...
-d:\17ci0414\asdf\task_mapcore.cpp(269): warning C4715: 'Map_Core::Object::Get_Frame_QT': 値を返さないコントロール パスがあります。
-  コンパイル中...
-  Dm2008_Ver1_3.cpp
-  DI2014_Ver3_4.cpp
-  DG2014_VertexContainer.cpp
-  DG2014_VertexBuffer.cpp
-  DG2014_Ver3_51.cpp
-  DG2014_Texture.cpp
-  DG2014_MeshSOBFile.cpp
-  DG2014_Mesh.cpp
-  DG2014_InputLayout.cpp
-  DG2014_IndexBuffer.cpp
-  DG2014_Image.cpp
-  DG2014_Font.cpp
-  DG2014_Effect.cpp
-  DG2014_DGObject.cpp
-  Collision.cpp
-  Bbox.cpp
-  コードを生成中...
-  GPG.vcxproj -> D:\17ci0414\asdf\Debug\GPG.exe
+  코드를 생성하고 있습니다...
+  GPG.vcxproj -> C:\Users\Lumine\Desktop\Fermat\3d_Maze\Debug\GPG.exe
