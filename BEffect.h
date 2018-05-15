@@ -8,21 +8,15 @@
 
 
 class BEffect 
-{
-	//変更不可------------------------------------------------
-public:
-	typedef  shared_ptr<BEffect>	SP;
-	typedef  weak_ptr<BEffect>		WP;
-
-	//変更可能---------------------------------------------------
+{	
 
 public:
 	//変数
 	//---------------------------------------------------------------------------------------------
 	//エフェクトハンドル
 	//0番：キャラクタ生成
-	//1番：アイテム生成
-	//2番：アイテム消滅
+	//1番：テレポートアウト
+	//2番：テレポートイン
 	//3番：エネミー着地
 	//4番：エネミーと衝突
 	//5番：壁と衝突
@@ -35,8 +29,8 @@ public:
 	{
 		CLEAR = -1,
 		CreateCharactor = 0,
-		CreateItem,
-		DestroyItem,
+		TeleportOut,
+		Teleportin,
 		EnemyLanding,
 		Hit_to_Enemy,
 		Hit_to_Wall,
@@ -49,6 +43,7 @@ public:
 	int effect_Life;
 	
 	ML::Vec3 pos;//エフェクト再生位置
+	ML::Vec3 target;//ターゲット位置(ある場合だけもらう)
 	ML::Vec3 angle;//エフェクト再生角度
 	ML::Vec3 scale;//エフェクトの大きさ
 	ML::Vec3 moveVec;//エフェクトの移動速度
@@ -59,13 +54,15 @@ public:
 
 	//メソッド
 	//初期化でメッシュを読み込む関数
-	void LoadEffect(effType handle);	
+	void LoadEffect(effType handle);
 	//初期化関数
 	void Eff_Initialize(ML::Vec3 pos, ML::Vec3 angle, effType handle);
+	void Eff_Initialize(ML::Vec3 pos, ML::Vec3 target, ML::Vec3 angle, effType handle);
 
 	//生成消滅
 	BEffect() :
 		pos(0, 0, 0),
+		target(0,0,0),
 		angle(0, 0, 0),
 		scale(0,0,0),
 		moveVec(0,0,0),

@@ -4,6 +4,7 @@
 #include  "MyPG.h"
 #include  "Task_Tutorial.h"
 #include  "Task_Title.h"
+#include  "easing.h"
 
 namespace  Tutorial
 {
@@ -20,6 +21,9 @@ namespace  Tutorial
 		DG::Image_Create(this->imageName[1], "./data/image/Tutorial_Control.png");//操作のテュートリアル
 		DG::Image_Create(this->imageName[2], "./data/image/Tutorial_Obstacle.png");//障害物のテュートリアル
 		DG::Image_Create(this->Bg_Img, "./data/image/background.jpg");
+
+		this->bgmName = "tutorialBGM";
+		DM::Sound_CreateStream(this->bgmName, "./data/sound/tutorial.wav");
 	
 		return true;
 	}
@@ -32,6 +36,7 @@ namespace  Tutorial
 			DG::Image_Erase(this->imageName[i]);
 		}
 		DG::Image_Erase(this->Bg_Img);
+		DM::Sound_Erase(this->bgmName);
 		return true;
 	}
 	//-------------------------------------------------------------------
@@ -46,6 +51,36 @@ namespace  Tutorial
 		//★データ初期化
 		this->posy = 0;
 		this->column = tc;
+
+		this->timeCnt = 990;//0~80ではない数値で初期化
+		this->page_Change_Flag = false;
+
+		switch(this->column)
+		{
+		case Tutorial_Column::OutLine:
+			for (int i = 0; i < 3; i++)
+			{
+				this->posx[i] = ge->screenWidth * i;
+				//easing::Set("Change_Page" + to_string(i), easing::CIRCIN, ge->screenWidth*i, ge->screenWidth*(i+1), 80);
+			}
+			break;
+		case Tutorial_Column::Control:
+			for (int i = 0; i < 3; i++)
+			{
+				this->posx[i] = ge->screenWidth * (i-1);
+				//easing::Set("Change_Page" + to_string(i), easing::CIRCIN, ge->screenWidth*(i-1), ge->screenWidth*(i), 80);
+			}
+			break;
+		case Tutorial_Column::Obstacle:
+			for (int i = 0; i < 3; i++)
+			{
+				this->posx[i] = ge->screenWidth * (i-2);
+				//easing::Set("Change_Page" + to_string(i), easing::CIRCIN, ge->screenWidth*(i-2), ge->screenWidth*(i - 1), 80);
+			}
+			break;
+		}
+
+		DM::Sound_Play(this->res->bgmName, true);
 			
 		DG::EffectState().param.bgColor = ML::Color(1, 0, 0, 0);
 		//★タスクの生成
@@ -80,7 +115,28 @@ namespace  Tutorial
 		if (in.LStick.U.on || in.HU.on)
 		{
 			this->posy += 2;
+		}		
+
+		if (in.LStick.L.down || in.HL.down)
+		{
+			if (this->Can_I_Change_the_Page())
+			{
+				this->page_Change_Flag = false;
+				this->timeCnt = 0;
+				this->posy = 0;
+			}
 		}
+		else if (in.LStick.R.down || in.HR.down)
+		{
+			if (this->Can_I_Change_the_Page())
+			{
+				this->page_Change_Flag = true;
+				this->timeCnt = 0;
+				this->posy = 0;
+			}
+		}
+
+		this->Page_Chage(this->page_Change_Flag);
 
 		//posyの範囲設定
 		if (this->posy < -528)
@@ -100,6 +156,7 @@ namespace  Tutorial
 				this->Kill();
 			}
 		}
+		this->timeCnt++;
 	}
 	//-------------------------------------------------------------------
 	//「２Ｄ描画」１フレーム毎に行う処理
@@ -110,28 +167,71 @@ namespace  Tutorial
 
 		DG::Image_Draw(this->res->Bg_Img, drawBG, srcBG);
 
-		ML::Box2D draw(0, 0, 1280, 1248);
-		ML::Box2D src(0, 0,1280, 1248);
-
-		draw.Offset(0, this->posy);
-		switch (this->column)
+		ML::Box2D draw[3] = 
 		{
-		case Tutorial_Column::OutLine:
-			DG::Image_Draw(this->res->imageName[0], draw, src);
-			break;
-		case Tutorial_Column::Control:
-			DG::Image_Draw(this->res->imageName[1], draw, src);
-			break;
-		case Tutorial_Column::Obstacle:
-			DG::Image_Draw(this->res->imageName[2], draw, src);
-			break;
+			{0, 0, 1280, 1248},
+			{ 0, 0, 1280, 1248 },
+			{ 0, 0, 1280, 1248 },		
+		};
+		ML::Box2D src(0, 0,1280, 1248);
+		for (int i = 0; i < 3; i++)
+		{
+			draw[i].Offset(this->posx[i], this->posy);
+			DG::Image_Draw(this->res->imageName[i], draw[i], src);
 		}
+		
+		/*DG::Image_Draw(this->res->imageName[1], draw, src);
+		DG::Image_Draw(this->res->imageName[2], draw, src);*/
+		
 		
 	}
 
 	void  Object::Render3D_L0()
 	{
 		
+	}
+
+	//-----------------------------------------------------------------------------------
+	//ページ切り替え
+	void Object::Page_Chage(bool page_Move_Right)
+	{
+		if (this->timeCnt > 80 )
+		{
+			return;
+		}
+
+		//右のページを見る
+		if (page_Move_Right)
+		{
+			if (this->posx[2] == 0)
+			{
+				return;
+			}
+			for (int i = 0; i < 3; i++)
+			{
+				this->posx[i] -= 16;
+			}
+		}
+		//左のページを見る
+		else
+		{
+			if (this->posx[0] == 0)
+			{
+				return;
+			}
+			for (int i = 0; i < 3; i++)
+			{
+				this->posx[i] += 16;
+			}
+		}
+		
+	}
+
+	//----------------------------------------------------------------------------------
+	//ページ切り替えが可能かを判断
+	bool Object::Can_I_Change_the_Page()
+	{
+		return (this->timeCnt > 80);
 	}
 	//★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★
 	//以下は基本的に変更不要なメソッド

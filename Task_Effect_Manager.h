@@ -55,6 +55,7 @@ namespace EffectManager
 
 		//外部からの追加命令
 		void Add_Effect(ML::Vec3 pos, ML::Vec3 angle, BEffect::effType handle);
+		void Add_Effect(ML::Vec3 pos,ML::Vec3 target, ML::Vec3 angle, BEffect::effType handle);
 		//全体のライフを1フレームに1ずつ減少させる
 		void Dec_Effect_Life();		
 

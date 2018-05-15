@@ -51,6 +51,13 @@ namespace  EffectManager
 		//★データ＆タスク解放
 		//リストの開放
 		DG::Mesh_Clear();
+		if (this->efList.size() != 0)
+		{
+			for (auto i : this->efList)
+			{
+				i->Finalize();
+			}
+		}
 		this->efList.clear();
 		/*for (auto it = this->efList.begin(); it != this->efList.end(); it++)
 		{
@@ -123,7 +130,13 @@ namespace  EffectManager
 
 		this->efList.push_back(NewEF);
 	}
+	void Object::Add_Effect(ML::Vec3 pos, ML::Vec3 target, ML::Vec3 angle, BEffect::effType handle)
+	{
+		Effect* NewEF = new Effect();
+		NewEF->Load_Eff(pos, target, angle, handle);
 
+		this->efList.push_back(NewEF);
+	}
 	void Object::Dec_Effect_Life()
 	{
 		if (this->efList.size() <= 1)

@@ -24,7 +24,7 @@ namespace Ball
 		static   WP  instance;
 		static  Resource::SP  Create();
 		//‹¤—L‚·‚é•Ï”‚Í‚±‚±‚É’Ç‰Á‚·‚é
-		string meshName;
+		string meshName;		
 	};
 	//-------------------------------------------------------------------
 	class  Object : public  BTask

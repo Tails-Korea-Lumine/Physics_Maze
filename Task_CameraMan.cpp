@@ -131,8 +131,8 @@ namespace  CameraMan
 	//ライトオフ
 	void Object::Turnoff_the_Light()
 	{
-		DG::EffectState().param.light[0].enable = true;
-		DG::EffectState().param.lightAmbient = ML::Color(1, 0, 0, 0);
+		DG::EffectState().param.light[0].enable = false;
+		DG::EffectState().param.lightAmbient = ML::Color(1, 0.05f, 0.05f, 0.05f);
 		this->timeCnt = 0;
 	}
 	//-----------------------------------------------------------------

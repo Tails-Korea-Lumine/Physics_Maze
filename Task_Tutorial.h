@@ -27,6 +27,7 @@ namespace Tutorial
 		//選択可能な目次が3個
 		string imageName[3];
 		string Bg_Img;
+		string bgmName;
 	};
 	//-------------------------------------------------------------------
 	class  Object : public  BTask
@@ -52,8 +53,15 @@ namespace Tutorial
 	public:
 		//追加したい変数・メソッドはここに追加する
 
+		int timeCnt;
+		bool page_Change_Flag;
+
+		int posx[3];//チュートリアルページ切り替え用
 		int posy;//テュートリアルページの表示位置-528=<posy=<720 変更可能性あり
 		
 		Tutorial_Column column;
+
+		void Page_Chage(bool page_Move_Right);
+		bool Can_I_Change_the_Page();
 	};
 }

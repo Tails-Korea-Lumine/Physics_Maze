@@ -92,6 +92,15 @@
     <Filter Include="MyPG\Obstacle\Teleportaion">
       <UniqueIdentifier>{21cac853-36af-483b-8619-cc2c3385d4c9}</UniqueIdentifier>
     </Filter>
+    <Filter Include="MyPG\Tasks\EffectManager">
+      <UniqueIdentifier>{4967e13f-9e92-44ff-8454-02bcd40bc3b4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="MyPG\BEffect">
+      <UniqueIdentifier>{8c914333-62b8-4098-a148-2b18c873c955}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="MyPG\Effect">
+      <UniqueIdentifier>{2e85247c-fb87-40d3-857e-4c1791da1421}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="myLib.cpp">
@@ -202,6 +211,15 @@
     <ClCompile Include="Teleportation_Manager.cpp">
       <Filter>MyPG\Obstacle\Teleportaion</Filter>
     </ClCompile>
+    <ClCompile Include="BEffect.cpp">
+      <Filter>MyPG\BEffect</Filter>
+    </ClCompile>
+    <ClCompile Include="Task_Effect_Manager.cpp">
+      <Filter>MyPG\Tasks\EffectManager</Filter>
+    </ClCompile>
+    <ClCompile Include="Effect.cpp">
+      <Filter>MyPG\Effect</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="myLib.h">
@@ -311,6 +329,15 @@
     </ClInclude>
     <ClInclude Include="Teleportation_Manager.h">
       <Filter>MyPG\Obstacle\Teleportaion</Filter>
+    </ClInclude>
+    <ClInclude Include="BEffect.h">
+      <Filter>MyPG\BEffect</Filter>
+    </ClInclude>
+    <ClInclude Include="Task_Effect_Manager.h">
+      <Filter>MyPG\Tasks\EffectManager</Filter>
+    </ClInclude>
+    <ClInclude Include="Effect.h">
+      <Filter>MyPG\Effect</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

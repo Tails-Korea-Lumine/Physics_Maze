@@ -14,8 +14,14 @@ namespace  Cursor
 	bool  Resource::Initialize()
 	{
 		this->imageName = "Cursor";
-
 		DG::Image_Create(this->imageName, "./data/image/cursor.png");
+
+		this->seMoveName = "seCursorMove";
+		DM::Sound_CreateSE(this->seMoveName, "./data/sound/Cursor.wav");
+		this->seSelectName = "seCursorSelect";
+		DM::Sound_CreateSE(this->seSelectName, "./data/sound/CursorSelct.wav");
+		this->seCancelName = "seCursorCancel";
+		DM::Sound_CreateSE(this->seCancelName, "./data/sound/CursorCencel.wav");
 		return true;
 	}
 	//-------------------------------------------------------------------
@@ -23,6 +29,9 @@ namespace  Cursor
 	bool  Resource::Finalize()
 	{
 		DG::Image_Erase(this->imageName);
+		DM::Sound_Erase(this->seMoveName);
+		DM::Sound_Erase(this->seCancelName);
+		DM::Sound_Erase(this->seSelectName);
 		return true;
 	}
 	//-------------------------------------------------------------------
@@ -81,6 +90,7 @@ namespace  Cursor
 			//カーソルの選択処理
 			if (in1.B3.down || in1.ST.down)
 			{
+				DM::Sound_Play(this->res->seSelectName,false);
 				if (this->now == Start_Tutorial)
 				{
 					this->now = nowMenu(this->select_pos.y);
@@ -98,6 +108,7 @@ namespace  Cursor
 			{
 				this->now = Start_Tutorial;
 				this->select_pos.x = 0;
+				DM::Sound_Play(this->res->seCancelName, false);
 			}
 		}
 		//フラグが立ったらカウントダウン開始
@@ -135,15 +146,20 @@ namespace  Cursor
 	int Object::Move_Cursor(POINT& select)
 	{
 		auto in1 = DI::GPad_GetState("P1");
-
+		//移動
 		if (in1.LStick.U.down || in1.HU.down)
 		{
+			//SE再生
+			DM::Sound_Play(this->res->seMoveName, false);
 			select.y -= 2;
 		}
 		if (in1.LStick.D.down || in1.HD.down)
 		{
+			//SE再生
+			DM::Sound_Play(this->res->seMoveName, false);
 			select.y += 2;
 		}
+		//現在メニュ－に応じる移動範囲設定
 		if (this->now == Start_Tutorial)
 		{
 			if (select.y < -1)
@@ -166,6 +182,7 @@ namespace  Cursor
 				select.y = 3;
 			}
 		}
+		
 		return 408 + (select.y * 43);
 	}
 

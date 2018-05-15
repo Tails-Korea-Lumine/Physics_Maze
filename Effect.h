@@ -4,15 +4,12 @@
 //---------------------------------------------------------------------------------
 //エフェクト描画クラス
 //---------------------------------------------------------------------------------
-
 #include "BEffect.h"
 
 
 class Effect : public BEffect
 {
 public:
-	typedef  shared_ptr<Effect>	SP;
-	typedef  weak_ptr<Effect>	WP;
 	//消滅関数
 	void Finalize();
 
@@ -24,6 +21,7 @@ public:
 
 	//初期化関数
 	void Load_Eff(ML::Vec3 pos, ML::Vec3 angle, effType handle);
+	void Load_Eff(ML::Vec3 pos,ML::Vec3 target, ML::Vec3 angle, effType handle);
 
 	//描画メソッド
 	//マネージャーで呼ぶのはこれらだけ

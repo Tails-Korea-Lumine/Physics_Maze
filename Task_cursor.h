@@ -32,6 +32,9 @@ namespace Cursor
 		static  Resource::SP  Create();
 		//‹¤—L‚·‚é•Ï”‚Í‚±‚±‚É’Ç‰Á‚·‚é
 		string imageName;
+		string seMoveName;
+		string seSelectName;
+		string seCancelName;
 	};
 	//-------------------------------------------------------------------
 	class  Object : public  BTask

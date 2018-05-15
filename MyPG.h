@@ -5,6 +5,7 @@
 #include "Collision.h"
 #include "Dm2008_Ver1_3.h"
 #include "Teleportation_Manager.h"
+#include "Task_Effect_Manager.h"
 
 
 //ゲーム内全域で使用する構造体などを定義する
@@ -95,6 +96,8 @@ namespace  MyPG
 		std::vector<After_Collision> collision_Result;
 		//テレポーテーションマネージャー
 		Teleportation_Manager TM;
+		//エフェクトマネージャー
+		weak_ptr <EffectManager::Object> eff_Manager;
 	//----------------------------------------------
 	};
 }

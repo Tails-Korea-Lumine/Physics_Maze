@@ -15,15 +15,15 @@ namespace  Ball
 	bool  Resource::Initialize()
 	{
 		this->meshName = "Item";
-
 		DG::Mesh_CreateFromSOBFile(this->meshName, "./data/mesh/Item.SOB");
+	
 		return true;
 	}
 	//-------------------------------------------------------------------
 	//リソースの解放
 	bool  Resource::Finalize()
 	{		
-		DG::Mesh_Erase(this->meshName);
+		DG::Mesh_Erase(this->meshName);		
 		return true;
 	}
 	//-------------------------------------------------------------------
@@ -141,8 +141,7 @@ namespace  Ball
 						//反射角で跳ね返す
 
 						this->G.Reflaction_Vector(&this->speed, p.normal, this->m);
-
-
+						
 						//衝突フラグを有効にする
 						this->collision_Flag = true;
 					}

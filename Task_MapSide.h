@@ -28,6 +28,8 @@ namespace Map3d
 		static   WP  instance;
 		static  Resource::SP  Create();
 		//‹¤—L‚·‚é•Ï”‚Í‚±‚±‚É’Ç‰Á‚·‚é
+		string seTeleportIn;
+		string seTeleportOut;
 	};
 	//-------------------------------------------------------------------
 	class  Object : public BTask
@@ -58,7 +60,10 @@ namespace Map3d
 		int mapSize;
 		int sideNumber;
 		float chipSize;
-		string chipName[10];		
+		int gimicCnt;
+		string chipName[10];
+
+
 		//ƒ{[ƒ‹‚Ì‚Ù‚¤‚É“n‚·î•ñ
 		std::vector< After_Collision> col_Poligons;
 		//‰ñ“]—Ê

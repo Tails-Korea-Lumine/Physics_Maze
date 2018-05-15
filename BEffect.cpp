@@ -19,21 +19,21 @@ void BEffect::LoadEffect(effType handle)
 
 		break;
 		
-	case CreateItem://1
+	case TeleportOut://1
 		this->meshName = "CreateItem";
 		this->filePath = "./data/mesh/effect/CreateItem.SOB";
-		this->alpha = 0.6f;
-		this->effect_Life = 60;
-		this->scale = ML::Vec3(100, 100, 100);
-		easing::Set("scaleY_CreateItem", easing::QUINTOUT, 100, 1200, 60);
+		this->alpha = 0.8f;
+		this->effect_Life = 90;
+		this->scale = ML::Vec3(200, 100, 200);
+		easing::Set("scaleY_CreateItem", easing::CIRCOUT, 10, 8000, 60);
 
 		break;
-	case DestroyItem://2
+	case Teleportin://2
 		this->meshName = "DestroyItem";
 		this->filePath = "./data/mesh/effect/DestroyItem.SOB";
 		this->alpha = 1.0f;
 		this->effect_Life = 30;
-		this->scale = ML::Vec3(100.0f, 100.0f, 100.0f);
+		this->scale = ML::Vec3(80.0f, 80.0f, 80.0f);
 		this->pos.y += 100.0f;
 
 		break;
@@ -122,4 +122,13 @@ void BEffect::Eff_Initialize(ML::Vec3 pos, ML::Vec3 angle, effType handle)
 	this->playing_EffectHandle = handle;
 
 	LoadEffect(handle);	
+}
+void BEffect::Eff_Initialize(ML::Vec3 pos, ML::Vec3 target, ML::Vec3 angle, effType handle)
+{
+	this->pos = pos;
+	this->target = target;
+	this->angle = angle;
+	this->playing_EffectHandle = handle;
+
+	LoadEffect(handle);
 }

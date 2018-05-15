@@ -49,8 +49,7 @@ namespace  Game
 		this->timeCnt = 0;
 		this->nowdi = di;
 		this->render2D_Priority[1] = 1.0f;
-		ge->gameClearFlag = false;
-		
+		ge->gameClearFlag = false;		
 
 		float size_destance = 0.0f;
 
@@ -69,12 +68,13 @@ namespace  Game
 		//ライティング有効化
 		DG::EffectState().param.lightsEnable = true;
 		//環境光の強さを設定する
-		DG::EffectState().param.lightAmbient = ML::Color(1, 0.1f, 0.1f, 0.1f);
+		DG::EffectState().param.lightAmbient = ML::Color(1, 0.3f, 0.3f, 0.3f);
 		//平行光源の設定
-		//DG::EffectState().param.light[0].enable = true;
+		DG::EffectState().param.light[0].enable = true;
 		DG::EffectState().param.light[0].kind = DG_::Light::Directional;//光源の種類
 		DG::EffectState().param.light[0].direction = ML::Vec3(1, -1, 1).Normalize();//照射方向
 		DG::EffectState().param.light[0].color = ML::Color(1, 1,1,1);//色と強さ
+		//★タスクの生成		
 
 		//カメラマンを生成
 		auto cameraman = CameraMan::Object::Create(true);
@@ -88,7 +88,7 @@ namespace  Game
 		//ワールド回転量初期化
 		ge->World_Rotation = ML::QT();
 
-		//★タスクの生成
+		
 		//マップの中心地
 		ge->Map_center = ML::Vec3(1050, 50, 1050);
 		//判定の結果をゼロクリア
@@ -110,6 +110,9 @@ namespace  Game
 
 		//マップマネージャ生成
 		auto manager = Map_Manager::Object::Create(true);
+
+		//エフェクトマネージャー生成
+		ge->eff_Manager = EffectManager::Object::Create(true);
 		
 		//UIの生成
 		auto ui = UI::Object::Create(true);
@@ -125,7 +128,7 @@ namespace  Game
 		ge->KillAll_G("ボール");
 		ge->KillAll_G("UI");
 		ge->KillAll_G("カメラマン");
-
+		ge->KillAll_G("エフェクト");
 	//	DG::Font_Erase("FontA");
 
 		DM::Sound_Stop(this->res->bgmName);

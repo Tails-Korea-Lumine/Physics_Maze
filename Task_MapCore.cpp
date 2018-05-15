@@ -220,12 +220,14 @@ namespace  Map_Core
 		
 		for (int b = 0; b < 6; b++)
 		{
+			//‘Š‘Î‹——£‚Ìâ‘Î’l‚ð‚Æ‚é
 			ML::Vec3 d = this->barrier[b].Get_Pos() - pos;
 			if (d.Length() < 0)
 			{
 				d *= -1;
 			}
-			if (d.Length() > (this->mapSize + 4) * 50)
+			//ˆê’è‹——£ˆÈ“à‚Ì‚à‚Ì‚¾‚¯”»’è‚ð‚·‚é
+			if (d.Length() > (this->mapSize + 4) * 53)
 			{
 				continue;
 			}

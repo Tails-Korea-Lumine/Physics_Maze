@@ -30,6 +30,9 @@ private:
 	ML::Box3D collision_Base;//一個一個の判定範囲
 	ML::QT boxQT;//マップの回転量
 	Collision col;
+	//衝突判定
+	//判定の正不正だけをもらう関数
+	bool Get_Collision_Bool(const ML::Vec3& pos, const float& r, const ML::Vec3& speed);
 	
 public:
 
@@ -42,7 +45,9 @@ public:
 	//位置を返す関数
 	ML::Vec3 Get_Pos();
 	//衝突判定
+	//判定の結果値をもらう関数
 	void Get_Collision_Poligon(std::vector<After_Collision>* result, const ML::Vec3& pos, const float& r, const ML::Vec3& speed);
+
 	//ゲームクリア判定
 	bool Player_was_Clear_the_Game(const ML::Vec3& pos, const float& r, const ML::Vec3 speed);
 	//テレポートするかを判定

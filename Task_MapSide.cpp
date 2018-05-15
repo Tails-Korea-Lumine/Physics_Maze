@@ -5,6 +5,7 @@
 #include  "Task_MapSide.h"
 #include  "Task_Ball.h"
 #include  "Task_Game.h"
+#include  "Task_CameraMan.h"
 
 namespace  Map3d
 {
@@ -13,13 +14,18 @@ namespace  Map3d
 	//リソースの初期化
 	bool  Resource::Initialize()
 	{
-		
+		this->seTeleportIn = "SETeleIn";
+		DM::Sound_CreateSE(this->seTeleportIn, "./data/sound/TeleportIn.wav");
+		this->seTeleportOut = "SETeleOut";
+		DM::Sound_CreateSE(this->seTeleportOut, "./data/sound/TeleportOut.wav");
 		return true;
 	}
 	//-------------------------------------------------------------------
 	//リソースの解放
 	bool  Resource::Finalize()
 	{		
+		DM::Sound_Erase(this->seTeleportOut);
+		DM::Sound_Erase(this->seTeleportIn);
 		return true;
 	}
 	//-------------------------------------------------------------------
@@ -33,6 +39,8 @@ namespace  Map3d
 
 
 		//★データ初期化
+		this->render3D_Priority[0] = 0.3f;
+		this->gimicCnt = 0;
 		int plusSize;
 		if (di == Difficult_Range::Hard)
 		{
@@ -352,6 +360,9 @@ namespace  Map3d
 					case BoxType::Goal:
 						if (this->arr[z][y][x].Player_was_Clear_the_Game(pos, r, speed))
 						{
+							ML::Vec3 distance = this->arr[z][y][x].Get_Pos() - pos;
+							auto ball = ge->GetTask_One_G<Ball::Object>("ボール");
+							ball->Teleportation(pos + (distance*0.01f));
 							auto game = ge->GetTask_One_G<Game::Object>("ゲーム");
 							if (game != nullptr)
 							{
@@ -360,14 +371,23 @@ namespace  Map3d
 						}
 						break;
 					//扉はテレポート
-					case BoxType::Teleportaion:
+					case BoxType::Teleportaion:						
 						if (this->arr[z][y][x].Player_was_Hit_the_Door(pos, r, speed))
-						{
+						{						
 							auto ball = ge->GetTask_One_G<Ball::Object>("ボール");
 							ML::Vec3 exitpos;
 							if (ge->TM.Find_Exit(this->sideNumber,&exitpos))
-							{
+							{								
 								ball->Teleportation(exitpos);
+								auto eff = ge->eff_Manager.lock();
+								//テレポートインのエフェクト
+								eff->Add_Effect(pos, this->arr[z][y][x].Get_Pos(), ML::Vec3(0, 0, 0), BEffect::effType::Teleportin);
+								//テレポートインの音を鳴らす
+								DM::Sound_Play(this->res->seTeleportIn, false);
+								//テレポートアウトのエフェクト
+								eff->Add_Effect(exitpos, ML::Vec3(0, 0, 0), BEffect::effType::TeleportOut);
+								//テレポートアウトの音を鳴らす
+								DM::Sound_Play(this->res->seTeleportOut, false);
 							}
 						}
 						break;
@@ -375,6 +395,7 @@ namespace  Map3d
 						if (this->arr[z][y][x].Player_Turnoff_the_Switch(pos, r, speed))
 						{
 							//カメラマンにライトを3秒間オフする命令を送る
+							ge->GetTask_One_G<CameraMan::Object>("カメラマン")->Turnoff_the_Light();
 						}
 						break;
 					//壁はただのあたり判定

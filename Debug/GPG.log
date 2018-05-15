@@ -1,4 +1,24 @@
-﻿  Task_Game.cpp
+﻿  Bbox.cpp
+  Collision.cpp
+  GameEngine_Ver3_7.cpp
+  Gravity.cpp
+  MyPG.cpp
+  Task_Ball.cpp
+  Task_CameraMan.cpp
+  Task_Game.cpp
+  Task_MapCore.cpp
+  Task_MapFence.cpp
+  Task_MapSide.cpp
   Task_Map_Manager.cpp
+  Task_Result.cpp
+  Task_Tutorial.cpp
+  Task_UI.cpp
+  Task_cursor.cpp
+  Task_title.cpp
+c:\users\lumine\desktop\fermat\3d_maze\task_title.cpp(122): warning C4244: '인수': 'float'에서 'const int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\lumine\desktop\fermat\3d_maze\task_title.cpp(127): warning C4244: '인수': 'float'에서 'const int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\lumine\desktop\fermat\3d_maze\task_title.cpp(226): warning C4018: '>': signed 또는 unsigned가 일치하지 않습니다.
+  WinMain.cpp
   코드를 생성하고 있습니다...
+c:\users\lumine\desktop\fermat\3d_maze\task_mapcore.cpp(270): warning C4715: 'Map_Core::Object::Get_Frame_QT': 모든 제어 경로에서 값을 반환하지는 않습니다.
   GPG.vcxproj -> C:\Users\Lumine\Desktop\Fermat\3d_Maze\Debug\GPG.exe
