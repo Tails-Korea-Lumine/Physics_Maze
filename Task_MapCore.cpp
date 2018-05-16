@@ -208,7 +208,7 @@ namespace  Map_Core
 	//------------------------------------------------------------------------------------
 	//あたり判定
 
-	void Object::Core_Check_Hit(const ML::Vec3& pos, const float& r, const ML::Vec3& speed)
+	bool Object::Core_Check_Hit(const ML::Vec3& pos, const float& r, const ML::Vec3& speed)
 	{
 		//接触三角形を判定前にクリアする	
 		this->col_Poligons.clear();
@@ -217,7 +217,12 @@ namespace  Map_Core
 		//std::vector<After_Collision> poligonC
 		this->core.Get_Collision_Poligon(&this->col_Poligons, pos, r, speed);
 		
-		
+		bool ball_was_Collision_to_Core = false;
+
+		if (this->col_Poligons.size() != 0)
+		{
+			ball_was_Collision_to_Core = true;
+		}
 		for (int b = 0; b < 6; b++)
 		{
 			//相対距離の絶対値をとる
@@ -234,6 +239,8 @@ namespace  Map_Core
 			//std::vector<After_Collision> poligonB
 			this->barrier[b].Get_Collision_Poligon(&this->col_Poligons, pos, r, speed);			
 		}
+
+		return ball_was_Collision_to_Core;
 	}
 
 	//---------------------------------------------------------------------------------

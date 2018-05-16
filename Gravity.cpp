@@ -2,14 +2,14 @@
 #include <cmath>
 
 //法線ベクトルを求める
-ML::Vec3 Gravity::Get_Normal_to_Vector_Cross(const ML::Vec3& v1, const ML::Vec3& v2)
+void Gravity::Get_Normal_to_Vector_Cross(ML::Vec3* normal, const ML::Vec3& v1, const ML::Vec3& v2)
 {
 	ML::Vec3 Normal;
 	Normal.x = (v1.y*v2.z) - (v1.z*v2.y);
 	Normal.y = (v1.z * v2.x) - (v1.x*v2.z);
 	Normal.z = (v1.x*v2.y) - (v1.y*v2.x);
 
-	return Normal;
+	*normal = Normal;
 }
 //内積を求める
 float Gravity::Get_Vector_Dot(const ML::Vec3& v1, const ML::Vec3& v2)
@@ -51,7 +51,7 @@ float Gravity::Vector_Cross(const ML::Vec3& v1, const ML::Vec3& v2)
 
 	//座標上の外積(法線ベクトル)
 	ML::Vec3 Cross_to_Position;
-	Cross_to_Position = Gravity::Get_Normal_to_Vector_Cross(v1, v2);
+	Gravity::Get_Normal_to_Vector_Cross(&Cross_to_Position, v1, v2);
 
 	float sin;
 

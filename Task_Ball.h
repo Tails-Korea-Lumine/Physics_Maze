@@ -81,6 +81,7 @@ namespace Ball
 		void Fix_Position_for_Rotate(const ML::QT& qt);
 		//テレポート(指定した場所に即移動する)引数 : (目的地)
 		void Teleportation(const ML::Vec3& objectPos);
-
+		//コアとあたってない時コアの方に引っ張られる
+		void Graviation_Pull(const ML::Vec3& force);
 	};
 }

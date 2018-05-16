@@ -49,31 +49,8 @@ namespace  Game
 		this->timeCnt = 0;
 		this->nowdi = di;
 		this->render2D_Priority[1] = 1.0f;
-		ge->gameClearFlag = false;		
+		ge->gameClearFlag = false;	
 
-		float size_destance = 0.0f;
-
-		if (di == Difficult_Range::Hard)
-		{
-			size_destance = 1100.0f;
-		}
-		//カメラの設定
-		ge->camera[0] = MyPG::Camera::Create(
-			ML::Vec3(1050.0f, 50.0f, 1050.0f),				//	ターゲット位置
-			ML::Vec3(1050.0f, 50.0f, -1500.0f - size_destance),//	カメラ位置
-			ML::Vec3(0.0f, 1.0f, 0.0f),					//	カメラの上方向ベクトル
-			ML::ToRadian(35), 10.0f, 4000.0f,	//	視野角・視野距離
-			(float)ge->screenWidth / (float)ge->screenHeight);		//	画面比率		
-		DG::EffectState().param.bgColor = ML::Color(1, 0.0f, 0.0f, 0.0f);
-		//ライティング有効化
-		DG::EffectState().param.lightsEnable = true;
-		//環境光の強さを設定する
-		DG::EffectState().param.lightAmbient = ML::Color(1, 0.3f, 0.3f, 0.3f);
-		//平行光源の設定
-		DG::EffectState().param.light[0].enable = true;
-		DG::EffectState().param.light[0].kind = DG_::Light::Directional;//光源の種類
-		DG::EffectState().param.light[0].direction = ML::Vec3(1, -1, 1).Normalize();//照射方向
-		DG::EffectState().param.light[0].color = ML::Color(1, 1,1,1);//色と強さ
 		//★タスクの生成		
 
 		//カメラマンを生成

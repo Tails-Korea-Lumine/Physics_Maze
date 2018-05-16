@@ -39,87 +39,92 @@ void Collision::Get_Triangle_Box3D(std::vector<Triangle>* result, const ML::Box3
 	{
 		t[0].a = vertex_Index[0],
 		t[0].b = vertex_Index[3],
-		t[0].c = vertex_Index[4],
-		t[0].normal = this->Get_Normal_to_Vector_Cross((t[0].c - t[0].a), (t[0].b - t[0].a))
+		t[0].c = vertex_Index[4],		
 	};
+	this->Get_Normal_to_Vector_Cross(&t[0].normal, (t[0].c - t[0].a), (t[0].b - t[0].a));
 	t[1] =
 	{
 		t[1].a = vertex_Index[3],
 		t[1].b = vertex_Index[4],
-		t[1].c = vertex_Index[7],
-		t[1].normal = this->Get_Normal_to_Vector_Cross((t[1].b - t[1].a), (t[1].c - t[1].a))
+		t[1].c = vertex_Index[7],		
 	};
+	this->Get_Normal_to_Vector_Cross(&t[1].normal, (t[1].b - t[1].a), (t[1].c - t[1].a));
 	t[2] =
 	{
 		t[2].a = vertex_Index[1],
-		t[2].b = vertex_Index[0],		
-		t[2].c = vertex_Index[5],
-		t[2].normal = this->Get_Normal_to_Vector_Cross((t[2].c - t[2].a), (t[2].b - t[2].a))
+		t[2].b = vertex_Index[0],
+		t[2].c = vertex_Index[5],		
 	};
+	this->Get_Normal_to_Vector_Cross(&t[2].normal, (t[2].c - t[2].a), (t[2].b - t[2].a));
 	t[3] =
 	{
 		t[3].a = vertex_Index[0],
 		t[3].b = vertex_Index[5],
-		t[3].c = vertex_Index[4],
-		t[3].normal = this->Get_Normal_to_Vector_Cross((t[3].b - t[3].a), (t[3].c - t[3].a))
+		t[3].c = vertex_Index[4],		
 	};
+	this->Get_Normal_to_Vector_Cross(&t[3].normal, (t[3].b - t[3].a), (t[3].c - t[3].a));
 	t[4] =
 	{
 		t[4].a = vertex_Index[1],
 		t[4].b = vertex_Index[5],
 		t[4].c = vertex_Index[2],
-		t[4].normal = this->Get_Normal_to_Vector_Cross((t[4].c - t[4].a), (t[4].b - t[4].a))
+		
 	};
+	this->Get_Normal_to_Vector_Cross(&t[4].normal, (t[4].c - t[4].a), (t[4].b - t[4].a));
 	t[5] =
 	{
 		t[5].a = vertex_Index[5],
 		t[5].b = vertex_Index[2],
 		t[5].c = vertex_Index[6],
-		t[5].normal = this->Get_Normal_to_Vector_Cross((t[5].b - t[5].a), (t[5].c - t[5].a))
+		
 	};
+	this->Get_Normal_to_Vector_Cross(&t[5].normal, (t[5].b - t[5].a), (t[5].c - t[5].a));
 	t[6] =
 	{
 		t[6].a = vertex_Index[3],
 		t[6].b = vertex_Index[7],
 		t[6].c = vertex_Index[2],
-		t[6].normal = this->Get_Normal_to_Vector_Cross((t[6].b - t[6].a),(t[4].c - t[6].a))
+		
 	};
+	this->Get_Normal_to_Vector_Cross(&t[6].normal, (t[6].b - t[6].a), (t[4].c - t[6].a));
 	t[7] =
 	{
 		t[7].a = vertex_Index[7],
 		t[7].b = vertex_Index[2],
 		t[7].c = vertex_Index[6],
-		t[7].normal = this->Get_Normal_to_Vector_Cross((t[7].c - t[7].a), (t[7].b - t[7].a))
+		
 	};
+	this->Get_Normal_to_Vector_Cross(&t[7].normal, (t[7].c - t[7].a), (t[7].b - t[7].a));
 	t[8] =
 	{
 		t[8].a = vertex_Index[4],
 		t[8].b = vertex_Index[7],
 		t[8].c = vertex_Index[5],
-		t[8].normal = this->Get_Normal_to_Vector_Cross((t[8].c - t[8].a), (t[8].b - t[8].a))
+		
 	};
+	this->Get_Normal_to_Vector_Cross(&t[8].normal, (t[8].c - t[8].a), (t[8].b - t[8].a));
 	t[9] =
 	{
 		t[9].a = vertex_Index[7],
 		t[9].b = vertex_Index[5],
 		t[9].c = vertex_Index[6],
-		t[9].normal = this->Get_Normal_to_Vector_Cross((t[9].b - t[9].a),(t[9].c - t[9].a))
-
 	};
+	this->Get_Normal_to_Vector_Cross(&t[9].normal, (t[9].b - t[9].a), (t[9].c - t[9].a));
 	t[10] =
 	{
 		t[10].a = vertex_Index[0],
 		t[10].b = vertex_Index[3],
 		t[10].c = vertex_Index[1],
-		t[10].normal = this->Get_Normal_to_Vector_Cross((t[10].b - t[10].a),(t[10].c - t[10].a))
+		
 	};
+	this->Get_Normal_to_Vector_Cross(&t[10].normal, (t[10].b - t[10].a), (t[10].c - t[10].a));
 	t[11] =
 	{
 		t[11].a = vertex_Index[3],
 		t[11].b = vertex_Index[1],
-		t[11].c = vertex_Index[2],
-		t[11].normal = this->Get_Normal_to_Vector_Cross((t[11].c - t[11].a), (t[11].b - t[11].a))
+		t[11].c = vertex_Index[2],		
 	};
+	this->Get_Normal_to_Vector_Cross(&t[11].normal, (t[11].c - t[11].a), (t[11].b - t[11].a));
 
 	//std::vector‚Å‚Ü‚Æ‚ß‚½Œã‚É
 	for (int i = 0; i < 12; i++)
@@ -147,9 +152,7 @@ bool Collision::Check_Collision(const Triangle& tri, const ML::Vec3& p)
 	if (A.Length() == 0.0f || B.Length() == 0.0f || C.Length() == 0.0f)
 	{
 		return true; //ŒvŽZ•s‰Â”\‚©‚ÂŽOŠpŒ`‚É“à•ï‚³‚ê‚Ä‚¢‚é‚Ì‚Å‚ ‚½‚Á‚Ä‚é”»’è‚Å•Ô‚·
-	}
-	//•Ó‚Ìã‚ÌŽž
-	
+	}	
 	
 
 	//alpha  A‚ÆB‚ÌŠp“x
@@ -207,7 +210,7 @@ void Collision::Get_Poionts_to_Sphere(std::vector<ML::Vec3>* result ,const ML::V
 		S.push_back(v[i]);
 	}*/
 	//”¼’¼Œa‚ÌŒë·”ÍˆÍ‚ðŠÜ‚ß‚ÄŽæ‚éver.2
-	for (float i = r; i > r-3; i-=0.5f)
+	for (float i = r; i > r-2; i-=0.5f)
 	{
 		//ver0.3
 		/*v[0] = pos + ML::Vec3(+i, 0, 0);

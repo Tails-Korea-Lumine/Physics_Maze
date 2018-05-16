@@ -29,7 +29,24 @@ namespace  CameraMan
 		this->res = Resource::Create();
 
 		//★データ初期化
-		//カメラの初期設定はTask_Gameの方で行う
+		//カメラの設定
+		ge->camera[0] = MyPG::Camera::Create(
+			ML::Vec3(1050.0f, 50.0f, 1050.0f),				//	ターゲット位置
+			ML::Vec3(1050.0f, 50.0f, -1500.0f),//	カメラ位置
+			ML::Vec3(0.0f, 1.0f, 0.0f),					//	カメラの上方向ベクトル
+			ML::ToRadian(35), 10.0f, 4000.0f,	//	視野角・視野距離
+			(float)ge->screenWidth / (float)ge->screenHeight);		//	画面比率		
+		DG::EffectState().param.bgColor = ML::Color(1, 0.0f, 0.0f, 0.0f);
+		//ライティング有効化
+		DG::EffectState().param.lightsEnable = true;
+		//環境光の強さを設定する
+		DG::EffectState().param.lightAmbient = ML::Color(1, 0.3f, 0.3f, 0.3f);
+		//平行光源の設定
+		DG::EffectState().param.light[0].enable = true;
+		DG::EffectState().param.light[0].kind = DG_::Light::Directional;//光源の種類
+		DG::EffectState().param.light[0].direction = ML::Vec3(1, -1, 1).Normalize();//照射方向
+		DG::EffectState().param.light[0].color = ML::Color(1, 1, 1, 1);//色と強さ
+
 
 		this->nowPos = ge->camera[0]->pos;
 		this->initPos = ge->camera[0]->pos;

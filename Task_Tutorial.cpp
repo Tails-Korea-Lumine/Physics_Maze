@@ -4,7 +4,6 @@
 #include  "MyPG.h"
 #include  "Task_Tutorial.h"
 #include  "Task_Title.h"
-#include  "easing.h"
 
 namespace  Tutorial
 {
@@ -61,21 +60,21 @@ namespace  Tutorial
 			for (int i = 0; i < 3; i++)
 			{
 				this->posx[i] = ge->screenWidth * i;
-				//easing::Set("Change_Page" + to_string(i), easing::CIRCIN, ge->screenWidth*i, ge->screenWidth*(i+1), 80);
+				
 			}
 			break;
 		case Tutorial_Column::Control:
 			for (int i = 0; i < 3; i++)
 			{
 				this->posx[i] = ge->screenWidth * (i-1);
-				//easing::Set("Change_Page" + to_string(i), easing::CIRCIN, ge->screenWidth*(i-1), ge->screenWidth*(i), 80);
+				
 			}
 			break;
 		case Tutorial_Column::Obstacle:
 			for (int i = 0; i < 3; i++)
 			{
 				this->posx[i] = ge->screenWidth * (i-2);
-				//easing::Set("Change_Page" + to_string(i), easing::CIRCIN, ge->screenWidth*(i-2), ge->screenWidth*(i - 1), 80);
+				
 			}
 			break;
 		}

@@ -226,7 +226,12 @@ namespace  Map_Manager
 			//ボールとマップのあたり判定
 			if (ball != nullptr)
 			{
-				core->Core_Check_Hit(ball->Get_Pos(), ball->Get_Radious(), ball->Get_Speed());
+				//コアとボールが接触していない時、引力をかける(バリアの外に出られなくようにする仕組み)
+				if (!core->Core_Check_Hit(ball->Get_Pos(), ball->Get_Radious(), ball->Get_Speed()))
+				{
+					ML::Vec3 force = ge->Map_center - ball->Get_Pos();
+					ball->Graviation_Pull(force.Normalize());
+				}
 				for (auto m = map->begin(); m != map->end(); m++)
 				{
 					(*m)->Map_Check_Hit(ball->Get_Pos(), ball->Get_Radious(), ball->Get_Speed());
