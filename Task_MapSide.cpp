@@ -363,11 +363,9 @@ namespace  Map3d
 							ML::Vec3 distance = this->arr[z][y][x].Get_Pos() - pos;
 							auto ball = ge->GetTask_One_G<Ball::Object>("ボール");
 							ball->Teleportation(pos + (distance*0.01f));
-							auto game = ge->GetTask_One_G<Game::Object>("ゲーム");
-							if (game != nullptr)
-							{
-								game->Game_Clear();
-							}
+							//auto game = ge->GetTask_One_G<Game::Object>("ゲーム");							
+							ge->game.lock()->Game_Clear();
+							
 						}
 						break;
 					//扉はテレポート

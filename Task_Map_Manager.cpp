@@ -142,38 +142,40 @@ namespace  Map_Manager
 			
 			//回転をeasingで減速運動させるver0.3
 			
-			//入力されてる所のeasingデータをリセットさせる
-			if (in1.LStick.axis.y > 0)
+			if (ge->game.lock()->GET_READY())
 			{
-				easing::Reset("Decrese_StickVolumeXM");
-				easing::Start("Decrese_StickVolumeXM");
+				//入力されてる所のeasingデータをリセットさせる
+				if (in1.LStick.axis.y > 0)
+				{
+					easing::Reset("Decrese_StickVolumeXM");
+					easing::Start("Decrese_StickVolumeXM");
+				}
+				else if (in1.LStick.axis.y < 0)
+				{
+					easing::Reset("Decrese_StickVolumeXP");
+					easing::Start("Decrese_StickVolumeXP");
+				}
+				if (in1.LStick.axis.x > 0)
+				{
+					easing::Reset("Decrese_StickVolumeYM");
+					easing::Start("Decrese_StickVolumeYM");
+				}
+				else if (in1.LStick.axis.x < 0)
+				{
+					easing::Reset("Decrese_StickVolumeYP");
+					easing::Start("Decrese_StickVolumeYP");
+				}
+				if (in1.R2.on)
+				{
+					easing::Reset("Decrese_StickVolumeZM");
+					easing::Start("Decrese_StickVolumeZM");
+				}
+				else if (in1.L2.on)
+				{
+					easing::Reset("Decrese_StickVolumeZP");
+					easing::Start("Decrese_StickVolumeZP");
+				}
 			}
-			else if (in1.LStick.axis.y < 0)
-			{
-				easing::Reset("Decrese_StickVolumeXP");
-				easing::Start("Decrese_StickVolumeXP");
-			}
-			if (in1.LStick.axis.x > 0)
-			{
-				easing::Reset("Decrese_StickVolumeYM");
-				easing::Start("Decrese_StickVolumeYM");
-			}
-			else if (in1.LStick.axis.x < 0)
-			{
-				easing::Reset("Decrese_StickVolumeYP");
-				easing::Start("Decrese_StickVolumeYP");
-			}
-			if (in1.R2.on)
-			{
-				easing::Reset("Decrese_StickVolumeZM");
-				easing::Start("Decrese_StickVolumeZM");
-			}
-			else if (in1.L2.on)
-			{
-				easing::Reset("Decrese_StickVolumeZP");
-				easing::Start("Decrese_StickVolumeZP");
-			}
-
 			//easingデータが回転量で更新される
 			this->frame_QTxp = ML::QT(ML::Vec3(1, 0, 0), ML::ToRadian(-easing::GetPos("Decrese_StickVolumeXM")  / float(delicate)));
 						

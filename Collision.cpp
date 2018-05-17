@@ -179,7 +179,7 @@ bool Collision::Check_Collision(const Triangle& tri, const ML::Vec3& p)
 
 	//誤差まで確認(誤差の範囲は変わる余地がある 2018/03/16)
 	//0.99756405026
-	if (check  >= _CMATH_::cos(ML::ToRadian(359)))
+	if (check  >= _CMATH_::cosf(ML::ToRadian(359)))
 	{
 		return true;
 	}

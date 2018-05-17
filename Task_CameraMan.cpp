@@ -3,6 +3,7 @@
 //-------------------------------------------------------------------
 #include  "MyPG.h"
 #include  "Task_CameraMan.h"
+#include  "Task_Game.h"
 
 namespace  CameraMan
 {
@@ -32,7 +33,7 @@ namespace  CameraMan
 		//カメラの設定
 		ge->camera[0] = MyPG::Camera::Create(
 			ML::Vec3(1050.0f, 50.0f, 1050.0f),				//	ターゲット位置
-			ML::Vec3(1050.0f, 50.0f, -1500.0f),//	カメラ位置
+			ML::Vec3(2050.0f, 1050.0f, -1500.0f),//	カメラ位置
 			ML::Vec3(0.0f, 1.0f, 0.0f),					//	カメラの上方向ベクトル
 			ML::ToRadian(35), 10.0f, 4000.0f,	//	視野角・視野距離
 			(float)ge->screenWidth / (float)ge->screenHeight);		//	画面比率		
@@ -79,6 +80,97 @@ namespace  CameraMan
 	//「更新」１フレーム毎に行う処理
 	void  Object::UpDate()
 	{
+		//auto game = ge->GetTask_One_G<Game::Object>("ゲーム");
+
+		if (!ge->game.lock()->GET_READY())
+		{
+			this->ProMotion();
+		}
+		else
+		{
+			this->Camera_Move();
+		}
+
+		//ライトがオフされてから3秒後に、ライトをオンする
+		if (this->It_Passed_3sec())
+		{
+			this->Turnon_the_Light();
+		}
+		this->timeCnt++;
+	}
+	//-------------------------------------------------------------------
+	//「２Ｄ描画」１フレーム毎に行う処理
+	void  Object::Render2D_AF()
+	{		
+	}
+
+	void  Object::Render3D_L0()
+	{
+		
+	}
+
+	//---------------------------------------------------------------------
+	//追加メソッド
+	//ライトオフ
+	void Object::Turnoff_the_Light()
+	{
+		DG::EffectState().param.light[0].enable = false;
+		DG::EffectState().param.lightAmbient = ML::Color(1, 0.05f, 0.05f, 0.05f);
+		this->timeCnt = 0;
+	}
+	//----------------------------------------------------------------
+	//ライトオン
+	void Object::Turnon_the_Light()
+	{
+		DG::EffectState().param.light[0].enable = true;
+		DG::EffectState().param.lightAmbient = ML::Color(1, 0.3f, 0.3f, 0.3f);
+	}
+	//-----------------------------------------------------------------
+	//3秒がたったのかを確認
+	bool Object::It_Passed_3sec()
+	{
+		if (this->timeCnt > 180)
+		{
+			return true;
+		}
+		return false;
+	}
+
+	//------------------------------------------------------------------------
+	//ゲームスタート演出
+	void Object::ProMotion()
+	{
+		if (this->timeCnt < 180)
+		{
+			ge->camera[0]->pos.z += 22;
+		}
+		else if (this->timeCnt == 180)
+		{
+			ge->camera[0]->pos = ML::Vec3(50, -950, 1740);
+		}
+		else if (this->timeCnt < 360)
+		{
+			ge->camera[0]->pos.z -= 22;
+		}
+		else if (this->timeCnt == 360)
+		{
+			ge->camera[0]->pos = ML::Vec3(1050, 50, -1300);
+		}
+		else
+		{
+			ge->camera[0]->pos.z -= 18;
+		}
+
+		if (ge->camera[0]->pos.z < -1750)
+		{
+			ge->camera[0]->pos.z = -1750;
+		}
+	}
+
+	//--------------------------------------------------------------------------
+	//カメラの移動操作
+	void Object::Camera_Move()
+	{
 		auto in1 = DI::GPad_GetState("P1");
 
 		this->nowPos = ge->Map_center - ML::Vec3(0, 0, this->distance);
@@ -123,46 +215,7 @@ namespace  CameraMan
 
 		//カメラ位置の更新
 		ge->camera[0]->pos = this->nowPos;
-
-		//ライトがオフされてから3秒後に、ライトをオンする
-		if (this->It_Passed_3sec())
-		{
-			DG::EffectState().param.light[0].enable = true;
-			DG::EffectState().param.lightAmbient = ML::Color(1, 0.3f, 0.3f, 0.3f);
-		}
-		this->timeCnt++;
 	}
-	//-------------------------------------------------------------------
-	//「２Ｄ描画」１フレーム毎に行う処理
-	void  Object::Render2D_AF()
-	{		
-	}
-
-	void  Object::Render3D_L0()
-	{
-		
-	}
-
-	//---------------------------------------------------------------------
-	//追加メソッド
-	//ライトオフ
-	void Object::Turnoff_the_Light()
-	{
-		DG::EffectState().param.light[0].enable = false;
-		DG::EffectState().param.lightAmbient = ML::Color(1, 0.05f, 0.05f, 0.05f);
-		this->timeCnt = 0;
-	}
-	//-----------------------------------------------------------------
-	//3秒がたったのかを確認
-	bool Object::It_Passed_3sec()
-	{
-		if (this->timeCnt > 180)
-		{
-			return true;
-		}
-		return false;
-	}
-
 	//★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★
 	//以下は基本的に変更不要なメソッド
 	//★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★

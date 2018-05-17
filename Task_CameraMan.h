@@ -65,7 +65,13 @@ namespace CameraMan
 		//メソッド
 		//ライトをオフする処理
 		void Turnoff_the_Light();
+		//ライトをオンする処理
+		void Turnon_the_Light();
 		//3秒がたったのかを判定
 		bool It_Passed_3sec();
+		//ゲームスタート前の演出
+		void ProMotion();
+		//カメラの移動操作
+		void Camera_Move();
 	};
 }

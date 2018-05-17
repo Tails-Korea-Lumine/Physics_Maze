@@ -49,7 +49,8 @@ namespace  Game
 		this->timeCnt = 0;
 		this->nowdi = di;
 		this->render2D_Priority[1] = 1.0f;
-		ge->gameClearFlag = false;	
+		ge->gameClearFlag = false;
+		ge->getReadyFlag = true;
 
 		//★タスクの生成		
 
@@ -91,6 +92,8 @@ namespace  Game
 		//エフェクトマネージャー生成
 		ge->eff_Manager = EffectManager::Object::Create(true);
 		
+		
+
 		//UIの生成
 		auto ui = UI::Object::Create(true);
 
@@ -109,6 +112,7 @@ namespace  Game
 	//	DG::Font_Erase("FontA");
 
 		DM::Sound_Stop(this->res->bgmName);
+
 		if (!ge->QuitFlag() && this->nextTaskCreate)
 		{
 			//★引き継ぎタスクの生成
@@ -142,6 +146,15 @@ namespace  Game
 		}		
 		ge->TM.Increse_Counter();
 
+		//始まる前の演出が終わったら準備中フラグを無効にする
+		if (!this->GET_READY())
+		{
+			if (this->timeCnt > 480)
+			{
+				ge->getReadyFlag = false;
+				this->timeCnt = 0;
+			}
+		}
 		//時間を更新
 		this->timeCnt++;
 	}
@@ -195,6 +208,13 @@ namespace  Game
 	bool Object::IS_Cleared()
 	{
 		return ge->gameClearFlag;
+	}
+
+	//--------------------------------------------------------------------------------------
+	//操作可能かを確認
+	bool Object::GET_READY()
+	{
+		return !ge->getReadyFlag;
 	}
 	//★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★
 	//以下は基本的に変更不要なメソッド

@@ -67,5 +67,7 @@ namespace Game
 		void Game_Clear();
 		//ƒNƒŠƒA‚µ‚½‚Ì‚©‚ğ•Ô‚·ŠÖ”
 		bool IS_Cleared();
+		//‘€ì‰Â”\‚©‚ğ•Ô‚·ŠÖ”
+		bool GET_READY();
 	};
 }

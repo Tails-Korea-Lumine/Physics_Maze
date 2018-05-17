@@ -103,7 +103,11 @@ namespace  UI
 		}
 
 		this->ui_Time.y = easing::GetPos("Up_to_Down");
-		this->timeCnt++;
+		//UI‚ÅŒ©‚¹‚éŽžŒv‚Í€”õ‚ªI‚í‚Á‚½Œã‚É—¬‚ê‚é
+		if (ge->game.lock()->GET_READY())
+		{
+			this->timeCnt++;
+		}
 
 		//“§–¾“x‚Ì”ÍˆÍŽw’è
 		if (this->wipe_Alpha < 0.0f)
@@ -119,7 +123,7 @@ namespace  UI
 	//u‚Q‚c•`‰æv‚PƒtƒŒ[ƒ€–ˆ‚És‚¤ˆ—
 	void  Object::Render2D_AF()
 	{
-		if (ge->GetTask_One_G<Game::Object>("ƒQ[ƒ€") != nullptr)
+		if (ge->GetTask_One_G<Game::Object>("ƒQ[ƒ€") != nullptr)	
 		{
 			this->Draw_Time();
 		}		

@@ -71,9 +71,6 @@
     <Filter Include="MyPG\Tasks\Cursor">
       <UniqueIdentifier>{4dfe7fba-b287-4a9d-ae9b-a09075da0b76}</UniqueIdentifier>
     </Filter>
-    <Filter Include="MyPG\Tasks\Rsult">
-      <UniqueIdentifier>{f5fc417a-c27b-4a87-a8d2-facb878928dc}</UniqueIdentifier>
-    </Filter>
     <Filter Include="MyPG\Tasks\Tutorial">
       <UniqueIdentifier>{0c8a68bc-efec-458f-a21c-0fbb146c5d26}</UniqueIdentifier>
     </Filter>
@@ -100,6 +97,9 @@
     </Filter>
     <Filter Include="MyPG\Effect">
       <UniqueIdentifier>{2e85247c-fb87-40d3-857e-4c1791da1421}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="MyPG\Tasks\Result">
+      <UniqueIdentifier>{f5fc417a-c27b-4a87-a8d2-facb878928dc}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -197,7 +197,7 @@
       <Filter>MyPG\Tasks\Tutorial</Filter>
     </ClCompile>
     <ClCompile Include="Task_Result.cpp">
-      <Filter>MyPG\Tasks\Rsult</Filter>
+      <Filter>MyPG\Tasks\Result</Filter>
     </ClCompile>
     <ClCompile Include="Task_UI.cpp">
       <Filter>MyPG\Tasks\UI</Filter>
@@ -313,7 +313,7 @@
       <Filter>MyPG\Tasks\Tutorial</Filter>
     </ClInclude>
     <ClInclude Include="Task_Result.h">
-      <Filter>MyPG\Tasks\Rsult</Filter>
+      <Filter>MyPG\Tasks\Result</Filter>
     </ClInclude>
     <ClInclude Include="Task_UI.h">
       <Filter>MyPG\Tasks\UI</Filter>
