@@ -19,7 +19,7 @@ public:
 
 
 	//‰Á‘¬‚³‚¹‚é
-	ML::Vec3 Accelerate(const float& Weight);
+	void Accelerate(ML::Vec3* speed, const float& Weight);
 	//•Ç‚Æ‚Ô‚Â‚©‚Á‚½Œã‚ÌˆÚ“®•ûŒü‚Æ‘¬“x‚ð•Ô‚·
 	void CollisionOver_Accelerate(ML::Vec3* speed, const ML::Vec3& normal);
 

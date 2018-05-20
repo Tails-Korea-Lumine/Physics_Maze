@@ -31,18 +31,9 @@ namespace  MapFence
 		this->res = Resource::Create();
 
 
-		//★データ初期化
-		int plusSize;
-		if (di == Difficult_Range::Hard)
-		{
-			plusSize = 4;
-		}
-		else
-		{
-			plusSize = 0;
-		}
+		//★データ初期化		
 		this->fenceNumber = sideNum;
-		this->mapSize = 8 + plusSize;//基本は8X8難易度によって増加される(2018/04/21)
+		this->mapSize = 8;//基本は8X8難易度によって増加される(2018/04/21)
 		this->render3D_Priority[0] = 1.0f;
 		//面ごとに別の初期値を与える
 		switch(fenceNumber)

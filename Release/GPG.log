@@ -1,8 +1,28 @@
-﻿  GameEngine_Ver3_7.cpp
+﻿  Bbox.cpp
+  Collision.cpp
+  GameEngine_Ver3_7.cpp
+  Gravity.cpp
   MyPG.cpp
+  Task_Ball.cpp
+  Task_CameraMan.cpp
+  Task_Effect_Manager.cpp
+  Task_Game.cpp
+  Task_MapCore.cpp
+  Task_MapFence.cpp
+  Task_MapSide.cpp
+  Task_Map_Manager.cpp
+  Task_Result.cpp
+  Task_Tutorial.cpp
+  Task_UI.cpp
+  Task_cursor.cpp
+  Task_title.cpp
+c:\users\lumine\desktop\fermat\3d_maze\task_title.cpp(122): warning C4244: '인수': 'float'에서 'const int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\lumine\desktop\fermat\3d_maze\task_title.cpp(127): warning C4244: '인수': 'float'에서 'const int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\lumine\desktop\fermat\3d_maze\task_title.cpp(226): warning C4018: '>': signed 또는 unsigned가 일치하지 않습니다.
+  WinMain.cpp
   코드를 생성하고 있습니다.
-  8 of 5855 functions ( 0.1%) were compiled, the rest were copied from previous compilation.
-    0 functions were new in current compilation
-    3 functions had inline decision re-evaluated but remain unchanged
+  2 of 5855 functions ( 0.0%) were compiled, the rest were copied from previous compilation.
+    1 functions were new in current compilation
+    10 functions had inline decision re-evaluated but remain unchanged
   코드를 생성했습니다.
   GPG.vcxproj -> C:\Users\Lumine\Desktop\Fermat\3d_Maze\Release\GPG.exe

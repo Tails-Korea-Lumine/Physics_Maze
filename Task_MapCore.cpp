@@ -33,17 +33,8 @@ namespace  Map_Core
 		//リソースクラス生成orリソース共有
 		this->res = Resource::Create();
 
-		//★データ初期化
-		int plusSize;
-		if (di == Difficult_Range::Hard)
-		{
-			plusSize = 4;
-		}
-		else
-		{
-			plusSize = 0;
-		}
-		this->mapSize = 8 + plusSize;//基本は8X8難易度によって増加される	
+		//★データ初期化	
+		this->mapSize = 8;//基本は8X8難易度によって増加される	
 		this->map_QT = ML::QT(0.0f);
 		
 		//コアの初期化

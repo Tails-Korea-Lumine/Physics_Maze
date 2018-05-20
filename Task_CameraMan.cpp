@@ -146,7 +146,7 @@ namespace  CameraMan
 		}
 		else if (this->timeCnt == 180)
 		{
-			ge->camera[0]->pos = ML::Vec3(50, -950, 1740);
+			ge->camera[0]->pos = ML::Vec3(50, -950, 1940);
 		}
 		else if (this->timeCnt < 360)
 		{
@@ -154,16 +154,16 @@ namespace  CameraMan
 		}
 		else if (this->timeCnt == 360)
 		{
-			ge->camera[0]->pos = ML::Vec3(1050, 50, -1300);
+			ge->camera[0]->pos = ML::Vec3(1050, 50, -1100);
 		}
 		else
 		{
-			ge->camera[0]->pos.z -= 18;
+			ge->camera[0]->pos.z -= 13;
 		}
 
-		if (ge->camera[0]->pos.z < -1750)
+		if (ge->camera[0]->pos.z < ge->Map_center.z - this->distance)
 		{
-			ge->camera[0]->pos.z = -1750;
+			ge->camera[0]->pos.z = ge->Map_center.z - this->distance;
 		}
 	}
 

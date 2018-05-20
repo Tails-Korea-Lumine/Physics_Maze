@@ -71,7 +71,7 @@ namespace  Ball
 
 		//マップの情報を修得、今はタスク一個で持ってくるが		
 		//重力加速
-		this->speed += this->G.Accelerate(this->m);
+		this->G.Accelerate(&this->speed,this->m);
 		
 		//ver0.4の残骸ベクトル計算の精密調整が必要となればまた使うかもしれない(2018/05/03)
 		//for (int i = 0; i < 15; i++)

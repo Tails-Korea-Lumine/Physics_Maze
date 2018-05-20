@@ -60,9 +60,9 @@ float Gravity::Vector_Cross(const ML::Vec3& v1, const ML::Vec3& v2)
 	return sin;
 }
 
-ML::Vec3 Gravity::Accelerate(const float& Weight)
+void Gravity::Accelerate(ML::Vec3* speed, const float& Weight)
 {
-	return Weight * this->G_acceleration;
+	*speed += (Weight * this->G_acceleration);
 }
 
 void Gravity::CollisionOver_Accelerate(ML::Vec3* speed, const ML::Vec3& normal)
