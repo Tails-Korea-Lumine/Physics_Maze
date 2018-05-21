@@ -24,7 +24,7 @@ namespace Game
 		static   WP  instance;
 		static  Resource::SP  Create();
 		//共有する変数はここに追加する
-		string BG_Image;
+		string BG_mesh;
 		string bgmName;
 	};
 	//-------------------------------------------------------------------
@@ -55,6 +55,9 @@ namespace Game
 		int countdown;
 		bool countdownFlag;
 
+		//背景を回転させる角度
+		float angleY;
+
 		Difficult_Range nowdi;
 
 		//遊んだプレー時間Resultタスクに渡すもの
@@ -69,5 +72,7 @@ namespace Game
 		bool IS_Cleared();
 		//操作可能かを返す関数
 		bool GET_READY();
+		//画面切り替えが終わったのかを確認
+		bool Count_Down_Over();
 	};
 }

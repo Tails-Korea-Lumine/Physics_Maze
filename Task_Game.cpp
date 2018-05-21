@@ -21,9 +21,9 @@ namespace  Game
 	bool  Resource::Initialize()
 	{
 		this->bgmName = "stageBgm";
-		this->BG_Image = "GameBG";
+		this->BG_mesh = "under the sea";
 		DM::Sound_CreateStream(this->bgmName, "./data/sound/stage.wav");
-		//DG::Image_Create(this->BG_Image, "./data/image/GameBG.jpg");
+		DG::Mesh_CreateFromSOBFile(this->BG_mesh, "./data/mesh/under_the_sea.SOB");
 		return true;
 	}
 	//-------------------------------------------------------------------
@@ -31,7 +31,7 @@ namespace  Game
 	bool  Resource::Finalize()
 	{
 		DM::Sound_Erase(this->bgmName);
-		DG::Image_Erase(this->BG_Image);
+		DG::Mesh_Erase(this->BG_mesh);
 		return true;
 	}
 	//-------------------------------------------------------------------
@@ -66,7 +66,9 @@ namespace  Game
 		//ワールド回転量初期化
 		ge->World_Rotation = ML::QT();
 
-		
+		//背景の角度を初期化
+		this->angleY = 0.0f;
+
 		//マップの中心地
 		ge->Map_center = ML::Vec3(1050, 50, 1050);
 		//判定の結果をゼロクリア
@@ -140,7 +142,7 @@ namespace  Game
 			this->countdown++;
 		}
 		//1秒後にタスク消滅
-		if (this->countdown > 60)
+		if (this->Count_Down_Over())
 		{
 			this->Kill();
 		}		
@@ -157,6 +159,8 @@ namespace  Game
 		}
 		//時間を更新
 		this->timeCnt++;
+		//角度更新
+		this->angleY += 0.04f;
 	}
 	//-------------------------------------------------------------------
 	//「２Ｄ描画」１フレーム毎に行う処理
@@ -185,7 +189,23 @@ namespace  Game
 
 	void  Object::Render3D_L0()
 	{
+		//海の中をレンダリング
+		ML::Mat4x4 matS, matR, matT;
 		
+		matS.Scaling(74.0f);
+		matR.RotationY(ML::ToRadian(this->angleY));
+		matT.Translation(ge->Map_center);
+
+		//レンダリング限界距離を一時的に変える
+		float tmp = ge->camera[0]->forePlane;
+		ge->camera[0]->forePlane = 30000.0f;
+
+		DG::EffectState().param.matWorld = matS * matR * matT;
+
+		DG::Mesh_Draw(this->res->BG_mesh);
+
+		//限界距離を元道理に
+		ge->camera[0]->forePlane = tmp;
 	}
 
 	//--------------------------------------------------------------------------------------
@@ -215,6 +235,12 @@ namespace  Game
 	bool Object::GET_READY()
 	{
 		return !ge->getReadyFlag;
+	}
+	//--------------------------------------------------------------------------
+	//画面切り替えが終わったのかを確認
+	bool Object::Count_Down_Over()
+	{
+		return (this->countdown > 100);
 	}
 	//★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★
 	//以下は基本的に変更不要なメソッド

@@ -50,8 +50,11 @@ namespace Tutorial
 		bool  Finalize();		//「終了」タスク消滅時に１回だけ行う処理
 		void  Render3D_L0();
 		//変更可◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇
-	public:
+	
 		//追加したい変数・メソッドはここに追加する
+
+		int countDown;
+		bool countDown_Flag;
 
 		int timeCnt;
 		bool page_Change_Flag;
@@ -61,7 +64,12 @@ namespace Tutorial
 		
 		Tutorial_Column column;
 
+	public:
 		void Page_Chage(bool page_Move_Right);
 		bool Can_I_Change_the_Page();
+		//自分消滅までのカウントダウン開始を確認
+		bool Is_Count_Down();
+		//カウントダウンが終わったのかを確認
+		bool Count_Down_Over();
 	};
 }

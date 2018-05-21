@@ -118,7 +118,7 @@ namespace  Cursor
 			this->destination.y = -32;
 		}
 		//1秒後にタスク消滅
-		if (this->countdown > 60)
+		if (this->Count_Down_Over())
 		{
 			this->Kill();
 		}
@@ -198,6 +198,12 @@ namespace  Cursor
 	bool Object::Is_Count_Down()
 	{
 		return this->countdownFlag;
+	}
+	//--------------------------------------------------------------------------
+	//画面切り替えが終わったのかを確認
+	bool Object::Count_Down_Over()
+	{
+		return (this->countdown > 60);
 	}
 	//★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★
 	//以下は基本的に変更不要なメソッド

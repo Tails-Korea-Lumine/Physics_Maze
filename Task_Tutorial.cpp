@@ -4,6 +4,7 @@
 #include  "MyPG.h"
 #include  "Task_Tutorial.h"
 #include  "Task_Title.h"
+#include "Task_UI.h"
 
 namespace  Tutorial
 {
@@ -51,6 +52,9 @@ namespace  Tutorial
 		this->posy = 0;
 		this->column = tc;
 
+		this->countDown = 0;
+		this->countDown_Flag = false;
+
 		this->timeCnt = 990;//0~80ではない数値で初期化
 		this->page_Change_Flag = false;
 
@@ -84,6 +88,8 @@ namespace  Tutorial
 		DG::EffectState().param.bgColor = ML::Color(1, 0, 0, 0);
 		//★タスクの生成
 
+		auto ui = UI::Object::Create(true);
+
 		return  true;
 	}
 	//-------------------------------------------------------------------
@@ -92,6 +98,7 @@ namespace  Tutorial
 	{
 		//★データ＆タスク解放
 
+		ge->KillAll_G("UI");
 
 		if (!ge->QuitFlag() && this->nextTaskCreate)
 		{
@@ -106,7 +113,7 @@ namespace  Tutorial
 	void  Object::UpDate()
 	{
 		auto in = DI::GPad_GetState("P1");
-
+		//スクロール操作
 		if (in.LStick.D.on || in.HD.on)
 		{
 			this->posy -= 2;
@@ -115,8 +122,8 @@ namespace  Tutorial
 		{
 			this->posy += 2;
 		}		
-
-		if (in.LStick.L.down || in.HL.down)
+		//ページ切り替え操作
+		if (in.L1.down || in.L2.down)
 		{
 			if (this->Can_I_Change_the_Page())
 			{
@@ -125,7 +132,7 @@ namespace  Tutorial
 				this->posy = 0;
 			}
 		}
-		else if (in.LStick.R.down || in.HR.down)
+		else if (in.R1.down || in.R2.down)
 		{
 			if (this->Can_I_Change_the_Page())
 			{
@@ -134,7 +141,7 @@ namespace  Tutorial
 				this->posy = 0;
 			}
 		}
-
+		//ページ切り替えの動き
 		this->Page_Chage(this->page_Change_Flag);
 
 		//posyの範囲設定
@@ -147,14 +154,24 @@ namespace  Tutorial
 			this->posy = 0;
 		}		
 
+		//画面切り替え開始
 		if (in.ST.down)
 		{
-			if (in.ST.down)
-			{
-				//自身に消滅要請
-				this->Kill();
-			}
+			ge->GetTask_One_G<UI::Object>("UI")->Start_WipeIn();
+			this->countDown_Flag = true;
 		}
+
+		//カウントダウン
+		if (this->Is_Count_Down())
+		{
+			this->countDown++;
+		}
+		//カウントダウンが終わったら自分を消滅
+		if (this->Count_Down_Over())
+		{
+			this->Kill();
+		}
+		
 		this->timeCnt++;
 	}
 	//-------------------------------------------------------------------
@@ -226,6 +243,19 @@ namespace  Tutorial
 		
 	}
 
+	//-----------------------------------------------------------------------------
+	//自分消滅までのカウントダウン開始を確認
+	bool Object::Is_Count_Down()
+	{
+		return this->countDown_Flag;
+	}
+
+	//-------------------------------------------------------------------------------
+	//カウントダウンが終わったのかを確認
+	bool Object::Count_Down_Over()
+	{
+		return (this->countDown > 60);
+	}
 	//----------------------------------------------------------------------------------
 	//ページ切り替えが可能かを判断
 	bool Object::Can_I_Change_the_Page()

@@ -354,8 +354,8 @@ namespace  Title
 		ML::Box2D draw_Tutorial(400, 400, 520, 100);
 		ML::Box2D src_Tutorial(0, 0, 560, 140);		
 
-		ML::Box2D draw_Guide(400, 660, 500, 50);
-		ML::Box2D src_Guide(0, 0, 1400, 140);
+		ML::Box2D draw_Guide(350, 660, 550, 50);
+		ML::Box2D src_Guide(0, 0, 2200, 140);
 
 		draw_Start.Offset(-this->moving_Menu, 0);
 		draw_Tutorial.Offset(-this->moving_Menu, 0);

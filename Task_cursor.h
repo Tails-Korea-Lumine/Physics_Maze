@@ -75,5 +75,7 @@ namespace Cursor
 		nowMenu Get_Now_Menu();
 		//カウントダウンフラグを返す関数
 		bool Is_Count_Down();
+		//画面切り替えが終わったのかを確認
+		bool Count_Down_Over();
 	};
 }

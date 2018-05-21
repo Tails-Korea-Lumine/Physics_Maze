@@ -86,7 +86,6 @@ namespace  UI
 		//ŽžŠÔ‚Ì•`‰æ
 		void Draw_Time();
 		//‰æ–Ê–¾‚©‚µ‚ðŽn‚ß‚é
-		void Start_WipeIn();
-
+		void Start_WipeIn();		
 	};
 }
