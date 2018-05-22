@@ -192,9 +192,9 @@ namespace  Game
 		//海の中をレンダリング
 		ML::Mat4x4 matS, matR, matT;
 		
-		matS.Scaling(74.0f);
+		matS.Scaling(100.0f);
 		matR.RotationY(ML::ToRadian(this->angleY));
-		matT.Translation(ge->Map_center);
+		matT.Translation(ge->Map_center - ML::Vec3(0,0,1000));
 
 		//レンダリング限界距離を一時的に変える
 		float tmp = ge->camera[0]->forePlane;

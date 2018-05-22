@@ -309,11 +309,6 @@ namespace  MapFence
 			{
 				for (int x = 0; x <= this->sizeX; x++)
 				{
-					//“¹‚Í”»’è‚µ‚È‚¢
-					if (this->arr[z][y][x].What_Type_Is_this_Box() == BoxType::Road)
-					{
-						continue;
-					}
 					//ˆê’è‹——£ˆÈ“à‚Ì‚à‚Ì‚¾‚¯”»’è‚ğ‚·‚é
 					ML::Vec3 d = this->arr[z][y][x].Get_Pos() - pos;
 					//d‚Íâ‘Î’l‚Ì‹——£
@@ -321,11 +316,16 @@ namespace  MapFence
 					{
 						d *= -1;
 					}
-					//‹——£‚ª100ˆÈã‚¾‚Á‚½‚ç”»’è‚¹‚¸Ÿ‚É€–Ú‚É
-					if (d.Length() > 100)
+					//ˆê’è‹——£ˆÈã‚¾‚Á‚½‚ç”»’è‚¹‚¸Ÿ‚É€–Ú‚É
+					if (d.Length() >= 100)
 					{
 						continue;
-					}				
+					}
+					//“¹‚Í”»’è‚µ‚È‚¢
+					if (this->arr[z][y][x].What_Type_Is_this_Box() == BoxType::Road)
+					{
+						continue;
+					}									
 					//this->collision_Tri = this->col.Hit_Check(Mass, pos, r, this->map_QT); //(ver0.2‚Åg‚Á‚½ˆ—)
 					//std::vector<After_Collision> poligon 
 					this->arr[z][y][x].Get_Collision_Poligon(&this->col_Poligons, pos, r, speed);

@@ -28,6 +28,7 @@ namespace Tutorial
 		string imageName[3];
 		string Bg_Img;
 		string bgmName;
+		string guide_Img[2];
 	};
 	//-------------------------------------------------------------------
 	class  Object : public  BTask

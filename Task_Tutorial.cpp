@@ -22,6 +22,12 @@ namespace  Tutorial
 		DG::Image_Create(this->imageName[2], "./data/image/Tutorial_Obstacle.png");//障害物のテュートリアル
 		DG::Image_Create(this->Bg_Img, "./data/image/background.jpg");
 
+		this->guide_Img[0] = "page_Guide";
+		this->guide_Img[1] = "press_S";
+
+		DG::Image_Create(this->guide_Img[0], "./data/image/pageGuide.png");
+		DG::Image_Create(this->guide_Img[1], "./data/image/pressS.png");
+
 		this->bgmName = "tutorialBGM";
 		DM::Sound_CreateStream(this->bgmName, "./data/sound/tutorial.wav");
 	
@@ -34,6 +40,10 @@ namespace  Tutorial
 		for (int i = 0; i < 3; i++)
 		{
 			DG::Image_Erase(this->imageName[i]);
+		}
+		for (int i = 0; i < 2; i++)
+		{
+			DG::Image_Erase(this->guide_Img[i]);
 		}
 		DG::Image_Erase(this->Bg_Img);
 		DM::Sound_Erase(this->bgmName);
@@ -116,11 +126,11 @@ namespace  Tutorial
 		//スクロール操作
 		if (in.LStick.D.on || in.HD.on)
 		{
-			this->posy -= 2;
+			this->posy -= 8;
 		}
 		if (in.LStick.U.on || in.HU.on)
 		{
-			this->posy += 2;
+			this->posy += 8;
 		}		
 		//ページ切り替え操作
 		if (in.L1.down || in.L2.down)
@@ -196,10 +206,22 @@ namespace  Tutorial
 			DG::Image_Draw(this->res->imageName[i], draw[i], src);
 		}
 		
-		/*DG::Image_Draw(this->res->imageName[1], draw, src);
-		DG::Image_Draw(this->res->imageName[2], draw, src);*/
-		
-		
+		//ガイドイメージ
+		ML::Box2D drawguide[2] =
+		{
+			{0,(int)ge->screenHeight-60,(int)ge->screenWidth/2,60},
+			{(int)ge->screenWidth/2,(int)ge->screenHeight-60,(int)ge->screenWidth / 2,60 }
+		};
+		ML::Box2D srcguide[2] =
+		{
+			{ 0,0,2000,140},
+			{0,0,1400,140}
+		};
+		for (int i = 0; i < 2; i++)
+		{
+			DG::Image_Draw(this->res->guide_Img[i], drawguide[i], srcguide[i]);
+		}
+
 	}
 
 	void  Object::Render3D_L0()
