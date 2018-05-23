@@ -69,7 +69,7 @@ namespace  UI
 
 		//幕のeasingSet
 		easing::Set("wipeOut", easing::SINEOUT, -200, 1280, 100);
-		easing::Set("wipeIn", easing::SINEOUT, -2200, 0, 60);
+		easing::Set("wipeIn", easing::SINEOUT, -2200, 0, 130);
 		
 		//幕はタスク生成の時画面から消えて行って
 		//タスク消滅前に画面の上まで移動する
@@ -192,7 +192,7 @@ namespace  UI
 	}
 
 	//-----------------------------------------------------------------------
-	//画面明かしを始める
+	//画面隠しを始める
 	void Object::Start_WipeIn()
 	{
 		easing::Start("wipeIn");

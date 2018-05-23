@@ -54,10 +54,8 @@ namespace Map_Core
 		//追加したい変数・メソッドはここに追加する
 		//変数
 		//真ん中のキューブと外に飛ばされないようにする外壁
-		Bbox core, barrier[6];
-		//バリアの初期位置
-		ML::Vec3 b_ini_pos[6];
-		//マップの大きさ、難易度で変わる
+		Bbox core, barrier;		
+		//マップの大きさ
 		int mapSize;
 		//ボールに渡す情報	
 		std::vector< After_Collision> col_Poligons;		

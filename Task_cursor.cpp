@@ -203,7 +203,7 @@ namespace  Cursor
 	//画面切り替えが終わったのかを確認
 	bool Object::Count_Down_Over()
 	{
-		return (this->countdown > 60);
+		return (this->countdown > 130);
 	}
 	//★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★
 	//以下は基本的に変更不要なメソッド

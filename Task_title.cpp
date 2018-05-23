@@ -115,16 +115,10 @@ namespace  Title
 
 		//easing function set
 		//SPINNING CUBE
-
-		//0‚©‚ç‚Ì‹ô”
-		for (int i = 0; i < 12; i += 2)
+				
+		for (int j = 0; j < 12; j++)
 		{
-			easing::Set("Title_x" + to_string(i), easing::QUARTINOUT, float(-140+(100*i)), float(60 + (100 * i)), 100.0f);
-		}
-		//1‚©‚ç‚ÌŠï”
-		for (int j = 1; j < 12; j++)
-		{
-			easing::Set("Title_x" + to_string(j), easing::QUARTINOUT, float(-140 + (100 * j)), float(60 + (100 * j)), 100.0f);
+			easing::Set("Title_x" + to_string(j), easing::QUARTINOUT, -140.0f + (100.0f * j), 60.0f + (100.0f * j), 100.0f);
 		}
 		
 		/*easing::Set("Title_1_x", easing::QUARTINOUT, 1280, 240, 110);
@@ -223,9 +217,9 @@ namespace  Title
 			case nowMenu::difficult:
 			case nowMenu::TutorialCalum:
 				this->moving_Menu += 22;
-				if (this->moving_Menu > ge->screenWidth)
+				if (this->moving_Menu > (int)ge->screenWidth)
 				{
-					this->moving_Menu = ge->screenWidth;
+					this->moving_Menu = (int)ge->screenWidth;
 				}
 				break;
 			}

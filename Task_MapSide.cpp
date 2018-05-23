@@ -302,6 +302,10 @@ namespace  Map3d
 
 						ge->TM.Update_Door_Position(this->sideNumber, pos);
 						break;
+					//スイッチはあたり判定範囲を小さく	
+					case BoxType::LightSwitch:
+						base = ML::Box3D(-10, -10, -10, 20, 20, 20);
+						break;
 					}
 
 

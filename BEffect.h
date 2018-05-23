@@ -23,7 +23,7 @@ public:
 	//6番：しっぽ生成
 	//7番：しっぽ消滅
 	//8番：しっぽと衝突
-	//9番：キャラクタ死亡
+	//9番：クリアエフェクト
 	//---------------------------------------------------------------------------------------------
 	enum effType
 	{
@@ -37,7 +37,7 @@ public:
 		CreateTail,
 		DestroyTail,
 		Hit_to_Tail,
-		DestroyCharactor
+		Game_Clear,
 	};
 	effType playing_EffectHandle;
 	int effect_Life;

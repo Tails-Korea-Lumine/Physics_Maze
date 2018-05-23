@@ -115,7 +115,7 @@ namespace  CameraMan
 	void Object::Turnoff_the_Light()
 	{
 		DG::EffectState().param.light[0].enable = false;
-		DG::EffectState().param.lightAmbient = ML::Color(1, 0.05f, 0.05f, 0.05f);
+		DG::EffectState().param.lightAmbient = ML::Color(1, 0.005f, 0.005f, 0.005f);
 		this->timeCnt = 0;
 	}
 	//----------------------------------------------------------------

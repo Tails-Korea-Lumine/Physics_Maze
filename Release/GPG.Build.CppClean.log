@@ -1,7 +1,6 @@
 c:\users\lumine\desktop\fermat\3d_maze\release\vc141.pdb
-c:\users\lumine\desktop\fermat\3d_maze\release\mylib.obj
-c:\users\lumine\desktop\fermat\3d_maze\release\gravity.obj
 c:\users\lumine\desktop\fermat\3d_maze\release\gameengine_ver3_7.obj
+c:\users\lumine\desktop\fermat\3d_maze\release\effect.obj
 c:\users\lumine\desktop\fermat\3d_maze\release\easing.obj
 c:\users\lumine\desktop\fermat\3d_maze\release\dm2008_ver1_3.obj
 c:\users\lumine\desktop\fermat\3d_maze\release\di2014_ver3_4.obj
@@ -18,6 +17,7 @@ c:\users\lumine\desktop\fermat\3d_maze\release\dg2014_font.obj
 c:\users\lumine\desktop\fermat\3d_maze\release\dg2014_effect.obj
 c:\users\lumine\desktop\fermat\3d_maze\release\dg2014_dgobject.obj
 c:\users\lumine\desktop\fermat\3d_maze\release\collision.obj
+c:\users\lumine\desktop\fermat\3d_maze\release\beffect.obj
 c:\users\lumine\desktop\fermat\3d_maze\release\bbox.obj
 c:\users\lumine\desktop\fermat\3d_maze\release\xnacollision.obj
 c:\users\lumine\desktop\fermat\3d_maze\release\winmain.obj
@@ -31,13 +31,13 @@ c:\users\lumine\desktop\fermat\3d_maze\release\task_mapside.obj
 c:\users\lumine\desktop\fermat\3d_maze\release\task_mapfence.obj
 c:\users\lumine\desktop\fermat\3d_maze\release\task_mapcore.obj
 c:\users\lumine\desktop\fermat\3d_maze\release\task_game.obj
+c:\users\lumine\desktop\fermat\3d_maze\release\task_effect_manager.obj
 c:\users\lumine\desktop\fermat\3d_maze\release\task_cursor.obj
 c:\users\lumine\desktop\fermat\3d_maze\release\task_cameraman.obj
 c:\users\lumine\desktop\fermat\3d_maze\release\task_ball.obj
 c:\users\lumine\desktop\fermat\3d_maze\release\mypg.obj
-c:\users\lumine\desktop\fermat\3d_maze\release\task_effect_manager.obj
-c:\users\lumine\desktop\fermat\3d_maze\release\effect.obj
-c:\users\lumine\desktop\fermat\3d_maze\release\beffect.obj
+c:\users\lumine\desktop\fermat\3d_maze\release\mylib.obj
+c:\users\lumine\desktop\fermat\3d_maze\release\gravity.obj
 c:\users\lumine\desktop\fermat\3d_maze\release\gpg.ipdb
 c:\users\lumine\desktop\fermat\3d_maze\release\gpg.iobj
 c:\users\lumine\desktop\fermat\3d_maze\release\gpg.exe

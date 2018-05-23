@@ -39,27 +39,30 @@ namespace  Map_Core
 		
 		//コアの初期化
 		this->core = Bbox(BoxType::Core, ge->Map_center, ML::Box3D(-50 * this->mapSize, -50 * this->mapSize, -50 * this->mapSize, 100 * this->mapSize, 100 * this->mapSize, 100 * this->mapSize), this->map_QT);
-		//バリアの初期化		
-		//各面に価するあたり判定範囲
-		ML::Box3D XZ, XY, YZ;
-		XZ = ML::Box3D(-100 * (this->mapSize -2), -50 , -100 * (this->mapSize -2), 100 * (this->mapSize + 4), 100, 100 * (this->mapSize + 4));
-		XY = ML::Box3D(-100 * (this->mapSize - 2), -100 * (this->mapSize - 2), -50 , 100 * (this->mapSize + 4), 100 * (this->mapSize + 4), 100);
-		YZ = ML::Box3D(-50 , -100 * (this->mapSize - 2), -100 * (this->mapSize - 2), 100, 100 * (this->mapSize + 4), 100 * (this->mapSize + 4));
-		//面ごとの初期位置
-		//後で初期位置を変更する可能性あり(2018/04/24)
-		this->b_ini_pos[0] = ge->Map_center + ML::Vec3(0.0f, 53.0f * (this->mapSize + 3), 0.0f);
-		this->b_ini_pos[1] = ge->Map_center + ML::Vec3(0.0f, 0.0f, 53.0f * (this->mapSize + 3));
-		this->b_ini_pos[2] = ge->Map_center + ML::Vec3(-53.0f * (this->mapSize + 3), 0.0f, 0.0f);
-		this->b_ini_pos[3] = ge->Map_center + ML::Vec3(53.0f * (this->mapSize + 3), 0.0f, 0.0f);
-		this->b_ini_pos[4] = ge->Map_center + ML::Vec3(0.0f, 0.0f, -53.0f * (this->mapSize + 3));
-		this->b_ini_pos[5] = ge->Map_center + ML::Vec3(0.0f, -53.0f * (this->mapSize + 3), 0.0f);
-		//Bbox初期化
-		this->barrier[0] = Bbox(BoxType::Barrier, b_ini_pos[0] , XZ, this->map_QT);
-		this->barrier[1] = Bbox(BoxType::Barrier, b_ini_pos[1] , XY, this->map_QT);
-		this->barrier[2] = Bbox(BoxType::Barrier, b_ini_pos[2] , YZ, this->map_QT);
-		this->barrier[3] = Bbox(BoxType::Barrier, b_ini_pos[3] , YZ, this->map_QT);
-		this->barrier[4] = Bbox(BoxType::Barrier, b_ini_pos[4] , XY, this->map_QT);
-		this->barrier[5] = Bbox(BoxType::Barrier, b_ini_pos[5] , XZ, this->map_QT);
+		//バリアの初期化
+		//各面ごとバリアを置いたver0.5
+		////各面に価するあたり判定範囲
+		//ML::Box3D XZ, XY, YZ;
+		//XZ = ML::Box3D(-100 * (this->mapSize -2), -50 , -100 * (this->mapSize -2), 100 * (this->mapSize + 4), 100, 100 * (this->mapSize + 4));
+		//XY = ML::Box3D(-100 * (this->mapSize - 2), -100 * (this->mapSize - 2), -50 , 100 * (this->mapSize + 4), 100 * (this->mapSize + 4), 100);
+		//YZ = ML::Box3D(-50 , -100 * (this->mapSize - 2), -100 * (this->mapSize - 2), 100, 100 * (this->mapSize + 4), 100 * (this->mapSize + 4));
+		////面ごとの初期位置		
+		//this->b_ini_pos[0] = ge->Map_center + ML::Vec3(0.0f, 53.0f * (this->mapSize + 3), 0.0f);
+		//this->b_ini_pos[1] = ge->Map_center + ML::Vec3(0.0f, 0.0f, 53.0f * (this->mapSize + 3));
+		//this->b_ini_pos[2] = ge->Map_center + ML::Vec3(-53.0f * (this->mapSize + 3), 0.0f, 0.0f);
+		//this->b_ini_pos[3] = ge->Map_center + ML::Vec3(53.0f * (this->mapSize + 3), 0.0f, 0.0f);
+		//this->b_ini_pos[4] = ge->Map_center + ML::Vec3(0.0f, 0.0f, -53.0f * (this->mapSize + 3));
+		//this->b_ini_pos[5] = ge->Map_center + ML::Vec3(0.0f, -53.0f * (this->mapSize + 3), 0.0f);
+		////Bbox初期化
+		//this->barrier[0] = Bbox(BoxType::Barrier, b_ini_pos[0] , XZ, this->map_QT);
+		//this->barrier[1] = Bbox(BoxType::Barrier, b_ini_pos[1] , XY, this->map_QT);
+		//this->barrier[2] = Bbox(BoxType::Barrier, b_ini_pos[2] , YZ, this->map_QT);
+		//this->barrier[3] = Bbox(BoxType::Barrier, b_ini_pos[3] , YZ, this->map_QT);
+		//this->barrier[4] = Bbox(BoxType::Barrier, b_ini_pos[4] , XY, this->map_QT);
+		//this->barrier[5] = Bbox(BoxType::Barrier, b_ini_pos[5] , XZ, this->map_QT);
+
+		//逆向きのバリア一個ですますver0.6
+		this->barrier = Bbox(BoxType::Barrier, ge->Map_center, ML::Box3D(50 * (this->mapSize+2), 50 * (this->mapSize+2), 50 * (this->mapSize+2), -100 * (this->mapSize+2), -100 * (this->mapSize+2), -100 * (this->mapSize+2)), this->map_QT);
 
 		//★タスクの生成
 
@@ -189,11 +192,12 @@ namespace  Map_Core
 		//回転開始
 		ML::Vec3 temp = matR.TransformCoord(ge->Map_center);
 		this->core.Rotate_Box(temp, this->map_QT);
-		for (int b = 0; b < 6; b++)
+		/*for (int b = 0; b < 6; b++)
 		{
 			ML::Vec3 btemp = matR.TransformCoord(this->b_ini_pos[b]);
 			this->barrier[b].Rotate_Box(btemp, this->map_QT);
-		}
+		}*/
+		this->barrier.Rotate_Box(temp, this->map_QT);
 	}
 
 	//------------------------------------------------------------------------------------
@@ -214,22 +218,23 @@ namespace  Map_Core
 		{
 			ball_was_Collision_to_Core = true;
 		}
-		for (int b = 0; b < 6; b++)
-		{
-			//相対距離の絶対値をとる
-			ML::Vec3 d = this->barrier[b].Get_Pos() - pos;
-			if (d.Length() < 0)
-			{
-				d *= -1;
-			}
-			//一定距離以内のものだけ判定をする
-			if (d.Length() > (this->mapSize + 4) * 53)
-			{
-				continue;
-			}
-			//std::vector<After_Collision> poligonB
-			this->barrier[b].Get_Collision_Poligon(&this->col_Poligons, pos, r, speed);			
-		}
+		//for (int b = 0; b < 6; b++)
+		//{
+		//	//相対距離の絶対値をとる
+		//	ML::Vec3 d = this->barrier[b].Get_Pos() - pos;
+		//	if (d.Length() < 0)
+		//	{
+		//		d *= -1;
+		//	}
+		//	//一定距離以内のものだけ判定をする
+		//	if (d.Length() > (this->mapSize + 4) * 53)
+		//	{
+		//		continue;
+		//	}
+		//	//std::vector<After_Collision> poligonB
+		//	this->barrier[b].Get_Collision_Poligon(&this->col_Poligons, pos, r, speed);			
+		//}
+		this->barrier.Get_Collision_Poligon(&this->col_Poligons, pos, r, speed);
 
 		return ball_was_Collision_to_Core;
 	}

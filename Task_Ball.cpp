@@ -53,7 +53,7 @@ namespace  Ball
 	bool  Object::Finalize()
 	{
 		//★データ＆タスク解放
-
+		ge->eff_Manager.lock()->Add_Effect(this->Get_Pos(), ML::Vec3(0, 0, 0), BEffect::effType::Game_Clear);
 
 		if (!ge->QuitFlag() && this->nextTaskCreate)
 		{
@@ -67,7 +67,7 @@ namespace  Ball
 	//「更新」１フレーム毎に行う処理
 	void  Object::UpDate()
 	{
-		auto in1 = DI::GPad_GetState("P1");		
+		
 
 		//マップの情報を修得、今はタスク一個で持ってくるが		
 		//重力加速

@@ -192,7 +192,7 @@ void Collision::Get_Poionts_to_Sphere(std::vector<ML::Vec3>* result ,const ML::V
 	//std::vector<ML::Vec3> S;
 	ML::Vec3 v[26] = {};//ver0.3では6個だった(2018/05/01)
 
-	ML::Mat4x4 matR;
+	//ML::Mat4x4 matR;
 	
 	//D3DXMatrixAffineTransformation(&matR, 1, &pos, &rotation, NULL);
 
@@ -289,7 +289,7 @@ bool Collision::Hit_Check(std::vector<After_Collision>* result, const ML::Box3D&
 			{
 				//マスとマス接触面でおかしい加速を防ぐ
 				//移動ベクトルと衝突した三角形の法線ベクトルのcos値
-				float cosSN = Gravity::Vector_Dot(speed , tri.normal);
+				float cosSN = this->Vector_Dot(speed , tri.normal);
 				//cos値が1ということは内角が0度だということ、つまり物理的にあり得ない衝突
 				//もしものために誤差範囲まで確認
 				if (cosSN >= _CMATH_::cos(ML::ToRadian(6)))
@@ -328,7 +328,7 @@ void Collision::Get_ShortisetPoints_BoxtoSphere(std::vector<ML::Vec3>* result, c
 	
 	//最短距離が出る方向のベクトルに半直径を掛けて
 	//最短距離の点を返す(for文は誤差範囲今は多めに点を取る 2018/05/09)
-	for (float d = r; d > r /2; d --)
+	for (float d = r + 2; d > r -2; d --)
 	{
 		result->push_back(pos + (relative_Distance * d));
 	}

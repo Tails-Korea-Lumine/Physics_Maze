@@ -97,14 +97,14 @@ void BEffect::LoadEffect(effType handle)
 
 		break;
 		
-	case DestroyCharactor: //9
+	case Game_Clear: //9
 		this->meshName = "DestroyCharactor";
 		this->filePath = "./data/mesh/effect/DestroyPlayer.SOB";
 		this->alpha = 0.0f;
-		this->effect_Life = 300;
+		this->effect_Life = 60;
 		this->scale = ML::Vec3(0.0f, 0.0f, 0.0f);
 
-		easing::Set("scale_EF9", easing::CUBICIN, 130.0f, 0, 20);
+		easing::Set("scale_EF9", easing::CUBICIN, 240.0f, 0, 20);
 
 		break;
 	default:

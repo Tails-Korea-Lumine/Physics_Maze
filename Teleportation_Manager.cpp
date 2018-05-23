@@ -2,11 +2,13 @@
 
 void Teleportation_Manager::Update_Door_Position(const int& sidenum, const ML::Vec3& pos)
 {
+	//ドアの現在位置を更新
 	this->doorPos[sidenum] = pos;
 }
 
 bool Teleportation_Manager::Find_Exit(const int& sidenum, ML::Vec3* exitpos)
 {
+	//行先の番号を探す
 	int exitnum = sidenum;
 	if (sidenum < 3)
 	{
@@ -16,7 +18,7 @@ bool Teleportation_Manager::Find_Exit(const int& sidenum, ML::Vec3* exitpos)
 	{
 		exitnum -= 3;
 	}
-
+	//反対側が再起動前ならテレポートを行う
 	if (!this->be_Used[exitnum])
 	{
 		this->be_Used[exitnum] = true;
@@ -46,7 +48,8 @@ void Teleportation_Manager::Increse_Counter()
 	for (int i =0; i<6; i++)
 	{
 		this->timeCnt[i]++;
-		if (this->timeCnt[i] > 300)
+		//10秒後再起動
+		if (this->timeCnt[i] > 600)
 		{
 			this->be_Used[i] = false;
 		}

@@ -109,6 +109,12 @@ namespace  Map_Manager
 		auto core = ge->GetTask_One_G<Map_Core::Object>("マップ");
 		auto ball = ge->GetTask_One_G<Ball::Object>("ボール");
 
+		//情報をもらうものの中1個でも足りないなら処理をしない
+		if (map == nullptr || fence == nullptr || core == nullptr || ball == nullptr)
+		{
+			return;
+		}
+
 
 		//std::vector<After_Collision> Result;
 		for (unsigned int i = 0; i < delicate; i++)
@@ -226,24 +232,23 @@ namespace  Map_Manager
 			//あたり判定は毎回マップのほうで行う	
 			ge->collision_Result.clear();
 			//ボールとマップのあたり判定
-			if (ball != nullptr)
+			
+			//コアとボールが接触していない時、引力をかける(バリアの外に出られなくようにする仕組み)
+			if (!core->Core_Check_Hit(ball->Get_Pos(), ball->Get_Radious(), ball->Get_Speed()))
 			{
-				//コアとボールが接触していない時、引力をかける(バリアの外に出られなくようにする仕組み)
-				if (!core->Core_Check_Hit(ball->Get_Pos(), ball->Get_Radious(), ball->Get_Speed()))
-				{
-					ML::Vec3 force = ge->Map_center - ball->Get_Pos();
-					ball->Graviation_Pull(force.Normalize());
-				}
-				for (auto m = map->begin(); m != map->end(); m++)
-				{
-					(*m)->Map_Check_Hit(ball->Get_Pos(), ball->Get_Radious(), ball->Get_Speed());
-				}
-				for (auto f = fence->begin(); f != fence->end(); f++)
-				{
-					(*f)->Map_Check_Hit(ball->Get_Pos(), ball->Get_Radious(), ball->Get_Speed());
-				}
-
+				ML::Vec3 force = ge->Map_center - ball->Get_Pos();
+				ball->Graviation_Pull(force.Normalize());
 			}
+			for (auto m = map->begin(); m != map->end(); m++)
+			{
+				(*m)->Map_Check_Hit(ball->Get_Pos(), ball->Get_Radious(), ball->Get_Speed());
+			}
+			for (auto f = fence->begin(); f != fence->end(); f++)
+			{
+				(*f)->Map_Check_Hit(ball->Get_Pos(), ball->Get_Radious(), ball->Get_Speed());
+			}
+
+			
 
 			//判定の結果を保存
 			core->Get_Collision_Poligon(&ge->collision_Result);

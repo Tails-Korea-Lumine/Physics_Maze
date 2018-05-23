@@ -132,6 +132,7 @@ namespace  Game
 
 		if (this->IS_Cleared())
 		{
+			ge->KillAll_G("ボール");
 			ge->GetTask_One_G<UI::Object>("UI")->Start_WipeIn();
 			this->countdownFlag = true;
 		}
@@ -192,20 +193,14 @@ namespace  Game
 		//海の中をレンダリング
 		ML::Mat4x4 matS, matR, matT;
 		
-		matS.Scaling(100.0f);
+		matS.Scaling(200.0f);
 		matR.RotationY(ML::ToRadian(this->angleY));
-		matT.Translation(ge->Map_center - ML::Vec3(0,0,1000));
-
-		//レンダリング限界距離を一時的に変える
-		float tmp = ge->camera[0]->forePlane;
-		ge->camera[0]->forePlane = 30000.0f;
+		matT.Translation(ge->camera[0]->pos);		
 
 		DG::EffectState().param.matWorld = matS * matR * matT;
 
 		DG::Mesh_Draw(this->res->BG_mesh);
-
-		//限界距離を元道理に
-		ge->camera[0]->forePlane = tmp;
+		
 	}
 
 	//--------------------------------------------------------------------------------------
@@ -240,7 +235,7 @@ namespace  Game
 	//画面切り替えが終わったのかを確認
 	bool Object::Count_Down_Over()
 	{
-		return (this->countdown > 100);
+		return (this->countdown > 130);
 	}
 	//★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★
 	//以下は基本的に変更不要なメソッド

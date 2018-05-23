@@ -12,7 +12,7 @@ void Gravity::Get_Normal_to_Vector_Cross(ML::Vec3* normal, const ML::Vec3& v1, c
 	*normal = Normal;
 }
 //内積を求める
-float& Gravity::Get_Vector_Dot(const ML::Vec3& v1, const ML::Vec3& v2)
+float Gravity::Get_Vector_Dot(const ML::Vec3& v1, const ML::Vec3& v2)
 {
 	float Dot_to_Position;
 	Dot_to_Position = (v1.x*v2.x) + (v1.y*v2.y) + (v1.z*v2.z);
@@ -21,7 +21,7 @@ float& Gravity::Get_Vector_Dot(const ML::Vec3& v1, const ML::Vec3& v2)
 }
 
 //内積でコサイン値を求める
-float& Gravity::Vector_Dot(const ML::Vec3& v1, const ML::Vec3& v2)
+float Gravity::Vector_Dot(const ML::Vec3& v1, const ML::Vec3& v2)
 {
 	//ベクトルの長さ
 	float v1_Lenth, v2_Lenth;
@@ -41,7 +41,7 @@ float& Gravity::Vector_Dot(const ML::Vec3& v1, const ML::Vec3& v2)
 }
 
 //外積でサイン値を求める
-float& Gravity::Vector_Cross(const ML::Vec3& v1, const ML::Vec3& v2)
+float Gravity::Vector_Cross(const ML::Vec3& v1, const ML::Vec3& v2)
 {
 	//ベクトルの長さ
 	float v1_Lenth, v2_Lenth;

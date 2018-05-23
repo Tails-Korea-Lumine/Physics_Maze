@@ -50,7 +50,7 @@ void Effect::Playing_Effect(effType ef)
 	case effType::Hit_to_Tail:
 		this->Playing_EF8();
 		break;
-	case effType::DestroyCharactor:
+	case effType::Game_Clear:
 		this->Playing_EF9();
 		break;
 
@@ -94,7 +94,7 @@ void Effect::UpDate_Effect(effType ef)
 	case effType::Hit_to_Tail:
 		this->UpDate_EF8();
 		break;
-	case effType::DestroyCharactor:
+	case effType::Game_Clear:
 		this->UpDate_EF9();
 		break;
 
@@ -321,31 +321,31 @@ void Effect::Playing_EF8()
 	//4番：エネミーと衝突と全く同じ
 	//this->Playing_EF4();
 }
-//9番：キャラクタ死亡
+//9番：クリアエフェクト
 void Effect::Playing_EF9()
 {
-	//if (this->effect_Life < 0)
-	//{
-	//	return;
-	//}
-	//ML::Mat4x4 matS,matR, matT;
-	//matS.Scaling(this->scale);
-	//matR.RotationY(this->angle.y);
-	//matT.Translation(this->pos);
+	if (this->effect_Life < 0)
+	{
+		return;
+	}
+	ML::Mat4x4 matS,matR, matT;
+	matS.Scaling(this->scale);
+	matR.RotationY(this->angle.y);
+	matT.Translation(this->pos);
 
-	////ライティングを無効にする
-	//DG::EffectState().param.lightsEnable = false;
-	////透明度設定
-	//auto bsBuf = DG::EffectState().BS_Get();
-	//DG::EffectState().BS_Alpha();
-	//DG::EffectState().param.objectColor = ML::Color(this->alpha, 1, 1, 1);
-	//DG::EffectState().param.matWorld = matS * matR * matT;
-	//DG::Mesh_Draw(this->meshName);
+	//ライティングを無効にする
+	DG::EffectState().param.lightsEnable = false;
+	//透明度設定
+	auto bsBuf = DG::EffectState().BS_Get();
+	DG::EffectState().BS_Alpha();
+	DG::EffectState().param.objectColor = ML::Color(this->alpha, 1, 1, 1);
+	DG::EffectState().param.matWorld = matS * matR * matT;
+	DG::Mesh_Draw(this->meshName);
 
-	////透明度,ライティングを元に戻す
-	//DG::EffectState().param.lightsEnable = true;
-	//DG::EffectState().BS_Set(bsBuf);
-	//DG::EffectState().param.objectColor = ML::Color(1, 1, 1, 1);	
+	//透明度,ライティングを元に戻す
+	DG::EffectState().param.lightsEnable = true;
+	DG::EffectState().BS_Set(bsBuf);
+	DG::EffectState().param.objectColor = ML::Color(1, 1, 1, 1);	
 }
 
 
@@ -558,30 +558,30 @@ void Effect::UpDate_EF8()
 	//4番：エネミーと衝突と全く同じ
 	//this->UpDate_EF4();
 }
-//9番：キャラクタ死亡
+//9番：クリアエフェクト
 void Effect::UpDate_EF9()
 {
-	//if (this->effect_Life > 200)
-	//{
-	//	return;
-	//}
-	//else if (this->effect_Life > 30)
-	//{
-	//	this->scale += ML::Vec3(0.8f, 0.8f, 0.8f);
-	//	this->angle.y += ML::ToRadian(0.3f);
-	//	this->alpha += 0.008f;		
-	//}
-	//else if (this->effect_Life == 30)
-	//{
-	//	easing::Start("scale_EF9");
-	//}
-	//else if (this->effect_Life < 30)
-	//{
-	//	//easing::UpDate();
-	//	this->scale.x = easing::GetPos("scale_EF9");
-	//	this->scale.y = easing::GetPos("scale_EF9");
-	//	this->scale.z = easing::GetPos("scale_EF9");
-	//}
+	if (this->effect_Life > 200)
+	{
+		return;
+	}
+	else if (this->effect_Life > 30)
+	{
+		this->scale += ML::Vec3(8.0f, 8.0f, 8.0f);
+		this->angle.y += ML::ToRadian(0.3f);
+		this->alpha += 0.8f;		
+	}
+	else if (this->effect_Life == 30)
+	{
+		easing::Start("scale_EF9");
+	}
+	else if (this->effect_Life < 30)
+	{
+		//easing::UpDate();
+		this->scale.x = easing::GetPos("scale_EF9");
+		this->scale.y = easing::GetPos("scale_EF9");
+		this->scale.z = easing::GetPos("scale_EF9");
+	}
 }
 
 
