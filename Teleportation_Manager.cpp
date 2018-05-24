@@ -48,8 +48,8 @@ void Teleportation_Manager::Increse_Counter()
 	for (int i =0; i<6; i++)
 	{
 		this->timeCnt[i]++;
-		//10•bŒãÄ‹N“®
-		if (this->timeCnt[i] > 600)
+		//5•bŒãÄ‹N“®
+		if (this->timeCnt[i] > 300)
 		{
 			this->be_Used[i] = false;
 		}

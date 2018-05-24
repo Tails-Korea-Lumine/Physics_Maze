@@ -101,6 +101,9 @@
     <Filter Include="MyPG\Tasks\Result">
       <UniqueIdentifier>{f5fc417a-c27b-4a87-a8d2-facb878928dc}</UniqueIdentifier>
     </Filter>
+    <Filter Include="MyPG\MyMath">
+      <UniqueIdentifier>{e832b3a3-800c-4b06-bf7d-4b5624bc20b9}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="myLib.cpp">
@@ -142,12 +145,6 @@
     <ClCompile Include="xnacollision.cpp">
       <Filter>LIB</Filter>
     </ClCompile>
-    <ClCompile Include="WinMain.cpp">
-      <Filter>MyPG</Filter>
-    </ClCompile>
-    <ClCompile Include="MyPG.cpp">
-      <Filter>MyPG</Filter>
-    </ClCompile>
     <ClCompile Include="DG2014\DG2014_Ver3_51.cpp">
       <Filter>LIB\DG2014</Filter>
     </ClCompile>
@@ -187,9 +184,6 @@
     <ClCompile Include="Task_Map_Manager.cpp">
       <Filter>MyPG\Tasks\map</Filter>
     </ClCompile>
-    <ClCompile Include="easing.cpp">
-      <Filter>MyPG</Filter>
-    </ClCompile>
     <ClCompile Include="Task_cursor.cpp">
       <Filter>MyPG\Tasks\Cursor</Filter>
     </ClCompile>
@@ -219,6 +213,12 @@
     </ClCompile>
     <ClCompile Include="Effect.cpp">
       <Filter>MyPG\Effect</Filter>
+    </ClCompile>
+    <ClCompile Include="easing.cpp" />
+    <ClCompile Include="MyPG.cpp" />
+    <ClCompile Include="WinMain.cpp" />
+    <ClCompile Include="MyMath.cpp">
+      <Filter>MyPG\MyMath</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -261,9 +261,6 @@
     <ClInclude Include="xnacollision.h">
       <Filter>LIB</Filter>
     </ClInclude>
-    <ClInclude Include="MyPG.h">
-      <Filter>MyPG</Filter>
-    </ClInclude>
     <ClInclude Include="DG2014\DG2014_Ver3_51.h">
       <Filter>LIB\DG2014</Filter>
     </ClInclude>
@@ -303,9 +300,6 @@
     <ClInclude Include="Task_Map_Manager.h">
       <Filter>MyPG\Tasks\map</Filter>
     </ClInclude>
-    <ClInclude Include="easing.h">
-      <Filter>MyPG</Filter>
-    </ClInclude>
     <ClInclude Include="Task_cursor.h">
       <Filter>MyPG\Tasks\Cursor</Filter>
     </ClInclude>
@@ -338,6 +332,11 @@
     </ClInclude>
     <ClInclude Include="Effect.h">
       <Filter>MyPG\Effect</Filter>
+    </ClInclude>
+    <ClInclude Include="easing.h" />
+    <ClInclude Include="MyPG.h" />
+    <ClInclude Include="MyMath.h">
+      <Filter>MyPG\MyMath</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

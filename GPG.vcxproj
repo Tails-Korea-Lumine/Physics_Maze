@@ -103,6 +103,7 @@
     <ClCompile Include="GameEngine_Ver3_7.cpp" />
     <ClCompile Include="Gravity.cpp" />
     <ClCompile Include="myLib.cpp" />
+    <ClCompile Include="MyMath.cpp" />
     <ClCompile Include="MyPG.cpp" />
     <ClCompile Include="Task_Ball.cpp" />
     <ClCompile Include="Task_CameraMan.cpp" />
@@ -145,6 +146,7 @@
     <ClInclude Include="Gravity.h" />
     <ClInclude Include="library.h" />
     <ClInclude Include="myLib.h" />
+    <ClInclude Include="MyMath.h" />
     <ClInclude Include="MyPG.h" />
     <ClInclude Include="Task_Ball.h" />
     <ClInclude Include="Task_CameraMan.h" />

@@ -23,7 +23,7 @@ struct After_Collision
 	}
 };
 
-class Collision : public Gravity
+class Collision : public MyMath
 {
 private:
 	//SUKAプログラムのBox3dから12個の三角形を取り出す
@@ -41,8 +41,6 @@ public:
 	//球体と立方体衝突判定関数
 	//引数：(結果を保存するstd::vectorのアドレス、判定するマス、ボールの位置、ボールの直径の半分、ボールの移動ベクトル、ワールド回転量)
 	bool Hit_Check(std::vector<After_Collision>* result, const ML::Box3D& box, const ML::Vec3& pos,const float& r , const ML::Vec3& speed, const ML::QT& worldR);
-	//めり込んだ時の位置補正関数
-	//引数 : ()
-	void Fix_Position();
+	
 	
 };

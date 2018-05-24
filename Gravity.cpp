@@ -1,64 +1,6 @@
 #include "Gravity.h"
 #include <cmath>
 
-//法線ベクトルを求める
-void Gravity::Get_Normal_to_Vector_Cross(ML::Vec3* normal, const ML::Vec3& v1, const ML::Vec3& v2)
-{
-	ML::Vec3 Normal;
-	Normal.x = (v1.y*v2.z) - (v1.z*v2.y);
-	Normal.y = (v1.z * v2.x) - (v1.x*v2.z);
-	Normal.z = (v1.x*v2.y) - (v1.y*v2.x);
-
-	*normal = Normal;
-}
-//内積を求める
-float Gravity::Get_Vector_Dot(const ML::Vec3& v1, const ML::Vec3& v2)
-{
-	float Dot_to_Position;
-	Dot_to_Position = (v1.x*v2.x) + (v1.y*v2.y) + (v1.z*v2.z);
-
-	return Dot_to_Position;
-}
-
-//内積でコサイン値を求める
-float Gravity::Vector_Dot(const ML::Vec3& v1, const ML::Vec3& v2)
-{
-	//ベクトルの長さ
-	float v1_Lenth, v2_Lenth;
-	v1_Lenth = v1.Length();
-	v2_Lenth = v2.Length();
-
-	//座標上の内積
-	float Dot_to_Position;
-	Dot_to_Position = this->Get_Vector_Dot(v1, v2);
-
-	//コサイン値を求めて返す
-	float cos;
-
-	cos = Dot_to_Position / (v1_Lenth*v2_Lenth);
-
-	return cos;
-}
-
-//外積でサイン値を求める
-float Gravity::Vector_Cross(const ML::Vec3& v1, const ML::Vec3& v2)
-{
-	//ベクトルの長さ
-	float v1_Lenth, v2_Lenth;
-
-	v1_Lenth = v1.Length();
-	v2_Lenth = v2.Length();	
-
-	//座標上の外積(法線ベクトル)
-	ML::Vec3 Cross_to_Position;
-	Gravity::Get_Normal_to_Vector_Cross(&Cross_to_Position, v1, v2);
-
-	float sin;
-
-	sin = Cross_to_Position.Length() / (v1_Lenth * v2_Lenth);
-
-	return sin;
-}
 
 void Gravity::Accelerate(ML::Vec3* speed, const float& Weight)
 {
