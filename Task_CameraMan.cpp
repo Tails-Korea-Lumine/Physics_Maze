@@ -176,14 +176,14 @@ namespace  CameraMan
 		this->nowPos = ge->Map_center - ML::Vec3(0, 0, this->distance);
 
 		//Rstick‚Ì“®‚«‚ÅƒJƒƒ‰‚ðˆÚ“®
-		if (in1.RStick.axis.x != 0)
+		/*if (in1.RStick.axis.x != 0)
 		{
 			this->angle.x += in1.RStick.axis.x * 3;
 		}
 		if (in1.RStick.axis.y != 0)
 		{
 			this->angle.y -= in1.RStick.axis.y * 3;
-		}
+		}*/
 
 		//ˆÚ“®”ÍˆÍÝ’è
 		if (this->angle.x < -this->maxAngle)

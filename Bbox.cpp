@@ -1,7 +1,7 @@
 #include "Bbox.h"
 
 
-void Bbox::Rotate_Box(ML::Vec3 pos, ML::QT q)
+void Bbox::Rotate_Box(const ML::Vec3& pos, const ML::QT& q)
 {
 	this->pos = pos;
 	this->boxQT = q;

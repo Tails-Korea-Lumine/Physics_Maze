@@ -317,7 +317,7 @@ namespace  MapFence
 						d *= -1;
 					}
 					//ˆê’è‹——£ˆÈã‚¾‚Á‚½‚ç”»’è‚¹‚¸ŽŸ‚É€–Ú‚É
-					if (d.Length() >= 100)
+					if (d.Length() > 100)
 					{
 						continue;
 					}

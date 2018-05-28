@@ -38,7 +38,7 @@ public:
 
 	//メソッド	
 	//回転関数　引数 : (回転した位置 , 回転量)
-	void Rotate_Box(ML::Vec3 pos, ML::QT q);
+	void Rotate_Box(const ML::Vec3& pos, const ML::QT& q);
 	
 	//道かどうかを確認する
 	BoxType What_Type_Is_this_Box();

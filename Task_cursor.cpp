@@ -88,7 +88,7 @@ namespace  Cursor
 		if (!this->Is_Count_Down())
 		{
 			//カーソルの選択処理
-			if (in1.B3.down || in1.ST.down)
+			if (in1.B2.down || in1.ST.down)
 			{
 				DM::Sound_Play(this->res->seSelectName,false);
 				if (this->now == Start_Tutorial)
@@ -104,7 +104,7 @@ namespace  Cursor
 				}
 			}
 			//カーソルの取り消し処理
-			if (in1.B2.down)
+			if (in1.B1.down)
 			{
 				this->now = Start_Tutorial;
 				this->select_pos.x = 0;

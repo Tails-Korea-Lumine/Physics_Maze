@@ -38,7 +38,7 @@ void Gravity::CollisionOver_Accelerate(ML::Vec3* speed, const ML::Vec3& normal)
 	//このうえはver0.1
 
 	float fn;
-	fn = Gravity::Get_Vector_Dot(*speed, normal);
+	Gravity::Get_Vector_Dot(&fn, *speed, normal);
 	//fn *= speed.Length();
 	//絶対値に変える
 	if (fn < 0)
@@ -63,7 +63,7 @@ void Gravity::Reflaction_Vector(ML::Vec3* force, const ML::Vec3& normal, const f
 {	
 	//壁面の法線ベクトルの大きさを変更
 	float fn;
-	fn = this->Get_Vector_Dot(*force, normal);
+	this->Get_Vector_Dot(&fn, *force, normal);
 	//fn *= force.Length();
 	//絶対値に変える
 	if (fn < 0)

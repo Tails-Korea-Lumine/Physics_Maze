@@ -165,12 +165,12 @@ bool Collision::Check_Collision(const Triangle& tri, const ML::Vec3& p)
 	float sinBeta;
 	float sinGamma;
 
-	cosAlpha = this->Vector_Dot(A, B);
-	cosBeta = this->Vector_Dot(B, C);
-	cosGamma = this->Vector_Dot(A, C);
-	sinAlpha = this->Vector_Cross(A, B);
-	sinBeta = this->Vector_Cross(B, C);
-	sinGamma = this->Vector_Cross(A, C);
+	this->Vector_Dot(&cosAlpha,A, B);
+	this->Vector_Dot(&cosBeta, B, C);
+	this->Vector_Dot(&cosGamma, A, C);
+	this->Vector_Cross(&sinAlpha, A, B);
+	this->Vector_Cross(&sinBeta, B, C);
+	this->Vector_Cross(&sinGamma, A, C);
 
 	float check;
 
@@ -289,7 +289,8 @@ bool Collision::Hit_Check(std::vector<After_Collision>* result, const ML::Box3D&
 			{
 				//マスとマス接触面でおかしい加速を防ぐ
 				//移動ベクトルと衝突した三角形の法線ベクトルのcos値
-				float cosSN = this->Vector_Dot(speed , tri.normal);
+				float cosSN;
+				this->Vector_Dot(&cosSN, speed, tri.normal);
 				//cos値が1ということは内角が0度だということ、つまり物理的にあり得ない衝突
 				//もしものために誤差範囲まで確認
 				if (cosSN >= _CMATH_::cos(ML::ToRadian(6)))

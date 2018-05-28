@@ -12,7 +12,7 @@ namespace MyPG
 		720,							//	画面サイズY
 		1,								//	表示倍率
 		1,								//	マルチサンプル(1or2or4)
-		false,							//	フルスクリーンモード
+		true,							//	フルスクリーンモード
 		480,							//	2D描画用解像度X(現在非対応）
 		270,							//	2D描画用解像度Y(現在非対応）
 		"SPINNING CUBE",				//	ウインドウタイトル
@@ -80,9 +80,9 @@ namespace MyPG
 			{ DI::GPB::B01, DI::But::B1 },{ DI::GPB::B02, DI::But::B2 },
 			{ DI::GPB::B03, DI::But::B3 },{ DI::GPB::B04, DI::But::B4 },
 			{ DI::GPB::B05, DI::But::L1 },{ DI::GPB::B06, DI::But::R1 },
-			{ DI::GPB::B07, DI::But::L2 },{ DI::GPB::B08, DI::But::R2 },
-			{ DI::GPB::B09, DI::But::SE },{ DI::GPB::B10, DI::But::ST },
-			{ DI::GPB::B11, DI::But::L3 },{ DI::GPB::B12, DI::But::R3 },
+			{ DI::GPB::B07, DI::But::SE },{ DI::GPB::B08, DI::But::ST },
+			{ DI::GPB::B09, DI::But::L3 },{ DI::GPB::B10, DI::But::R3 },
+			//{ DI::GPB::B11, DI::But::L3 },{ DI::GPB::B12, DI::But::R3 },
 			{ DI::GPB::HSU, DI::But::HU },{ DI::GPB::HSD, DI::But::HD },
 			{ DI::GPB::HSL, DI::But::HL },{ DI::GPB::HSR, DI::But::HR },
 		};

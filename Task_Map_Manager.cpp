@@ -171,31 +171,31 @@ namespace  Map_Manager
 					easing::Reset("Decrese_StickVolumeYP");
 					easing::Start("Decrese_StickVolumeYP");
 				}
-				if (in1.R2.on)
+				if (in1.RStick.axis.x <0)
 				{
 					easing::Reset("Decrese_StickVolumeZM");
 					easing::Start("Decrese_StickVolumeZM");
 				}
-				else if (in1.L2.on)
+				else if (in1.RStick.axis.x >0)
 				{
 					easing::Reset("Decrese_StickVolumeZP");
 					easing::Start("Decrese_StickVolumeZP");
 				}
 			}
 			//easingデータが回転量で更新される
-			this->frame_QTxp = ML::QT(ML::Vec3(1, 0, 0), ML::ToRadian(-easing::GetPos("Decrese_StickVolumeXM")  / float(delicate)));
+			this->frame_QTxp = ML::QT(ML::Vec3(1, 0, 0), ML::ToRadian(-easing::GetPos("Decrese_StickVolumeXM")  / (float)delicate));
 						
-			this->frame_QTxm = ML::QT(ML::Vec3(1, 0, 0), ML::ToRadian(easing::GetPos("Decrese_StickVolumeXP") / float(delicate)));
+			this->frame_QTxm = ML::QT(ML::Vec3(1, 0, 0), ML::ToRadian(easing::GetPos("Decrese_StickVolumeXP") / (float)delicate));
 			
 			
-			this->frame_QTym = ML::QT(ML::Vec3(0, 1, 0), ML::ToRadian(-easing::GetPos("Decrese_StickVolumeYM") / float(delicate)));
+			this->frame_QTym = ML::QT(ML::Vec3(0, 1, 0), ML::ToRadian(-easing::GetPos("Decrese_StickVolumeYM") / (float)delicate));
 
-			this->frame_QTyp = ML::QT(ML::Vec3(0, 1, 0), ML::ToRadian(easing::GetPos("Decrese_StickVolumeYP") / float(delicate)));
+			this->frame_QTyp = ML::QT(ML::Vec3(0, 1, 0), ML::ToRadian(easing::GetPos("Decrese_StickVolumeYP") / (float)delicate));
 						
 			
-			this->frame_QTzm = ML::QT(ML::Vec3(0, 0, 1), ML::ToRadian(-easing::GetPos("Decrese_StickVolumeZM") / float(delicate)));
+			this->frame_QTzm = ML::QT(ML::Vec3(0, 0, 1), ML::ToRadian(-easing::GetPos("Decrese_StickVolumeZM") / (float)delicate));
 
-			this->frame_QTzp = ML::QT(ML::Vec3(0, 0, 1), ML::ToRadian(easing::GetPos("Decrese_StickVolumeZP") / float(delicate)));
+			this->frame_QTzp = ML::QT(ML::Vec3(0, 0, 1), ML::ToRadian(easing::GetPos("Decrese_StickVolumeZP") / (float)delicate));
 				
 			
 
@@ -230,8 +230,7 @@ namespace  Map_Manager
 
 
 			//あたり判定は毎回マップのほうで行う	
-			ge->collision_Result.clear();
-			//ボールとマップのあたり判定
+			ge->collision_Result.clear();			
 			
 			//コアとボールが接触していない時、引力をかける(バリアの外に出られなくようにする仕組み)
 			if (!core->Core_Check_Hit(ball->Get_Pos(), ball->Get_Radious(), ball->Get_Speed()))
@@ -239,6 +238,7 @@ namespace  Map_Manager
 				ML::Vec3 force = ge->Map_center - ball->Get_Pos();
 				ball->Graviation_Pull(force.Normalize());
 			}
+			//ボールとマップのあたり判定
 			for (auto m = map->begin(); m != map->end(); m++)
 			{
 				(*m)->Map_Check_Hit(ball->Get_Pos(), ball->Get_Radious(), ball->Get_Speed());
