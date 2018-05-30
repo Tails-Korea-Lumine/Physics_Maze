@@ -40,7 +40,7 @@ namespace  Ball
 		this->speed = ML::Vec3(0, 0, 0);
 		this->moveVec = ML::Vec3(0, 0, 0);
 		this->r = 30.0f;
-		this->m = 100.0f;
+		this->m = 30.0f;
 		this->collision_Flag = false;
 
 	
@@ -71,17 +71,7 @@ namespace  Ball
 
 		//マップの情報を修得、今はタスク一個で持ってくるが		
 		//重力加速
-		this->G.Accelerate(&this->speed,this->m);
-		
-		//ver0.4の残骸ベクトル計算の精密調整が必要となればまた使うかもしれない(2018/05/03)
-		//for (int i = 0; i < 15; i++)
-		
-			////判定スタート
-			//core->Core_Check_Hit(this->pos, this->r, this->speed);
-			//for (auto m = map->begin(); m != map->end(); m++)
-			//{
-			//	(*m)->Map_Check_Hit(this->pos, this->r, this->speed);
-			//}
+		this->G.Accelerate(&this->speed,this->m);			
 			
 			
 
@@ -95,73 +85,79 @@ namespace  Ball
 
 			//もし,どこもあたり判定をせずに動いた場合
 			//処理せずに次のフレームに移る
-			if (ge->collision_Result.size() == 0)
-			{
-				//移動(フレーム終了する直前に行う)
-				this->pos += this->speed;
-				return;
-			}
-			//前回フレームのあたり判定結果を確認
-			if (this->Is_Collision())
-			{
-				//今回フレームで衝突があったことを確認するフラグ
-				bool cnt = false;
-
-				//結果の数分ループする
-				for (auto p : ge->collision_Result)
-				{
-					//前のフレームで衝突だったら、今回のフレームでの衝突判定でやること
-					if (p.collision_Flag)
-					{
-						//今回のフレームに衝突だったら
-						//斜め線加速をする
-						this->G.CollisionOver_Accelerate(&this->speed, p.normal);
-						//フラグを立てる
-						cnt = true;
-						this->collision_Flag = true;
-
-					}
-					else if (cnt == false)
-					{
-						//今回のフレームに衝突しなかったら
-						//衝突フラグを無効にする
-						this->collision_Flag = false;
-					}
-				}
-			}
-			else
-			{
-				//結果の数分ループする
-				for (auto p : ge->collision_Result)
-				{
-					//前のフレームで衝突ではなかったら、今回のフレームでの衝突判定でやること			
-					if (p.collision_Flag)
-					{
-						//今回のフレームに衝突だったら
-						//反射角で跳ね返す
-
-						this->G.Reflaction_Vector(&this->speed, p.normal, this->m);
-						
-						//衝突フラグを有効にする
-						this->collision_Flag = true;
-					}
-				}				
-				
-			}			
 			
-			//終端速度を指定
-			if (this->speed.Length() > 8.0f)
-			{
-				this->speed = this->speed.Normalize();
-				this->speed *= 8.0f;
-			}
-
-			//移動(フレーム終了する直前に行う)
-			this->pos += this->speed;
-
 			
 	}
 	//-------------------------------------------------------------------
+	//あたり判定による方向転換及び移動
+	void Object::Move_Ball()
+	{
+		if (ge->collision_Result.size() == 0)
+		{
+			//移動(フレーム終了する直前に行う)
+			this->pos += this->speed;
+			return;
+		}
+		//前回フレームのあたり判定結果を確認
+		if (this->Is_Collision())
+		{
+			//今回フレームで衝突があったことを確認するフラグ
+			bool cnt = false;
+
+			//結果の数分ループする
+			for (auto p : ge->collision_Result)
+			{
+				//前のフレームで衝突だったら、今回のフレームでの衝突判定でやること
+				if (p.collision_Flag)
+				{
+					//今回のフレームに衝突だったら
+					//斜め線加速をする
+					this->G.CollisionOver_Accelerate(&this->speed, p.normal);
+					//フラグを立てる
+					cnt = true;
+					this->collision_Flag = true;
+
+				}
+				else if (cnt == false)
+				{
+					//今回のフレームに衝突しなかったら
+					//衝突フラグを無効にする
+					this->collision_Flag = false;
+				}
+			}
+		}
+		else
+		{
+			//結果の数分ループする
+			for (auto p : ge->collision_Result)
+			{
+				//前のフレームで衝突ではなかったら、今回のフレームでの衝突判定でやること			
+				if (p.collision_Flag)
+				{
+					//今回のフレームに衝突だったら
+					//反射角で跳ね返す
+
+					this->G.Reflaction_Vector(&this->speed, p.normal, this->m);
+
+					//衝突フラグを有効にする
+					this->collision_Flag = true;
+				}
+			}
+
+		}
+
+		//終端速度を指定
+		if (this->speed.Length() > 2.0f)
+		{
+			this->speed = this->speed.Normalize();
+			this->speed *= 2.0f;
+		}
+
+		//移動(フレーム終了する直前に行う)
+		this->pos += this->speed;
+
+	}
+	
 	//「２Ｄ描画」１フレーム毎に行う処理
 	void  Object::Render2D_AF()
 	{		

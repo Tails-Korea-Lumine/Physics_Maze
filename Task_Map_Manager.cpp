@@ -183,19 +183,19 @@ namespace  Map_Manager
 				}
 			}
 			//easingデータが回転量で更新される
-			this->frame_QTxp = ML::QT(ML::Vec3(1, 0, 0), ML::ToRadian(-easing::GetPos("Decrese_StickVolumeXM")  / (float)delicate));
+			this->frame_QTxp = ML::QT(ML::Vec3(1, 0, 0), ML::ToRadian(-(easing::GetPos("Decrese_StickVolumeXM")*in1.LStick.volume)  / (float)delicate));
 						
-			this->frame_QTxm = ML::QT(ML::Vec3(1, 0, 0), ML::ToRadian(easing::GetPos("Decrese_StickVolumeXP") / (float)delicate));
+			this->frame_QTxm = ML::QT(ML::Vec3(1, 0, 0), ML::ToRadian((easing::GetPos("Decrese_StickVolumeXP")*in1.LStick.volume) / (float)delicate));
 			
 			
-			this->frame_QTym = ML::QT(ML::Vec3(0, 1, 0), ML::ToRadian(-easing::GetPos("Decrese_StickVolumeYM") / (float)delicate));
+			this->frame_QTym = ML::QT(ML::Vec3(0, 1, 0), ML::ToRadian(-(easing::GetPos("Decrese_StickVolumeYM")*in1.LStick.volume) / (float)delicate));
 
-			this->frame_QTyp = ML::QT(ML::Vec3(0, 1, 0), ML::ToRadian(easing::GetPos("Decrese_StickVolumeYP") / (float)delicate));
+			this->frame_QTyp = ML::QT(ML::Vec3(0, 1, 0), ML::ToRadian((easing::GetPos("Decrese_StickVolumeYP")*in1.LStick.volume) / (float)delicate));
 						
 			
-			this->frame_QTzm = ML::QT(ML::Vec3(0, 0, 1), ML::ToRadian(-easing::GetPos("Decrese_StickVolumeZM") / (float)delicate));
+			this->frame_QTzm = ML::QT(ML::Vec3(0, 0, 1), ML::ToRadian(-(easing::GetPos("Decrese_StickVolumeZM")*in1.RStick.volume) / (float)delicate));
 
-			this->frame_QTzp = ML::QT(ML::Vec3(0, 0, 1), ML::ToRadian(easing::GetPos("Decrese_StickVolumeZP") / (float)delicate));
+			this->frame_QTzp = ML::QT(ML::Vec3(0, 0, 1), ML::ToRadian((easing::GetPos("Decrese_StickVolumeZP")*in1.RStick.volume) / (float)delicate));
 				
 			
 
@@ -225,9 +225,7 @@ namespace  Map_Manager
 			{
 				(*f)->Map_Rotate();
 			}
-
-
-
+			
 
 			//あたり判定は毎回マップのほうで行う	
 			ge->collision_Result.clear();			
@@ -246,9 +244,7 @@ namespace  Map_Manager
 			for (auto f = fence->begin(); f != fence->end(); f++)
 			{
 				(*f)->Map_Check_Hit(ball->Get_Pos(), ball->Get_Radious(), ball->Get_Speed());
-			}
-
-			
+			}			
 
 			//判定の結果を保存
 			core->Get_Collision_Poligon(&ge->collision_Result);
@@ -261,16 +257,16 @@ namespace  Map_Manager
 				(*i)->Get_Collision_Poligon(&ge->collision_Result);
 			}
 			//ge->collision_Result = Result;
+			
 
 			//位置補正を仕掛ける
-			for (auto p : ge->collision_Result)
+			if (ge->collision_Result.size() != 0)
 			{
-				if (p.collision_Flag)
-				{
-					ball->Fix_Position_for_Rotate(this->frame_QTxp * this->frame_QTxm * this->frame_QTyp* this->frame_QTym *this->frame_QTzm * this->frame_QTzp);
-					break;
-				}
+				ball->Fix_Position_for_Rotate(this->frame_QTxp * this->frame_QTxm * this->frame_QTyp* this->frame_QTym *this->frame_QTzm * this->frame_QTzp);
 			}
+
+			//ボールを移動させる
+			ball->Move_Ball();
 		}
 	}
 	//★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★

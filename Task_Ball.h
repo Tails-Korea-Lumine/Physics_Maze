@@ -77,6 +77,8 @@ namespace Ball
 		float Get_Radious();
 		//速度
 		ML::Vec3 Get_Speed();
+		//あたり判定による方向転換及び移動
+		void Move_Ball();
 		//位置補正用回転関数 引数 : (マップのフレーム回転量)
 		void Fix_Position_for_Rotate(const ML::QT& qt);
 		//テレポート(指定した場所に即移動する)引数 : (目的地)

@@ -187,10 +187,10 @@ bool Collision::Check_Collision(const Triangle& tri, const ML::Vec3& p)
 	return false;
 }
 
-void Collision::Get_Poionts_to_Sphere(std::vector<ML::Vec3>* result ,const ML::Vec3& pos, const float& r, const ML::QT& rotation)
+void Collision::Get_Poionts_to_Sphere(std::vector<ML::Vec3>* result ,const ML::Vec3& pos, const float& r)
 {
 	//std::vector<ML::Vec3> S;
-	ML::Vec3 v[26] = {};//ver0.3では6個だった(2018/05/01)
+	ML::Vec3 v[106] = {};//ver0.3では6個だった(2018/05/01)
 
 	//ML::Mat4x4 matR;
 	
@@ -210,7 +210,7 @@ void Collision::Get_Poionts_to_Sphere(std::vector<ML::Vec3>* result ,const ML::V
 		S.push_back(v[i]);
 	}*/
 	//半直径の誤差範囲を含めて取るver.2
-	for (float i = r; i > r-2; i-=0.5f)
+	//for (float i = r; i > r-2; i-=0.5f)
 	{
 		//ver0.3
 		/*v[0] = pos + ML::Vec3(+i, 0, 0);
@@ -220,35 +220,122 @@ void Collision::Get_Poionts_to_Sphere(std::vector<ML::Vec3>* result ,const ML::V
 		v[4] = pos + ML::Vec3(0, 0, +i);
 		v[5] = pos + ML::Vec3(0, 0, -i);*/
 		
-
-		//ver 0.4
+		float i = r;
+		//ver 0.6
 		v[0] = pos + ML::Vec3(+i, 0, 0);
 		v[1] = pos + ML::Vec3(-i, 0, 0);
 		v[2] = pos + ML::Vec3(0, +i, 0);
 		v[3] = pos + ML::Vec3(0, -i, 0);
 		v[4] = pos + ML::Vec3(0, 0, +i);
 		v[5] = pos + ML::Vec3(0, 0, -i);
-		v[6] = pos + ML::Vec3(_CMATH_::cosf(ML::ToRadian(45))*i, _CMATH_::sinf(ML::ToRadian(45))*i, 0);
-		v[7] = pos + ML::Vec3(_CMATH_::cosf(ML::ToRadian(135))*i, _CMATH_::sinf(ML::ToRadian(135))*i, 0);
-		v[8] = pos + ML::Vec3(_CMATH_::cosf(ML::ToRadian(-45))*i, _CMATH_::sinf(ML::ToRadian(-45))*i, 0);
-		v[9] = pos + ML::Vec3(_CMATH_::cosf(ML::ToRadian(-135))*i, _CMATH_::sinf(ML::ToRadian(-135))*i, 0);
-		v[10] = pos + ML::Vec3(0,_CMATH_::cosf(ML::ToRadian(45))*i, _CMATH_::sinf(ML::ToRadian(45))*i);
-		v[11] = pos + ML::Vec3(0,_CMATH_::cosf(ML::ToRadian(135))*i, _CMATH_::sinf(ML::ToRadian(135))*i);
-		v[12] = pos + ML::Vec3(0, _CMATH_::cosf(ML::ToRadian(-45))*i, _CMATH_::sinf(ML::ToRadian(-45))*i);
-		v[13] = pos + ML::Vec3(0, _CMATH_::cosf(ML::ToRadian(-135))*i, _CMATH_::sinf(ML::ToRadian(-135))*i);
-		v[14] = pos + ML::Vec3(_CMATH_::cosf(ML::ToRadian(45))*i,0, _CMATH_::sinf(ML::ToRadian(45))*i);
-		v[15] = pos + ML::Vec3(_CMATH_::cosf(ML::ToRadian(135))*i, 0, _CMATH_::sinf(ML::ToRadian(135))*i);
-		v[16] = pos + ML::Vec3(_CMATH_::cosf(ML::ToRadian(-45))*i, 0, _CMATH_::sinf(ML::ToRadian(-45))*i);
-		v[17] = pos + ML::Vec3(_CMATH_::cosf(ML::ToRadian(-135))*i, 0, _CMATH_::sinf(ML::ToRadian(-135))*i);
-		v[18] = pos + ML::Vec3(_CMATH_::cosf(ML::ToRadian(45))*i, _CMATH_::sinf(ML::ToRadian(45))*i, _CMATH_::cosf(ML::ToRadian(45))*i);
-		v[19] = pos + ML::Vec3(_CMATH_::cosf(ML::ToRadian(135))*i, _CMATH_::sinf(ML::ToRadian(135))*i, _CMATH_::cosf(ML::ToRadian(135))*i);
-		v[20] = pos + ML::Vec3(_CMATH_::cosf(ML::ToRadian(45))*i, _CMATH_::sinf(ML::ToRadian(45))*i, _CMATH_::cosf(ML::ToRadian(-45))*i);
-		v[21] = pos + ML::Vec3(_CMATH_::cosf(ML::ToRadian(135))*i, _CMATH_::sinf(ML::ToRadian(135))*i, _CMATH_::cosf(ML::ToRadian(-135))*i);
-		v[22] = pos + ML::Vec3(_CMATH_::cosf(ML::ToRadian(-45))*i, _CMATH_::sinf(ML::ToRadian(-45))*i, _CMATH_::cosf(ML::ToRadian(45))*i);
-		v[23] = pos + ML::Vec3(_CMATH_::cosf(ML::ToRadian(-135))*i, _CMATH_::sinf(ML::ToRadian(-135))*i, _CMATH_::cosf(ML::ToRadian(135))*i);
-		v[24] = pos + ML::Vec3(_CMATH_::cosf(ML::ToRadian(-45))*i, _CMATH_::sinf(ML::ToRadian(-45))*i, _CMATH_::cosf(ML::ToRadian(-45))*i);
-		v[25] = pos + ML::Vec3(_CMATH_::cosf(ML::ToRadian(-135))*i, _CMATH_::sinf(ML::ToRadian(-135))*i, _CMATH_::cosf(ML::ToRadian(-135))*i);
-	
+
+		v[6] = pos + ML::Vec3(_CMATH_::cosf(ML::ToRadian(15))*i, _CMATH_::sinf(ML::ToRadian(15))*i, 0);
+		v[7] = pos + ML::Vec3(_CMATH_::cosf(ML::ToRadian(30))*i, _CMATH_::sinf(ML::ToRadian(30))*i, 0);
+		v[8] = pos + ML::Vec3(_CMATH_::cosf(ML::ToRadian(45))*i, _CMATH_::sinf(ML::ToRadian(45))*i, 0);
+		v[9] = pos + ML::Vec3(_CMATH_::cosf(ML::ToRadian(60))*i, _CMATH_::sinf(ML::ToRadian(60))*i, 0);
+		v[10] = pos + ML::Vec3(_CMATH_::cosf(ML::ToRadian(75))*i, _CMATH_::sinf(ML::ToRadian(75))*i, 0);
+		v[11] = pos + ML::Vec3(_CMATH_::cosf(ML::ToRadian(105))*i, _CMATH_::sinf(ML::ToRadian(105))*i, 0);
+		v[12] = pos + ML::Vec3(_CMATH_::cosf(ML::ToRadian(120))*i, _CMATH_::sinf(ML::ToRadian(120))*i, 0);
+		v[13] = pos + ML::Vec3(_CMATH_::cosf(ML::ToRadian(135))*i, _CMATH_::sinf(ML::ToRadian(135))*i, 0);
+		v[14] = pos + ML::Vec3(_CMATH_::cosf(ML::ToRadian(150))*i, _CMATH_::sinf(ML::ToRadian(150))*i, 0);
+		v[15] = pos + ML::Vec3(_CMATH_::cosf(ML::ToRadian(165))*i, _CMATH_::sinf(ML::ToRadian(160))*i, 0);
+		v[16] = pos + ML::Vec3(_CMATH_::cosf(ML::ToRadian(-15))*i, _CMATH_::sinf(ML::ToRadian(-15))*i, 0);
+		v[17] = pos + ML::Vec3(_CMATH_::cosf(ML::ToRadian(-30))*i, _CMATH_::sinf(ML::ToRadian(-30))*i, 0);
+		v[18] = pos + ML::Vec3(_CMATH_::cosf(ML::ToRadian(-45))*i, _CMATH_::sinf(ML::ToRadian(-45))*i, 0);
+		v[19] = pos + ML::Vec3(_CMATH_::cosf(ML::ToRadian(-60))*i, _CMATH_::sinf(ML::ToRadian(-60))*i, 0);
+		v[20] = pos + ML::Vec3(_CMATH_::cosf(ML::ToRadian(-75))*i, _CMATH_::sinf(ML::ToRadian(-75))*i, 0);
+		v[21] = pos + ML::Vec3(_CMATH_::cosf(ML::ToRadian(-105))*i, _CMATH_::sinf(ML::ToRadian(-105))*i, 0);
+		v[22] = pos + ML::Vec3(_CMATH_::cosf(ML::ToRadian(-120))*i, _CMATH_::sinf(ML::ToRadian(-120))*i, 0);
+		v[23] = pos + ML::Vec3(_CMATH_::cosf(ML::ToRadian(-135))*i, _CMATH_::sinf(ML::ToRadian(-135))*i, 0);
+		v[24] = pos + ML::Vec3(_CMATH_::cosf(ML::ToRadian(-150))*i, _CMATH_::sinf(ML::ToRadian(-150))*i, 0);
+		v[25] = pos + ML::Vec3(_CMATH_::cosf(ML::ToRadian(-165))*i, _CMATH_::sinf(ML::ToRadian(-160))*i, 0);
+
+		v[26] = pos + ML::Vec3(0,_CMATH_::cosf(ML::ToRadian(15))*i, _CMATH_::sinf(ML::ToRadian(15))*i);
+		v[27] = pos + ML::Vec3(0,_CMATH_::cosf(ML::ToRadian(30))*i, _CMATH_::sinf(ML::ToRadian(30))*i);
+		v[28] = pos + ML::Vec3(0,_CMATH_::cosf(ML::ToRadian(45))*i, _CMATH_::sinf(ML::ToRadian(45))*i);
+		v[29] = pos + ML::Vec3(0,_CMATH_::cosf(ML::ToRadian(60))*i, _CMATH_::sinf(ML::ToRadian(60))*i);
+		v[30] = pos + ML::Vec3(0,_CMATH_::cosf(ML::ToRadian(75))*i, _CMATH_::sinf(ML::ToRadian(75))*i);
+		v[31] = pos + ML::Vec3(0,_CMATH_::cosf(ML::ToRadian(105))*i, _CMATH_::sinf(ML::ToRadian(105))*i);
+		v[32] = pos + ML::Vec3(0,_CMATH_::cosf(ML::ToRadian(120))*i, _CMATH_::sinf(ML::ToRadian(120))*i);
+		v[33] = pos + ML::Vec3(0,_CMATH_::cosf(ML::ToRadian(135))*i, _CMATH_::sinf(ML::ToRadian(135))*i);
+		v[34] = pos + ML::Vec3(0,_CMATH_::cosf(ML::ToRadian(150))*i, _CMATH_::sinf(ML::ToRadian(150))*i);
+		v[35] = pos + ML::Vec3(0,_CMATH_::cosf(ML::ToRadian(165))*i, _CMATH_::sinf(ML::ToRadian(160))*i);
+		v[36] = pos + ML::Vec3(0,_CMATH_::cosf(ML::ToRadian(-15))*i, _CMATH_::sinf(ML::ToRadian(-15))*i);
+		v[37] = pos + ML::Vec3(0,_CMATH_::cosf(ML::ToRadian(-30))*i, _CMATH_::sinf(ML::ToRadian(-30))*i);
+		v[38] = pos + ML::Vec3(0,_CMATH_::cosf(ML::ToRadian(-45))*i, _CMATH_::sinf(ML::ToRadian(-45))*i);
+		v[39] = pos + ML::Vec3(0,_CMATH_::cosf(ML::ToRadian(-60))*i, _CMATH_::sinf(ML::ToRadian(-60))*i);
+		v[40] = pos + ML::Vec3(0,_CMATH_::cosf(ML::ToRadian(-75))*i, _CMATH_::sinf(ML::ToRadian(-75))*i);
+		v[41] = pos + ML::Vec3(0,_CMATH_::cosf(ML::ToRadian(-105))*i, _CMATH_::sinf(ML::ToRadian(-105))*i);
+		v[42] = pos + ML::Vec3(0,_CMATH_::cosf(ML::ToRadian(-120))*i, _CMATH_::sinf(ML::ToRadian(-120))*i);
+		v[43] = pos + ML::Vec3(0,_CMATH_::cosf(ML::ToRadian(-135))*i, _CMATH_::sinf(ML::ToRadian(-135))*i);
+		v[44] = pos + ML::Vec3(0,_CMATH_::cosf(ML::ToRadian(-150))*i, _CMATH_::sinf(ML::ToRadian(-150))*i);
+		v[45] = pos + ML::Vec3(0,_CMATH_::cosf(ML::ToRadian(-165))*i, _CMATH_::sinf(ML::ToRadian(-160))*i);
+
+		v[46] = pos + ML::Vec3(_CMATH_::cosf(ML::ToRadian(15))*i,0, _CMATH_::sinf(ML::ToRadian(15))*i);
+		v[47] = pos + ML::Vec3(_CMATH_::cosf(ML::ToRadian(30))*i,0, _CMATH_::sinf(ML::ToRadian(30))*i);
+		v[48] = pos + ML::Vec3(_CMATH_::cosf(ML::ToRadian(45))*i,0, _CMATH_::sinf(ML::ToRadian(45))*i);
+		v[49] = pos + ML::Vec3(_CMATH_::cosf(ML::ToRadian(60))*i,0, _CMATH_::sinf(ML::ToRadian(60))*i);
+		v[50] = pos + ML::Vec3(_CMATH_::cosf(ML::ToRadian(75))*i,0, _CMATH_::sinf(ML::ToRadian(75))*i);
+		v[51] = pos + ML::Vec3(_CMATH_::cosf(ML::ToRadian(105))*i,0, _CMATH_::sinf(ML::ToRadian(105))*i);
+		v[52] = pos + ML::Vec3(_CMATH_::cosf(ML::ToRadian(120))*i,0, _CMATH_::sinf(ML::ToRadian(120))*i);
+		v[53] = pos + ML::Vec3(_CMATH_::cosf(ML::ToRadian(135))*i,0, _CMATH_::sinf(ML::ToRadian(135))*i);
+		v[54] = pos + ML::Vec3(_CMATH_::cosf(ML::ToRadian(150))*i,0, _CMATH_::sinf(ML::ToRadian(150))*i);
+		v[55] = pos + ML::Vec3(_CMATH_::cosf(ML::ToRadian(165))*i,0, _CMATH_::sinf(ML::ToRadian(160))*i);
+		v[56] = pos + ML::Vec3(_CMATH_::cosf(ML::ToRadian(-15))*i,0, _CMATH_::sinf(ML::ToRadian(-15))*i);
+		v[57] = pos + ML::Vec3(_CMATH_::cosf(ML::ToRadian(-30))*i,0, _CMATH_::sinf(ML::ToRadian(-30))*i);
+		v[58] = pos + ML::Vec3(_CMATH_::cosf(ML::ToRadian(-45))*i,0, _CMATH_::sinf(ML::ToRadian(-45))*i);
+		v[59] = pos + ML::Vec3(_CMATH_::cosf(ML::ToRadian(-60))*i,0, _CMATH_::sinf(ML::ToRadian(-60))*i);
+		v[60] = pos + ML::Vec3(_CMATH_::cosf(ML::ToRadian(-75))*i,0, _CMATH_::sinf(ML::ToRadian(-75))*i);
+		v[61] = pos + ML::Vec3(_CMATH_::cosf(ML::ToRadian(-105))*i,0, _CMATH_::sinf(ML::ToRadian(-105))*i);
+		v[62] = pos + ML::Vec3(_CMATH_::cosf(ML::ToRadian(-120))*i,0, _CMATH_::sinf(ML::ToRadian(-120))*i);
+		v[63] = pos + ML::Vec3(_CMATH_::cosf(ML::ToRadian(-135))*i,0, _CMATH_::sinf(ML::ToRadian(-135))*i);
+		v[64] = pos + ML::Vec3(_CMATH_::cosf(ML::ToRadian(-150))*i,0, _CMATH_::sinf(ML::ToRadian(-150))*i);
+		v[65] = pos + ML::Vec3(_CMATH_::cosf(ML::ToRadian(-165))*i,0, _CMATH_::sinf(ML::ToRadian(-160))*i);
+
+		v[66] = pos + ML::Vec3(_CMATH_::cosf(ML::ToRadian(15))*i, _CMATH_::sinf(ML::ToRadian(15))*i, _CMATH_::cosf(ML::ToRadian(15))*i);
+		v[67] = pos + ML::Vec3(_CMATH_::cosf(ML::ToRadian(30))*i, _CMATH_::sinf(ML::ToRadian(30))*i, _CMATH_::cosf(ML::ToRadian(30))*i);
+		v[68] = pos + ML::Vec3(_CMATH_::cosf(ML::ToRadian(45))*i, _CMATH_::sinf(ML::ToRadian(45))*i, _CMATH_::cosf(ML::ToRadian(45))*i);
+		v[69] = pos + ML::Vec3(_CMATH_::cosf(ML::ToRadian(60))*i, _CMATH_::sinf(ML::ToRadian(60))*i, _CMATH_::cosf(ML::ToRadian(60))*i);
+		v[70] = pos + ML::Vec3(_CMATH_::cosf(ML::ToRadian(75))*i, _CMATH_::sinf(ML::ToRadian(75))*i, _CMATH_::cosf(ML::ToRadian(75))*i);
+		v[71] = pos + ML::Vec3(_CMATH_::cosf(ML::ToRadian(105))*i, _CMATH_::sinf(ML::ToRadian(105))*i, _CMATH_::cosf(ML::ToRadian(105))*i);
+		v[72] = pos + ML::Vec3(_CMATH_::cosf(ML::ToRadian(120))*i, _CMATH_::sinf(ML::ToRadian(120))*i, _CMATH_::cosf(ML::ToRadian(120))*i);
+		v[73] = pos + ML::Vec3(_CMATH_::cosf(ML::ToRadian(135))*i, _CMATH_::sinf(ML::ToRadian(135))*i, _CMATH_::cosf(ML::ToRadian(135))*i);
+		v[74] = pos + ML::Vec3(_CMATH_::cosf(ML::ToRadian(150))*i, _CMATH_::sinf(ML::ToRadian(150))*i, _CMATH_::cosf(ML::ToRadian(150))*i);
+		v[75] = pos + ML::Vec3(_CMATH_::cosf(ML::ToRadian(165))*i, _CMATH_::sinf(ML::ToRadian(165))*i, _CMATH_::cosf(ML::ToRadian(165))*i);
+
+		v[76] = pos + ML::Vec3(_CMATH_::cosf(ML::ToRadian(15))*i, _CMATH_::sinf(ML::ToRadian(15))*i, _CMATH_::cosf(ML::ToRadian(-15))*i);
+		v[77] = pos + ML::Vec3(_CMATH_::cosf(ML::ToRadian(30))*i, _CMATH_::sinf(ML::ToRadian(30))*i, _CMATH_::cosf(ML::ToRadian(-30))*i);
+		v[78] = pos + ML::Vec3(_CMATH_::cosf(ML::ToRadian(45))*i, _CMATH_::sinf(ML::ToRadian(45))*i, _CMATH_::cosf(ML::ToRadian(-45))*i);
+		v[79] = pos + ML::Vec3(_CMATH_::cosf(ML::ToRadian(60))*i, _CMATH_::sinf(ML::ToRadian(60))*i, _CMATH_::cosf(ML::ToRadian(-60))*i);
+		v[80] = pos + ML::Vec3(_CMATH_::cosf(ML::ToRadian(75))*i, _CMATH_::sinf(ML::ToRadian(75))*i, _CMATH_::cosf(ML::ToRadian(-75))*i);
+		v[81] = pos + ML::Vec3(_CMATH_::cosf(ML::ToRadian(105))*i, _CMATH_::sinf(ML::ToRadian(105))*i, _CMATH_::cosf(ML::ToRadian(-105))*i);
+		v[82] = pos + ML::Vec3(_CMATH_::cosf(ML::ToRadian(120))*i, _CMATH_::sinf(ML::ToRadian(120))*i, _CMATH_::cosf(ML::ToRadian(-120))*i);
+		v[83] = pos + ML::Vec3(_CMATH_::cosf(ML::ToRadian(135))*i, _CMATH_::sinf(ML::ToRadian(135))*i, _CMATH_::cosf(ML::ToRadian(-135))*i);
+		v[84] = pos + ML::Vec3(_CMATH_::cosf(ML::ToRadian(150))*i, _CMATH_::sinf(ML::ToRadian(150))*i, _CMATH_::cosf(ML::ToRadian(-150))*i);
+		v[85] = pos + ML::Vec3(_CMATH_::cosf(ML::ToRadian(165))*i, _CMATH_::sinf(ML::ToRadian(165))*i, _CMATH_::cosf(ML::ToRadian(-165))*i);
+
+		v[86] = pos + ML::Vec3(_CMATH_::cosf(ML::ToRadian(-15))*i, _CMATH_::sinf(ML::ToRadian(-15))*i, _CMATH_::cosf(ML::ToRadian(15))*i);
+		v[87] = pos + ML::Vec3(_CMATH_::cosf(ML::ToRadian(-30))*i, _CMATH_::sinf(ML::ToRadian(-30))*i, _CMATH_::cosf(ML::ToRadian(30))*i);
+		v[88] = pos + ML::Vec3(_CMATH_::cosf(ML::ToRadian(-45))*i, _CMATH_::sinf(ML::ToRadian(-45))*i, _CMATH_::cosf(ML::ToRadian(45))*i);
+		v[89] = pos + ML::Vec3(_CMATH_::cosf(ML::ToRadian(-60))*i, _CMATH_::sinf(ML::ToRadian(-60))*i, _CMATH_::cosf(ML::ToRadian(60))*i);
+		v[90] = pos + ML::Vec3(_CMATH_::cosf(ML::ToRadian(-75))*i, _CMATH_::sinf(ML::ToRadian(-75))*i, _CMATH_::cosf(ML::ToRadian(75))*i);
+		v[91] = pos + ML::Vec3(_CMATH_::cosf(ML::ToRadian(-105))*i, _CMATH_::sinf(ML::ToRadian(-105))*i, _CMATH_::cosf(ML::ToRadian(105))*i);
+		v[92] = pos + ML::Vec3(_CMATH_::cosf(ML::ToRadian(-120))*i, _CMATH_::sinf(ML::ToRadian(-120))*i, _CMATH_::cosf(ML::ToRadian(120))*i);
+		v[93] = pos + ML::Vec3(_CMATH_::cosf(ML::ToRadian(-135))*i, _CMATH_::sinf(ML::ToRadian(-135))*i, _CMATH_::cosf(ML::ToRadian(135))*i);
+		v[94] = pos + ML::Vec3(_CMATH_::cosf(ML::ToRadian(-150))*i, _CMATH_::sinf(ML::ToRadian(-150))*i, _CMATH_::cosf(ML::ToRadian(150))*i);
+		v[95] = pos + ML::Vec3(_CMATH_::cosf(ML::ToRadian(-165))*i, _CMATH_::sinf(ML::ToRadian(-165))*i, _CMATH_::cosf(ML::ToRadian(165))*i);
+
+		v[96] = pos + ML::Vec3(_CMATH_::cosf(ML::ToRadian(-15))*i, _CMATH_::sinf(ML::ToRadian(-15))*i, _CMATH_::cosf(ML::ToRadian(-15))*i);
+		v[97] = pos + ML::Vec3(_CMATH_::cosf(ML::ToRadian(-30))*i, _CMATH_::sinf(ML::ToRadian(-30))*i, _CMATH_::cosf(ML::ToRadian(-30))*i);
+		v[98] = pos + ML::Vec3(_CMATH_::cosf(ML::ToRadian(-45))*i, _CMATH_::sinf(ML::ToRadian(-45))*i, _CMATH_::cosf(ML::ToRadian(-45))*i);
+		v[99] = pos + ML::Vec3(_CMATH_::cosf(ML::ToRadian(-60))*i, _CMATH_::sinf(ML::ToRadian(-60))*i, _CMATH_::cosf(ML::ToRadian(-60))*i);
+		v[100] = pos + ML::Vec3(_CMATH_::cosf(ML::ToRadian(-75))*i, _CMATH_::sinf(ML::ToRadian(-75))*i, _CMATH_::cosf(ML::ToRadian(-75))*i);
+		v[101] = pos + ML::Vec3(_CMATH_::cosf(ML::ToRadian(-105))*i, _CMATH_::sinf(ML::ToRadian(-105))*i, _CMATH_::cosf(ML::ToRadian(-105))*i);
+		v[102] = pos + ML::Vec3(_CMATH_::cosf(ML::ToRadian(-120))*i, _CMATH_::sinf(ML::ToRadian(-120))*i, _CMATH_::cosf(ML::ToRadian(-120))*i);
+		v[103] = pos + ML::Vec3(_CMATH_::cosf(ML::ToRadian(-135))*i, _CMATH_::sinf(ML::ToRadian(-135))*i, _CMATH_::cosf(ML::ToRadian(-135))*i);
+		v[104] = pos + ML::Vec3(_CMATH_::cosf(ML::ToRadian(-150))*i, _CMATH_::sinf(ML::ToRadian(-150))*i, _CMATH_::cosf(ML::ToRadian(-150))*i);
+		v[105] = pos + ML::Vec3(_CMATH_::cosf(ML::ToRadian(-165))*i, _CMATH_::sinf(ML::ToRadian(-165))*i, _CMATH_::cosf(ML::ToRadian(-165))*i);
+														 
 		for (auto j : v)
 		{			
 			//j = matR.TransformCoord(j);
@@ -266,7 +353,7 @@ bool Collision::Hit_Check(std::vector<After_Collision>* result, const ML::Box3D&
 {
 	std::vector<ML::Vec3> all_Points;
 	//球の頂点座標
-	this->Get_Poionts_to_Sphere(&all_Points, pos, r, worldR);
+	this->Get_Poionts_to_Sphere(&all_Points, pos, r);
 	//最短距離の座標も追加
 	this->Get_ShortisetPoints_BoxtoSphere(&all_Points, box, pos, r);
 	
@@ -274,9 +361,7 @@ bool Collision::Hit_Check(std::vector<After_Collision>* result, const ML::Box3D&
 	std::vector<Triangle> all_Tri;
 	this->Get_Triangle_Box3D(&all_Tri, box, worldR);
 
-	bool collision_Flag;
-	//戻り値
-	//std::vector<After_Collision> R;
+	bool collision_Flag;	
 	//コンストラクタによってゼロベクトルとfalseで生成される
 	After_Collision collision_True;
 	//衝突判定スタート

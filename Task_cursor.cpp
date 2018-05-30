@@ -79,14 +79,13 @@ namespace  Cursor
 	//-------------------------------------------------------------------
 	//「更新」１フレーム毎に行う処理
 	void  Object::UpDate()
-	{
-		//カーソルの目的地を設定
-		this->destination.y = (float)this->Move_Cursor(this->select_pos);
-		
+	{		
 		auto in1 = DI::GPad_GetState("P1");
 		//カウントダウンフラグが立っていない場合のみ選択と取り消し処理を行う
 		if (!this->Is_Count_Down())
 		{
+			//カーソルの目的地を設定
+			this->destination.y = (float)this->Move_Cursor(this->select_pos);
 			//カーソルの選択処理
 			if (in1.B2.down || in1.ST.down)
 			{
