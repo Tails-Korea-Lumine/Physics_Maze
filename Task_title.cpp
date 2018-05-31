@@ -118,7 +118,7 @@ namespace  Title
 				
 		for (int j = 0; j < 12; j++)
 		{
-			easing::Set("Title_x" + to_string(j), easing::QUARTINOUT, -140.0f + (100.0f * j), 60.0f + (100.0f * j), 100.0f);
+			easing::Set("Title_x" + to_string(j), easing::QUARTINOUT, -140.0f + (100.0f * j), 180.0f + (130.0f * j), 100.0f);
 		}
 		
 		/*easing::Set("Title_1_x", easing::QUARTINOUT, 1280, 240, 110);
@@ -141,16 +141,6 @@ namespace  Title
 		}
 		easing::Start("Title_0_y");
 		easing::Start("Title_1_y");
-
-
-		//カメラの設定
-		ge->camera[0] = MyPG::Camera::Create(
-			ML::Vec3(1000.0f, 0.0f, 1000.0f),				//	ターゲット位置
-			ML::Vec3(1000.0f, 1400.0f, -1000.0f),			//	カメラ位置
-			ML::Vec3(0.0f, 1.0f, 0.0f),					//	カメラの上方向ベクトル
-			ML::ToRadian(35), 10.0f, 4000.0f,	//	視野角・視野距離
-			(float)ge->screenWidth / (float)ge->screenHeight);		//	画面比率		
-		DG::EffectState().param.bgColor = ML::Color(1, 0, 0, 0);
 
 		//bgm再生
 		DM::Sound_Play(this->res->bgm_Title, true);
@@ -241,7 +231,7 @@ namespace  Title
 	void  Object::Render2D_AF()
 	{		
 
-		ML::Box2D draw_BG(0, 0, 1280, 720);
+		ML::Box2D draw_BG(0, 0, ge->screenWidth, ge->screenHeight);
 		ML::Box2D src_BG(0, 0, 1280, 960);
 		DG::Image_Draw(this->res->BG_ImageName, draw_BG, src_BG);
 		this->Draw_Title_Name();
@@ -343,12 +333,12 @@ namespace  Title
 			return;
 		}
 
-		ML::Box2D draw_Start(400, 310, 380, 100);
+		ML::Box2D draw_Start((ge->screenWidth/2)-200, 310, 380, 100);
 		ML::Box2D src_Start(0, 0, 420, 140);
-		ML::Box2D draw_Tutorial(400, 400, 520, 100);
+		ML::Box2D draw_Tutorial((ge->screenWidth / 2) - 200, 400, 520, 100);
 		ML::Box2D src_Tutorial(0, 0, 560, 140);		
 
-		ML::Box2D draw_Guide(350, 660, 550, 50);
+		ML::Box2D draw_Guide((ge->screenWidth/2)-300, (ge->screenHeight-100), 600, 50);
 		ML::Box2D src_Guide(0, 0, 2200, 140);
 
 		draw_Start.Offset(-this->moving_Menu, 0);
@@ -364,11 +354,11 @@ namespace  Title
 	void Object::Draw_Dif_Col(nowMenu now)
 	{
 		//表示範囲は画像を作った後に変更する(2018/05/04)
-		ML::Box2D draw_Dif_Col0(400 + ge->screen2DWidth, 310, 380, 100);//Easy and OutLine
-		ML::Box2D draw_Dif_Col1(400 + ge->screen2DWidth, 400, 380, 100);//Normal and Control
-		ML::Box2D draw_Dif_Col2(400 + ge->screen2DWidth, 490, 380, 100);//Hard and Obstacle
+		ML::Box2D draw_Dif_Col0(400 + ge->screenWidth, 310, 380, 100);//Easy and OutLine
+		ML::Box2D draw_Dif_Col1(400 + ge->screenWidth, 400, 380, 100);//Normal and Control
+		ML::Box2D draw_Dif_Col2(400 + ge->screenWidth, 490, 380, 100);//Hard and Obstacle
 
-		//仮のsrc
+		//scrサイズは統一されている
 		ML::Box2D src_Dif_col0(0, 0, 700, 140);
 
 		draw_Dif_Col0.Offset(-this->moving_Menu, 0);

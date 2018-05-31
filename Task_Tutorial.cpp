@@ -188,16 +188,16 @@ namespace  Tutorial
 	//「２Ｄ描画」１フレーム毎に行う処理
 	void  Object::Render2D_AF()
 	{
-		ML::Box2D drawBG(0, 0, 1280, 720);
+		ML::Box2D drawBG(0, 0, ge->screenWidth, ge->screenHeight);
 		ML::Box2D srcBG(0, 0, 1280, 960);
 
 		DG::Image_Draw(this->res->Bg_Img, drawBG, srcBG);
 
 		ML::Box2D draw[3] = 
 		{
-			{0, 0, 1280, 1248},
-			{ 0, 0, 1280, 1248 },
-			{ 0, 0, 1280, 1248 },		
+			{0, 0, (int)ge->screenWidth, 1248},
+			{ 0, 0, (int)ge->screenWidth, 1248 },
+			{ 0, 0, (int)ge->screenWidth, 1248 },
 		};
 		ML::Box2D src(0, 0,1280, 1248);
 		for (int i = 0; i < 3; i++)
@@ -214,7 +214,7 @@ namespace  Tutorial
 		};
 		ML::Box2D srcguide[2] =
 		{
-			{ 0,0,2000,140},
+			{ 0,0,2200,140},
 			{0,0,1400,140}
 		};
 		for (int i = 0; i < 2; i++)
@@ -247,7 +247,7 @@ namespace  Tutorial
 			}
 			for (int i = 0; i < 3; i++)
 			{
-				this->posx[i] -= 16;
+				this->posx[i] -= 24;
 			}
 		}
 		//左のページを見る
@@ -259,7 +259,7 @@ namespace  Tutorial
 			}
 			for (int i = 0; i < 3; i++)
 			{
-				this->posx[i] += 16;
+				this->posx[i] += 24;
 			}
 		}
 		

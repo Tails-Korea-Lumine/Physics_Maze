@@ -68,8 +68,8 @@ namespace  UI
 		easing::Start("Up_to_Down");
 
 		//幕のeasingSet
-		easing::Set("wipeOut", easing::SINEOUT, -200, 1280, 100);
-		easing::Set("wipeIn", easing::SINEOUT, -2200, 0, 130);
+		easing::Set("wipeOut", easing::SINEOUT, -200, ge->screenWidth, 100);
+		easing::Set("wipeIn", easing::SINEOUT, -2200, 400, 130);
 		
 		//幕はタスク生成の時画面から消えて行って
 		//タスク消滅前に画面の上まで移動する
@@ -163,8 +163,8 @@ namespace  UI
 	//幕の描画
 	void Object::Draw_Wipe_InOut()
 	{
-		ML::Box2D drawOut(-200, -160, 1480, 1080);
-		ML::Box2D drawIN(-2200, 0, 2200, 720);		
+		ML::Box2D drawOut(-200, -160, 3000, 1500);
+		ML::Box2D drawIN(-2200, 0, 3000, 1500);		
 		ML::Box2D src(0, 0, 1920, 1080);
 		
 		switch (this->wipe)

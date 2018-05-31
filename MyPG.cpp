@@ -8,8 +8,8 @@ namespace MyPG
 	MyGameEngine::MyGameEngine( )
 	:GameEngine(
 	//	環境情報
-		1280,							//	画面サイズX
-		720,							//	画面サイズY
+		1920,							//	画面サイズX
+		1080,							//	画面サイズY
 		1,								//	表示倍率
 		1,								//	マルチサンプル(1or2or4)
 		true,							//	フルスクリーンモード
@@ -67,7 +67,7 @@ namespace MyPG
 		//キーボードとゲームパッドの入力を受け取るオブジェクトを生成する
 		//キーボードパラメータ
 		DI::AnalogAxisKB	ls = { DIK_LEFT, DIK_RIGHT, DIK_UP, DIK_DOWN };
-		DI::AnalogAxisKB	rs = { DIK_NUMPAD4, DIK_NUMPAD6, DIK_NUMPAD8, DIK_NUMPAD2 };
+		DI::AnalogAxisKB	rs = { DIK_NUMPAD6, DIK_NUMPAD4, DIK_NUMPAD8, DIK_NUMPAD2 };
 		DI::KeyDatas_KB	 key = {
 			{ DIK_Z, DI::But::B1 },{ DIK_X, DI::But::B2 },{ DIK_C, DI::But::B3 },
 			{ DIK_V, DI::But::B4 },{ DIK_A, DI::But::SE },{ DIK_S, DI::But::ST },
