@@ -44,7 +44,7 @@ namespace  Cursor
 		this->res = Resource::Create();
 
 		//★データ初期化
-		this->pos = ML::Vec2(300, -32);
+		this->pos = ML::Vec2(float(ge->screenWidth/3), -32);
 		this->select_pos.x = 0;
 		this->select_pos.y = -1;
 		this->countdown = 0;
@@ -182,7 +182,7 @@ namespace  Cursor
 			}
 		}
 		
-		return 408 + (select.y * 43);
+		return (ge->screenHeight/2)-50 + (select.y * 50);
 	}
 
 	//---------------------------------------------------------------------------------
@@ -194,13 +194,13 @@ namespace  Cursor
 
 	//---------------------------------------------------------------------------------
 	//カウントダウンフラグを返す関数
-	bool Object::Is_Count_Down()
+	bool Object::Is_Count_Down() const
 	{
 		return this->countdownFlag;
 	}
 	//--------------------------------------------------------------------------
 	//画面切り替えが終わったのかを確認
-	bool Object::Count_Down_Over()
+	bool Object::Count_Down_Over() const
 	{
 		return (this->countdown > 130);
 	}

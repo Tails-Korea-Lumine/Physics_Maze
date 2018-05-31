@@ -106,6 +106,8 @@ namespace  Title
 		this->moving_Menu = 0;
 		this->moving_Title_Name = 0;
 		this->n = nowMenu::Start_Tutorial;
+		//easing list初期化
+		easing::Init();
 
 		for (int i = 0; i < 12; i++)
 		{
@@ -118,7 +120,7 @@ namespace  Title
 				
 		for (int j = 0; j < 12; j++)
 		{
-			easing::Set("Title_x" + to_string(j), easing::QUARTINOUT, -140.0f + (100.0f * j), 180.0f + (130.0f * j), 100.0f);
+			easing::Set("Title_x" + to_string(j), easing::QUARTINOUT, -140.0f + (100.0f * j), 180.0f + (130.0f * j), 100);
 		}
 		
 		/*easing::Set("Title_1_x", easing::QUARTINOUT, 1280, 240, 110);
@@ -221,9 +223,9 @@ namespace  Title
 		this->timeCnt++;
 		//カウンタの上限指定		
 		
-		if (this->moving_Title_Name > 160)
+		if (this->moving_Title_Name > 110)
 		{
-			this->moving_Title_Name = 160;
+			this->moving_Title_Name = 110;
 		}
 	}
 	//-------------------------------------------------------------------
@@ -333,9 +335,9 @@ namespace  Title
 			return;
 		}
 
-		ML::Box2D draw_Start((ge->screenWidth/2)-200, 310, 380, 100);
+		ML::Box2D draw_Start((ge->screenWidth/2)-200, (ge->screenHeight/2)-150, 380, 100);
 		ML::Box2D src_Start(0, 0, 420, 140);
-		ML::Box2D draw_Tutorial((ge->screenWidth / 2) - 200, 400, 520, 100);
+		ML::Box2D draw_Tutorial((ge->screenWidth / 2) - 200, (ge->screenHeight / 2)-50, 520, 100);
 		ML::Box2D src_Tutorial(0, 0, 560, 140);		
 
 		ML::Box2D draw_Guide((ge->screenWidth/2)-300, (ge->screenHeight-100), 600, 50);
@@ -354,9 +356,9 @@ namespace  Title
 	void Object::Draw_Dif_Col(nowMenu now)
 	{
 		//表示範囲は画像を作った後に変更する(2018/05/04)
-		ML::Box2D draw_Dif_Col0(400 + ge->screenWidth, 310, 380, 100);//Easy and OutLine
-		ML::Box2D draw_Dif_Col1(400 + ge->screenWidth, 400, 380, 100);//Normal and Control
-		ML::Box2D draw_Dif_Col2(400 + ge->screenWidth, 490, 380, 100);//Hard and Obstacle
+		ML::Box2D draw_Dif_Col0((ge->screenWidth / 2) - 200 + ge->screenWidth, (ge->screenHeight / 2) - 150, 380, 100);//Easy and OutLine
+		ML::Box2D draw_Dif_Col1((ge->screenWidth / 2) - 200 + ge->screenWidth, (ge->screenHeight / 2) - 50, 380, 100);//Normal and Control
+		ML::Box2D draw_Dif_Col2((ge->screenWidth / 2) - 200 + ge->screenWidth, (ge->screenHeight / 2) + 50, 380, 100);//Hard and Obstacle
 
 		//scrサイズは統一されている
 		ML::Box2D src_Dif_col0(0, 0, 700, 140);

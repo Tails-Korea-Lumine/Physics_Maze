@@ -58,5 +58,5 @@ public:
 	//コンストラクタ・デストラクタ
 	Bbox();
 	Bbox(BoxType chip, ML::Vec3 pos, ML::Box3D base, ML::QT qt);
-	virtual ~Bbox(){}
+	~Bbox(){}
 };

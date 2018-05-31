@@ -67,10 +67,10 @@ namespace Tutorial
 
 	public:
 		void Page_Chage(bool page_Move_Right);
-		bool Can_I_Change_the_Page();
+		bool Can_I_Change_the_Page() const;
 		//自分消滅までのカウントダウン開始を確認
-		bool Is_Count_Down();
+		bool Is_Count_Down() const;
 		//カウントダウンが終わったのかを確認
-		bool Count_Down_Over();
+		bool Count_Down_Over() const;
 	};
 }

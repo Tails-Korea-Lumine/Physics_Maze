@@ -68,8 +68,8 @@ namespace  UI
 		easing::Start("Up_to_Down");
 
 		//幕のeasingSet
-		easing::Set("wipeOut", easing::SINEOUT, -200, ge->screenWidth, 100);
-		easing::Set("wipeIn", easing::SINEOUT, -2200, 400, 130);
+		easing::Set("wipeOut", easing::SINEOUT, -200, (float)ge->screenWidth, 100);
+		easing::Set("wipeIn", easing::SINEOUT, -2200, 0, 130);
 		
 		//幕はタスク生成の時画面から消えて行って
 		//タスク消滅前に画面の上まで移動する

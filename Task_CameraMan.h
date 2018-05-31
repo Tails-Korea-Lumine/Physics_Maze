@@ -68,7 +68,7 @@ namespace CameraMan
 		//ライトをオンする処理
 		void Turnon_the_Light();
 		//3秒がたったのかを判定
-		bool It_Passed_3sec();
+		bool It_Passed_3sec() const;
 		//ゲームスタート前の演出
 		void ProMotion();
 		//カメラの移動操作

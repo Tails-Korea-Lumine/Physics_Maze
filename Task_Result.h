@@ -64,6 +64,6 @@ namespace Result
 	public:
 		//ƒƒ\ƒbƒh
 		void Draw_Score();
-		bool Is_Count_Down();
+		bool Is_Count_Down() const;
 	};
 }

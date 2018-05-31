@@ -4,6 +4,7 @@
 #include  "MyPG.h"
 #include  "Task_Result.h"
 #include  "Task_UI.h"
+#include  "easing.h"
 
 namespace  Result
 {
@@ -54,6 +55,8 @@ namespace  Result
 		//★データ初期化
 		this->countdown = 0;
 		this->countdownFlag = false;
+		//easing list　初期化
+		easing::Init();
 		//bgm再生
 		DM::Sound_Play(this->res->bgmName, true);
 
@@ -142,14 +145,14 @@ namespace  Result
 		//this time
 		if (this->timeCnt > 60)
 		{
-			ML::Box2D draw_ThisTime(500, 70, 700, 140);
+			ML::Box2D draw_ThisTime((ge->screenWidth/2), ge->screenHeight/4, 700, 140);
 			ML::Box2D src_ThisTime(0, 0, 700, 140);
 			DG::Image_Draw(this->res->thisTime, draw_ThisTime, src_ThisTime);
 		}
 		//your score
 		if (this->timeCnt > 120)
 		{
-			ML::Box2D draw_YourScore(450, 300, 770, 140);
+			ML::Box2D draw_YourScore((ge->screenWidth / 2), ge->screenHeight / 2, 770, 140);
 			ML::Box2D src_YourScore(0, 0, 770, 140);
 			DG::Image_Draw(this->res->yourScore, draw_YourScore, src_YourScore);
 		}
@@ -161,7 +164,7 @@ namespace  Result
 		//press S to return title
 		if (this->timeCnt > 240)
 		{
-			ML::Box2D draw_pressS(200, 650, 700, 70);
+			ML::Box2D draw_pressS((ge->screenWidth / 3), ge->screenHeight-100, 700, 70);
 			ML::Box2D src_pressS(0, 0, 1400, 140);
 			DG::Image_Draw(this->res->presS, draw_pressS, src_pressS);
 		}
@@ -177,11 +180,14 @@ namespace  Result
 	//追加メソッド
 	void Object::Draw_Score()
 	{
+		//数字一個のサイズ
+		int numSize = 140;
+
 		int score1000 = 0;
 		int score100 = 0;
 		int score10 = 0;
 		int score1 = 0;
-		//点数がーなら０点で表示する
+		//点数がマイナスなら０点で表示する
 		if (this->score > 0)
 		{
 			score1000 = this->score / 1000;
@@ -191,10 +197,10 @@ namespace  Result
 		}
 
 
-		ML::Box2D draw1000(400, 450, 140, 140);
-		ML::Box2D draw100(520, 450, 140, 140);
-		ML::Box2D draw10(640, 450, 140, 140);
-		ML::Box2D draw1(760, 450, 140, 140);
+		ML::Box2D draw1000((ge->screenWidth/3), (ge->screenHeight/3)*2, numSize, numSize);
+		ML::Box2D draw100((ge->screenWidth / 3) + (numSize * 1), (ge->screenHeight / 3) * 2, numSize, numSize);
+		ML::Box2D draw10((ge->screenWidth / 3) + (numSize * 2), (ge->screenHeight / 3) * 2, numSize, numSize);
+		ML::Box2D draw1((ge->screenWidth / 3) + (numSize * 3), (ge->screenHeight / 3) * 2, numSize, numSize);
 
 		//描画
 		DG::Image_Draw(this->res->Number_Image, draw1000, this->src_Number[score1000]);
@@ -205,7 +211,7 @@ namespace  Result
 
 	//----------------------------------------------------------------------------------
 	//カウンタダウンフラグを返す関数
-	bool Object::Is_Count_Down()
+	bool Object::Is_Count_Down() const
 	{
 		return this->countdownFlag;
 	}

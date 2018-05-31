@@ -155,9 +155,9 @@ namespace  Tutorial
 		this->Page_Chage(this->page_Change_Flag);
 
 		//posyの範囲設定
-		if (this->posy < -528)
+		if (this->posy < -200)
 		{
-			this->posy = -528;
+			this->posy = -200;
 		}
 		if (this->posy > 0)
 		{
@@ -267,20 +267,20 @@ namespace  Tutorial
 
 	//-----------------------------------------------------------------------------
 	//自分消滅までのカウントダウン開始を確認
-	bool Object::Is_Count_Down()
+	bool Object::Is_Count_Down() const
 	{
 		return this->countDown_Flag;
 	}
 
 	//-------------------------------------------------------------------------------
 	//カウントダウンが終わったのかを確認
-	bool Object::Count_Down_Over()
+	bool Object::Count_Down_Over() const
 	{
 		return (this->countDown > 60);
 	}
 	//----------------------------------------------------------------------------------
 	//ページ切り替えが可能かを判断
-	bool Object::Can_I_Change_the_Page()
+	bool Object::Can_I_Change_the_Page() const
 	{
 		return (this->timeCnt > 80);
 	}

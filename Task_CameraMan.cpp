@@ -127,7 +127,7 @@ namespace  CameraMan
 	}
 	//-----------------------------------------------------------------
 	//3•b‚ª‚½‚Á‚½‚Ì‚©‚ðŠm”F
-	bool Object::It_Passed_3sec()
+	bool Object::It_Passed_3sec() const
 	{
 		if (this->timeCnt > 180)
 		{

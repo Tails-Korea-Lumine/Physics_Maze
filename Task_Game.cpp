@@ -12,6 +12,7 @@
 #include  "Task_Result.h"
 #include  "Task_UI.h"
 #include  "Task_CameraMan.h"
+#include  "easing.h"
 
 namespace  Game
 {
@@ -51,7 +52,8 @@ namespace  Game
 		this->render2D_Priority[1] = 1.0f;
 		ge->gameClearFlag = false;
 		ge->getReadyFlag = true;
-
+		//easing list初期化
+		easing::Init();
 		//★タスクの生成		
 
 		//カメラマンを生成
@@ -206,7 +208,7 @@ namespace  Game
 	//--------------------------------------------------------------------------------------
 	//追加メソッド
 	//カウントダウンフラグを返す関数
-	bool Object::Is_Count_Down()
+	bool Object::Is_Count_Down() const
 	{
 		return this->countdownFlag;
 	}
@@ -220,20 +222,20 @@ namespace  Game
 
 	//---------------------------------------------------------------------------------------
 	//クリアしたのかを確認
-	bool Object::IS_Cleared()
+	bool Object::IS_Cleared() const
 	{
 		return ge->gameClearFlag;
 	}
 
 	//--------------------------------------------------------------------------------------
 	//操作可能かを確認
-	bool Object::GET_READY()
+	bool Object::GET_READY() const
 	{
 		return !ge->getReadyFlag;
 	}
 	//--------------------------------------------------------------------------
 	//画面切り替えが終わったのかを確認
-	bool Object::Count_Down_Over()
+	bool Object::Count_Down_Over() const
 	{
 		return (this->countdown > 130);
 	}

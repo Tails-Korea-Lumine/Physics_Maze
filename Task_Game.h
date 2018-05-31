@@ -65,14 +65,14 @@ namespace Game
 
 	public:
 		//カウントダウンフラグを返す関数
-		bool Is_Count_Down();
+		bool Is_Count_Down() const;
 		//クリアフラグを立てる関数
 		void Game_Clear();
 		//クリアしたのかを返す関数
-		bool IS_Cleared();
+		bool IS_Cleared() const;
 		//操作可能かを返す関数
-		bool GET_READY();
+		bool GET_READY() const;
 		//画面切り替えが終わったのかを確認
-		bool Count_Down_Over();
+		bool Count_Down_Over() const;
 	};
 }

@@ -30,8 +30,6 @@ void MyMath::Vector_Dot(float* result, const ML::Vec3& v1, const ML::Vec3& v2)
 	this->Get_Vector_Dot(&Dot_to_Position, v1, v2);
 
 	//コサイン値を求めて返す
-	float cos;
-
 	*result = Dot_to_Position / (v1_Lenth*v2_Lenth);
 	
 }

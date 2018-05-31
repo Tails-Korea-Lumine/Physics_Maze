@@ -69,14 +69,14 @@ namespace Ball
 	public:
 		//メソッド
 		//一個前のフレームで衝突したかを返す
-		bool Is_Collision();
+		bool Is_Collision() const;
 		//その時のボールの情報を返す関数
 		//位置
-		ML::Vec3 Get_Pos();
+		ML::Vec3 Get_Pos() const;
 		//半直径
-		float Get_Radious();
+		float Get_Radious() const;
 		//速度
-		ML::Vec3 Get_Speed();
+		ML::Vec3 Get_Speed() const;
 		//あたり判定による方向転換及び移動
 		void Move_Ball();
 		//位置補正用回転関数 引数 : (マップのフレーム回転量)

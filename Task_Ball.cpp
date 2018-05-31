@@ -176,7 +176,7 @@ namespace  Ball
 	//--------------------------------------------------------------------
 	//追加メソッド
 
-	bool Object::Is_Collision()
+	bool Object::Is_Collision() const
 	{
 		return this->collision_Flag;
 	}
@@ -184,17 +184,17 @@ namespace  Ball
 	//---------------------------------------------------------------------
 	//その時のボールの情報を返す関数
 	//位置
-	ML::Vec3 Object::Get_Pos()
+	ML::Vec3 Object::Get_Pos() const
 	{
 		return this->pos;
 	}
 	//半直径
-	float Object::Get_Radious()
+	float Object::Get_Radious() const
 	{
 		return this->r;
 	}
 	//速度
-	ML::Vec3 Object::Get_Speed()
+	ML::Vec3 Object::Get_Speed() const
 	{
 		return this->speed;
 	}
