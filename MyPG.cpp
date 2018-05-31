@@ -2,9 +2,7 @@
 #include "Task_Title.h"
 
 namespace MyPG
-{
-	
-
+{	
 	MyGameEngine::MyGameEngine( )
 	:GameEngine(
 	//	環境情報
@@ -86,7 +84,7 @@ namespace MyPG
 			{ DI::GPB::HSU, DI::But::HU },{ DI::GPB::HSD, DI::But::HD },
 			{ DI::GPB::HSL, DI::But::HL },{ DI::GPB::HSR, DI::But::HR },
 		};
-		DI::GPad_CreateKBGP("P1", ls, rs, key, 0, but);
+		DI::GPad_CreateKBGP("P1", ls, rs, key, 1, but);
 
 
 		//背景色の設定（デフォルト）

@@ -61,6 +61,8 @@ namespace Ball
 		float r;
 		//重さ
 		float m;
+		//回転量
+		float rot;
 		//接触しているかを判定するフラグ
 		bool collision_Flag;
 		//重力

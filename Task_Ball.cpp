@@ -41,6 +41,7 @@ namespace  Ball
 		this->moveVec = ML::Vec3(0, 0, 0);
 		this->r = 30.0f;
 		this->m = 30.0f;
+		this->rot = 0.0f;
 		this->collision_Flag = false;
 
 	
@@ -86,7 +87,8 @@ namespace  Ball
 			//‚à‚µ,‚Ç‚±‚à‚ ‚½‚è”»’è‚ð‚¹‚¸‚É“®‚¢‚½ê‡
 			//ˆ—‚¹‚¸‚ÉŽŸ‚ÌƒtƒŒ[ƒ€‚ÉˆÚ‚é
 			
-			
+		//‰ñ“]—Êã¸
+		this->rot += this->speed.Length();
 	}
 	//-------------------------------------------------------------------
 	//‚ ‚½‚è”»’è‚É‚æ‚é•ûŒü“]Š·‹y‚ÑˆÚ“®
@@ -167,9 +169,14 @@ namespace  Ball
 	{
 		ML::Mat4x4 matT;
 		ML::Mat4x4 matS;
+		ML::Mat4x4 matR;
+		//ˆÚ“®s—ñ
 		matT.Translation(this->pos);
+		//Šgks—ñ
 		matS.Scaling(this->r);
-		DG::EffectState().param.matWorld = matS * matT;
+		//‰ñ“]s—ñ
+		matR.RotationAxis(this->speed.Normalize(), ML::ToRadian(this->rot));
+		DG::EffectState().param.matWorld = matS * matR * matT;
 		DG::Mesh_Draw(this->res->meshName);
 	}
 
