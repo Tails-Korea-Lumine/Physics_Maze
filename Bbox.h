@@ -40,10 +40,10 @@ public:
 	//回転関数　引数 : (回転した位置 , 回転量)
 	void Rotate_Box(const ML::Vec3& pos, const ML::QT& q);
 	
-	//道かどうかを確認する
-	BoxType What_Type_Is_this_Box();
+	//BoxTypeを確認する
+	BoxType What_Type_Is_this_Box() const;
 	//位置を返す関数
-	ML::Vec3 Get_Pos();
+	ML::Vec3 Get_Pos() const;
 	//衝突判定
 	//判定の結果値をもらう関数
 	void Get_Collision_Poligon(std::vector<After_Collision>* result, const ML::Vec3& pos, const float& r, const ML::Vec3& speed);

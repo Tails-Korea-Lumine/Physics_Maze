@@ -67,8 +67,7 @@ namespace Map3d
 		//ボールのほうに渡す情報
 		std::vector< After_Collision> col_Poligons;
 		//回転量
-		ML::QT map_QT;
-		ML::QT frame_QT;
+		ML::QT map_QT;		
 		
 	public:
 		//メソッド

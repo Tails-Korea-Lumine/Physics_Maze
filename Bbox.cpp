@@ -16,12 +16,12 @@ void Bbox::Get_Collision_Poligon(std::vector<After_Collision>* result, const ML:
 	}
 }
 
-BoxType Bbox::What_Type_Is_this_Box()
+BoxType Bbox::What_Type_Is_this_Box() const
 {
 	return this->chip;
 }
 
-ML::Vec3 Bbox::Get_Pos()
+ML::Vec3 Bbox::Get_Pos() const
 {
 	return this->pos;
 }
@@ -60,12 +60,13 @@ bool Bbox::Player_Turnoff_the_Switch(const ML::Vec3& pos, const float& r, const 
 	return this->Get_Collision_Bool(pos, r, speed);
 }
 
+//あたってるかあたってないか論理的な結果だけを求める処理
 bool Bbox::Get_Collision_Bool(const ML::Vec3& pos, const float& r, const ML::Vec3& speed)
 {
 	//あたり判定の結果をもらう
 	std::vector<After_Collision> check;
 	this->col.Hit_Check(&check, this->collision_Base.OffsetCopy(this->pos), pos, r, speed, this->boxQT);
-	//結果のサイズが０ではないならクリア
+	//結果のサイズが０ではないならあたっている
 	if (check.size() != 0)
 	{
 		return true;

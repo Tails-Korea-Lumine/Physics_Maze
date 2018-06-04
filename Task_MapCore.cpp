@@ -238,41 +238,7 @@ namespace  Map_Core
 
 		return ball_was_Collision_to_Core;
 	}
-
-	//---------------------------------------------------------------------------------
-	//今回フレームの回転量を返す
-	ML::QT Object::Get_Frame_QT()
-	{
-		return this->frame_QT;
-	}
-
-	ML::QT Object::Get_Frame_QT(float f)
-	{
-		auto in1 = DI::GPad_GetState("P1");
-		//スティックが倒された量を更新
-		if (in1.B1.on)
-		{
-			//スティックで入力
-			if (in1.LStick.axis.x != 0)
-			{
-				this->frame_QT = ML::QT(ML::Vec3(0, 0, 1), ML::ToRadian(-in1.LStick.axis.x/f));
-			}
-		}
-		//押されていない時はY軸回転とX軸回転
-		else
-		{
-
-			if (in1.LStick.axis.y != 0)
-			{
-				this->frame_QT = ML::QT(ML::Vec3(1, 0, 0), ML::ToRadian(-in1.LStick.axis.y/f));
-			}
-
-			if (in1.LStick.axis.x != 0)
-			{
-				return ML::QT(ML::Vec3(0, 1, 0), ML::ToRadian(-in1.LStick.axis.x/f));
-			}
-		}
-	}
+	
 	//-----------------------------------------------------------------------------------
 	//ほかのプログラムにあたり判定が終わったポリゴンを渡す関数
 	void Object::Get_Collision_Poligon(std::vector<After_Collision>* result)

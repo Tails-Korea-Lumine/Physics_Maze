@@ -60,18 +60,14 @@ namespace Map_Core
 		//ボールに渡す情報	
 		std::vector< After_Collision> col_Poligons;		
 		//回転量
-		ML::QT map_QT;
-		ML::QT frame_QT;
+		ML::QT map_QT;		
 
 	public:
 		//メソッド
 		void Rotate_Core_and_Barrier();
 		bool Core_Check_Hit(const ML::Vec3& pos, const float& r, const ML::Vec3& speed);//球とマップのあたり判定
 		//ほかのプログラムにあたり判定が終わったポリゴンを渡す関数
-		void Get_Collision_Poligon(std::vector<After_Collision>* result);
-		//今回フレームの回転量を返す
-		ML::QT Get_Frame_QT();
-		ML::QT Get_Frame_QT(float f);
+		void Get_Collision_Poligon(std::vector<After_Collision>* result);		
 
 		//クォータニオンを更新する関数
 		void UpDate_Quartanion(const ML::QT& qt);
