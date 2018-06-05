@@ -74,5 +74,9 @@ namespace Game
 		bool GET_READY() const;
 		//画面切り替えが終わったのかを確認
 		bool Count_Down_Over() const;
+		//ゲームクリア演出を始める
+		bool Start_Clear_Promotion();
+		//カメラ演出が終わったのかを確認
+		bool Is_Camera_Promotion_Over();
 	};
 }

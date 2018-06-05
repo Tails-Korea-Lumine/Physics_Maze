@@ -3,15 +3,17 @@
 
 void Bbox::Rotate_Box(const ML::Vec3& pos, const ML::QT& q)
 {
+	//回転量と位置を更新
 	this->pos = pos;
 	this->boxQT = q;
 }
 
 void Bbox::Get_Collision_Poligon(std::vector<After_Collision>* result, const ML::Vec3& pos, const float& r, const ML::Vec3& speed)
 {
-	//当たらなかった時だけゼロベクトルリザルトをpushbackする
+	//あたり判定結果をresultに保存
 	if (!this->col.Hit_Check(result, this->collision_Base.OffsetCopy(this->pos), pos, r, speed, this->boxQT))
 	{
+		//当たらなかった時だけゼロベクトルリザルトをpushbackする
 		result->push_back(After_Collision());
 	}
 }
@@ -26,6 +28,7 @@ ML::Vec3 Bbox::Get_Pos() const
 	return this->pos;
 }
 
+//引数なしコンストラクタ(ゼロクリア)
 Bbox::Bbox()
 {
 	this->chip = BoxType::Clear;
@@ -33,7 +36,7 @@ Bbox::Bbox()
 	this->collision_Base = ML::Box3D(0, 0, 0, 0, 0, 0);
 	this->boxQT = ML::QT(0.0f);
 }
-
+//引数 : (箱のタイプ,位置,あたり判定矩形,初期回転量)
 Bbox::Bbox(BoxType chip, ML::Vec3 pos, ML::Box3D base, ML::QT qt)
 {
 	this->chip = chip;

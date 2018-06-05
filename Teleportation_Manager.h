@@ -3,7 +3,7 @@
 #include "GameEngine_Ver3_7.h"
 //瞬間移動を管理するクラス
 
-//ドアは1面あたり1個以下が存在して、全数は偶数で存在する
+//ドアは1面あたり1個以下が存在して、全の数は偶数で存在する
 //0<->3
 //1<->4
 //2<->5
@@ -28,7 +28,9 @@ public:
 	void Increse_Counter();
 
 	//コンストラクタ・デストラクタ
+	//ゼロクリア
 	Teleportation_Manager();	
+
 	~Teleportation_Manager() 
 	{}
 };

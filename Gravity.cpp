@@ -2,12 +2,12 @@
 #include <cmath>
 
 
-void Gravity::Accelerate(ML::Vec3* speed, const float& Weight)
+void Gravity::Accelerate(ML::Vec3* speed, const float& Weight) const
 {
 	*speed += (Weight * this->G_acceleration);
 }
 
-void Gravity::CollisionOver_Accelerate(ML::Vec3* speed, const ML::Vec3& normal)
+void Gravity::CollisionOver_Accelerate(ML::Vec3* speed, const ML::Vec3& normal) const
 {
 	/*//法線ベクトルと速度の角度とサイン値
 	float sin , seta;
@@ -38,7 +38,7 @@ void Gravity::CollisionOver_Accelerate(ML::Vec3* speed, const ML::Vec3& normal)
 	//このうえはver0.1
 
 	float fn;
-	Gravity::Get_Vector_Dot(&fn, *speed, normal);
+	this->Get_Vector_Dot(&fn, *speed, normal);
 	//fn *= speed.Length();
 	//絶対値に変える
 	if (fn < 0)
@@ -59,7 +59,7 @@ void Gravity::CollisionOver_Accelerate(ML::Vec3* speed, const ML::Vec3& normal)
 	//return after_Collision;
 }
 
-void Gravity::Reflaction_Vector(ML::Vec3* force, const ML::Vec3& normal, const float& weight)
+void Gravity::Reflaction_Vector(ML::Vec3* force, const ML::Vec3& normal, const float& weight) const
 {	
 	//壁面の法線ベクトルの大きさを変更
 	float fn;

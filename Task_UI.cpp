@@ -68,7 +68,7 @@ namespace  UI
 		easing::Start("Up_to_Down");
 
 		//幕のeasingSet
-		easing::Set("wipeOut", easing::SINEOUT, -200, (float)ge->screenWidth, 100);
+		easing::Set("wipeOut", easing::SINEOUT, -200, (float)ge->screenWidth, 200);
 		easing::Set("wipeIn", easing::SINEOUT, -2200, 0, 130);
 		
 		//幕はタスク生成の時画面から消えて行って
@@ -131,7 +131,7 @@ namespace  UI
 	}
 	//----------------------------------------------------------------------------------
 	//時間の描画
-	void Object::Draw_Time()
+	void Object::Draw_Time() const
 	{
 		int min10, min1, sec10, sec1;
 		//各位の数値を別々にもらう
@@ -148,7 +148,13 @@ namespace  UI
 		ML::Box2D draw_Sec1(360, 0, 64, 64);
 		ML::Box2D draw_colon(280, 0, 50, 64);
 
+		//easingでのY座標更新
 		draw_UI_Time.Offset(this->ui_Time);
+		draw_Min10.Offset(this->ui_Time);
+		draw_Min1.Offset(this->ui_Time);
+		draw_colon.Offset(this->ui_Time);
+		draw_Sec10.Offset(this->ui_Time);
+		draw_Sec1.Offset(this->ui_Time);
 
 		//描画
 		DG::Image_Draw(this->res->uI_Time_Img, draw_UI_Time, src_UI_Time);
@@ -197,6 +203,7 @@ namespace  UI
 	{
 		easing::Start("wipeIn");
 		this->wipe = WipeInOut::Wipe_In;
+		this->wipe_Alpha = 0.1f;
 	}
 	//★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★
 	//以下は基本的に変更不要なメソッド

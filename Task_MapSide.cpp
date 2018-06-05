@@ -42,28 +42,34 @@ namespace  Map3d
 		this->render3D_Priority[0] = 0.3f;
 		this->gimicCnt = 0;		
 		this->sideNumber = sideNum;
-		this->mapSize = 8;//基本は8X8難易度によって増加される(2018/04/21)
+		this->mapSize = 8;//基本は8X8
 		this->render3D_Priority[0] = 1.0f;
 		//面ごとに別の初期値を与える
 		switch(sideNumber)
 		{
 		case 0:
 			this->map_QT = ML::QT(0.0f);
+			this->Normal_Side = ML::Vec3(0, 1, 0);
 			break;
 		case 1:
 			this->map_QT = ML::QT(ML::Vec3(1, 0, 0), ML::ToRadian(90));
+			this->Normal_Side = ML::Vec3(0, 0, 1);
 			break;
 		case 2:
 			this->map_QT = ML::QT(ML::Vec3(0, 0, 1), ML::ToRadian(90));
+			this->Normal_Side = ML::Vec3(-1, 0, 0);
 			break;
 		case 3:
 			this->map_QT = ML::QT(ML::Vec3(0, 0, 1), ML::ToRadian(-90));
+			this->Normal_Side = ML::Vec3(1, 0, 0);
 			break;
 		case 4:
 			this->map_QT = ML::QT(ML::Vec3(1, 0, 0), ML::ToRadian(-90));
+			this->Normal_Side = ML::Vec3(0, 0, -1);
 			break;
 		case 5:
 			this->map_QT = ML::QT(ML::Vec3(1, 0, 0), ML::ToRadian(180));
+			this->Normal_Side = ML::Vec3(0, -1, 0);
 			break;
 		}
 		//データのゼロクリア
@@ -198,7 +204,19 @@ namespace  Map3d
 
 	void  Object::Render3D_L0()
 	{
-		
+		MyMath mm;
+		//カメラとの内積値を保存する場所
+		float c = 0.0f;
+		//視線ベクトル
+		ML::Vec3 sv = ge->camera[0]->target - ge->camera[0]->pos;
+		mm.Vector_Dot(&c, sv.Normalize(), this->Normal_Side);
+
+		//内積値が-90 < cos < 90の間はレンダリングをしない
+
+		if (c > _CMATH_::cosf(ML::ToRadian(89)))
+		{
+			return;
+		}
 
 		ML::Mat4x4 matS;
 		matS.Scaling(this->chipSize);
@@ -241,7 +259,7 @@ namespace  Map3d
 	//追加メソッド	
 	//あたっているかを返す関数	
 
-	void Object::Get_Collision_Poligon(std::vector<After_Collision>* result)
+	void Object::Get_Collision_Poligon(std::vector<After_Collision>* result) const
 	{
 		for (auto p : this->col_Poligons)
 		{
@@ -358,9 +376,8 @@ namespace  Map3d
 							ML::Vec3 distance = this->arr[z][y][x].Get_Pos() - pos;
 							auto ball = ge->GetTask_One_G<Ball::Object>("ボール");
 							ball->Teleportation(pos + (distance*0.01f));
-							//auto game = ge->GetTask_One_G<Game::Object>("ゲーム");							
-							ge->game.lock()->Game_Clear();
 							
+							ge->game.lock()->Game_Clear();							
 						}
 						break;
 					//扉はテレポート
@@ -415,8 +432,6 @@ namespace  Map3d
 	//回転させる
 	void Object::Map_Rotate()
 	{
-			
-
 		for (int y = 0; y < this->sizeY; y++)
 		{
 			for (int z = 0; z < this->sizeZ; z++)
@@ -457,6 +472,12 @@ namespace  Map3d
 	void Object::UpDate_Quartanion(const ML::QT& qt)
 	{
 		this->map_QT *= qt;
+
+		//法線ベクトルも回転量に応じて同じく回転を行う
+		ML::Mat4x4 matR;
+		D3DXMatrixAffineTransformation(&matR, 1.0f, NULL, &qt, NULL);
+
+		this->Normal_Side = matR.TransformNormal(this->Normal_Side);
 	}
 	//★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★
 	//以下は基本的に変更不要なメソッド

@@ -175,7 +175,7 @@ namespace  Ball
 		//Šgks—ñ
 		matS.Scaling(this->r);
 		//‰ñ“]s—ñ
-		matR.RotationAxis(this->speed.Normalize(), ML::ToRadian(this->rot));
+		matR.RotationAxis(this->pos, ML::ToRadian(this->rot));
 		DG::EffectState().param.matWorld = matS * matR * matT;
 		DG::Mesh_Draw(this->res->meshName);
 	}

@@ -34,7 +34,7 @@ namespace  Map_Manager
 		this->res = Resource::Create();
 
 		//★データ初期化	
-		easing::Init();
+		
 
 		this->frame_QTxp = ML::QT(0.0f);
 		this->frame_QTxm = ML::QT(0.0f);
@@ -171,31 +171,31 @@ namespace  Map_Manager
 					easing::Reset("Decrese_StickVolumeYP");
 					easing::Start("Decrese_StickVolumeYP");
 				}
-				if (in1.RStick.axis.x <0)
+				if (in1.Triger.axis.x <0)
 				{
 					easing::Reset("Decrese_StickVolumeZM");
 					easing::Start("Decrese_StickVolumeZM");
 				}
-				else if (in1.RStick.axis.x >0)
+				else if (in1.Triger.axis.x >0)
 				{
 					easing::Reset("Decrese_StickVolumeZP");
 					easing::Start("Decrese_StickVolumeZP");
 				}
 			}
 			//easingデータが回転量で更新される
-			this->frame_QTxp = ML::QT(ML::Vec3(1, 0, 0), ML::ToRadian(-(easing::GetPos("Decrese_StickVolumeXM")*in1.LStick.volume)  / (float)delicate));
+			this->frame_QTxp = ML::QT(ML::Vec3(1, 0, 0), ML::ToRadian(-(easing::GetPos("Decrese_StickVolumeXM"))  / (float)delicate));
 						
-			this->frame_QTxm = ML::QT(ML::Vec3(1, 0, 0), ML::ToRadian((easing::GetPos("Decrese_StickVolumeXP")*in1.LStick.volume) / (float)delicate));
+			this->frame_QTxm = ML::QT(ML::Vec3(1, 0, 0), ML::ToRadian((easing::GetPos("Decrese_StickVolumeXP")) / (float)delicate));
 			
 			
-			this->frame_QTym = ML::QT(ML::Vec3(0, 1, 0), ML::ToRadian(-(easing::GetPos("Decrese_StickVolumeYM")*in1.LStick.volume) / (float)delicate));
+			this->frame_QTym = ML::QT(ML::Vec3(0, 1, 0), ML::ToRadian(-(easing::GetPos("Decrese_StickVolumeYM")) / (float)delicate));
 
-			this->frame_QTyp = ML::QT(ML::Vec3(0, 1, 0), ML::ToRadian((easing::GetPos("Decrese_StickVolumeYP")*in1.LStick.volume) / (float)delicate));
+			this->frame_QTyp = ML::QT(ML::Vec3(0, 1, 0), ML::ToRadian((easing::GetPos("Decrese_StickVolumeYP")) / (float)delicate));
 						
 			
-			this->frame_QTzm = ML::QT(ML::Vec3(0, 0, 1), ML::ToRadian(-(easing::GetPos("Decrese_StickVolumeZM")*in1.RStick.volume) / (float)delicate));
+			this->frame_QTzm = ML::QT(ML::Vec3(0, 0, 1), ML::ToRadian(-(easing::GetPos("Decrese_StickVolumeZM")) / (float)delicate));
 
-			this->frame_QTzp = ML::QT(ML::Vec3(0, 0, 1), ML::ToRadian((easing::GetPos("Decrese_StickVolumeZP")*in1.RStick.volume) / (float)delicate));
+			this->frame_QTzp = ML::QT(ML::Vec3(0, 0, 1), ML::ToRadian((easing::GetPos("Decrese_StickVolumeZP")) / (float)delicate));
 				
 			
 

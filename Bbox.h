@@ -14,7 +14,7 @@ enum BoxType
 	Goal = 2, //ゴール位置
 	Teleportaion = 3, //テレポーテーション
 	LightSwitch = 4, //ライトのスイッチ//スイッチは絶対に行き止まりに設置しない
-	Obstacle3 = 5, //障害物０番(未定)
+	Obstacle3 = 5, //障害物3番(未定)
 
 	Core = 40, //真ん中のでかいキューブ
 	Barrier = 50, //外に飛ばさないようにする透明な壁
@@ -56,7 +56,9 @@ public:
 	bool Player_Turnoff_the_Switch(const ML::Vec3& pos, const float& r, const ML::Vec3 speed);
 
 	//コンストラクタ・デストラクタ
+	//引数なしコンストラクタ(ゼロクリア)
 	Bbox();
+	//引数 : (箱のタイプ,位置,あたり判定矩形,初期回転量)
 	Bbox(BoxType chip, ML::Vec3 pos, ML::Box3D base, ML::QT qt);
 	~Bbox(){}
 };

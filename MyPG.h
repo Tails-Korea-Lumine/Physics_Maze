@@ -90,7 +90,7 @@ namespace  MyPG
 		bool getReadyFlag;
 
 		//ワールド回転量
-		ML::QT World_Rotation; 
+		//ML::QT World_Rotation; 
 		//マップ全体の中心
 		ML::Vec3 Map_center;
 		//あたり判定の結果

@@ -89,6 +89,7 @@ namespace DI
 	struct  VGamePad {
 		StickInfo  LStick;
 		StickInfo  RStick;
+		StickInfo  Triger;
 		ButtonInfo  B1;
 		ButtonInfo  B2;
 		ButtonInfo  B3;
@@ -149,6 +150,7 @@ namespace DI
 		const string	name_,
 		const AnalogAxisKB	axisL_,
 		const AnalogAxisKB	axisR_,
+		const AnalogAxisKB  triger,
 		const KeyDatas_KB		button_);
 	//ゲームパッドでデバイス生成
 	void  GPad_CreateGP(
@@ -160,6 +162,7 @@ namespace DI
 		const string	name_,
 		const AnalogAxisKB	axisL_,
 		const AnalogAxisKB	axisR_,
+		const AnalogAxisKB  triger,
 		const KeyDatas_KB		buttonK_,
 		const DWORD			id_,
 		const KeyDatas_GP		buttonG_);

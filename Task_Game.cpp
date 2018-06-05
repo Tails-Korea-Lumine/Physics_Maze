@@ -12,7 +12,6 @@
 #include  "Task_Result.h"
 #include  "Task_UI.h"
 #include  "Task_CameraMan.h"
-#include  "easing.h"
 
 namespace  Game
 {
@@ -52,9 +51,10 @@ namespace  Game
 		this->render2D_Priority[1] = 1.0f;
 		ge->gameClearFlag = false;
 		ge->getReadyFlag = true;
-		//easing list初期化
-		easing::Init();
-		//★タスクの生成		
+		
+		//★タスクの生成
+		//UIの生成
+		auto ui = UI::Object::Create(true);
 
 		//カメラマンを生成
 		auto cameraman = CameraMan::Object::Create(true);
@@ -65,9 +65,7 @@ namespace  Game
 		//bgm再生
 		DM::Sound_Play(this->res->bgmName, true);
 
-		//ワールド回転量初期化
-		ge->World_Rotation = ML::QT();
-
+		
 		//背景の角度を初期化
 		this->angleY = 0.0f;
 
@@ -75,6 +73,7 @@ namespace  Game
 		ge->Map_center = ML::Vec3(1050, 50, 1050);
 		//判定の結果をゼロクリア
 		ge->collision_Result.clear();
+
 		//ボールの生成
 		auto ball = Ball::Object::Create(true);
 		//中心の元なるキューブ
@@ -96,10 +95,6 @@ namespace  Game
 		//エフェクトマネージャー生成
 		ge->eff_Manager = EffectManager::Object::Create(true);
 		
-		
-
-		//UIの生成
-		auto ui = UI::Object::Create(true);
 
 		return  true;
 	}
@@ -132,7 +127,7 @@ namespace  Game
 	{
 		//auto in = DI::GPad_GetState("P1");
 
-		if (this->IS_Cleared())
+		if (this->Start_Clear_Promotion())
 		{
 			ge->KillAll_G("ボール");
 			ge->GetTask_One_G<UI::Object>("UI")->Start_WipeIn();
@@ -154,7 +149,7 @@ namespace  Game
 		//始まる前の演出が終わったら準備中フラグを無効にする
 		if (!this->GET_READY())
 		{
-			if (this->timeCnt > 480)
+			if (this->Is_Camera_Promotion_Over())
 			{
 				ge->getReadyFlag = false;
 				this->timeCnt = 0;
@@ -162,7 +157,7 @@ namespace  Game
 		}
 		//時間を更新
 		this->timeCnt++;
-		//角度更新
+		//背景角度更新
 		this->angleY += 0.04f;
 	}
 	//-------------------------------------------------------------------
@@ -239,6 +234,20 @@ namespace  Game
 	{
 		return (this->countdown > 130);
 	}
+	//---------------------------------------------------------------------------
+	//ゲームクリア演出を始める
+	bool Object::Start_Clear_Promotion()
+	{
+		return (this->IS_Cleared() && this->countdown == 0);
+	}
+
+	//------------------------------------------------------------------------------
+	//カメラ演出が終わったのかを確認
+	bool Object::Is_Camera_Promotion_Over()
+	{
+		return this->timeCnt > 420;
+	}
+
 	//★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★
 	//以下は基本的に変更不要なメソッド
 	//★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★

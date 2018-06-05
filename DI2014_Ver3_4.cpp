@@ -142,8 +142,9 @@ namespace DI_
 		vector<sKeyParam>     buttons;
 		vector<DWORD>         kbAxisL;	//キーボード専用方向キー
 		vector<DWORD>         kbAxisR;	//キーボード専用方向キー
+		vector<DWORD>		  kbAxisTriger;
 		vector<DWORD>         kbPov4;	//キーボード専用POVキー
-		StickInfo         ls, rs;
+		StickInfo         ls, rs, triger;
 
 		Input();
 		bool  Initialize(
@@ -151,6 +152,7 @@ namespace DI_
 			DWORD         id_,
 			AnalogAxisKB* axisL_,
 			AnalogAxisKB* axisR_,
+			AnalogAxisKB*   triger,
 			DWORD         numButton_,
 			KeyDataKB     buttonKB_[],
 			KeyDataGP     buttonGP_[]);
@@ -162,7 +164,7 @@ namespace DI_
 		bool  CheckBT(But::Type  kk_, KS::Type  ks_);	//検出するボタンの状態
 		bool  CheckStickL(Axis::Type  kk_, KS::Type  ks_);
 		bool  CheckStickR(Axis::Type  kk_, KS::Type  ks_);
-
+		bool  CheckStickTriger(Axis::Type  kk_, KS::Type  ks_);
 
 	public:
 		~Input();
@@ -172,6 +174,7 @@ namespace DI_
 		static  SP  CreateKB(
 			AnalogAxisKB	axisL_,
 			AnalogAxisKB	axisR_,
+			AnalogAxisKB    triger,
 			DWORD			numButton_,
 			KeyDataKB	button_[]);
 		static  SP  CreateGP(
@@ -189,6 +192,7 @@ namespace DI_
 		//	アナログスティックの入力を得る
 		StickInfo  StickL();
 		StickInfo  StickR();
+		StickInfo  Triger();
 
 		//	アナログスティックの４方向をボタンに見立てて使用する
 		//	ボタンのＯＮ　ＯＦＦでしかないのでアナログの情報にはならない
@@ -201,6 +205,12 @@ namespace DI_
 		bool  StickR_Down(Axis::Type  kk_);
 		bool  StickR_Up(Axis::Type  kk_);
 
+		//アナログトリガー
+		bool Triger_On(Axis::Type  kk_);
+		bool Triger_Off(Axis::Type  kk_);
+		bool Triger_Down(Axis::Type  kk_);
+		bool Triger_Up(Axis::Type  kk_);
+
 
 	private:
 		static  SP  Create(
@@ -208,6 +218,7 @@ namespace DI_
 			DWORD			id_,
 			AnalogAxisKB*	axisL_,
 			AnalogAxisKB*	axisR_,
+			AnalogAxisKB*   triger,
 			DWORD			numButton_,
 			KeyDataKB		buttonKB_[],
 			KeyDataGP		buttonGP_[]);
@@ -323,6 +334,7 @@ namespace DI_
 			DWORD				id_,
 			AnalogAxisKB*	axisL_,
 			AnalogAxisKB*	axisR_,
+			AnalogAxisKB*   triger,
 			DWORD				numButton_,
 			KeyDataKB		buttonKB_[],
 			KeyDataGP		buttonGP_[])
@@ -331,6 +343,7 @@ namespace DI_
 		StickInfo  w = { 0.0f, 0.0f, ML::Vec2(0, 0), KS::Off, KS::Off, KS::Off, KS::Off };
 		ls = w;
 		rs = w;
+		this->triger = w;
 
 		Obj::SP dii = Obj::GetInst( );
 		if(dii == 0){	return false; }
@@ -352,6 +365,13 @@ namespace DI_
 			kbAxisR.push_back(axisR_->vKeyR);
 			kbAxisR.push_back(axisR_->vKeyU);
 			kbAxisR.push_back(axisR_->vKeyD);
+		}
+		if (triger)
+		{
+			kbAxisTriger.push_back(triger->vKeyL);
+			kbAxisTriger.push_back(triger->vKeyR);
+			kbAxisTriger.push_back(triger->vKeyU);
+			kbAxisTriger.push_back(triger->vKeyD);
 		}
 
 		if(buttonKB_){
@@ -381,13 +401,14 @@ namespace DI_
 			DWORD				id_,
 			AnalogAxisKB*		axisL_,
 			AnalogAxisKB*		axisR_,
+			AnalogAxisKB*       triger,
 			DWORD				numButton_,
 			KeyDataKB			buttonKB_[],
 			KeyDataGP			buttonGP_[])
 	{
 		auto sp = SP(new Input( ));
 		if(sp){
-			if( sp->Initialize(dk_,  id_,  axisL_,  axisR_,  numButton_,  buttonKB_,  buttonGP_) )
+			if( sp->Initialize(dk_,  id_,  axisL_,  axisR_, triger,  numButton_,  buttonKB_,  buttonGP_) )
 			{
 				return sp;
 			}
@@ -398,21 +419,24 @@ namespace DI_
 	Input::SP Input::CreateKB(
 				AnalogAxisKB		axisL_,
 				AnalogAxisKB		axisR_,
+				AnalogAxisKB        triger,
 				DWORD				numButton_,
 				KeyDataKB			button_[])
 	{
 		AnalogAxisKB*  aL = nullptr;
 		AnalogAxisKB*  aR = nullptr;
+		AnalogAxisKB*  T = nullptr;
 		if(axisL_.vKeyL && axisL_.vKeyR && axisL_.vKeyU && axisL_.vKeyD){	aL = &axisL_;} 
-		if(axisR_.vKeyL && axisR_.vKeyR && axisR_.vKeyU && axisR_.vKeyD){	aR = &axisR_;} 
-		return  Create(KeyBoard,  0,  aL,  aR,  numButton_,  button_,  nullptr);
+		if(axisR_.vKeyL && axisR_.vKeyR && axisR_.vKeyU && axisR_.vKeyD){	aR = &axisR_;}
+		if (triger.vKeyL && triger.vKeyR && triger.vKeyU && triger.vKeyD) { T = &triger; }
+		return  Create(KeyBoard,  0,  aL,  aR, T,  numButton_,  button_,  nullptr);
 	}
 	Input::SP Input::CreateGP(
 				DWORD				id_,
 				DWORD				numButton_,
 				KeyDataGP		button_[])
 	{
-		return Create(GamePad,  id_,  nullptr,  nullptr,  numButton_,  nullptr,  button_);
+		return Create(GamePad,  id_,  nullptr,  nullptr, nullptr,  numButton_,  nullptr,  button_);
 	}
 	Input::SP Input::Link(Input::SP a, Input::SP b)
 	{
@@ -520,10 +544,23 @@ namespace DI_
 			if(keyStatus[kbAxisR[2]] != 0){	ay_R -= 1;}
 			if(keyStatus[kbAxisR[3]] != 0){	ay_R += 1;}
 		}
+		float ax_Tri = 0, ay_Tri = 0;
+
+		if (kbAxisTriger.size() == 4)
+		{
+			if (keyStatus[kbAxisTriger[0]] != 0) { ax_Tri -= 1; }
+			if (keyStatus[kbAxisTriger[1]] != 0) { ax_Tri += 1; }
+			if (keyStatus[kbAxisTriger[2]] != 0) { ay_Tri -= 1; }
+			if (keyStatus[kbAxisTriger[3]] != 0) { ay_Tri += 1; }
+		}
 
 		//LRスティック情報更新
 		SIUpdate(ls,  ax_L,  ay_L);
 		SIUpdate(rs,  ax_R,  ay_R);
+
+		//トリガー情報更新(XBOXの場合)
+		SIUpdate(triger, ax_Tri, ay_Tri);
+
 		//　ボタンとして登録されたキーへの対応
 		for(auto it = begin(buttons); it != end(buttons); ++it){
 			it->state  =  UpdateButtonState(keyStatus[it->dKey] != 0,  it->state);
@@ -552,6 +589,11 @@ namespace DI_
 	bool  Input::StickR_Off(Axis::Type  kk_){  return  this->CheckStickR(kk_, KS::Off); }
 	bool  Input::StickR_Down(Axis::Type  kk_){ return  this->CheckStickR(kk_, KS::Down); }
 	bool  Input::StickR_Up(Axis::Type  kk_){   return  this->CheckStickR(kk_, KS::Up); }
+	
+	bool  Input::Triger_On(Axis::Type kk_) { return this->CheckStickTriger(kk_, KS::On); }
+	bool  Input::Triger_Off(Axis::Type kk_) { return this->CheckStickTriger(kk_, KS::Off); }
+	bool  Input::Triger_Down(Axis::Type kk_) { return this->CheckStickTriger(kk_, KS::Down); }
+	bool  Input::Triger_Up(Axis::Type kk_) { return this->CheckStickTriger(kk_, KS::Up); }
 
 	bool Input::CheckStickL(Axis::Type  kk_, KS::Type  ks_)
 	{
@@ -572,6 +614,16 @@ namespace DI_
 		else if(kk_  ==  Axis::D){	w  =  StickR( ).yp;}
 		else{						return  false;}
 		return  KeyCheck(w,  ks_);
+	}
+	bool Input::CheckStickTriger(Axis::Type  kk_, KS::Type  ks_)
+	{
+		KS::Type   w;
+		if (kk_ == Axis::L) { w = Triger().xm; }
+		else if (kk_ == Axis::R) { w = Triger().xp; }
+		else if (kk_ == Axis::U) { w = Triger().ym; }
+		else if (kk_ == Axis::D) { w = Triger().yp; }
+		else { return  false; }
+		return  KeyCheck(w, ks_);
 	}
 
 	StickInfo  Input::StickL()
@@ -596,11 +648,26 @@ namespace DI_
 		}
 		return me;
 	}
+	StickInfo  Input::Triger()
+	{
+		StickInfo  me = this->triger;
+		StickInfo  linkRtv;
+		if (link != nullptr) 
+		{
+			linkRtv = link->Triger();
+			if (me.volume  <  linkRtv.volume) 
+			{
+				return linkRtv; 
+			}
+		}
+		return me;
+	}
 	void  Input::CheckUnNon()
 	{
 		//アナログスティック対応
 		SIUpdate(ls, 0, 0);
 		SIUpdate(rs, 0, 0);
+		SIUpdate(triger, 0, 0);
 
 		//ボタンへの対応
 		for (auto it = begin(buttons); it != end(buttons); ++it)
@@ -632,7 +699,8 @@ namespace DI_
 		}
 		//アナログスティック対応
 		SIUpdate(ls,  js.lX * digToAnalog,  js.lY  * digToAnalog);
-		SIUpdate(rs,  js.lZ * digToAnalog,  js.lRz * digToAnalog);
+		SIUpdate(triger,  js.lZ * digToAnalog, js.lZ * digToAnalog);
+		SIUpdate(rs, js.lRx*digToAnalog, js.lRy * digToAnalog);
 
 
 		//POV対応
@@ -1002,17 +1070,20 @@ namespace DI
 		const string		name_,
 		const AnalogAxisKB	axisL_,
 		const AnalogAxisKB	axisR_,
+		const AnalogAxisKB  triger,
 		const KeyDatas_KB	button_)
 	{
 		DI_::AnalogAxisKB  aL;
 		memcpy(&aL, &axisL_, sizeof(aL));
 		DI_::AnalogAxisKB  aR;
 		memcpy(&aR, &axisR_, sizeof(aR));
+		DI_::AnalogAxisKB  T;
+		memcpy(&T, &triger, sizeof(T));
 		auto  bt = new DI_::KeyDataKB[button_.size( )];
 		memcpy(bt, &button_[0], sizeof(DI_::KeyDataKB) * button_.size());
 
 
-		auto  w = DI_::Input::CreateKB(aL, aR, button_.size(), bt);
+		auto  w = DI_::Input::CreateKB(aL, aR, T, button_.size(), bt);
 		delete[] bt;
 		if (!w) { return; }
 		inputs[name_] = w;
@@ -1036,6 +1107,7 @@ namespace DI
 		const string	name_,
 		const AnalogAxisKB	axisL_,
 		const AnalogAxisKB	axisR_,
+		const AnalogAxisKB  triger,
 		const KeyDatas_KB	buttonK_,
 		const DWORD			id_,
 		const KeyDatas_GP	buttonG_)
@@ -1044,13 +1116,15 @@ namespace DI
 		memcpy(&aL, &axisL_, sizeof(aL));
 		DI_::AnalogAxisKB  aR;
 		memcpy(&aR, &axisR_, sizeof(aR));
+		DI_::AnalogAxisKB  T;
+		memcpy(&T, &triger, sizeof(T));
 		auto  btK = new DI_::KeyDataKB[buttonK_.size()];
 		memcpy(btK, &buttonK_[0], sizeof(DI_::KeyDataKB) * buttonK_.size());
 
 		auto  btG = new DI_::KeyDataGP[buttonG_.size()];
 		memcpy(btG, &buttonG_[0], sizeof(DI_::KeyDataGP) * buttonG_.size());
 
-		auto  w1 = DI_::Input::CreateKB(aL, aR, buttonK_.size(), btK);
+		auto  w1 = DI_::Input::CreateKB(aL, aR, T, buttonK_.size(), btK);
 		delete[] btK;
 		auto  w2 = DI_::Input::CreateGP(id_, buttonG_.size(), btG);
 		delete[] btG;
@@ -1097,6 +1171,15 @@ namespace DI
 			rtv.RStick.R = ConvertKS(rs.xp);
 			rtv.RStick.U = ConvertKS(rs.ym);
 			rtv.RStick.D = ConvertKS(rs.yp);
+
+			auto triger = it->second->Triger();
+			rtv.Triger.angle = triger.angle;
+			rtv.Triger.volume = triger.volume;
+			rtv.Triger.axis = triger.axis;
+			rtv.Triger.L = ConvertKS(triger.xm);
+			rtv.Triger.R = ConvertKS(triger.xp);
+			rtv.Triger.U = ConvertKS(triger.ym);
+			rtv.Triger.D = ConvertKS(triger.yp);
 
 			rtv.B1 = ConvertKS(it->second->CheckBT(DI_::But::B1));
 			rtv.B2 = ConvertKS(it->second->CheckBT(DI_::But::B2));

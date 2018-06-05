@@ -55,15 +55,25 @@ namespace Result
 	
 		//追加したい変数・メソッドはここに追加する
 		//変数
+		//点数
 		int score;
+		//時間確認変数
 		int timeCnt;
+		//数字表
 		ML::Box2D src_Number[10];
 		//タスク消滅までのカウンタとフラグ
 		int countdown;
 		bool countdownFlag;
+
 	public:
 		//メソッド
-		void Draw_Score();
+		//点数描画
+		void Draw_Score() const;
+		//カウントダウン中なのかを確認する
 		bool Is_Count_Down() const;
+		//カウントダウンが終わったのかを確認する
+		bool Is_Count_Down_Over() const;
+		//引数ぐらいの時間がたったのかを確認する
+		bool Is_Over_Argument_Seconds(const int sec) const;
 	};
 }

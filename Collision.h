@@ -27,20 +27,20 @@ class Collision : public MyMath
 {
 private:
 	//SUKAプログラムのBox3dから12個の三角形を取り出す
-	void Get_Triangle_Box3D(std::vector<Triangle>* result, const ML::Box3D& box, const ML::QT& rotation);
+	void Get_Triangle_Box3D(std::vector<Triangle>* result, const ML::Box3D& box, const ML::QT& rotation) const;
 	//ボールの座標から6個の頂点を取り出す
-	void Get_Poionts_to_Sphere(std::vector<ML::Vec3>* result, const ML::Vec3& pos, const float& r);
+	void Get_Poionts_to_Sphere(std::vector<ML::Vec3>* result, const ML::Vec3& pos, const float& r) const;
 	//Box3dと球体の最短距離の点を取る 引数 : (ボックスのあたり判定範囲, 球の中心, 半直径)
-	void Get_ShortisetPoints_BoxtoSphere(std::vector<ML::Vec3>* result, const ML::Box3D& box, const ML::Vec3& pos, const float& r);
+	void Get_ShortisetPoints_BoxtoSphere(std::vector<ML::Vec3>* result, const ML::Box3D& box, const ML::Vec3& pos, const float& r) const;
 	//一個の点と三角形の衝突判定を行う
-	bool Check_Collision(const Triangle& tri, const ML::Vec3& p);
+	bool Check_Collision(const Triangle& tri, const ML::Vec3& p) const;
 
 public:
 	//実際ほかのプログラムで呼び出す関数
 
 	//球体と立方体衝突判定関数
 	//引数：(結果を保存するstd::vectorのアドレス、判定するマス、ボールの位置、ボールの直径の半分、ボールの移動ベクトル、ワールド回転量)
-	bool Hit_Check(std::vector<After_Collision>* result, const ML::Box3D& box, const ML::Vec3& pos,const float& r , const ML::Vec3& speed, const ML::QT& worldR);
+	bool Hit_Check(std::vector<After_Collision>* result, const ML::Box3D& box, const ML::Vec3& pos, const float& r, const ML::Vec3& speed, const ML::QT& worldR) const;
 	
 	
 };

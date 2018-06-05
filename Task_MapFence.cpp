@@ -244,7 +244,7 @@ namespace  MapFence
 	//’Ç‰Áƒƒ\ƒbƒh	
 	//‚ ‚½‚Á‚Ä‚¢‚é‚©‚ğ•Ô‚·ŠÖ”	
 
-	void Object::Get_Collision_Poligon(std::vector<After_Collision>* result)
+	void Object::Get_Collision_Poligon(std::vector<After_Collision>* result) const
 	{
 		for (auto p : this->col_Poligons)
 		{

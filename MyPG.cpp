@@ -10,7 +10,7 @@ namespace MyPG
 		1080,							//	画面サイズY
 		1,								//	表示倍率
 		1,								//	マルチサンプル(1or2or4)
-		true,							//	フルスクリーンモード
+		false,							//	フルスクリーンモード
 		480,							//	2D描画用解像度X(現在非対応）
 		270,							//	2D描画用解像度Y(現在非対応）
 		"SPINNING CUBE",				//	ウインドウタイトル
@@ -66,6 +66,7 @@ namespace MyPG
 		//キーボードパラメータ
 		DI::AnalogAxisKB	ls = { DIK_LEFT, DIK_RIGHT, DIK_UP, DIK_DOWN };
 		DI::AnalogAxisKB	rs = { DIK_NUMPAD6, DIK_NUMPAD4, DIK_NUMPAD8, DIK_NUMPAD2 };
+		DI::AnalogAxisKB	triger = { DIK_E, DIK_R,DIK_9,DIK_0 };
 		DI::KeyDatas_KB	 key = {
 			{ DIK_Z, DI::But::B1 },{ DIK_X, DI::But::B2 },{ DIK_C, DI::But::B3 },
 			{ DIK_V, DI::But::B4 },{ DIK_A, DI::But::SE },{ DIK_S, DI::But::ST },
@@ -84,7 +85,8 @@ namespace MyPG
 			{ DI::GPB::HSU, DI::But::HU },{ DI::GPB::HSD, DI::But::HD },
 			{ DI::GPB::HSL, DI::But::HL },{ DI::GPB::HSR, DI::But::HR },
 		};
-		DI::GPad_CreateKBGP("P1", ls, rs, key, 1, but);
+		//razer raijuの時は番号を1番に初期化すること
+		DI::GPad_CreateKBGP("P1", ls, rs, triger, key, 1, but);
 
 
 		//背景色の設定（デフォルト）

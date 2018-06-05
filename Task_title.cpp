@@ -105,9 +105,7 @@ namespace  Title
 		this->next_Task_Index = { 0,0 };
 		this->moving_Menu = 0;
 		this->moving_Title_Name = 0;
-		this->n = nowMenu::Start_Tutorial;
-		//easing list初期化
-		easing::Init();
+		this->n = nowMenu::Start_Tutorial;		
 
 		for (int i = 0; i < 12; i++)
 		{
@@ -200,7 +198,8 @@ namespace  Title
 			switch(n)						
 			{
 			case nowMenu::Start_Tutorial:
-				this->moving_Menu -= 22;
+				//60フレームで全部移動できるような移動量
+				this->moving_Menu -= (int)ge->screenWidth / 60;
 				if (this->moving_Menu < 0)
 				{
 					this->moving_Menu = 0;
@@ -208,7 +207,8 @@ namespace  Title
 				break;
 			case nowMenu::difficult:
 			case nowMenu::TutorialCalum:
-				this->moving_Menu += 22;
+				//60フレームで全部移動できるような移動量
+				this->moving_Menu += (int)ge->screenWidth / 60;
 				if (this->moving_Menu > (int)ge->screenWidth)
 				{
 					this->moving_Menu = (int)ge->screenWidth;
@@ -219,10 +219,10 @@ namespace  Title
 			this->moving_Title_Name += 6;
 		}
 
-				
+		//時間上昇
 		this->timeCnt++;
+
 		//カウンタの上限指定		
-		
 		if (this->moving_Title_Name > 110)
 		{
 			this->moving_Title_Name = 110;
@@ -232,14 +232,24 @@ namespace  Title
 	//「２Ｄ描画」１フレーム毎に行う処理
 	void  Object::Render2D_AF()
 	{		
-
+		//イメージサイズをもらう
+		POINT size_BG = DG::Image_Size(this->res->BG_ImageName);
+		//背景を描画する領域
 		ML::Box2D draw_BG(0, 0, ge->screenWidth, ge->screenHeight);
-		ML::Box2D src_BG(0, 0, 1280, 960);
+		//イメージから取る範囲
+		ML::Box2D src_BG(0, 0, size_BG.x, size_BG.y);
+		//背景描画
 		DG::Image_Draw(this->res->BG_ImageName, draw_BG, src_BG);
-		this->Draw_Title_Name();
-		this->Draw_PAK();
+
+		//2Dの描画関数を呼ぶ
+		this->Draw_Title_Name();		
 		this->Draw_Menu();
 		this->Draw_Dif_Col(this->n);
+
+		if (this->Is_Need_to_Draw_PAK())
+		{
+			this->Draw_PAK();
+		}
 	}
 
 	void  Object::Render3D_L0()
@@ -249,16 +259,16 @@ namespace  Title
 	//----------------------------------------------------------------------------------
 	//----------------------------------------------------------------------------------
 	//追加メソッド
-	//スティック以外のボタンを押すのかを判別
-	bool Object::Press_Any_Key()
+	bool Object::Press_Any_Key() const
 	{
 		auto in1 = DI::GPad_GetState("P1");
-
+		//ゲームパッドから入力をもらえるすべてのものを確認
 		if (in1.B1.down || in1.B2.down || in1.B3.down || in1.B4.down ||
 			in1.HD.down || in1.HL.down || in1.HR.down || in1.HU.down ||
 			in1.L1.down || in1.L2.down || in1.L3.down ||
 			in1.R1.down || in1.R2.down || in1.R3.down ||
-			in1.SE.down || in1.ST.down)
+			in1.SE.down || in1.ST.down || 
+			in1.LStick.volume !=0 || in1.RStick.volume !=0 || in1.Triger.volume !=0)
 		{
 			return true;
 		}
@@ -267,7 +277,7 @@ namespace  Title
 	}
 	//-------------------------------------------------------------------------------
 	//タイトル名を表示
-	void Object::Draw_Title_Name()
+	void Object::Draw_Title_Name() const
 	{
 		ML::Box2D draw(0, 0, 100, 100);
 		ML::Box2D src(0, 0, 140, 140);
@@ -282,7 +292,7 @@ namespace  Title
 	//タイトル名の位置を更新
 	void Object::UpDate_Title_Name()
 	{
-		//X座標更新
+		
 		/*this->Title_Name[0].x = easing::GetPos("Title_0_x");
 		this->Title_Name[1].x = easing::GetPos("Title_1_x");
 		this->Title_Name[2].x = easing::GetPos("Title_2_x");
@@ -293,11 +303,12 @@ namespace  Title
 		this->Title_Name[7].x = easing::GetPos("Title_7_x");
 		this->Title_Name[8].x = easing::GetPos("Title_8_x");*/
 
+		//X座標更新
 		for (int i = 0; i < 12; i++)
 		{
 			this->Title_Name[i].x = easing::GetPos("Title_x" + to_string(i));
 		}
-
+		//Y座標更新
 		for (int i = 0; i < 12; i++)
 		{			
 			switch (i%2)
@@ -314,38 +325,55 @@ namespace  Title
 	}
 	//----------------------------------------------------------------------------------
 	//press any key を表示
-	void Object::Draw_PAK()
-	{
-		if (this->timeCnt < 200 || this->select_now)
-		{
-			return;
-		}
-		ML::Box2D draw(250, 500, 750, 100);
-		ML::Box2D src(0, 0, 900, 140);
+	void Object::Draw_PAK() const
+	{		
+		ML::Box2D draw((int)(ge->screenWidth/2)-375, (int)ge->screenHeight/2, 750, 100);
+		//画像全体サイズ
+		POINT size_Pak = DG::Image_Size(this->res->press_Any_Key_Image);
+		ML::Box2D src(0, 0, size_Pak.x, size_Pak.y);
 
 		DG::Image_Draw(this->res->press_Any_Key_Image, draw, src);
 	}
 
 	//---------------------------------------------------------------------
 	//メニューの表示
-	void Object::Draw_Menu()
+	void Object::Draw_Menu() const
 	{
+		//現在、メニュー選択中でないなら処理しない
 		if(!this->select_now)
 		{
 			return;
 		}
 
+		//start関連
+		//表示範囲
 		ML::Box2D draw_Start((ge->screenWidth/2)-200, (ge->screenHeight/2)-150, 380, 100);
-		ML::Box2D src_Start(0, 0, 420, 140);
+		//startイメージ全体サイズ
+		POINT size_Start = DG::Image_Size(this->res->start_Image);
+		//画像から取り出す範囲
+		ML::Box2D src_Start(0, 0, size_Start.x, size_Start.y);
+
+		//tutorial関連
+		//表示範囲
 		ML::Box2D draw_Tutorial((ge->screenWidth / 2) - 200, (ge->screenHeight / 2)-50, 520, 100);
-		ML::Box2D src_Tutorial(0, 0, 560, 140);		
+		//tutorialイメージ全体サイズ
+		POINT size_Tutorial = DG::Image_Size(this->res->tutorial_Image);
+		//画像から取り出す範囲
+		ML::Box2D src_Tutorial(0, 0, size_Tutorial.x, size_Tutorial.y);
 
+		//ボタンガイド関連
+		//表示範囲
 		ML::Box2D draw_Guide((ge->screenWidth/2)-300, (ge->screenHeight-100), 600, 50);
-		ML::Box2D src_Guide(0, 0, 2200, 140);
+		//ボタンガイドイメージの全体サイズ
+		POINT size_Guide = DG::Image_Size(this->res->select_Guide_Image);
+		//画像から取り出す範囲
+		ML::Box2D src_Guide(0, 0, size_Guide.x, size_Guide.y);
 
+		//変数に合わせて表示範囲を更新
 		draw_Start.Offset(-this->moving_Menu, 0);
 		draw_Tutorial.Offset(-this->moving_Menu, 0);
 
+		//描画開始
 		DG::Image_Draw(this->res->start_Image, draw_Start, src_Start);
 		DG::Image_Draw(this->res->tutorial_Image, draw_Tutorial, src_Tutorial);
 		DG::Image_Draw(this->res->select_Guide_Image, draw_Guide, src_Guide);
@@ -353,19 +381,22 @@ namespace  Title
 
 	//-----------------------------------------------------------------------------
 	//難易度とテュートリアル目次の表示
-	void Object::Draw_Dif_Col(nowMenu now)
+	void Object::Draw_Dif_Col(nowMenu now) const
 	{
-		//表示範囲は画像を作った後に変更する(2018/05/04)
-		ML::Box2D draw_Dif_Col0((ge->screenWidth / 2) - 200 + ge->screenWidth, (ge->screenHeight / 2) - 150, 380, 100);//Easy and OutLine
-		ML::Box2D draw_Dif_Col1((ge->screenWidth / 2) - 200 + ge->screenWidth, (ge->screenHeight / 2) - 50, 380, 100);//Normal and Control
-		ML::Box2D draw_Dif_Col2((ge->screenWidth / 2) - 200 + ge->screenWidth, (ge->screenHeight / 2) + 50, 380, 100);//Hard and Obstacle
+		//表示範囲
+		ML::Box2D draw_Dif_Col0((ge->screenWidth / 2) - 200 + ge->screenWidth, (ge->screenHeight / 2) - 150, 380, 100);//Easy or OutLine
+		ML::Box2D draw_Dif_Col1((ge->screenWidth / 2) - 200 + ge->screenWidth, (ge->screenHeight / 2) - 50, 380, 100);//Normal or Control
+		ML::Box2D draw_Dif_Col2((ge->screenWidth / 2) - 200 + ge->screenWidth, (ge->screenHeight / 2) + 50, 380, 100);//Hard or Obstacle
 
 		//scrサイズは統一されている
 		ML::Box2D src_Dif_col0(0, 0, 700, 140);
 
+		//変数に合わせて表示範囲を更新
 		draw_Dif_Col0.Offset(-this->moving_Menu, 0);
 		draw_Dif_Col1.Offset(-this->moving_Menu, 0);
 		draw_Dif_Col2.Offset(-this->moving_Menu, 0);
+
+		//以前選択したものに合わせて描画処理を別にする
 		switch (now)
 		{
 		case nowMenu::difficult:
@@ -383,6 +414,7 @@ namespace  Title
 
 	//----------------------------------------------------------------------------
 	//次のタスクを決める関数
+	//カーソルの方で呼び出せる関数
 	void Object::I_Select(POINT select)
 	{
 		//-1ならゲーム本編
@@ -390,6 +422,19 @@ namespace  Title
 		this->next_Task_Index = select;
 
 		this->Kill();
+	}
+
+	//-----------------------------------------------------------------------------
+	//PAKを描画しなくてもいいのかを判別する
+	//(trueの時に描画する)
+	bool Object::Is_Need_to_Draw_PAK() const
+	{
+		//200フレーム以降まで何も押してないなら描画をする
+		if (this->timeCnt < 200 || this->select_now)
+		{
+			return false;
+		}
+		return true;
 	}
 	//★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★
 	//以下は基本的に変更不要なメソッド

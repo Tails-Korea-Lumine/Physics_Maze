@@ -63,8 +63,9 @@ namespace Map3d
 		int gimicCnt;
 		string chipName[10];
 
-
-		//ボールのほうに渡す情報
+		//法線ベクトル
+		ML::Vec3 Normal_Side;
+		//あたり判定結果を保存するvector
 		std::vector< After_Collision> col_Poligons;
 		//回転量
 		ML::QT map_QT;		
@@ -75,7 +76,7 @@ namespace Map3d
 		void Map_Check_Hit(const ML::Vec3& pos, const float& r, const ML::Vec3& speed);//球とマップのあたり判定
 		void Map_Rotate();
 		
-		void Get_Collision_Poligon(std::vector<After_Collision>* result);
+		void Get_Collision_Poligon(std::vector<After_Collision>* result) const;
 
 		//クォータニオンを更新する関数
 		void UpDate_Quartanion(const ML::QT& qt);

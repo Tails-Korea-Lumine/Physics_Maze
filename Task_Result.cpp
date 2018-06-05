@@ -39,6 +39,7 @@ namespace  Result
 		DG::Image_Erase(this->yourScore);
 		DG::Image_Erase(this->result);
 		DG::Image_Erase(this->Number_Image);
+		DG::Image_Erase(this->presS);
 
 		DM::Sound_Erase(this->bgmName);
 		return true;
@@ -54,9 +55,7 @@ namespace  Result
 
 		//★データ初期化
 		this->countdown = 0;
-		this->countdownFlag = false;
-		//easing list　初期化
-		easing::Init();
+		this->countdownFlag = false;		
 		//bgm再生
 		DM::Sound_Play(this->res->bgmName, true);
 
@@ -74,6 +73,7 @@ namespace  Result
 			break;
 		}
 		this->timeCnt = 0;
+		//数字表の情報初期化
 		for (int i = 0; i < 10; i++)
 		{
 			this->src_Number[i].x = (140 * i);
@@ -86,7 +86,7 @@ namespace  Result
 		
 		DG::EffectState().param.bgColor = ML::Color(1, 0, 0, 0);
 		//★タスクの生成
-
+		//Wipe In&OutのためにUIタスクを生成
 		UI::Object::Create(true);
 
 		return  true;
@@ -118,6 +118,7 @@ namespace  Result
 		{
 			this->countdownFlag = true;
 			ge->GetTask_One_G<UI::Object>("UI")->Start_WipeIn();
+			//強制的に画面情報が全部表示する時間にする
 			this->timeCnt = 300;
 		}
 		//フラグが立っている間にカウントダウンする
@@ -126,7 +127,7 @@ namespace  Result
 			this->countdown++;
 		}
 		//1秒後にタスク消滅
-		if (this->countdown > 60)
+		if (this->Is_Count_Down_Over())
 		{
 			this->Kill();
 		}
@@ -140,32 +141,44 @@ namespace  Result
 	{
 		//result
 		ML::Box2D draw_Result(30, 30, 400, 100);
-		ML::Box2D src_Result(0, 0, 500, 140);
+		//画像全体サイズ
+		POINT size_Result = DG::Image_Size(this->res->result);
+		ML::Box2D src_Result(0, 0, size_Result.x, size_Result.y);
+		//描画
 		DG::Image_Draw(this->res->result, draw_Result, src_Result);
 		//this time
-		if (this->timeCnt > 60)
+		if (this->Is_Over_Argument_Seconds(1))
 		{
 			ML::Box2D draw_ThisTime((ge->screenWidth/2), ge->screenHeight/4, 700, 140);
-			ML::Box2D src_ThisTime(0, 0, 700, 140);
+			//画像全体サイズ
+			POINT size_ThisTime = DG::Image_Size(this->res->thisTime);
+			ML::Box2D src_ThisTime(0, 0, size_ThisTime.x, size_ThisTime.y);
+			//描画
 			DG::Image_Draw(this->res->thisTime, draw_ThisTime, src_ThisTime);
 		}
 		//your score
-		if (this->timeCnt > 120)
+		if (this->Is_Over_Argument_Seconds(2))
 		{
 			ML::Box2D draw_YourScore((ge->screenWidth / 2), ge->screenHeight / 2, 770, 140);
-			ML::Box2D src_YourScore(0, 0, 770, 140);
+			//画像全体サイズ
+			POINT size_YourScore = DG::Image_Size(this->res->yourScore);
+			ML::Box2D src_YourScore(0, 0, size_YourScore.x, size_YourScore.y);
+			//描画
 			DG::Image_Draw(this->res->yourScore, draw_YourScore, src_YourScore);
 		}
 		//スコアー表示
-		if (this->timeCnt > 180)
+		if (this->Is_Over_Argument_Seconds(3))
 		{
 			this->Draw_Score();
 		}
 		//press S to return title
-		if (this->timeCnt > 240)
+		if (this->Is_Over_Argument_Seconds(4))
 		{
 			ML::Box2D draw_pressS((ge->screenWidth / 3), ge->screenHeight-100, 700, 70);
-			ML::Box2D src_pressS(0, 0, 1400, 140);
+			//画像全体サイズ
+			POINT size_PressS = DG::Image_Size(this->res->presS);
+			ML::Box2D src_pressS(0, 0, size_PressS.x, size_PressS.y);
+			//描画
 			DG::Image_Draw(this->res->presS, draw_pressS, src_pressS);
 		}
 
@@ -178,11 +191,12 @@ namespace  Result
 
 	//------------------------------------------------------------------------------------
 	//追加メソッド
-	void Object::Draw_Score()
+	void Object::Draw_Score() const
 	{
 		//数字一個のサイズ
 		int numSize = 140;
 
+		//点数の位置別に初期化
 		int score1000 = 0;
 		int score100 = 0;
 		int score10 = 0;
@@ -190,13 +204,14 @@ namespace  Result
 		//点数がマイナスなら０点で表示する
 		if (this->score > 0)
 		{
+			//0以上なら点数の要素を分解して代入
 			score1000 = this->score / 1000;
 			score100 = (this->score / 100) % 10;
 			score10 = (this->score / 10) % 10;
 			score1 = this->score % 10;
 		}
 
-
+		//表示範囲
 		ML::Box2D draw1000((ge->screenWidth/3), (ge->screenHeight/3)*2, numSize, numSize);
 		ML::Box2D draw100((ge->screenWidth / 3) + (numSize * 1), (ge->screenHeight / 3) * 2, numSize, numSize);
 		ML::Box2D draw10((ge->screenWidth / 3) + (numSize * 2), (ge->screenHeight / 3) * 2, numSize, numSize);
@@ -214,6 +229,20 @@ namespace  Result
 	bool Object::Is_Count_Down() const
 	{
 		return this->countdownFlag;
+	}
+	//----------------------------------------------------------------
+	//カウントダウンが終わったのかを確認
+	bool Object::Is_Count_Down_Over() const
+	{
+		//カウントダウンは1秒
+		return (this->countdown > 60);
+	}
+
+	//-----------------------------------------------------------------------
+	//引数ぐらいの時間がたったのかを確認する
+	bool Object::Is_Over_Argument_Seconds(const int sec) const
+	{
+		return (this->timeCnt > (60 * sec));
 	}
 	//★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★
 	//以下は基本的に変更不要なメソッド

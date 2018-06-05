@@ -241,7 +241,7 @@ namespace  Map_Core
 	
 	//-----------------------------------------------------------------------------------
 	//ほかのプログラムにあたり判定が終わったポリゴンを渡す関数
-	void Object::Get_Collision_Poligon(std::vector<After_Collision>* result)
+	void Object::Get_Collision_Poligon(std::vector<After_Collision>* result) const
 	{
 		for (auto p : this->col_Poligons)
 		{

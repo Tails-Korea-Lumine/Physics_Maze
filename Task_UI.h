@@ -84,7 +84,7 @@ namespace  UI
 		//–‹‚Ì•`‰æ
 		void Draw_Wipe_InOut();
 		//ŽžŠÔ‚Ì•`‰æ
-		void Draw_Time();
+		void Draw_Time() const;
 		//‰æ–Ê–¾‚©‚µ‚ðŽn‚ß‚é
 		void Start_WipeIn();		
 	};

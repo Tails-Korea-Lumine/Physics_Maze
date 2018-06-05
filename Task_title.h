@@ -69,28 +69,43 @@ namespace Title
 		bool  Finalize();		//「終了」タスク消滅時に１回だけ行う処理
 		void  Render3D_L0();
 		//変更可◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇
-	public:
+	
 		//追加したい変数・メソッドはここに追加する
 		//変数
 		//タイトル文字の移動および描画座標
 		ML::Vec2 Title_Name[12];
-
+		//メニュー選択中なのかを確認するフラグ
 		bool select_now;
+		//時間確認用のカウンタ
 		int timeCnt;
+		//メニューを左右に動かせる移動量
 		int moving_Menu;
+		//タイトル名を上に動かせる移動量
 		int moving_Title_Name;
+		//次に移動するタスクを決める変数
 		POINT next_Task_Index;
+		//現在メニュー
 		nowMenu n;
 
+	public:
 		//メソッド
-		bool Press_Any_Key();//スティック以外のボタンを押すのかを判別
+		//ゲームパッドから入力をもらえるすべてのものを確認
+		bool Press_Any_Key() const;
+		//PAKを描画しなくてもいいのかを判別する
+		bool Is_Need_to_Draw_PAK() const;
+		//タイトル名位置更新
 		void UpDate_Title_Name();
-		void Draw_Title_Name();
-		void Draw_PAK();
-		void Draw_Menu();
-		void Draw_Dif_Col(nowMenu now);
+		//タイトル名描画関数
+		void Draw_Title_Name() const;
+		//press any keyを描画
+		void Draw_PAK() const;
+		//メニューを描画
+		void Draw_Menu() const;
+		//2番目のメニュー(難易度またはテュートリアル目次)を描画
+		void Draw_Dif_Col(nowMenu now) const;
 
 		//次のタスクを決める関数
 		void I_Select(POINT select);
+		
 	};
 }
