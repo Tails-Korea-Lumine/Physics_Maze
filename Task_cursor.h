@@ -67,6 +67,10 @@ namespace Cursor
 		//タスク消滅までのカウンタとフラグ
 		int countdown;
 		bool countdownFlag;
+		//各メニューの範囲
+		//0番がmin、1番がmax
+		int first_Menu_Range[2];
+		int last_Menu_Range[2];
 
 	public:
 		//メソッド
@@ -77,5 +81,7 @@ namespace Cursor
 		bool Is_Count_Down() const;
 		//画面切り替えが終わったのかを確認
 		bool Count_Down_Over() const;
+		//選択処理
+		void Click();
 	};
 }

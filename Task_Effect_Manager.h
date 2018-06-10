@@ -45,19 +45,20 @@ namespace EffectManager
 		bool  Finalize();		//「終了」タスク消滅時に１回だけ行う処理
 		void  Render3D_L0();
 		//変更可◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇
-	public:
+	
 		//追加したい変数・メソッドはここに追加する
 		//変数
 		std::list<Effect*> efList;//現在動いているエフェクトリスト
 		
 
 		//メソッド
+		//全体のライフを1フレームに1ずつ減少させる
+		void Dec_Effect_Life();
 
+	public:
 		//外部からの追加命令
 		void Add_Effect(ML::Vec3 pos, ML::Vec3 angle, BEffect::effType handle);
-		void Add_Effect(ML::Vec3 pos,ML::Vec3 target, ML::Vec3 angle, BEffect::effType handle);
-		//全体のライフを1フレームに1ずつ減少させる
-		void Dec_Effect_Life();		
+		void Add_Effect(ML::Vec3 pos,ML::Vec3 target, ML::Vec3 angle, BEffect::effType handle);			
 
 	};
 }

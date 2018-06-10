@@ -9,6 +9,8 @@
 #include  "Task_Ball.h"
 #include "easing.h"
 
+#define PRECISION 5
+
 namespace  Map_Manager
 {
 	Resource::WP  Resource::instance;
@@ -81,7 +83,7 @@ namespace  Map_Manager
 	void  Object::UpDate()
 	{				
 		//マップに関することは全部マネージャ側でやる ver0.6
-		this->Managing_All_Map(5);
+		this->Managing_All_Map(PRECISION);
 		
 	}
 	//-------------------------------------------------------------------
@@ -196,18 +198,19 @@ namespace  Map_Manager
 			this->frame_QTzm = ML::QT(ML::Vec3(0, 0, 1), ML::ToRadian(-(easing::GetPos("Decrese_StickVolumeZM")) / (float)delicate));
 
 			this->frame_QTzp = ML::QT(ML::Vec3(0, 0, 1), ML::ToRadian((easing::GetPos("Decrese_StickVolumeZP")) / (float)delicate));
-				
-			
+
+			//フレーム回転量のまとめ				
+			ML::QT frame_QT_All = this->frame_QTxp * this->frame_QTxm * this->frame_QTyp * this->frame_QTym *this->frame_QTzm * this->frame_QTzp;
 
 			//各タスクの回転量を更新
-			core->UpDate_Quartanion(this->frame_QTxp * this->frame_QTxm * this->frame_QTyp * this->frame_QTym *this->frame_QTzm * this->frame_QTzp);
+			core->UpDate_Quartanion(frame_QT_All);
 			for (auto m = map->begin(); m != map->end(); m++)
 			{
-				(*m)->UpDate_Quartanion(this->frame_QTxp * this->frame_QTxm * this->frame_QTyp* this->frame_QTym *this->frame_QTzm * this->frame_QTzp);
+				(*m)->UpDate_Quartanion(frame_QT_All);
 			}
 			for (auto f = fence->begin(); f != fence->end(); f++)
 			{
-				(*f)->UpDate_Quartanion(this->frame_QTxp * this->frame_QTxm * this->frame_QTyp* this->frame_QTym *this->frame_QTzm * this->frame_QTzp);
+				(*f)->UpDate_Quartanion(frame_QT_All);
 			}
 			
 
@@ -262,7 +265,7 @@ namespace  Map_Manager
 			//位置補正を仕掛ける
 			if (ge->collision_Result.size() != 0)
 			{
-				ball->Fix_Position_for_Rotate(this->frame_QTxp * this->frame_QTxm * this->frame_QTyp* this->frame_QTym *this->frame_QTzm * this->frame_QTzp);
+				ball->Fix_Position_for_Rotate(frame_QT_All);
 			}
 
 			//ボールを移動させる

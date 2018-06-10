@@ -1,6 +1,6 @@
 #pragma once
 #pragma warning(disable:4996)
-#include "GameEngine_Ver3_7.h"
+#include "myLib.h"
 //瞬間移動を管理するクラス
 
 //ドアは1面あたり1個以下が存在して、全の数は偶数で存在する

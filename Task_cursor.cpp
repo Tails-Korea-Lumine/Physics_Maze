@@ -6,6 +6,8 @@
 #include "Task_Title.h"
 #include "Task_UI.h"
 
+#define OUT_OF_SCREEN -32
+
 namespace  Cursor
 {
 	Resource::WP  Resource::instance;
@@ -44,12 +46,18 @@ namespace  Cursor
 		this->res = Resource::Create();
 
 		//★データ初期化
-		this->pos = ML::Vec2(float(ge->screenWidth/3), -32);
+		this->pos = ML::Vec2(float(ge->screenWidth/3), OUT_OF_SCREEN);
 		this->select_pos.x = 0;
 		this->select_pos.y = -1;
 		this->countdown = 0;
 		this->countdownFlag = false;
 		this->now = Start_Tutorial;
+
+		this->first_Menu_Range[0] = -1;
+		this->first_Menu_Range[1] = 1;
+
+		this->last_Menu_Range[0] = -1;
+		this->last_Menu_Range[1] = 3;
 
 		//★タスクの生成
 
@@ -79,57 +87,39 @@ namespace  Cursor
 	//-------------------------------------------------------------------
 	//「更新」１フレーム毎に行う処理
 	void  Object::UpDate()
-	{		
-		auto in1 = DI::GPad_GetState("P1");
+	{			
 		//カウントダウンフラグが立っていない場合のみ選択と取り消し処理を行う
 		if (!this->Is_Count_Down())
 		{
 			//カーソルの目的地を設定
 			this->destination.y = (float)this->Move_Cursor(this->select_pos);
 			//カーソルの選択処理
-			if (in1.B2.down || in1.ST.down)
-			{
-				DM::Sound_Play(this->res->seSelectName,false);
-				if (this->now == Start_Tutorial)
-				{
-					this->now = nowMenu(this->select_pos.y);
-					this->select_pos.x = this->select_pos.y;
-				}
-				else
-				{
-					//UIタスクに画面隠しを頼む
-					ge->GetTask_One_G<UI::Object>("UI")->Start_WipeIn();
-					this->countdownFlag = true;
-				}
-			}
-			//カーソルの取り消し処理
-			if (in1.B1.down)
-			{
-				this->now = Start_Tutorial;
-				this->select_pos.x = 0;
-				DM::Sound_Play(this->res->seCancelName, false);
-			}
+			this->Click();
 		}
 		//フラグが立ったらカウントダウン開始
 		else
 		{
 			this->countdown++;
-			this->destination.y = -32;
+			//カーソルの目的地は画面外にする
+			this->destination.y = OUT_OF_SCREEN;
 		}
-		//1秒後にタスク消滅
+		//カウントダウンが終わったらタスク消滅
 		if (this->Count_Down_Over())
 		{
 			this->Kill();
 		}
 		//25％ずつ移動
-		this->pos.y += (this->destination.y - this->pos.y) *0.25f;
+		this->pos.y += (this->destination.y - this->pos.y) * 0.25f;
 	}
 	//-------------------------------------------------------------------
 	//「２Ｄ描画」１フレーム毎に行う処理
 	void  Object::Render2D_AF()
 	{
+		//表示範囲
 		ML::Box2D draw(-16, -16, 32, 32);
-		ML::Box2D src(0, 0, 100, 100);
+		//画像全体サイズ
+		POINT size_Cursor = DG::Image_Size(this->res->imageName);
+		ML::Box2D src(0, 0, size_Cursor.x, size_Cursor.y);
 
 		draw.Offset(this->pos);
 		DG::Image_Draw(this->res->imageName, draw, src);
@@ -145,43 +135,47 @@ namespace  Cursor
 	int Object::Move_Cursor(POINT& select)
 	{
 		auto in1 = DI::GPad_GetState("P1");
+
+		//メニュー移動単位
+		int cursor_Moving = 2;
 		//移動
 		if (in1.LStick.U.down || in1.HU.down)
 		{
 			//SE再生
 			DM::Sound_Play(this->res->seMoveName, false);
-			select.y -= 2;
+			select.y -= cursor_Moving;
 		}
 		if (in1.LStick.D.down || in1.HD.down)
 		{
 			//SE再生
 			DM::Sound_Play(this->res->seMoveName, false);
-			select.y += 2;
+			select.y += cursor_Moving;
 		}
 		//現在メニュ－に応じる移動範囲設定
 		if (this->now == Start_Tutorial)
 		{
-			if (select.y < -1)
+			if (select.y < this->first_Menu_Range[0])
 			{
-				select.y = -1;
+				select.y = this->first_Menu_Range[0];
 			}
-			else if (this->select_pos.y > 1)
+			else if (select.y > this->first_Menu_Range[1])
 			{
-				select.y = 1;
+				select.y = this->first_Menu_Range[1];
 			}
 		}
 		else
 		{
-			if (select.y < -1)
+			if (select.y < this->last_Menu_Range[0])
 			{
-				select.y = -1;
+				select.y = this->last_Menu_Range[0];
 			}
-			else if (this->select_pos.y > 3)
+			else if (select.y > this->last_Menu_Range[1])
 			{
-				select.y = 3;
+				select.y = this->last_Menu_Range[1];
 			}
 		}
 		
+		//目的地になるところを計算して返す
 		return (ge->screenHeight/2)-50 + (select.y * 50);
 	}
 
@@ -203,6 +197,39 @@ namespace  Cursor
 	bool Object::Count_Down_Over() const
 	{
 		return (this->countdown > 130);
+	}
+
+	//------------------------------------------------------------------------------
+	//選択処理
+	void Object::Click()
+	{
+		auto in1 = DI::GPad_GetState("P1");
+
+		if (in1.B2.down || in1.ST.down)
+		{
+			DM::Sound_Play(this->res->seSelectName, false);
+			//今のメニューに対して処理が違う
+			if (this->now == Start_Tutorial)
+			{
+				//第1メニューだったら洗濯を保存して次のメニューに移動する
+				this->now = nowMenu(this->select_pos.y);
+				this->select_pos.x = this->select_pos.y;
+			}
+			else
+			{
+				//最後のメニューだったら
+				//UIタスクに画面隠しを頼む
+				ge->GetTask_One_G<UI::Object>("UI")->Start_WipeIn();
+				this->countdownFlag = true;
+			}
+		}
+		//カーソルの取り消し処理
+		if (in1.B1.down)
+		{
+			this->now = Start_Tutorial;
+			this->select_pos.x = 0;
+			DM::Sound_Play(this->res->seCancelName, false);
+		}
 	}
 	//★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★
 	//以下は基本的に変更不要なメソッド

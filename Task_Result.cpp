@@ -113,6 +113,7 @@ namespace  Result
 	void  Object::UpDate()
 	{
 		auto in = DI::GPad_GetState("P1");
+		easing::UpDate();
 		//カウントダウンフラグを立てる
 		if (in.ST.down)
 		{

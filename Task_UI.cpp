@@ -96,12 +96,6 @@ namespace  UI
 	//「更新」１フレーム毎に行う処理
 	void  Object::UpDate()
 	{
-		//easing更新
-		if (ge->GetTask_One_G<Title::Object>("タイトル") == nullptr)
-		{
-			easing::UpDate();
-		}
-
 		this->ui_Time.y = easing::GetPos("Up_to_Down");
 		//UIで見せる時計は準備が終わった後に流れる
 		if (ge->game.lock()->GET_READY())

@@ -2,9 +2,9 @@
 #pragma once
 //Base of Box Class
 
-#include "GameEngine_Ver3_7.h"
+//#include "GameEngine_Ver3_7.h"
 #include "Collision.h"
-#include "MyPG.h"
+//#include "MyPG.h"
 
 enum BoxType
 {
@@ -28,8 +28,8 @@ private:
 	BoxType chip;//マスのマップチップ
 	ML::Vec3 pos;//中心点の座標
 	ML::Box3D collision_Base;//一個一個の判定範囲
-	ML::QT boxQT;//マップの回転量
-	Collision col;
+	ML::QT boxQT;//マップの回転量	
+	
 	//衝突判定
 	//判定の正不正だけをもらう関数
 	bool Get_Collision_Bool(const ML::Vec3& pos, const float& r, const ML::Vec3& speed);

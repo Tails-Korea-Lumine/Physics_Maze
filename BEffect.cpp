@@ -10,7 +10,7 @@ void BEffect::LoadEffect(effType handle)
 	{
 	case CreateCharactor://0
 		this->meshName = "CreateCharactor";
-		this->filePath = "./data/mesh/effect/CreateCharactor.SOB";
+		//this->filePath = "./data/mesh/effect/CreateCharactor.SOB";
 		this->alpha = 0.0f;
 		this->effect_Life = 140;
 		easing::Set("scale_CreateCharactor", easing::EXPOOUT, 0, 100, 110);
@@ -21,7 +21,7 @@ void BEffect::LoadEffect(effType handle)
 		
 	case TeleportOut://1
 		this->meshName = "CreateItem";
-		this->filePath = "./data/mesh/effect/CreateItem.SOB";
+		//this->filePath = "./data/mesh/effect/CreateItem.SOB";
 		this->alpha = 0.8f;
 		this->effect_Life = 90;
 		this->scale = ML::Vec3(200, 100, 200);
@@ -30,7 +30,7 @@ void BEffect::LoadEffect(effType handle)
 		break;
 	case Teleportin://2
 		this->meshName = "DestroyItem";
-		this->filePath = "./data/mesh/effect/DestroyItem.SOB";
+		//this->filePath = "./data/mesh/effect/DestroyItem.SOB";
 		this->alpha = 1.0f;
 		this->effect_Life = 30;
 		this->scale = ML::Vec3(80.0f, 80.0f, 80.0f);
@@ -40,7 +40,7 @@ void BEffect::LoadEffect(effType handle)
 
 	case EnemyLanding: //3
 		this->meshName = "EnemyLanding";
-		this->filePath = "./data/mesh/effect/EnemyLanding.SOB";
+		//this->filePath = "./data/mesh/effect/EnemyLanding.SOB";
 		this->alpha =0.6f;
 		this->effect_Life = 30;
 		this->scale = ML::Vec3(0, 20.0f, 0);
@@ -52,7 +52,7 @@ void BEffect::LoadEffect(effType handle)
 		
 	case Hit_to_Enemy://4
 		this->meshName = "Hit_to_Enemy";
-		this->filePath = "./data/mesh/effect/Hit_the_Enemy.SOB";
+		//this->filePath = "./data/mesh/effect/Hit_the_Enemy.SOB";
 		this->alpha = 0.0f;
 		this->effect_Life = 60;
 		this->scale = ML::Vec3(600.0f, 600.0f, 600.0f);
@@ -61,7 +61,7 @@ void BEffect::LoadEffect(effType handle)
 
 	case Hit_to_Wall: //5
 		this->meshName = "Hit_to_Wall";
-		this->filePath = "./data/mesh/effect/Hit_the_Wall.SOB";
+		//this->filePath = "./data/mesh/effect/Hit_the_Wall.SOB";
 		this->alpha = 0.0f;
 		this->effect_Life = 10;
 		this->scale = ML::Vec3(50.0f, 50.0f, 50.0f);
@@ -70,7 +70,7 @@ void BEffect::LoadEffect(effType handle)
 
 	case CreateTail: //6
 		this->meshName = "CreateTail";
-		this->filePath = "./data/mesh/effect/CreateTail.SOB";
+		//this->filePath = "./data/mesh/effect/CreateTail.SOB";
 		this->alpha = 1.0f;
 		this->effect_Life = 67;
 
@@ -78,7 +78,7 @@ void BEffect::LoadEffect(effType handle)
 
 	case DestroyTail://7
 		this->meshName = "DestroyTail";
-		this->filePath = "./data/mesh/effect/DestroyTail.SOB";
+		//this->filePath = "./data/mesh/effect/DestroyTail.SOB";
 		this->alpha = 0.8f;
 		this->effect_Life = 300;
 		this->scale = ML::Vec3(100.0f, 100.0f, 100.0f);
@@ -90,7 +90,7 @@ void BEffect::LoadEffect(effType handle)
 
 	case Hit_to_Tail: //8
 		this->meshName = "Hit_to_Tail";
-		this->filePath = "./data/mesh/effect/Hit_the_Enemy.SOB";
+		//this->filePath = "./data/mesh/effect/Hit_the_Enemy.SOB";
 		this->alpha = 0.0f;
 		this->effect_Life = 60;
 		this->scale = ML::Vec3(600.0f, 600.0f, 600.0f);
@@ -99,12 +99,12 @@ void BEffect::LoadEffect(effType handle)
 		
 	case Game_Clear: //9
 		this->meshName = "DestroyCharactor";
-		this->filePath = "./data/mesh/effect/DestroyPlayer.SOB";
+		//this->filePath = "./data/mesh/effect/DestroyPlayer.SOB";
 		this->alpha = 0.0f;
-		this->effect_Life = 60;
+		this->effect_Life = 40;
 		this->scale = ML::Vec3(0.0f, 0.0f, 0.0f);
 
-		easing::Set("scale_EF9", easing::CUBICIN, 240.0f, 0, 20);
+		easing::Set("scale_EF9", easing::CUBICIN, 240.0f, 0, 10);
 
 		break;
 	default:

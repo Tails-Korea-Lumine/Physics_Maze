@@ -53,7 +53,7 @@ namespace MapFence
 	
 		//追加したい変数・メソッドはここに追加する	
 		//変数
-		Bbox arr[16][16][1];
+		Bbox arr[10][10][1];
 		int sizeZ, sizeY, sizeX;
 		int mapSize;
 		int fenceNumber;

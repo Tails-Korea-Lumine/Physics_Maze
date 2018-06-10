@@ -1,10 +1,11 @@
 #pragma once
 #pragma warning(disable : 4996)
+#include "myLib.h"
 
 //-------------------------------------------------------------------------
 //エフェクト基礎クラス
 //-------------------------------------------------------------------------
-#include "GameEngine_Ver3_7.h"
+//前作で使用してた今回の作品には使用しないデータも含まれている
 
 
 class BEffect 
@@ -50,16 +51,22 @@ public:
 	float alpha;//透明度
 
 	string meshName;//メッシュの名前
-	string filePath;//メッシュのパス
+	//string filePath;//メッシュのパス
+
+
 
 	//メソッド
 	//初期化でメッシュを読み込む関数
 	void LoadEffect(effType handle);
-	//初期化関数
+
+	//初期化メソッド
+	//その場で全部処理するエフェクト
 	void Eff_Initialize(ML::Vec3 pos, ML::Vec3 angle, effType handle);
+	//目的地まで移動しながら処理するエフェクト
 	void Eff_Initialize(ML::Vec3 pos, ML::Vec3 target, ML::Vec3 angle, effType handle);
 
 	//生成消滅
+	//ゼロクリア
 	BEffect() :
 		pos(0, 0, 0),
 		target(0,0,0),

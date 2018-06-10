@@ -60,6 +60,8 @@ namespace ML
 		Vec3  Normalize()const;
 		//ベクトルの長さを求める
 		float  Length()const;
+		//ゼロベクトル(無効)なのかを確認する、trueだったらゼロベクトル
+		bool Is_Zero_Vec() const;
 	};
 	class Vec4 : public  D3DXVECTOR4
 	{

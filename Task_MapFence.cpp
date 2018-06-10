@@ -303,11 +303,11 @@ namespace  MapFence
 		this->col_Poligons.clear();
 
 		//判定スタート
-		for (int y = 0; y <= this->sizeY; y++)
+		for (int y = 0; y < this->sizeY; y++)
 		{
-			for (int z = 0; z <= this->sizeZ; z++)
+			for (int z = 0; z < this->sizeZ; z++)
 			{
-				for (int x = 0; x <= this->sizeX; x++)
+				for (int x = 0; x < this->sizeX; x++)
 				{
 					//一定距離以内のものだけ判定をする
 					ML::Vec3 d = this->arr[z][y][x].Get_Pos() - pos;
@@ -317,7 +317,7 @@ namespace  MapFence
 						d *= -1;
 					}
 					//一定距離以上だったら判定せず次に項目に
-					if (d.Length() > 100)
+					if (d.Length() > this->chipSize)
 					{
 						continue;
 					}

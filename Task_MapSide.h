@@ -4,7 +4,7 @@
 //マップ
 //-------------------------------------------------------------------
 #include "GameEngine_Ver3_7.h"
-#include  "Collision.h"
+#include "Collision.h"
 #include "Bbox.h"
 #include "Task_title.h"
 
@@ -55,12 +55,13 @@ namespace Map3d
 	
 		//追加したい変数・メソッドはここに追加する	
 		//変数
-		Bbox arr[16][1][16];
+		Bbox arr[8][1][8];
 		int sizeZ, sizeY, sizeX;
 		int mapSize;
 		int sideNumber;
 		float chipSize;
 		int gimicCnt;
+		float rendering_Judge;
 		string chipName[10];
 
 		//法線ベクトル
@@ -70,9 +71,12 @@ namespace Map3d
 		//回転量
 		ML::QT map_QT;		
 		
-	public:
+	
 		//メソッド
 		bool Map_Load(string f_);
+		//レンダリングするかを確認するメソッド
+		bool Is_Need_Render();
+	public:
 		void Map_Check_Hit(const ML::Vec3& pos, const float& r, const ML::Vec3& speed);//球とマップのあたり判定
 		void Map_Rotate();
 		

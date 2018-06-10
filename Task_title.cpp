@@ -8,6 +8,9 @@
 #include "Task_Tutorial.h"
 #include  "easing.h"
 
+#define MOVING_TITLE_NAME_MAX 110
+#define MOVING_TITLE_NAME_SPEED 6
+
 namespace  Title
 {
 	Resource::WP  Resource::instance;
@@ -216,16 +219,16 @@ namespace  Title
 				break;
 			}
 			//メニューは関係なくカーソルが生きている間タイトル名は上に上がっている
-			this->moving_Title_Name += 6;
+			this->moving_Title_Name += MOVING_TITLE_NAME_SPEED;
 		}
 
 		//時間上昇
 		this->timeCnt++;
 
 		//カウンタの上限指定		
-		if (this->moving_Title_Name > 110)
+		if (this->moving_Title_Name > MOVING_TITLE_NAME_MAX)
 		{
-			this->moving_Title_Name = 110;
+			this->moving_Title_Name = MOVING_TITLE_NAME_MAX;
 		}
 	}
 	//-------------------------------------------------------------------
@@ -310,17 +313,8 @@ namespace  Title
 		}
 		//Y座標更新
 		for (int i = 0; i < 12; i++)
-		{			
-			switch (i%2)
-			{
-			case 0:
-				this->Title_Name[i].y = easing::GetPos("Title_0_y");
-				break;
-			case 1:
-				this->Title_Name[i].y = easing::GetPos("Title_1_y");
-				break;
-			}
-			
+		{						
+			this->Title_Name[i].y = easing::GetPos("Title_" + to_string(i%2) + "_y");
 		}		
 	}
 	//----------------------------------------------------------------------------------

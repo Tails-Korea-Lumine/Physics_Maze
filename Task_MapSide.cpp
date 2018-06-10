@@ -7,6 +7,8 @@
 #include  "Task_Game.h"
 #include  "Task_CameraMan.h"
 
+#define JUDGE_DEGREE_EIGHTYFIVE 85
+
 namespace  Map3d
 {
 	Resource::WP  Resource::instance;
@@ -43,6 +45,7 @@ namespace  Map3d
 		this->gimicCnt = 0;		
 		this->sideNumber = sideNum;
 		this->mapSize = 8;//基本は8X8
+		this->rendering_Judge = _CMATH_::cosf(ML::ToRadian(JUDGE_DEGREE_EIGHTYFIVE));
 		this->render3D_Priority[0] = 1.0f;
 		//面ごとに別の初期値を与える
 		switch(sideNumber)
@@ -204,17 +207,10 @@ namespace  Map3d
 
 	void  Object::Render3D_L0()
 	{
-		MyMath mm;
-		//カメラとの内積値を保存する場所
-		float c = 0.0f;
-		//視線ベクトル
-		ML::Vec3 sv = ge->camera[0]->target - ge->camera[0]->pos;
-		mm.Vector_Dot(&c, sv.Normalize(), this->Normal_Side);
-
-		//内積値が-90 < cos < 90の間はレンダリングをしない
-
-		if (c > _CMATH_::cosf(ML::ToRadian(89)))
+		//レンダリングするかを先に確認
+		if (this->Is_Need_Render() == false)
 		{
+			//必要ないときはこのまま処理終了
 			return;
 		}
 
@@ -344,11 +340,11 @@ namespace  Map3d
 		//std::vector<After_Collision> poligon;
 
 		//判定スタート
-		for (int y = 0; y <= this->sizeY; y++)
+		for (int y = 0; y < this->sizeY; y++)
 		{
-			for (int z = 0; z <= this->sizeZ; z++)
+			for (int z = 0; z < this->sizeZ; z++)
 			{
-				for (int x = 0; x <= this->sizeX; x++)
+				for (int x = 0; x < this->sizeX; x++)
 				{
 					//一定距離以内のものだけ判定をする
 					ML::Vec3 d = this->arr[z][y][x].Get_Pos() - pos;
@@ -358,7 +354,7 @@ namespace  Map3d
 						d *= -1;
 					}
 					//一定距離以上だったら判定せず次に項目に
-					if (d.Length() > 100)
+					if (d.Length() > this->chipSize)
 					{
 						continue;
 					}
@@ -478,6 +474,20 @@ namespace  Map3d
 		D3DXMatrixAffineTransformation(&matR, 1.0f, NULL, &qt, NULL);
 
 		this->Normal_Side = matR.TransformNormal(this->Normal_Side);
+	}
+
+	//------------------------------------------------------------------------------------------
+	//レンダリングするかを確認する
+	bool Object::Is_Need_Render()
+	{
+		//カメラとの内積値を保存する場所
+		float c = 0.0f;
+		//視線ベクトル
+		ML::Vec3 sv = ge->camera[0]->target - ge->camera[0]->pos;
+		MyMath::Vector_Dot(&c, sv.Normalize(), this->Normal_Side);
+
+		//内積値が-90 < cos < 90の間はレンダリングをしない
+		return c > this->rendering_Judge? false : true;
 	}
 	//★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★
 	//以下は基本的に変更不要なメソッド

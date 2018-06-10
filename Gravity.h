@@ -1,12 +1,11 @@
 #pragma once
 #pragma warning(disable:4996)
-#include "GameEngine_Ver3_7.h"
 #include "MyMath.h"
 
 //d—ÍƒNƒ‰ƒX
 //---------------------------------------------------------------
 
-class Gravity : public MyMath
+class Gravity
 {
 private:
 	const ML::Vec3 G_acceleration;

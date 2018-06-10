@@ -30,13 +30,20 @@ namespace  EffectManager
 		this->res = Resource::Create();
 
 		//★データ初期化
+		//使用するエフェクトメッシュの生成
+		//テレポートイン
+		DG::Mesh_CreateFromSOBFile("DestroyItem", "./data/mesh/effect/DestroyItem.SOB");
+		//テレポートアウト
+		DG::Mesh_CreateFromSOBFile("CreateItem", "./data/mesh/effect/CreateItem.SOB");
+		//ゲームクリア
+		DG::Mesh_CreateFromSOBFile("DestroyCharactor", "./data/mesh/effect/DestroyPlayer.SOB");
+		//エフェクトリストをクリア
 		this->efList.clear();
 
 		this->render3D_Priority[0] = 1.0f;
-		//だみデータ
+		//ダミーデータ
 		Effect* dummmy0 = new Effect;
-		dummmy0->Eff_Initialize(ML::Vec3(0, 0, 0), ML::Vec3(0, 0, 0), BEffect::effType::CLEAR);
-		dummmy0->effect_Life = -1;
+		dummmy0->Set_Dummy();
 
 		this->efList.push_back(dummmy0);
 
@@ -92,7 +99,7 @@ namespace  EffectManager
 			{
 				continue;
 			}
-			(*it)->UpDate_Effect((*it)->playing_EffectHandle);
+			(*it)->UpDate_Effect((*it)->Get_Type());
 		}
 		this->Dec_Effect_Life();
 	}
@@ -115,14 +122,13 @@ namespace  EffectManager
 			{
 				continue;
 			}
-			(*it)->Playing_Effect((*it)->playing_EffectHandle);
+			(*it)->Playing_Effect((*it)->Get_Type());
 		}
 	}
 
 	//--------------------------------------------------------------------------------------
 	//追加メソッド
 	//-----------------------------------------------------------------------------
-
 	void Object::Add_Effect(ML::Vec3 pos, ML::Vec3 angle, BEffect::effType handle)
 	{
 		Effect* NewEF = new Effect();
@@ -145,19 +151,20 @@ namespace  EffectManager
 		}
 		for (auto it = this->efList.begin(); it != this->efList.end(); it++)
 		{
-			if ((*it)->effect_Life >0)
+			if ((*it)->Is_Alive())
 			{
-				(*it)->effect_Life--;
+				(*it)->Dec_Eff();
 			}
-			//ライフが０になったエフェクトはヒップから開放
-			else if((*it)->effect_Life ==0)
+			//ライフが０になったエフェクトはヒ-プから開放
+			else if((*it)->Get_Type() != BEffect::effType::CLEAR)
 			{
 				(*it)->Finalize();				
 			}
 		}
 		//ライフが０になったエフェクトはリストから外す
-		this->efList.remove_if([](Effect* it) {return it->effect_Life == 0; });
-	}
+		//return it->effect_Life == 0
+		this->efList.remove_if(Effect::Eff_Judge);
+	}	
 	
 	//★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★
 	//以下は基本的に変更不要なメソッド

@@ -1,10 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="リソース ファイル">
-      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
-      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
-    </Filter>
     <Filter Include="LIB">
       <UniqueIdentifier>{113049ad-8f97-405e-b7fa-c2eb0d7c72af}</UniqueIdentifier>
     </Filter>
@@ -53,9 +49,6 @@
     <Filter Include="MyPG\Tasks\game">
       <UniqueIdentifier>{0d2f1ac2-da88-41c8-b171-bbce603f253f}</UniqueIdentifier>
     </Filter>
-    <Filter Include="MyPG\Collision">
-      <UniqueIdentifier>{7a372d06-94f8-4d60-83a9-b11365a0ee90}</UniqueIdentifier>
-    </Filter>
     <Filter Include="MyPG\Gravity">
       <UniqueIdentifier>{2ce5a61e-806c-4992-80b8-ccfc0cc21bdc}</UniqueIdentifier>
     </Filter>
@@ -103,6 +96,9 @@
     </Filter>
     <Filter Include="MyPG\MyMath">
       <UniqueIdentifier>{e832b3a3-800c-4b06-bf7d-4b5624bc20b9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="MyPG\Collision">
+      <UniqueIdentifier>{7a372d06-94f8-4d60-83a9-b11365a0ee90}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

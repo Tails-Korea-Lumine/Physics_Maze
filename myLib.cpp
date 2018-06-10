@@ -58,7 +58,16 @@ namespace ML
 	Vec3  Vec3::operator  = (const D3DXVECTOR3&  v_){ return  (*this)  =  Vec3(v_); }
 	class  Vec4  Vec3::Vec4(  ){	return  class  Vec4(this->x, this->y, this->z, 1);}
 	Vec3  Vec3::Normalize()const{ return  (*this) / this->Length(); }
-	float  Vec3::Length(  )const{		return  D3DXVec3Length(this);		}	
+	float  Vec3::Length(  )const{		return  D3DXVec3Length(this);		}
+
+	bool  Vec3::Is_Zero_Vec() const
+	{
+		if (this->x != 0.0f || this->y != 0.0f || this->z != 0.0f)
+		{
+			return false;
+		}
+		return true;
+	}
 
 	Vec4::Vec4( ):D3DXVECTOR4(0,0,0,0){	}
 	Vec4::Vec4(const float  x_,const float  y_,const float  z_,const float  w_):D3DXVECTOR4(x_,y_,z_,w_){}

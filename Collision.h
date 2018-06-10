@@ -1,6 +1,5 @@
 #pragma once
-#include "GameEngine_Ver3_7.h"
-#include "Gravity.h"
+#include "myLib.h"
 
 //三角形の基本情報
 //頂点と法線ベクトル
@@ -23,9 +22,13 @@ struct After_Collision
 	}
 };
 
-class Collision : public MyMath
+class Collision
 {
 private:
+	//あたり判定基準値
+	const float judge;
+
+	//メソッド
 	//SUKAプログラムのBox3dから12個の三角形を取り出す
 	void Get_Triangle_Box3D(std::vector<Triangle>* result, const ML::Box3D& box, const ML::QT& rotation) const;
 	//ボールの座標から6個の頂点を取り出す
@@ -43,4 +46,10 @@ public:
 	bool Hit_Check(std::vector<After_Collision>* result, const ML::Box3D& box, const ML::Vec3& pos, const float& r, const ML::Vec3& speed, const ML::QT& worldR) const;
 	
 	
+	Collision() :judge(_CMATH_::cosf(ML::ToRadian(359)))
+	{
+
+	}
 };
+
+static Collision col = Collision();

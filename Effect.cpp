@@ -1,20 +1,19 @@
 //---------------------------------------------------------------------------------
-//エフェクト描画クラス
+//エフェクトクラス
 //---------------------------------------------------------------------------------
 
 #include "Effect.h"
 #include "easing.h"
+#include "GameEngine_Ver3_7.h"
 
 void Effect::Load_Eff(ML::Vec3 pos, ML::Vec3 angle, effType handle)
 {
 	this->Eff_Initialize(pos, angle, handle);	
-	DG::Mesh_CreateFromSOBFile(this->meshName, this->filePath);
 }
 
 void Effect::Load_Eff(ML::Vec3 pos, ML::Vec3 target, ML::Vec3 angle, effType handle)
 {
 	this->Eff_Initialize(pos, target, angle, handle);
-	DG::Mesh_CreateFromSOBFile(this->meshName, this->filePath);
 }
 
 void Effect::Playing_Effect(effType ef)
@@ -565,17 +564,17 @@ void Effect::UpDate_EF9()
 	{
 		return;
 	}
-	else if (this->effect_Life > 30)
+	else if (this->effect_Life > 10)
 	{
 		this->scale += ML::Vec3(8.0f, 8.0f, 8.0f);
 		this->angle.y += ML::ToRadian(0.3f);
 		this->alpha += 0.8f;		
 	}
-	else if (this->effect_Life == 30)
+	else if (this->effect_Life == 10)
 	{
 		easing::Start("scale_EF9");
 	}
-	else if (this->effect_Life < 30)
+	else if (this->effect_Life < 10)
 	{
 		//easing::UpDate();
 		this->scale.x = easing::GetPos("scale_EF9");
@@ -591,4 +590,30 @@ void Effect::Finalize()
 	//DG::Mesh_Erase(this->meshName);
 	delete this;
 	this->effect_Life = 0;
+}
+
+void Effect::Set_Dummy()
+{
+	this->Eff_Initialize(ML::Vec3(0, 0, 0), ML::Vec3(0, 0, 0), BEffect::effType::CLEAR);
+	this->effect_Life = -1;
+}
+
+void Effect::Dec_Eff()
+{
+	this->effect_Life--;
+}
+
+bool Effect::Is_Alive()
+{
+	return this->effect_Life > 0 ? true : false;
+}
+
+BEffect::effType Effect::Get_Type()
+{
+	return this->playing_EffectHandle;
+}
+
+bool Effect::Eff_Judge(Effect* e)
+{
+	return e->effect_Life == 0;
 }

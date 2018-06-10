@@ -6,6 +6,7 @@
 #include  "Task_Title.h"
 #include "Task_UI.h"
 
+#define SCROLL_MAX_RANGE -200
 namespace  Tutorial
 {
 	Resource::WP  Resource::instance;
@@ -122,15 +123,17 @@ namespace  Tutorial
 	//「更新」１フレーム毎に行う処理
 	void  Object::UpDate()
 	{
+		int scroll_Speed = 8;
+
 		auto in = DI::GPad_GetState("P1");
 		//スクロール操作
 		if (in.LStick.D.on || in.HD.on)
 		{
-			this->posy -= 8;
+			this->posy -= scroll_Speed;
 		}
 		if (in.LStick.U.on || in.HU.on)
 		{
-			this->posy += 8;
+			this->posy += scroll_Speed;
 		}		
 		//ページ切り替え操作
 		if (in.L1.down || in.L2.down)
@@ -155,9 +158,9 @@ namespace  Tutorial
 		this->Page_Chage(this->page_Change_Flag);
 
 		//posyの範囲設定
-		if (this->posy < -200)
+		if (this->posy < SCROLL_MAX_RANGE)
 		{
-			this->posy = -200;
+			this->posy = SCROLL_MAX_RANGE;
 		}
 		if (this->posy > 0)
 		{
@@ -189,7 +192,9 @@ namespace  Tutorial
 	void  Object::Render2D_AF()
 	{
 		ML::Box2D drawBG(0, 0, ge->screenWidth, ge->screenHeight);
-		ML::Box2D srcBG(0, 0, 1280, 960);
+		//画像全体サイズ
+		POINT size_BG = DG::Image_Size(this->res->Bg_Img);
+		ML::Box2D srcBG(0, 0, size_BG.x, size_BG.y);
 
 		DG::Image_Draw(this->res->Bg_Img, drawBG, srcBG);
 
@@ -233,7 +238,8 @@ namespace  Tutorial
 	//ページ切り替え
 	void Object::Page_Chage(bool page_Move_Right)
 	{
-		if (this->timeCnt > 80 )
+		int page_Changing_Speed = 24;
+		if (this->Can_I_Change_the_Page())
 		{
 			return;
 		}
@@ -241,25 +247,25 @@ namespace  Tutorial
 		//右のページを見る
 		if (page_Move_Right)
 		{
-			if (this->posx[2] == 0)
+			if (this->posx[2] <= 0)
 			{
 				return;
 			}
 			for (int i = 0; i < 3; i++)
 			{
-				this->posx[i] -= 24;
+				this->posx[i] -= page_Changing_Speed;
 			}
 		}
 		//左のページを見る
 		else
 		{
-			if (this->posx[0] == 0)
+			if (this->posx[0] >= 0)
 			{
 				return;
 			}
 			for (int i = 0; i < 3; i++)
 			{
-				this->posx[i] += 24;
+				this->posx[i] += page_Changing_Speed;
 			}
 		}
 		

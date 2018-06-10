@@ -7,6 +7,8 @@
 #include  "Task_MapCore.h"
 #include  "Task_MapFence.h"
 
+#define TERMINATION_SPEED 2.0f
+
 namespace  Ball
 {
 	Resource::WP  Resource::instance;
@@ -68,24 +70,8 @@ namespace  Ball
 	//「更新」１フレーム毎に行う処理
 	void  Object::UpDate()
 	{
-		
-
-		//マップの情報を修得、今はタスク一個で持ってくるが		
 		//重力加速
-		this->G.Accelerate(&this->speed,this->m);			
-			
-			
-
-			//-------------------------------------
-			//デバッグ用ポーズ
-			/*if (in1.B2.down)
-			{
-				system("pause");
-			}*/
-			//-------------------------------------
-
-			//もし,どこもあたり判定をせずに動いた場合
-			//処理せずに次のフレームに移る
+		this->G.Accelerate(&this->speed,this->m);				
 			
 		//回転量上昇
 		this->rot += this->speed.Length();
@@ -94,6 +80,8 @@ namespace  Ball
 	//あたり判定による方向転換及び移動
 	void Object::Move_Ball()
 	{
+		//もし,どこもあたり判定をせずに動いた場合
+		//処理せずに次のフレームに移る
 		if (ge->collision_Result.size() == 0)
 		{
 			//移動(フレーム終了する直前に行う)
@@ -149,10 +137,10 @@ namespace  Ball
 		}
 
 		//終端速度を指定
-		if (this->speed.Length() > 2.0f)
+		if (this->speed.Length() > TERMINATION_SPEED)
 		{
 			this->speed = this->speed.Normalize();
-			this->speed *= 2.0f;
+			this->speed *= TERMINATION_SPEED;
 		}
 
 		//移動(フレーム終了する直前に行う)
@@ -175,7 +163,7 @@ namespace  Ball
 		//拡縮行列
 		matS.Scaling(this->r);
 		//回転行列
-		matR.RotationAxis(this->pos, ML::ToRadian(this->rot));
+		matR.RotationAxis((ge->Map_center - this->pos), ML::ToRadian(this->rot));
 		DG::EffectState().param.matWorld = matS * matR * matT;
 		DG::Mesh_Draw(this->res->meshName);
 	}
