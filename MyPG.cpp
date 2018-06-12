@@ -86,7 +86,7 @@ namespace MyPG
 			{ DI::GPB::HSL, DI::But::HL },{ DI::GPB::HSR, DI::But::HR },
 		};
 		//razer raijuの時は番号を1番に初期化すること
-		DI::GPad_CreateKBGP("P1", ls, rs, triger, key, 1, but);
+		DI::GPad_CreateKBGP("P1", ls, rs, triger, key, 0, but);
 
 
 		//背景色の設定（デフォルト）
