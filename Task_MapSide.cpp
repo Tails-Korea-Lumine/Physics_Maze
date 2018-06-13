@@ -331,7 +331,7 @@ namespace  Map3d
 		return true;
 	}
 	//-----------------------------------------------------------------------
-	void Object::Map_Check_Hit(const ML::Vec3& pos, const float& r, const ML::Vec3& speed)
+	bool Object::Map_Check_Hit(const ML::Vec3& pos, const float& r, const ML::Vec3& speed)
 	{
 		//多重衝突まで適用したver0.3(2018/04/16)
 
@@ -422,6 +422,12 @@ namespace  Map3d
 				}
 			}
 		}
+
+		if (this->col_Poligons.size() != 0)
+		{
+			return true;
+		}
+		return false;
 	}
 
 	//------------------------------------------------------------------------
@@ -488,6 +494,12 @@ namespace  Map3d
 
 		//内積値が-90 < cos < 90の間はレンダリングをしない
 		return c > this->rendering_Judge? false : true;
+	}
+	//-----------------------------------------------------------------------------------------
+	//マップの法線ベクトルを返すメソッド
+	void Object::Get_Normal_Side(ML::Vec3* result)const
+	{
+		*result = this->Normal_Side;
 	}
 	//★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★
 	//以下は基本的に変更不要なメソッド

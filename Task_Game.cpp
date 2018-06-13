@@ -8,7 +8,7 @@
 #include  "Task_MapCore.h"
 #include  "Task_Ball.h"
 #include  "Task_MapFence.h"
-#include  "Task_Map_Manager.h"
+#include  "Task_Physics_Manager.h"
 #include  "Task_Result.h"
 #include  "Task_UI.h"
 #include  "Task_CameraMan.h"
@@ -90,7 +90,7 @@ namespace  Game
 		}		
 
 		//マップマネージャ生成
-		auto manager = Map_Manager::Object::Create(true);
+		auto manager = Physics_Manager::Object::Create(true);
 
 		//エフェクトマネージャー生成
 		ge->eff_Manager = EffectManager::Object::Create(true);

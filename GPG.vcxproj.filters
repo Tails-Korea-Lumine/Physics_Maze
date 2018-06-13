@@ -55,9 +55,6 @@
     <Filter Include="MyPG\Tasks\map">
       <UniqueIdentifier>{ec3c490b-8940-4f06-8f03-23dbaf343a33}</UniqueIdentifier>
     </Filter>
-    <Filter Include="MyPG\Tasks\map\object">
-      <UniqueIdentifier>{59f6b83f-fd8a-4c69-a0dd-63210ed15681}</UniqueIdentifier>
-    </Filter>
     <Filter Include="MyPG\Bbox">
       <UniqueIdentifier>{6affa42c-fd48-4ee0-a97c-93cc8549cd94}</UniqueIdentifier>
     </Filter>
@@ -99,6 +96,9 @@
     </Filter>
     <Filter Include="MyPG\Collision">
       <UniqueIdentifier>{7a372d06-94f8-4d60-83a9-b11365a0ee90}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="MyPG\Tasks\Physics_Manager">
+      <UniqueIdentifier>{165f9a01-26ef-4713-ae03-34733c34f1d0}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -168,18 +168,6 @@
     <ClCompile Include="Bbox.cpp">
       <Filter>MyPG\Bbox</Filter>
     </ClCompile>
-    <ClCompile Include="Task_MapCore.cpp">
-      <Filter>MyPG\Tasks\map\object</Filter>
-    </ClCompile>
-    <ClCompile Include="Task_MapFence.cpp">
-      <Filter>MyPG\Tasks\map\object</Filter>
-    </ClCompile>
-    <ClCompile Include="Task_MapSide.cpp">
-      <Filter>MyPG\Tasks\map\object</Filter>
-    </ClCompile>
-    <ClCompile Include="Task_Map_Manager.cpp">
-      <Filter>MyPG\Tasks\map</Filter>
-    </ClCompile>
     <ClCompile Include="Task_cursor.cpp">
       <Filter>MyPG\Tasks\Cursor</Filter>
     </ClCompile>
@@ -215,6 +203,18 @@
     <ClCompile Include="WinMain.cpp" />
     <ClCompile Include="MyMath.cpp">
       <Filter>MyPG\MyMath</Filter>
+    </ClCompile>
+    <ClCompile Include="Task_Physics_Manager.cpp">
+      <Filter>MyPG\Tasks\Physics_Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="Task_MapCore.cpp">
+      <Filter>MyPG\Tasks\map</Filter>
+    </ClCompile>
+    <ClCompile Include="Task_MapFence.cpp">
+      <Filter>MyPG\Tasks\map</Filter>
+    </ClCompile>
+    <ClCompile Include="Task_MapSide.cpp">
+      <Filter>MyPG\Tasks\map</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -284,18 +284,6 @@
     <ClInclude Include="Bbox.h">
       <Filter>MyPG\Bbox</Filter>
     </ClInclude>
-    <ClInclude Include="Task_MapCore.h">
-      <Filter>MyPG\Tasks\map\object</Filter>
-    </ClInclude>
-    <ClInclude Include="Task_MapFence.h">
-      <Filter>MyPG\Tasks\map\object</Filter>
-    </ClInclude>
-    <ClInclude Include="Task_MapSide.h">
-      <Filter>MyPG\Tasks\map\object</Filter>
-    </ClInclude>
-    <ClInclude Include="Task_Map_Manager.h">
-      <Filter>MyPG\Tasks\map</Filter>
-    </ClInclude>
     <ClInclude Include="Task_cursor.h">
       <Filter>MyPG\Tasks\Cursor</Filter>
     </ClInclude>
@@ -333,6 +321,18 @@
     <ClInclude Include="MyPG.h" />
     <ClInclude Include="MyMath.h">
       <Filter>MyPG\MyMath</Filter>
+    </ClInclude>
+    <ClInclude Include="Task_Physics_Manager.h">
+      <Filter>MyPG\Tasks\Physics_Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="Task_MapCore.h">
+      <Filter>MyPG\Tasks\map</Filter>
+    </ClInclude>
+    <ClInclude Include="Task_MapFence.h">
+      <Filter>MyPG\Tasks\map</Filter>
+    </ClInclude>
+    <ClInclude Include="Task_MapSide.h">
+      <Filter>MyPG\Tasks\map</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
