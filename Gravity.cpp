@@ -1,9 +1,9 @@
 #include "Gravity.h"
-
+#include "MyPG.h"
 
 void Gravity::Accelerate(ML::Vec3* speed, const float& Weight) const
 {
-	*speed += (Weight * this->G_acceleration);
+	*speed += (Weight * this->G_acceleration );
 }
 
 void Gravity::CollisionOver_Accelerate(ML::Vec3* speed, const ML::Vec3& normal) const

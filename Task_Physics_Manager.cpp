@@ -3,11 +3,13 @@
 //-------------------------------------------------------------------
 #include  "MyPG.h"
 #include  "Task_Physics_Manager.h"
+#include  "Task_CameraMan.h"
 #include  "Task_MapCore.h"
 #include  "Task_MapSide.h"
 #include  "Task_MapFence.h"
 #include  "Task_Ball.h"
 #include "easing.h"
+#include "MyMath.h"
 
 #define PRECISION 5
 
@@ -51,12 +53,12 @@ namespace  Physics_Manager
 		this->anckerZ = ML::Vec3(0, 0, 1);
 	
 		//easing set
-		easing::Set("Decrese_StickVolumeXP", easing::QUARTIN, 1.3f, 0, 8);
-		easing::Set("Decrese_StickVolumeXM", easing::QUARTIN, 1.3f, 0, 8);
-		easing::Set("Decrese_StickVolumeYP", easing::QUARTIN, 1.3f, 0, 8);
-		easing::Set("Decrese_StickVolumeYM", easing::QUARTIN, 1.3f, 0, 8);
-		easing::Set("Decrese_StickVolumeZP", easing::QUARTIN, 1.3f, 0, 8);
-		easing::Set("Decrese_StickVolumeZM", easing::QUARTIN, 1.3f, 0, 8);
+		easing::Set("Decrese_StickVolumeXP", easing::QUARTIN, 1.3f, 0, 6);
+		easing::Set("Decrese_StickVolumeXM", easing::QUARTIN, 1.3f, 0, 6);
+		easing::Set("Decrese_StickVolumeYP", easing::QUARTIN, 1.3f, 0, 6);
+		easing::Set("Decrese_StickVolumeYM", easing::QUARTIN, 1.3f, 0, 6);
+		easing::Set("Decrese_StickVolumeZP", easing::QUARTIN, 1.3f, 0, 6);
+		easing::Set("Decrese_StickVolumeZM", easing::QUARTIN, 1.3f, 0, 6);
 		//easing set end						 
 		easing::Set_End("Decrese_StickVolumeXP");
 		easing::Set_End("Decrese_StickVolumeXM");
@@ -115,9 +117,15 @@ namespace  Physics_Manager
 		auto fence = ge->GetTask_Group_GN<MapFence::Object>("マップ", "Fence");
 		auto core = ge->GetTask_One_G<Map_Core::Object>("マップ");
 		auto ball = ge->GetTask_One_G<Ball::Object>("ボール");
+		auto cm = ge->GetTask_One_G<CameraMan::Object>("カメラマン");
 
 		//情報をもらうものの中1個でも足りないなら処理をしない
-		if (map == nullptr || fence == nullptr || core == nullptr || ball == nullptr)
+		if (map == nullptr || fence == nullptr || core == nullptr || ball == nullptr || cm == nullptr)
+		{
+			return;
+		}
+
+		if (cm->Is_Moving_Now() == true)
 		{
 			return;
 		}
@@ -258,7 +266,13 @@ namespace  Physics_Manager
 			for (auto f = fence->begin(); f != fence->end(); f++)
 			{
 				(*f)->Map_Check_Hit(ball->Get_Pos(), ball->Get_Radious(), ball->Get_Speed());
-			}			
+			}
+
+			//カメラ目的地をボールがある面が見えるように設定
+			if (in1.B4.down && side_Normal.Is_Zero_Vec() == false)
+			{
+				cm->Set_Destination(side_Normal);
+			}
 			
 			//判定の結果を保存
 			core->Get_Collision_Poligon(&ge->collision_Result);
@@ -282,6 +296,28 @@ namespace  Physics_Manager
 			//ボールを移動させる
 			ball->Move_Ball();
 		}
+	}
+	//------------------------------------------------------------------------
+	//回転軸再計算
+	void Object::Ancker_Calculating()
+	{
+		//カメラからマップ中心のベクトルが新しいZ回転軸
+		ML::Vec3 NEW_AnckerZ = ge->Map_center - ge->camera[0]->pos;
+
+		float sinz, siny, sinx;
+		//軸同士の判別のため外積値を計算しておく
+		MyMath::Vector_Cross(&sinz, this->anckerZ, NEW_AnckerZ);		
+
+		//新、旧Z回転軸の法線ベクトルでまだ分からない回転軸をもう1個計算
+		ML::Vec3 NEW_AnckerY, NEW_AnckerX;
+		//カメラの上方向ベクトルが新しいY回転軸
+		NEW_AnckerY = ge->camera[0]->up;
+		//X回転軸は新しい二つの軸の法線
+		MyMath::Get_Normal_to_Vector_Cross(&NEW_AnckerX, NEW_AnckerY, NEW_AnckerZ);
+
+		this->anckerX = NEW_AnckerX.Normalize();
+		this->anckerY = NEW_AnckerY.Normalize();
+		this->anckerZ = NEW_AnckerZ.Normalize();
 	}
 	//★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★
 	//以下は基本的に変更不要なメソッド

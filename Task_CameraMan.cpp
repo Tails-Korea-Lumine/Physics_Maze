@@ -3,6 +3,7 @@
 //-------------------------------------------------------------------
 #include  "MyPG.h"
 #include  "Task_CameraMan.h"
+#include  "Task_Physics_Manager.h"
 #include  "Task_Game.h"
 
 namespace  CameraMan
@@ -55,6 +56,8 @@ namespace  CameraMan
 		this->angle = ML::Vec3(0, 0, 0);
 		this->maxAngle = 30;
 		this->timeCnt = 0;
+		this->destination = this->nowPos;
+		this->moving_Flag = false;
 
 
 		//★タスクの生成
@@ -171,50 +174,83 @@ namespace  CameraMan
 	//カメラの移動操作
 	void Object::Camera_Move()
 	{
-		auto in1 = DI::GPad_GetState("P1");
+		//auto in1 = DI::GPad_GetState("P1");
 
-		this->nowPos = ge->Map_center - ML::Vec3(0, 0, this->distance);
+		//this->nowPos = ge->Map_center - ML::Vec3(0, 0, this->distance);
 
-		//Rstickの動きでカメラを移動
-		if (in1.RStick.axis.x != 0)
+		////Rstickの動きでカメラを移動
+		//if (in1.RStick.axis.x != 0)
+		//{
+		//	this->angle.x += in1.RStick.axis.x * 3;
+		//}
+		//if (in1.RStick.axis.y != 0)
+		//{
+		//	this->angle.y -= in1.RStick.axis.y * 3;
+		//}
+
+		////移動範囲設定
+		//if (this->angle.x < -this->maxAngle)
+		//{
+		//	this->angle.x = -this->maxAngle;
+		//}
+		//else if (this->angle.x > this->maxAngle)
+		//{
+		//	this->angle.x = this->maxAngle;
+		//}
+		//if (this->angle.y < -this->maxAngle)
+		//{
+		//	this->angle.y = -this->maxAngle;
+		//}
+		//else if (this->angle.y > this->maxAngle)
+		//{
+		//	this->angle.y = this->maxAngle;
+		//}
+
+		////回転クォータニオン生成
+		//ML::QT rotationY = ML::QT(ML::Vec3(0, 1, 0), ML::ToRadian(this->angle.x));
+		//ML::QT rotationX = ML::QT(ML::Vec3(1, 0, 0), ML::ToRadian(this->angle.y));
+
+		////アフィン変換
+		//ML::Mat4x4 matR;
+		//D3DXMatrixAffineTransformation(&matR, 1, &ge->Map_center, &(rotationX*rotationY), NULL);
+
+		//this->nowPos = matR.TransformCoord(this->nowPos);
+
+		////カメラ位置の更新
+		//ge->camera[0]->pos = this->nowPos;
+
+		if (this->nowPos != this->destination)
 		{
-			this->angle.x += in1.RStick.axis.x * 3;
-		}
-		if (in1.RStick.axis.y != 0)
-		{
-			this->angle.y -= in1.RStick.axis.y * 3;
-		}
+			//移動中フラグを立てる
+			this->moving_Flag = true;
+			//目的地と現在位置が異なる場合
+			//相対距離の25%ずつ移動する
+			ML::Vec3 d = this->destination - this->nowPos;
+			this->nowPos += d *0.10f;
 
-		//移動範囲設定
-		if (this->angle.x < -this->maxAngle)
-		{
-			this->angle.x = -this->maxAngle;
+			//一定距離以内なら代入させる
+			if (d.Length() <= 20)
+			{
+				ge->GetTask_One_G<Physics_Manager::Object>("物理運動")->Ancker_Calculating();
+				this->moving_Flag = false;
+				this->nowPos = this->destination;
+			}
+			//カメラ位置の更新
+			ge->camera[0]->pos = this->nowPos;
+			ge->camera[0]->UpDate();
 		}
-		else if (this->angle.x > this->maxAngle)
-		{
-			this->angle.x = this->maxAngle;
-		}
-		if (this->angle.y < -this->maxAngle)
-		{
-			this->angle.y = -this->maxAngle;
-		}
-		else if (this->angle.y > this->maxAngle)
-		{
-			this->angle.y = this->maxAngle;
-		}
-
-		//回転クォータニオン生成
-		ML::QT rotationY = ML::QT(ML::Vec3(0, 1, 0), ML::ToRadian(this->angle.x));
-		ML::QT rotationX = ML::QT(ML::Vec3(1, 0, 0), ML::ToRadian(this->angle.y));
-
-		//アフィン変換
-		ML::Mat4x4 matR;
-		D3DXMatrixAffineTransformation(&matR, 1, &ge->Map_center, &(rotationX*rotationY), NULL);
-
-		this->nowPos = matR.TransformCoord(this->nowPos);
-
-		//カメラ位置の更新
-		ge->camera[0]->pos = this->nowPos;
+	}
+	//---------------------------------------------------------------------------
+	//目的地設定
+	void Object::Set_Destination(const ML::Vec3& side_Normal_On_Ball)
+	{
+		this->destination = ge->Map_center + (side_Normal_On_Ball.Normalize() * this->distance);
+	}
+	//----------------------------------------------------------------------------
+	//移動中なのかを確認する
+	bool Object::Is_Moving_Now()
+	{
+		return this->moving_Flag;
 	}
 	//★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★
 	//以下は基本的に変更不要なメソッド

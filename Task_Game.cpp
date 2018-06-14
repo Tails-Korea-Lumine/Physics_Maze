@@ -12,6 +12,7 @@
 #include  "Task_Result.h"
 #include  "Task_UI.h"
 #include  "Task_CameraMan.h"
+#include "easing.h"
 
 namespace  Game
 {
@@ -52,6 +53,8 @@ namespace  Game
 		ge->gameClearFlag = false;
 		ge->getReadyFlag = true;
 		
+		easing::Init();
+
 		//★タスクの生成
 		//UIの生成
 		auto ui = UI::Object::Create(true);
@@ -108,6 +111,7 @@ namespace  Game
 		ge->KillAll_G("UI");
 		ge->KillAll_G("カメラマン");
 		ge->KillAll_G("エフェクト");
+		ge->KillAll_G("物理運動");
 	//	DG::Font_Erase("FontA");
 
 		DM::Sound_Stop(this->res->bgmName);

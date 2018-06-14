@@ -61,6 +61,11 @@ namespace CameraMan
 		//ライトオンまでの時間を計るカウンタ
 		int timeCnt;
 
+		//カメラをボールが存在する面に移動させるための目的地
+		ML::Vec3 destination;
+		//カメラ移動中を表すフラグ
+		bool moving_Flag;
+
 	public:
 		//メソッド
 		//ライトをオフする処理
@@ -73,5 +78,9 @@ namespace CameraMan
 		void ProMotion();
 		//カメラの移動操作
 		void Camera_Move();
+		//目的地設定
+		void Set_Destination(const ML::Vec3&);
+		//カメラが動いているかを確認する
+		bool Is_Moving_Now();
 	};
 }

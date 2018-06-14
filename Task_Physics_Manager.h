@@ -8,7 +8,7 @@
 namespace Physics_Manager
 {
 	//タスクに割り当てるグループ名と固有名
-	const  string  defGroupName("マップ");	//グループ名
+	const  string  defGroupName("物理運動");	//グループ名
 	const  string  defName("Manager");	//タスク名
 	//-------------------------------------------------------------------
 	class  Resource
@@ -62,6 +62,9 @@ namespace Physics_Manager
 		//メソッド
 		//マップの処理をいっぺんに管理する 引数 : (精密度)
 		void Managing_All_Map(const unsigned int delicate);
+		
 	public:
+		//回転軸再設定
+		void Ancker_Calculating();
 	};
 }
