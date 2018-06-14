@@ -189,10 +189,12 @@ namespace  CameraMan
 
 			//一定距離以内なら代入させる
 			if (d.Length() <= 20)
-			{
-				ge->GetTask_One_G<Physics_Manager::Object>("物理運動")->Ancker_Calculating();
+			{				
 				this->moving_Flag = false;
 				this->nowPos = this->destination;
+				//軸再計算
+				ge->GetTask_One_G<Physics_Manager::Object>("物理運動")->Ancker_Calculating();
+				//easing reset
 				easing::Reset("Moving_Camera");
 			}
 			//カメラ位置の更新

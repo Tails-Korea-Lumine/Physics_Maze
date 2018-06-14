@@ -392,7 +392,7 @@ namespace  Map3d
 								//テレポートインの音を鳴らす
 								DM::Sound_Play(this->res->seTeleportIn, false);
 								//テレポートアウトのエフェクト
-								eff->Add_Effect(exitpos, ML::Vec3(0, 0, 0), BEffect::effType::TeleportOut);
+								eff->Add_Effect(exitpos, this->Normal_Side, BEffect::effType::TeleportOut);
 								//テレポートアウトの音を鳴らす
 								DM::Sound_Play(this->res->seTeleportOut, false);
 							}
