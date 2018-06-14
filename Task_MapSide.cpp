@@ -338,7 +338,7 @@ namespace  Map3d
 		//接触三角形を判定前にクリアする
 		this->col_Poligons.clear();
 		//std::vector<After_Collision> poligon;
-		bool rtv = false;
+		bool ball_on_This_Side = false;
 		//判定スタート
 		for (int y = 0; y < this->sizeY; y++)
 		{
@@ -358,7 +358,7 @@ namespace  Map3d
 					{
 						continue;
 					}
-					rtv = true;
+					ball_on_This_Side = true;
 					//boxType別に処理を分ける
 					switch (this->arr[z][y][x].What_Type_Is_this_Box())
 					{
@@ -424,7 +424,7 @@ namespace  Map3d
 			}
 		}
 		
-		return rtv;
+		return ball_on_This_Side;
 	}
 
 	//------------------------------------------------------------------------

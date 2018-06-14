@@ -61,7 +61,7 @@ namespace Physics_Manager
 			
 		//メソッド
 		//マップの処理をいっぺんに管理する 引数 : (精密度)
-		void Managing_All_Map(const unsigned int delicate);
+		void Managing(const unsigned int delicate);
 		
 	public:
 		//回転軸再設定

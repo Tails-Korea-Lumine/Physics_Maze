@@ -51,9 +51,7 @@ namespace  Game
 		this->nowdi = di;
 		this->render2D_Priority[1] = 1.0f;
 		ge->gameClearFlag = false;
-		ge->getReadyFlag = true;
-		
-		easing::Init();
+		ge->getReadyFlag = true;		
 
 		//šƒ^ƒXƒN‚Ì¶¬
 		//UI‚Ì¶¬
@@ -199,9 +197,13 @@ namespace  Game
 		matT.Translation(ge->camera[0]->pos);		
 
 		DG::EffectState().param.matWorld = matS * matR * matT;
+		DG::EffectState().param.lightsEnable = false;
+		if (DG::EffectState().param.light[0].enable)
+		{
+			DG::Mesh_Draw(this->res->BG_mesh);
+		}
 
-		DG::Mesh_Draw(this->res->BG_mesh);
-		
+		DG::EffectState().param.lightsEnable = true;
 	}
 
 	//--------------------------------------------------------------------------------------

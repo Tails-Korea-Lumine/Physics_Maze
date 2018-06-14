@@ -67,11 +67,13 @@ namespace Ball
 		bool collision_Flag;
 		//重力
 		Gravity G;
+		//テレポートをしたのかを判別するフラグ
+		bool teleportation_Flag;
 
-	public:
 		//メソッド
 		//一個前のフレームで衝突したかを返す
 		bool Is_Collision() const;
+	public:
 		//その時のボールの情報を返す関数
 		//位置
 		ML::Vec3 Get_Pos() const;
@@ -79,6 +81,8 @@ namespace Ball
 		float Get_Radious() const;
 		//速度
 		ML::Vec3 Get_Speed() const;
+		//テレポートしたかを確認するタスク
+		bool Is_Teleport_Now() const;
 		//あたり判定による方向転換及び移動
 		void Move_Ball();
 		//位置補正用回転関数 引数 : (マップのフレーム回転量)

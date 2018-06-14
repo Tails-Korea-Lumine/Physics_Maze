@@ -45,6 +45,7 @@ namespace  Ball
 		this->m = 30.0f;
 		this->rot = 0.0f;
 		this->collision_Flag = false;
+		this->teleportation_Flag = false;
 
 	
 		//★タスクの生成
@@ -75,6 +76,9 @@ namespace  Ball
 			
 		//回転量上昇
 		this->rot += this->speed.Length();
+
+		//テレポートフラグを無効に
+		this->teleportation_Flag = false;
 	}
 	//-------------------------------------------------------------------
 	//あたり判定による方向転換及び移動
@@ -209,6 +213,7 @@ namespace  Ball
 	//テレポート(指定した場所に即移動する)
 	void Object::Teleportation(const ML::Vec3& objectPos)
 	{
+		this->teleportation_Flag = true;
 		this->pos = objectPos;
 	}
 
@@ -217,6 +222,12 @@ namespace  Ball
 	void Object::Graviation_Pull(const ML::Vec3& force)
 	{
 		this->speed += force;
+	}
+	//-----------------------------------------------------------------------------
+	//テレポートしたかを確認
+	bool Object::Is_Teleport_Now() const
+	{
+		return this->teleportation_Flag;
 	}
 	//★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★
 	//以下は基本的に変更不要なメソッド

@@ -5,6 +5,7 @@
 #include  "Task_Tutorial.h"
 #include  "Task_Title.h"
 #include "Task_UI.h"
+#include "easing.h"
 
 #define SCROLL_MAX_RANGE -200
 namespace  Tutorial
@@ -124,6 +125,8 @@ namespace  Tutorial
 	void  Object::UpDate()
 	{
 		int scroll_Speed = 8;
+
+		easing::UpDate();
 
 		auto in = DI::GPad_GetState("P1");
 		//ƒXƒNƒ[ƒ‹‘€ì

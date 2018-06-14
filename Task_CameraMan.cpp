@@ -5,6 +5,7 @@
 #include  "Task_CameraMan.h"
 #include  "Task_Physics_Manager.h"
 #include  "Task_Game.h"
+#include  "easing.h"
 
 namespace  CameraMan
 {
@@ -47,8 +48,9 @@ namespace  CameraMan
 		DG::EffectState().param.light[0].enable = true;
 		DG::EffectState().param.light[0].kind = DG_::Light::Directional;//光源の種類
 		DG::EffectState().param.light[0].direction = ML::Vec3(1, -1, 1).Normalize();//照射方向
-		DG::EffectState().param.light[0].color = ML::Color(1, 1, 1, 1);//色と強さ
+		DG::EffectState().param.light[0].color = ML::Color(1, 1, 1, 1);//色と強さ		
 
+		easing::Set("Moving_Camera", easing::EXPOIN, 0, 0.1f, 20);
 
 		this->nowPos = ge->camera[0]->pos;
 		this->initPos = ge->camera[0]->pos;
@@ -174,59 +176,16 @@ namespace  CameraMan
 	//カメラの移動操作
 	void Object::Camera_Move()
 	{
-		//auto in1 = DI::GPad_GetState("P1");
-
-		//this->nowPos = ge->Map_center - ML::Vec3(0, 0, this->distance);
-
-		////Rstickの動きでカメラを移動
-		//if (in1.RStick.axis.x != 0)
-		//{
-		//	this->angle.x += in1.RStick.axis.x * 3;
-		//}
-		//if (in1.RStick.axis.y != 0)
-		//{
-		//	this->angle.y -= in1.RStick.axis.y * 3;
-		//}
-
-		////移動範囲設定
-		//if (this->angle.x < -this->maxAngle)
-		//{
-		//	this->angle.x = -this->maxAngle;
-		//}
-		//else if (this->angle.x > this->maxAngle)
-		//{
-		//	this->angle.x = this->maxAngle;
-		//}
-		//if (this->angle.y < -this->maxAngle)
-		//{
-		//	this->angle.y = -this->maxAngle;
-		//}
-		//else if (this->angle.y > this->maxAngle)
-		//{
-		//	this->angle.y = this->maxAngle;
-		//}
-
-		////回転クォータニオン生成
-		//ML::QT rotationY = ML::QT(ML::Vec3(0, 1, 0), ML::ToRadian(this->angle.x));
-		//ML::QT rotationX = ML::QT(ML::Vec3(1, 0, 0), ML::ToRadian(this->angle.y));
-
-		////アフィン変換
-		//ML::Mat4x4 matR;
-		//D3DXMatrixAffineTransformation(&matR, 1, &ge->Map_center, &(rotationX*rotationY), NULL);
-
-		//this->nowPos = matR.TransformCoord(this->nowPos);
-
-		////カメラ位置の更新
-		//ge->camera[0]->pos = this->nowPos;
-
+		//目的地と現在位置が異なるときに移動開始
 		if (this->nowPos != this->destination)
-		{
+		{	
+			easing::Start("Moving_Camera");
 			//移動中フラグを立てる
 			this->moving_Flag = true;
 			//目的地と現在位置が異なる場合
 			//相対距離の25%ずつ移動する
 			ML::Vec3 d = this->destination - this->nowPos;
-			this->nowPos += d *0.10f;
+			this->nowPos += d * easing::GetPos("Moving_Camera");
 
 			//一定距離以内なら代入させる
 			if (d.Length() <= 20)
@@ -234,6 +193,7 @@ namespace  CameraMan
 				ge->GetTask_One_G<Physics_Manager::Object>("物理運動")->Ancker_Calculating();
 				this->moving_Flag = false;
 				this->nowPos = this->destination;
+				easing::Reset("Moving_Camera");
 			}
 			//カメラ位置の更新
 			ge->camera[0]->pos = this->nowPos;

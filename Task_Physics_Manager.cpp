@@ -53,12 +53,12 @@ namespace  Physics_Manager
 		this->anckerZ = ML::Vec3(0, 0, 1);
 	
 		//easing set
-		easing::Set("Decrese_StickVolumeXP", easing::QUARTIN, 1.3f, 0, 6);
-		easing::Set("Decrese_StickVolumeXM", easing::QUARTIN, 1.3f, 0, 6);
-		easing::Set("Decrese_StickVolumeYP", easing::QUARTIN, 1.3f, 0, 6);
-		easing::Set("Decrese_StickVolumeYM", easing::QUARTIN, 1.3f, 0, 6);
-		easing::Set("Decrese_StickVolumeZP", easing::QUARTIN, 1.3f, 0, 6);
-		easing::Set("Decrese_StickVolumeZM", easing::QUARTIN, 1.3f, 0, 6);
+		easing::Set("Decrese_StickVolumeXP", easing::QUARTIN, 1.7f, 0, 6);
+		easing::Set("Decrese_StickVolumeXM", easing::QUARTIN, 1.7f, 0, 6);
+		easing::Set("Decrese_StickVolumeYP", easing::QUARTIN, 1.7f, 0, 6);
+		easing::Set("Decrese_StickVolumeYM", easing::QUARTIN, 1.7f, 0, 6);
+		easing::Set("Decrese_StickVolumeZP", easing::QUARTIN, 1.7f, 0, 6);
+		easing::Set("Decrese_StickVolumeZM", easing::QUARTIN, 1.7f, 0, 6);
 		//easing set end						 
 		easing::Set_End("Decrese_StickVolumeXP");
 		easing::Set_End("Decrese_StickVolumeXM");
@@ -90,7 +90,7 @@ namespace  Physics_Manager
 	void  Object::UpDate()
 	{				
 		//マップに関することは全部マネージャ側でやる ver0.6
-		this->Managing_All_Map(PRECISION);
+		this->Managing(PRECISION);
 		
 	}
 	//-------------------------------------------------------------------
@@ -109,7 +109,7 @@ namespace  Physics_Manager
 	//----------------------------------------------------------------------------------
 	//追加メソッド
 	//マップの処理をいっぺんに管理する
-	void Object::Managing_All_Map(const unsigned int delicate)
+	void Object::Managing(const unsigned int precision)
 	{
 		auto in1 = DI::GPad_GetState("P1");
 		//ほかのタスクの情報をもらってくる
@@ -132,9 +132,19 @@ namespace  Physics_Manager
 
 		//ボールが存在している面の法線ベクトル
 		ML::Vec3 side_Normal(0, 0, 0);
+		float delicate = 0.0f;
+		//微調整機能
+		if (in1.B2.on)
+		{
+			delicate = (float)precision * 2.0f;
+		}
+		else
+		{
+			delicate = (float)precision;
+		}
 
 		//std::vector<After_Collision> Result;
-		for (unsigned int i = 0; i < delicate; i++)
+		for (unsigned int i = 0; i < precision; i++)
 		{
 			//z軸回転がボタンを押しながらやるver0.1
 			//if (in1.B1.on)
@@ -200,19 +210,19 @@ namespace  Physics_Manager
 				}
 			}
 			//easingデータが回転量で更新される
-			this->frame_QTxp = ML::QT(this->anckerX, ML::ToRadian(-(easing::GetPos("Decrese_StickVolumeXM"))  / (float)delicate));
+			this->frame_QTxp = ML::QT(this->anckerX, ML::ToRadian(-(easing::GetPos("Decrese_StickVolumeXM"))  / delicate));
 						
-			this->frame_QTxm = ML::QT(this->anckerX, ML::ToRadian((easing::GetPos("Decrese_StickVolumeXP")) / (float)delicate));
+			this->frame_QTxm = ML::QT(this->anckerX, ML::ToRadian((easing::GetPos("Decrese_StickVolumeXP")) / delicate));
 			
 			
-			this->frame_QTym = ML::QT(this->anckerY, ML::ToRadian(-(easing::GetPos("Decrese_StickVolumeYM")) / (float)delicate));
+			this->frame_QTym = ML::QT(this->anckerY, ML::ToRadian(-(easing::GetPos("Decrese_StickVolumeYM")) / delicate));
 
-			this->frame_QTyp = ML::QT(this->anckerY, ML::ToRadian((easing::GetPos("Decrese_StickVolumeYP")) / (float)delicate));
+			this->frame_QTyp = ML::QT(this->anckerY, ML::ToRadian((easing::GetPos("Decrese_StickVolumeYP")) / delicate));
 						
 			
-			this->frame_QTzm = ML::QT(this->anckerZ, ML::ToRadian(-(easing::GetPos("Decrese_StickVolumeZM")) / (float)delicate));
+			this->frame_QTzm = ML::QT(this->anckerZ, ML::ToRadian(-(easing::GetPos("Decrese_StickVolumeZM")) / delicate));
 
-			this->frame_QTzp = ML::QT(this->anckerZ, ML::ToRadian((easing::GetPos("Decrese_StickVolumeZP")) / (float)delicate));
+			this->frame_QTzp = ML::QT(this->anckerZ, ML::ToRadian((easing::GetPos("Decrese_StickVolumeZP")) / delicate));
 
 			//フレーム回転量のまとめ				
 			ML::QT frame_QT_All = this->frame_QTxp * this->frame_QTxm * this->frame_QTyp * this->frame_QTym *this->frame_QTzm * this->frame_QTzp;
@@ -269,7 +279,7 @@ namespace  Physics_Manager
 			}
 
 			//カメラ目的地をボールがある面が見えるように設定
-			if (in1.B4.down && side_Normal.Is_Zero_Vec() == false)
+			if (side_Normal.Is_Zero_Vec() == false && (in1.B4.down || ball->Is_Teleport_Now() ))
 			{
 				cm->Set_Destination(side_Normal);
 			}
@@ -303,10 +313,6 @@ namespace  Physics_Manager
 	{
 		//カメラからマップ中心のベクトルが新しいZ回転軸
 		ML::Vec3 NEW_AnckerZ = ge->Map_center - ge->camera[0]->pos;
-
-		float sinz, siny, sinx;
-		//軸同士の判別のため外積値を計算しておく
-		MyMath::Vector_Cross(&sinz, this->anckerZ, NEW_AnckerZ);		
 
 		//新、旧Z回転軸の法線ベクトルでまだ分からない回転軸をもう1個計算
 		ML::Vec3 NEW_AnckerY, NEW_AnckerX;
