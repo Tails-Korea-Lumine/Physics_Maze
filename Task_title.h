@@ -86,8 +86,10 @@ namespace Title
 		POINT next_Task_Index;
 		//現在メニュー
 		nowMenu n;
-
-	public:
+		//グラデーションウェーブ用
+		float waveR, waveG, waveB;
+		float dgreeR, dgreeG, dgreeB;
+	
 		//メソッド
 		//ゲームパッドから入力をもらえるすべてのものを確認
 		bool Press_Any_Key() const;
@@ -103,7 +105,10 @@ namespace Title
 		void Draw_Menu() const;
 		//2番目のメニュー(難易度またはテュートリアル目次)を描画
 		void Draw_Dif_Col(nowMenu now) const;
+		//色をだんだん変更する
+		void Color_Wave();
 
+	public:
 		//次のタスクを決める関数
 		void I_Select(POINT select);
 		

@@ -108,6 +108,13 @@ namespace  Title
 		this->next_Task_Index = { 0,0 };
 		this->moving_Menu = 0;
 		this->moving_Title_Name = 0;
+		this->waveB = 1.0f;
+		this->waveG = 1.0f;
+		this->waveR = 1.0f;
+		this->dgreeB = 0.0f;
+		this->dgreeG = 45.0f;
+		this->dgreeR = 90.0f;
+
 		this->n = nowMenu::Start_Tutorial;		
 
 		for (int i = 0; i < 12; i++)
@@ -221,7 +228,8 @@ namespace  Title
 			//メニューは関係なくカーソルが生きている間タイトル名は上に上がっている
 			this->moving_Title_Name += MOVING_TITLE_NAME_SPEED;
 		}
-
+		//カラーウェーブ
+		this->Color_Wave();
 		//時間上昇
 		this->timeCnt++;
 
@@ -242,7 +250,7 @@ namespace  Title
 		//イメージから取る範囲
 		ML::Box2D src_BG(0, 0, size_BG.x, size_BG.y);
 		//背景描画
-		DG::Image_Draw(this->res->BG_ImageName, draw_BG, src_BG);
+		DG::Image_Draw(this->res->BG_ImageName, draw_BG, src_BG,ML::Color(1,this->waveR,this->waveG,this->waveB));
 
 		//2Dの描画関数を呼ぶ
 		this->Draw_Title_Name();		
@@ -429,6 +437,21 @@ namespace  Title
 			return false;
 		}
 		return true;
+	}
+	//--------------------------------------------------------------------------------------------------
+	//カラーウェーブ
+	void Object::Color_Wave()
+	{
+		float waveCnt = 0.14f;
+		//ウェーブ
+		//サイン関数に渡す角度上昇
+		this->dgreeR += waveCnt;
+		this->dgreeG += waveCnt;
+		this->dgreeB += waveCnt;
+		//0.0f~1.0fに固定するためにずらす
+		this->waveR = (sinf(ML::ToRadian(this->dgreeR)) / 2) + 0.5f;
+		this->waveG = (sinf(ML::ToRadian(this->dgreeG)) / 2) + 0.5f;
+		this->waveB = (sinf(ML::ToRadian(this->dgreeB)) / 2) + 0.5f;
 	}
 	//★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★
 	//以下は基本的に変更不要なメソッド

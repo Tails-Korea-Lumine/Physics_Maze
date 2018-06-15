@@ -277,12 +277,6 @@ namespace  Physics_Manager
 			{
 				(*f)->Map_Check_Hit(ball->Get_Pos(), ball->Get_Radious(), ball->Get_Speed());
 			}
-
-			//カメラ目的地をボールがある面が見えるように設定
-			if (side_Normal.Is_Zero_Vec() == false && (in1.B4.down || ball->Is_Teleport_Now() ))
-			{
-				cm->Set_Destination(side_Normal);
-			}
 			
 			//判定の結果を保存
 			core->Get_Collision_Poligon(&ge->collision_Result);
@@ -293,8 +287,7 @@ namespace  Physics_Manager
 			for (auto i = fence->begin(); i != fence->end(); i++)
 			{
 				(*i)->Get_Collision_Poligon(&ge->collision_Result);
-			}
-			//ge->collision_Result = Result;
+			}			
 			
 
 			//位置補正を仕掛ける
@@ -305,6 +298,11 @@ namespace  Physics_Manager
 
 			//ボールを移動させる
 			ball->Move_Ball();
+		}
+		//カメラ目的地をボールがある面が見えるように設定
+		if (side_Normal.Is_Zero_Vec() == false && (in1.B4.down || ball->Is_Teleport_Now()))
+		{
+			cm->Set_Destination(side_Normal);
 		}
 	}
 	//------------------------------------------------------------------------

@@ -65,6 +65,10 @@ namespace CameraMan
 		ML::Vec3 destination;
 		//カメラ移動中を表すフラグ
 		bool moving_Flag;
+		//ゲームスタート前の演出
+		void ProMotion();
+		//カメラの移動操作
+		void Camera_Move();
 
 	public:
 		//メソッド
@@ -73,11 +77,7 @@ namespace CameraMan
 		//ライトをオンする処理
 		void Turnon_the_Light();
 		//3秒がたったのかを判定
-		bool It_Passed_3sec() const;
-		//ゲームスタート前の演出
-		void ProMotion();
-		//カメラの移動操作
-		void Camera_Move();
+		bool It_Passed_3sec() const;	
 		//目的地設定
 		void Set_Destination(const ML::Vec3&);
 		//カメラが動いているかを確認する
