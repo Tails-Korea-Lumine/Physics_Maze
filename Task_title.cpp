@@ -442,16 +442,18 @@ namespace  Title
 	//カラーウェーブ
 	void Object::Color_Wave()
 	{
-		float waveCnt = 0.14f;
+		float waveCntR = 0.06f;
+		float waveCntG = 0.14f;
+		float waveCntB = 0.1f;
 		//ウェーブ
 		//サイン関数に渡す角度上昇
-		this->dgreeR += waveCnt;
-		this->dgreeG += waveCnt;
-		this->dgreeB += waveCnt;
+		this->dgreeR += waveCntR;
+		this->dgreeG += waveCntG;
+		this->dgreeB += waveCntB;
 		//0.0f~1.0fに固定するためにずらす
-		this->waveR = (sinf(ML::ToRadian(this->dgreeR)) / 2) + 0.5f;
-		this->waveG = (sinf(ML::ToRadian(this->dgreeG)) / 2) + 0.5f;
-		this->waveB = (sinf(ML::ToRadian(this->dgreeB)) / 2) + 0.5f;
+		this->waveR = (sinf(ML::ToRadian(this->dgreeR)) / 4) + 0.5f;
+		this->waveG = (sinf(ML::ToRadian(this->dgreeG)) / 4) + 0.5f;
+		this->waveB = (sinf(ML::ToRadian(this->dgreeB)) / 4) + 0.5f;
 	}
 	//★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★
 	//以下は基本的に変更不要なメソッド
