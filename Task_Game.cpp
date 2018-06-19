@@ -51,7 +51,8 @@ namespace  Game
 		this->nowdi = di;
 		this->render2D_Priority[1] = 1.0f;
 		ge->gameClearFlag = false;
-		ge->getReadyFlag = true;		
+		ge->getReadyFlag = true;
+		this->vol = 0;
 
 		//★タスクの生成
 		//UIの生成
@@ -140,6 +141,7 @@ namespace  Game
 		if (this->Is_Count_Down())
 		{
 			this->countdown++;
+			this->BGM_Fade_Out();
 		}
 		//1秒後にタスク消滅
 		if (this->Count_Down_Over())
@@ -253,7 +255,13 @@ namespace  Game
 	{
 		return this->timeCnt > 420;
 	}
-
+	//--------------------------------------------------------------------------------
+	//BGM fade out
+	void Object::BGM_Fade_Out()
+	{
+		this->vol += 20;
+		DM::Sound_Volume(this->res->bgmName, this->vol);
+	}
 	//★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★
 	//以下は基本的に変更不要なメソッド
 	//★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★

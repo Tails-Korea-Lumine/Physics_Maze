@@ -88,6 +88,7 @@ namespace  Cursor
 	//「更新」１フレーム毎に行う処理
 	void  Object::UpDate()
 	{			
+		auto title = ge->GetTask_One_G <Title::Object>("タイトル");
 		//カウントダウンフラグが立っていない場合のみ選択と取り消し処理を行う
 		if (!this->Is_Count_Down())
 		{
@@ -102,6 +103,8 @@ namespace  Cursor
 			this->countdown++;
 			//カーソルの目的地は画面外にする
 			this->destination.y = OUT_OF_SCREEN;
+			//BGMをフェイトアウトさせる
+			title->BGM_Fade_Out();
 		}
 		//カウントダウンが終わったらタスク消滅
 		if (this->Count_Down_Over())

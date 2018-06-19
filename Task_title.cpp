@@ -114,6 +114,7 @@ namespace  Title
 		this->dgreeB = 0.0f;
 		this->dgreeG = 45.0f;
 		this->dgreeR = 90.0f;
+		this->vol = 0;
 
 		this->n = nowMenu::Start_Tutorial;		
 
@@ -454,6 +455,13 @@ namespace  Title
 		this->waveR = (sinf(ML::ToRadian(this->dgreeR)) / 4) + 0.5f;
 		this->waveG = (sinf(ML::ToRadian(this->dgreeG)) / 4) + 0.5f;
 		this->waveB = (sinf(ML::ToRadian(this->dgreeB)) / 4) + 0.5f;
+	}
+	//--------------------------------------------------------------------------------
+	//BGM fade out
+	void Object::BGM_Fade_Out()
+	{
+		this->vol += 20;
+		DM::Sound_Volume(this->res->bgm_Title, this->vol);
 	}
 	//★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★
 	//以下は基本的に変更不要なメソッド

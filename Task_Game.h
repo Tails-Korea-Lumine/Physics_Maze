@@ -62,6 +62,8 @@ namespace Game
 
 		//遊んだプレー時間Resultタスクに渡すもの
 		int timeCnt;
+		//bgm volume
+		long vol;
 
 	public:
 		//カウントダウンフラグを返す関数
@@ -78,5 +80,8 @@ namespace Game
 		bool Start_Clear_Promotion();
 		//カメラ演出が終わったのかを確認
 		bool Is_Camera_Promotion_Over();
+		//BGMヴォリュームをフェイドアウトさせる
+		void BGM_Fade_Out();
+
 	};
 }

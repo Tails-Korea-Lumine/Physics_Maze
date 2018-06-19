@@ -64,6 +64,8 @@ namespace Result
 		//タスク消滅までのカウンタとフラグ
 		int countdown;
 		bool countdownFlag;
+		//bgm volume
+		long vol;
 
 	public:
 		//メソッド
@@ -75,5 +77,7 @@ namespace Result
 		bool Is_Count_Down_Over() const;
 		//引数ぐらいの時間がたったのかを確認する
 		bool Is_Over_Argument_Seconds(const int sec) const;
+		//BGMヴォリュームをフェイドアウトさせる
+		void BGM_Fade_Out();
 	};
 }

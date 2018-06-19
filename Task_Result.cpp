@@ -82,7 +82,7 @@ namespace  Result
 			this->src_Number[i].h = 140;
 		}
 
-		//カメラの設定
+		this->vol = 0;
 		
 		DG::EffectState().param.bgColor = ML::Color(1, 0, 0, 0);
 		//★タスクの生成
@@ -126,6 +126,7 @@ namespace  Result
 		if (this->Is_Count_Down())
 		{
 			this->countdown++;
+			this->BGM_Fade_Out();
 		}
 		//1秒後にタスク消滅
 		if (this->Is_Count_Down_Over())
@@ -244,6 +245,13 @@ namespace  Result
 	bool Object::Is_Over_Argument_Seconds(const int sec) const
 	{
 		return (this->timeCnt > (60 * sec));
+	}
+	//--------------------------------------------------------------------------------
+	//BGM fade out
+	void Object::BGM_Fade_Out()
+	{
+		this->vol += 20;
+		DM::Sound_Volume(this->res->bgmName, this->vol);
 	}
 	//★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★
 	//以下は基本的に変更不要なメソッド

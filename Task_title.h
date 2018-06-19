@@ -89,6 +89,8 @@ namespace Title
 		//グラデーションウェーブ用
 		float waveR, waveG, waveB;
 		float dgreeR, dgreeG, dgreeB;
+		//bgm volume
+		long vol;
 	
 		//メソッド
 		//ゲームパッドから入力をもらえるすべてのものを確認
@@ -111,6 +113,7 @@ namespace Title
 	public:
 		//次のタスクを決める関数
 		void I_Select(POINT select);
-		
+		//BGMヴォリュームをフェイドアウトさせる
+		void BGM_Fade_Out();
 	};
 }
