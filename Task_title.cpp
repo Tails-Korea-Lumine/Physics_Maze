@@ -114,7 +114,7 @@ namespace  Title
 		this->dgreeB = 0.0f;
 		this->dgreeG = 45.0f;
 		this->dgreeR = 90.0f;
-		this->vol = 0;
+		this->vol = 1000;
 
 		this->n = nowMenu::Start_Tutorial;		
 
@@ -460,7 +460,7 @@ namespace  Title
 	//BGM fade out
 	void Object::BGM_Fade_Out()
 	{
-		this->vol += 20;
+		this->vol -= 5;
 		DM::Sound_Volume(this->res->bgm_Title, this->vol);
 	}
 	//šššššššššššššššššššššššššššššššššššššššššš

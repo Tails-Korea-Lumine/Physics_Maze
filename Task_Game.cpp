@@ -52,7 +52,7 @@ namespace  Game
 		this->render2D_Priority[1] = 1.0f;
 		ge->gameClearFlag = false;
 		ge->getReadyFlag = true;
-		this->vol = 0;
+		this->vol = 1000;
 
 		//šƒ^ƒXƒN‚Ì¶¬
 		//UI‚Ì¶¬
@@ -259,7 +259,7 @@ namespace  Game
 	//BGM fade out
 	void Object::BGM_Fade_Out()
 	{
-		this->vol += 20;
+		this->vol -= 5;
 		DM::Sound_Volume(this->res->bgmName, this->vol);
 	}
 	//šššššššššššššššššššššššššššššššššššššššššš

@@ -62,8 +62,14 @@ namespace Tutorial
 
 		int posx[3];//チュートリアルページ切り替え用
 		int posy;//テュートリアルページの表示位置-528=<posy=<720 変更可能性あり
+
+		//bgm volume
+		long vol;
 		
 		Tutorial_Column column;
+
+		//BGMヴォリュームをフェイドアウトさせる
+		void BGM_Fade_Out();
 
 	public:
 		void Page_Chage(bool page_Move_Right);

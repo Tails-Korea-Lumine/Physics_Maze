@@ -82,7 +82,7 @@ namespace  Result
 			this->src_Number[i].h = 140;
 		}
 
-		this->vol = 0;
+		this->vol = 1000;
 		
 		DG::EffectState().param.bgColor = ML::Color(1, 0, 0, 0);
 		//šƒ^ƒXƒN‚Ì¶¬
@@ -250,7 +250,7 @@ namespace  Result
 	//BGM fade out
 	void Object::BGM_Fade_Out()
 	{
-		this->vol += 20;
+		this->vol -= 5;
 		DM::Sound_Volume(this->res->bgmName, this->vol);
 	}
 	//šššššššššššššššššššššššššššššššššššššššššš

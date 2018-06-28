@@ -70,6 +70,8 @@ namespace  Tutorial
 		this->timeCnt = 990;//0~80ではない数値で初期化
 		this->page_Change_Flag = false;
 
+		this->vol = 1000;
+
 		switch(this->column)
 		{
 		case Tutorial_Column::OutLine:
@@ -292,6 +294,13 @@ namespace  Tutorial
 	bool Object::Can_I_Change_the_Page() const
 	{
 		return (this->timeCnt > 80);
+	}
+	//--------------------------------------------------------------------------------
+	//BGM fade out
+	void Object::BGM_Fade_Out()
+	{
+		this->vol -= 5;
+		DM::Sound_Volume(this->res->bgmName, this->vol);
 	}
 	//★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★
 	//以下は基本的に変更不要なメソッド

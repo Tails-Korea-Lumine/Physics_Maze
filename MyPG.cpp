@@ -56,7 +56,7 @@ namespace MyPG
 			D3DXVECTOR3(0.0f, 1.0f, 0.0f),		//	カメラの上方向ベクトル
 			ML::ToRadian(60.0f), 10.0f, 300.0f,	//	視野角・視野距離
 			(float)ge->screenWidth / (float)ge->screenHeight);		//	画面比率
-		DG::EffectState( ).param.bgColor  = ML::Color(1,1,1,1);
+		DG::EffectState( ).param.bgColor  = ML::Color(1,0,0,0);
 		ge->camera[3] = ge->camera[2] = ge->camera[1] = ge->camera[0];
 
 		//デバッグ用情報の表示ON/OFF
@@ -90,7 +90,7 @@ namespace MyPG
 
 
 		//背景色の設定（デフォルト）
-		DG::EffectState( ).param.bgColor  =  ML::Color(0,0.0f,0.8f,0.0f);
+		DG::EffectState( ).param.bgColor  =  ML::Color(0,0.0f,0.0f,0.0f);
 
 		//ビューポートの設定（デフォルト)
 		D3D10_VIEWPORT defVP = { 0,0,this->screenWidth,this->screenHeight,0.0f,1.0f }; //X Y W H MIND MAXD
