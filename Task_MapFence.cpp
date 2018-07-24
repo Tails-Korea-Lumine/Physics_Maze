@@ -203,8 +203,8 @@ namespace  MapFence
 	{
 		
 
-		ML::Mat4x4 matS;
-		matS.Scaling(this->chipSize);
+		ML::Mat4x4 matW;
+		//matS.Scaling(this->chipSize);
 		for (int y = 0; y < this->sizeY; y++)
 		{
 			for (int z = 0; z < this->sizeZ; z++)
@@ -217,23 +217,15 @@ namespace  MapFence
 						continue;
 					}
 					 
-					ML::Mat4x4 matT;
+				/*	ML::Mat4x4 matT;
 					matT.Translation(this->arr[z][y][x].Get_Pos());
 
 					ML::Mat4x4 matR;
-					matR.RotationQuaternion(this->map_QT);
-					//D3DXMatrixAffineTransformation(&matR, this->chipSize / 100.0f, NULL, &qtW, NULL);
-					////matR.Inverse();
+					matR.RotationQuaternion(this->map_QT);*/
+					
+					D3DXMatrixAffineTransformation(&matW, this->chipSize, NULL, &this->map_QT, &this->arr[z][y][x].Get_Pos());
 
-					//if (this->map_Rotation.Length() != 0)
-					//{
-					//	ML::Mat4x4 matMove;
-					//	D3DXMatrixAffineTransformation(&matMove, this->chipSize / 100.0f, NULL, &qtM, NULL);
-					//	matR *= matMove;
-					//}
-					//matR.Inverse();
-
-					DG::EffectState().param.matWorld =  matS * matR * matT;					
+					DG::EffectState().param.matWorld = matW;
 					DG::Mesh_Draw(this->chipName[(int)this->arr[z][y][x].What_Type_Is_this_Box()]);
 				}
 			}
