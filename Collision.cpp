@@ -204,7 +204,7 @@ void Collision::Get_Poionts_to_Sphere(std::vector<ML::Vec3>* result ,const ML::V
 	{
 		//âÒì]çsóÒê∂ê¨
 		ML::Mat4x4 matRx;
-		ML::QT qtX = ML::QT(ML::Vec3(1, 0, 0), ML::ToRadian(i));
+		ML::QT qtX = ML::QT(ML::Vec3(1, 0, 0), ML::ToRadian((float)i));
 
 		D3DXMatrixAffineTransformation(&matRx, 1.0f, &pos, &qtX, NULL);
 
@@ -216,7 +216,7 @@ void Collision::Get_Poionts_to_Sphere(std::vector<ML::Vec3>* result ,const ML::V
 	{
 		//âÒì]çsóÒê∂ê¨
 		ML::Mat4x4 matRy;
-		ML::QT qtY = ML::QT(ML::Vec3(0, 1, 0), ML::ToRadian(d));
+		ML::QT qtY = ML::QT(ML::Vec3(0, 1, 0), ML::ToRadian((float)d));
 
 		D3DXMatrixAffineTransformation(&matRy, 1.0f, &pos, &qtY, NULL);
 		
