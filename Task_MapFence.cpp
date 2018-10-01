@@ -72,9 +72,9 @@ namespace  MapFence
 		}
 		//データのゼロクリア
 		ZeroMemory(this->arr, sizeof(this->arr));
-		this->sizeX = 0;
+		//this->sizeX = 0;
 		this->sizeY = 0;
-		this->sizeZ = 0;
+		this->sizeX = 0;
 		this->chipSize = 100.0f;
 		for (int i = 0; i < _countof(this->chipName); i++)
 		{
@@ -111,9 +111,9 @@ namespace  MapFence
 				DG::Mesh_Erase(this->chipName[i]);
 			}
 		}
-		this->sizeX = 0;
+		//this->sizeX = 0;
 		this->sizeY = 0;
-		this->sizeZ = 0;
+		this->sizeX = 0;
 		this->col_Poligons.clear();
 
 		if (!ge->QuitFlag() && this->nextTaskCreate)
@@ -202,17 +202,16 @@ namespace  MapFence
 	void  Object::Render3D_L0()
 	{
 		
-
 		ML::Mat4x4 matW;
 		//matS.Scaling(this->chipSize);
 		for (int y = 0; y < this->sizeY; y++)
 		{
-			for (int z = 0; z < this->sizeZ; z++)
+			for (int x = 0; x < this->sizeX; x++)
 			{
-				for (int x = 0; x < this->sizeX; x++)
+				//for (int x = 0; x < this->sizeX; x++)
 				{
 					//道はレンダリングしない
-					if (this->arr[z][y][x].What_Type_Is_this_Box() == BoxType::Road)
+					if (this->arr[y][x].What_Type_Is_this_Box() == BoxType::Road)
 					{
 						continue;
 					}
@@ -223,10 +222,10 @@ namespace  MapFence
 					ML::Mat4x4 matR;
 					matR.RotationQuaternion(this->map_QT);*/
 					
-					D3DXMatrixAffineTransformation(&matW, this->chipSize, NULL, &this->map_QT, &this->arr[z][y][x].Get_Pos());
+					D3DXMatrixAffineTransformation(&matW, this->chipSize, NULL, &this->map_QT, &this->arr[y][x].Get_Pos());
 
 					DG::EffectState().param.matWorld = matW;
-					DG::Mesh_Draw(this->chipName[(int)this->arr[z][y][x].What_Type_Is_this_Box()]);
+					DG::Mesh_Draw(this->chipName[(int)this->arr[y][x].What_Type_Is_this_Box()]);
 				}
 			}
 		}
@@ -265,21 +264,21 @@ namespace  MapFence
 			DG::Mesh_CreateFromSOBFile(this->chipName[c], chipFilePath);
 		}
 		//マップ配列サイズの読み込み
-		fin >> this->sizeX >> this->sizeY >> this->sizeZ;
+		fin >> this->sizeX >> this->sizeY;
 		//マップ配列データの読みこみ
 		for (int y = 0; y < this->sizeY; y++)
 		{
-			for (int z = this->sizeZ - 1; z >= 0; z--)
+			for (int x = 0; x < sizeX; x++)
 			{
-				for (int x = 0; x < this->sizeX; x++)
+				//for (int x = 0; x < this->sizeX; x++)
 				{
 					int chip;
 					fin >> chip;
-					ML::Vec3 pos = ML::Vec3(x*this->chipSize + this->chipSize / 2, y*this->chipSize + this->chipSize / 2, z*this->chipSize + this->chipSize / 2);
+					ML::Vec3 pos = ML::Vec3(x * this->chipSize + this->chipSize / 2, y*this->chipSize + this->chipSize / 2, this->chipSize + this->chipSize / 2);
 					ML::Box3D base = ML::Box3D(-this->chipSize / 2, -this->chipSize / 2, -this->chipSize / 2, this->chipSize, this->chipSize, this->chipSize);				
 
 
-					this->arr[z][y][x] = Bbox(BoxType(chip), pos, base, this->map_QT);
+					this->arr[y][x] = Bbox(BoxType(chip), pos, base, this->map_QT);
 				}
 			}
 		}
@@ -297,12 +296,12 @@ namespace  MapFence
 		//判定スタート
 		for (int y = 0; y < this->sizeY; y++)
 		{
-			for (int z = 0; z < this->sizeZ; z++)
+			for (int x = 0; x < this->sizeX; x++)
 			{
-				for (int x = 0; x < this->sizeX; x++)
+				//for (int x = 0; x < this->sizeX; x++)
 				{
 					//一定距離以内のものだけ判定をする
-					ML::Vec3 d = this->arr[z][y][x].Get_Pos() - pos;
+					ML::Vec3 d = this->arr[y][x].Get_Pos() - pos;
 					//dは絶対値の距離
 					if (d.Length() < 0)
 					{
@@ -314,13 +313,13 @@ namespace  MapFence
 						continue;
 					}
 					//道は判定しない
-					if (this->arr[z][y][x].What_Type_Is_this_Box() == BoxType::Road)
+					if (this->arr[y][x].What_Type_Is_this_Box() == BoxType::Road)
 					{
 						continue;
 					}									
 					//this->collision_Tri = this->col.Hit_Check(Mass, pos, r, this->map_QT); //(ver0.2で使った処理)
 					//std::vector<After_Collision> poligon 
-					this->arr[z][y][x].Get_Collision_Poligon(&this->col_Poligons, pos, r, speed);
+					this->arr[y][x].Get_Collision_Poligon(&this->col_Poligons, pos, r, speed);
 					
 
 					//ver0.2で使った処理
@@ -342,20 +341,22 @@ namespace  MapFence
 
 		for (int y = 0; y < this->sizeY; y++)
 		{
-			for (int z = 0; z < this->sizeZ; z++)
+			for (int x = 0; x < this->sizeX; x++)
 			{
-				for (int x = 0; x < this->sizeX; x++)
+				//for (int x = 0; x < this->sizeX; x++)
 				{
 
-					ML::Vec3 pos = ML::Vec3(x*this->chipSize + this->chipSize / 2, y*this->chipSize + this->chipSize / 2, z*this->chipSize + this->chipSize / 2);
+					ML::Vec3 pos = ML::Vec3(x * this->chipSize + this->chipSize / 2, y*this->chipSize + this->chipSize / 2, this->chipSize + this->chipSize / 2);
+
 					if (this->fenceNumber < 8)
 					{
-						pos += ge->Map_center - ML::Vec3((this->mapSize*this->chipSize / 2), -(this->mapSize*this->chipSize / 2), -(this->mapSize*this->chipSize / 2));
+						pos += ge->Map_center - ML::Vec3((this->mapSize*this->chipSize / 2), -(this->mapSize*this->chipSize / 2), -((this->mapSize - 2)*this->chipSize / 2));
 					}
 					else
 					{
-						pos += ge->Map_center - ML::Vec3(((this->mapSize+2)*this->chipSize / 2), (this->mapSize*this->chipSize / 2), -(this->mapSize*this->chipSize / 2));
+						pos += ge->Map_center - ML::Vec3(((this->mapSize+2)*this->chipSize / 2), (this->mapSize*this->chipSize / 2), -((this->mapSize -2)*this->chipSize / 2));
 					}
+
 					//D3DXMatrixAffineTransformation(&matR, this->chipSize / 100.0f, &ML::Vec3(1050,50,1050), &qtW, NULL);
 					//matR.Inverse();
 
@@ -371,7 +372,7 @@ namespace  MapFence
 					pos = matR.TransformCoord(pos);
 
 					//matR.Inverse();
-					this->arr[z][y][x].Rotate_Box(pos, this->map_QT);
+					this->arr[y][x].Rotate_Box(pos, this->map_QT);
 				}
 			}
 		}

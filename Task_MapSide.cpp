@@ -78,7 +78,6 @@ namespace  Map3d
 		//データのゼロクリア
 		ZeroMemory(this->arr, sizeof(this->arr));
 		this->sizeX = 0;
-		this->sizeY = 0;
 		this->sizeZ = 0;
 		this->chipSize = 100.0f;
 		for (int i = 0; i < _countof(this->chipName); i++)
@@ -118,7 +117,6 @@ namespace  Map3d
 			}
 		}
 		this->sizeX = 0;
-		this->sizeY = 0;
 		this->sizeZ = 0;
 		this->col_Poligons.clear();
 
@@ -216,39 +214,38 @@ namespace  Map3d
 
 		ML::Mat4x4 matS;
 		matS.Scaling(this->chipSize);
-		for (int y = 0; y < this->sizeY; y++)
+		
+		for (int z = 0; z < this->sizeZ; z++)
 		{
-			for (int z = 0; z < this->sizeZ; z++)
+			for (int x = 0; x < this->sizeX; x++)
 			{
-				for (int x = 0; x < this->sizeX; x++)
+				//道はレンダリングしない
+				if (this->arr[z][x].What_Type_Is_this_Box() == BoxType::Road)
 				{
-					//道はレンダリングしない
-					if (this->arr[z][y][x].What_Type_Is_this_Box() == BoxType::Road)
-					{
-						continue;
-					}
-					 
-					ML::Mat4x4 matT;
-					matT.Translation(this->arr[z][y][x].Get_Pos());
-
-					ML::Mat4x4 matR;
-					matR.RotationQuaternion(this->map_QT);
-					//D3DXMatrixAffineTransformation(&matR, this->chipSize / 100.0f, NULL, &qtW, NULL);
-					////matR.Inverse();
-
-					//if (this->map_Rotation.Length() != 0)
-					//{
-					//	ML::Mat4x4 matMove;
-					//	D3DXMatrixAffineTransformation(&matMove, this->chipSize / 100.0f, NULL, &qtM, NULL);
-					//	matR *= matMove;
-					//}
-					//matR.Inverse();
-
-					DG::EffectState().param.matWorld = matS * matR * matT;
-					DG::Mesh_Draw(this->chipName[(int)this->arr[z][y][x].What_Type_Is_this_Box()]);
+					continue;
 				}
+					 
+				ML::Mat4x4 matT;
+				matT.Translation(this->arr[z][x].Get_Pos());
+
+				ML::Mat4x4 matR;
+				matR.RotationQuaternion(this->map_QT);
+				//D3DXMatrixAffineTransformation(&matR, this->chipSize / 100.0f, NULL, &qtW, NULL);
+				////matR.Inverse();
+
+				//if (this->map_Rotation.Length() != 0)
+				//{
+				//	ML::Mat4x4 matMove;
+				//	D3DXMatrixAffineTransformation(&matMove, this->chipSize / 100.0f, NULL, &qtM, NULL);
+				//	matR *= matMove;
+				//}
+				//matR.Inverse();
+
+				DG::EffectState().param.matWorld = matS * matR * matT;
+				DG::Mesh_Draw(this->chipName[(int)this->arr[z][x].What_Type_Is_this_Box()]);
 			}
 		}
+		
 	}
 
 	//-----------------------------------------------------------------------------------
@@ -284,48 +281,47 @@ namespace  Map3d
 			DG::Mesh_CreateFromSOBFile(this->chipName[c], chipFilePath);
 		}
 		//マップ配列サイズの読み込み
-		fin >> this->sizeX >> this->sizeY >> this->sizeZ;
+		fin >> this->sizeX >> this->sizeZ;
 		//マップ配列データの読みこみ
-		for (int y = 0; y < this->sizeY; y++)
+		
+		for (int z = this->sizeZ - 1; z >= 0; z--)
 		{
-			for (int z = this->sizeZ - 1; z >= 0; z--)
+			for (int x = 0; x < this->sizeX; x++)
 			{
-				for (int x = 0; x < this->sizeX; x++)
+				int chip;
+				fin >> chip;
+				ML::Vec3 pos = ML::Vec3(x*this->chipSize + this->chipSize / 2, this->chipSize + this->chipSize / 2, z*this->chipSize + this->chipSize / 2);
+				ML::Box3D base = ML::Box3D(-this->chipSize / 2, -this->chipSize / 2, -this->chipSize / 2, this->chipSize, this->chipSize, this->chipSize);				
+				ML::Mat4x4 matR;
+				ML::Vec3 objectPos;
+				//生成すること以外に何か処理を加える必要があるもの
+				switch (BoxType(chip))
 				{
-					int chip;
-					fin >> chip;
-					ML::Vec3 pos = ML::Vec3(x*this->chipSize + this->chipSize / 2, y*this->chipSize + this->chipSize / 2, z*this->chipSize + this->chipSize / 2);
-					ML::Box3D base = ML::Box3D(-this->chipSize / 2, -this->chipSize / 2, -this->chipSize / 2, this->chipSize, this->chipSize, this->chipSize);				
-					ML::Mat4x4 matR;
-					ML::Vec3 objectPos;
-					//生成すること以外に何か処理を加える必要があるもの
-					switch (BoxType(chip))
-					{
-					//スタート位置
-					case  BoxType::Start:
-						objectPos = pos + ge->Map_center - ML::Vec3((this->mapSize*this->chipSize / 2), -(this->mapSize*this->chipSize / 2), (this->mapSize*this->chipSize / 2));
-						D3DXMatrixAffineTransformation(&matR, this->chipSize / 100.0f, &ge->Map_center, &this->map_QT, NULL);
+				//スタート位置
+				case  BoxType::Start:
+					objectPos = pos + ge->Map_center - ML::Vec3((this->mapSize*this->chipSize / 2), -((this->mapSize - 2)*this->chipSize / 2), (this->mapSize*this->chipSize / 2));
+					D3DXMatrixAffineTransformation(&matR, this->chipSize / 100.0f, &ge->Map_center, &this->map_QT, NULL);
 						
-						objectPos = matR.TransformCoord(objectPos);
+					objectPos = matR.TransformCoord(objectPos);
 
-						ge->GetTask_One_G<Ball::Object>("ボール")->Teleportation(objectPos);
-						chip = int(BoxType::Road);
-						break;
-					//テレポート
-					case BoxType::Teleportaion:		
+					ge->GetTask_One_G<Ball::Object>("ボール")->Teleportation(objectPos);
+					chip = int(BoxType::Road);
+					break;
+				//テレポート
+				case BoxType::Teleportaion:		
 
-						ge->TM.Update_Door_Position(this->sideNumber, pos);
-						break;
-					//スイッチはあたり判定範囲を小さく	
-					case BoxType::LightSwitch:
-						base = ML::Box3D(-10, -10, -10, 20, 20, 20);
-						break;
-					}
-
-
-					this->arr[z][y][x] = Bbox(BoxType(chip), pos, base, this->map_QT);
+					ge->TM.Update_Door_Position(this->sideNumber, pos);
+					break;
+				//スイッチはあたり判定範囲を小さく	
+				case BoxType::LightSwitch:
+					base = ML::Box3D(-10, -10, -10, 20, 20, 20);
+					break;
 				}
+
+
+				this->arr[z][x] = Bbox(BoxType(chip), pos, base, this->map_QT);
 			}
+			
 		}
 		fin.close();
 		return true;
@@ -340,88 +336,87 @@ namespace  Map3d
 		//std::vector<After_Collision> poligon;
 		bool ball_on_This_Side = false;
 		//判定スタート
-		for (int y = 0; y < this->sizeY; y++)
+		
+		for (int z = 0; z < this->sizeZ; z++)
 		{
-			for (int z = 0; z < this->sizeZ; z++)
+			for (int x = 0; x < this->sizeX; x++)
 			{
-				for (int x = 0; x < this->sizeX; x++)
+				//一定距離以内のものだけ判定をする
+				ML::Vec3 d = this->arr[z][x].Get_Pos() - pos;
+				//dは絶対値の距離(distance)
+				if (d.Length() < 0)
 				{
-					//一定距離以内のものだけ判定をする
-					ML::Vec3 d = this->arr[z][y][x].Get_Pos() - pos;
-					//dは絶対値の距離(distance)
-					if (d.Length() < 0)
+					d *= -1;
+				}
+				//一定距離以上だったら判定せず次に項目に
+				if (d.Length() > this->chipSize)
+				{
+					continue;
+				}
+				ball_on_This_Side = true;
+				//boxType別に処理を分ける
+				switch (this->arr[z][x].What_Type_Is_this_Box())
+				{
+				//道は判定なし
+				case BoxType::Road:
+					continue;
+					break;
+				//ゴール旗はクリア判定
+				case BoxType::Goal:
+					if (this->arr[z][x].Player_was_Clear_the_Game(pos, r, speed))
 					{
-						d *= -1;
-					}
-					//一定距離以上だったら判定せず次に項目に
-					if (d.Length() > this->chipSize)
-					{
-						continue;
-					}
-					ball_on_This_Side = true;
-					//boxType別に処理を分ける
-					switch (this->arr[z][y][x].What_Type_Is_this_Box())
-					{
-					//道は判定なし
-					case BoxType::Road:
-						continue;
-						break;
-					//ゴール旗はクリア判定
-					case BoxType::Goal:
-						if (this->arr[z][y][x].Player_was_Clear_the_Game(pos, r, speed))
-						{
-							ML::Vec3 distance = this->arr[z][y][x].Get_Pos() - pos;
-							auto ball = ge->GetTask_One_G<Ball::Object>("ボール");
-							ball->Teleportation(pos + (distance*0.01f));
+						ML::Vec3 distance = this->arr[z][x].Get_Pos() - pos;
+						auto ball = ge->GetTask_One_G<Ball::Object>("ボール");
+						ball->Teleportation(pos + (distance*0.01f));
 							
-							ge->game.lock()->Game_Clear();							
-						}
-						break;
-					//扉はテレポート
-					case BoxType::Teleportaion:						
-						if (this->arr[z][y][x].Player_was_Hit_the_Door(pos, r, speed))
-						{						
-							auto ball = ge->GetTask_One_G<Ball::Object>("ボール");
-							ML::Vec3 exitpos;
-							if (ge->TM.Find_Exit(this->sideNumber,&exitpos))
-							{								
-								ball->Teleportation(exitpos);
-								auto eff = ge->eff_Manager.lock();
-								//テレポートインのエフェクト
-								eff->Add_Effect(pos, this->arr[z][y][x].Get_Pos(), ML::Vec3(0, 0, 0), BEffect::effType::Teleportin);
-								//テレポートインの音を鳴らす
-								DM::Sound_Play(this->res->seTeleportIn, false);
-								//テレポートアウトのエフェクト
-								eff->Add_Effect(exitpos, this->Normal_Side, BEffect::effType::TeleportOut);
-								//テレポートアウトの音を鳴らす
-								DM::Sound_Play(this->res->seTeleportOut, false);
-							}
-						}
-						break;
-					case BoxType::LightSwitch:
-						if (this->arr[z][y][x].Player_Turnoff_the_Switch(pos, r, speed))
-						{
-							//カメラマンにライトを3秒間オフする命令を送る
-							ge->GetTask_One_G<CameraMan::Object>("カメラマン")->Turnoff_the_Light();
-						}
-						break;
-					//壁はただのあたり判定
-					case BoxType::Wall:
-						this->arr[z][y][x].Get_Collision_Poligon(&this->col_Poligons, pos, r, speed);
-						break;
+						ge->game.lock()->Game_Clear();							
 					}
-					//this->collision_Tri = this->col.Hit_Check(Mass, pos, r, this->map_QT); //(ver0.2で使った処理)				
+					break;
+				//扉はテレポート
+				case BoxType::Teleportaion:						
+					if (this->arr[z][x].Player_was_Hit_the_Door(pos, r, speed))
+					{						
+						auto ball = ge->GetTask_One_G<Ball::Object>("ボール");
+						ML::Vec3 exitpos;
+						if (ge->TM.Find_Exit(this->sideNumber,&exitpos))
+						{								
+							ball->Teleportation(exitpos);
+							auto eff = ge->eff_Manager.lock();
+							//テレポートインのエフェクト
+							eff->Add_Effect(pos, this->arr[z][x].Get_Pos(), ML::Vec3(0, 0, 0), BEffect::effType::Teleportin);
+							//テレポートインの音を鳴らす
+							DM::Sound_Play(this->res->seTeleportIn, false);
+							//テレポートアウトのエフェクト
+							eff->Add_Effect(exitpos, this->Normal_Side, BEffect::effType::TeleportOut);
+							//テレポートアウトの音を鳴らす
+							DM::Sound_Play(this->res->seTeleportOut, false);
+						}
+					}
+					break;
+				case BoxType::LightSwitch:
+					if (this->arr[z][x].Player_Turnoff_the_Switch(pos, r, speed))
+					{
+						//カメラマンにライトを3秒間オフする命令を送る
+						ge->GetTask_One_G<CameraMan::Object>("カメラマン")->Turnoff_the_Light();
+					}
+					break;
+				//壁はただのあたり判定
+				case BoxType::Wall:
+					this->arr[z][x].Get_Collision_Poligon(&this->col_Poligons, pos, r, speed);
+					break;
+				}
+				//this->collision_Tri = this->col.Hit_Check(Mass, pos, r, this->map_QT); //(ver0.2で使った処理)				
 
 					
 
-					//ver0.2で使った処理
-					//判定で当たったら処理を止める
-					/*if (this->is_Collision().collision_Flag)
-					{
-					return;
-					}*/
-				}
+				//ver0.2で使った処理
+				//判定で当たったら処理を止める
+				/*if (this->is_Collision().collision_Flag)
+				{
+				return;
+				}*/
 			}
+			
 		}
 		
 		return ball_on_This_Side;
@@ -431,39 +426,38 @@ namespace  Map3d
 	//回転させる
 	void Object::Map_Rotate()
 	{
-		for (int y = 0; y < this->sizeY; y++)
+		
+		for (int z = 0; z < this->sizeZ; z++)
 		{
-			for (int z = 0; z < this->sizeZ; z++)
+			for (int x = 0; x < this->sizeX; x++)
 			{
-				for (int x = 0; x < this->sizeX; x++)
+
+				ML::Vec3 pos = ML::Vec3(x*this->chipSize + this->chipSize / 2, this->chipSize + this->chipSize / 2, z*this->chipSize + this->chipSize / 2);
+				pos += ge->Map_center - ML::Vec3((this->mapSize*this->chipSize / 2), -((this->mapSize-2)*this->chipSize / 2), (this->mapSize*this->chipSize / 2));
+				//D3DXMatrixAffineTransformation(&matR, this->chipSize / 100.0f, &ML::Vec3(1050,50,1050), &qtW, NULL);
+				//matR.Inverse();
+
+				/*if (this->map_Rotation.Length() != 0)
 				{
+				ML::Mat4x4 matMove;
+				D3DXMatrixAffineTransformation(&matMove, this->chipSize / 100.0f, &ge->Map_center, &qtM, NULL);
+				matR *= matMove;
+				}*/
+				ML::Mat4x4 matR;
+				D3DXMatrixAffineTransformation(&matR, this->chipSize / 100.0f, &ge->Map_center, &this->map_QT, NULL);
+				//ML::Vec3 temp = matR.TransformCoord(this->arr[z][y][x].Get_Pos());
+				pos = matR.TransformCoord(pos);
 
-					ML::Vec3 pos = ML::Vec3(x*this->chipSize + this->chipSize / 2, y*this->chipSize + this->chipSize / 2, z*this->chipSize + this->chipSize / 2);
-					pos += ge->Map_center - ML::Vec3((this->mapSize*this->chipSize / 2), -(this->mapSize*this->chipSize / 2), (this->mapSize*this->chipSize / 2));
-					//D3DXMatrixAffineTransformation(&matR, this->chipSize / 100.0f, &ML::Vec3(1050,50,1050), &qtW, NULL);
-					//matR.Inverse();
-
-					/*if (this->map_Rotation.Length() != 0)
-					{
-					ML::Mat4x4 matMove;
-					D3DXMatrixAffineTransformation(&matMove, this->chipSize / 100.0f, &ge->Map_center, &qtM, NULL);
-					matR *= matMove;
-					}*/
-					ML::Mat4x4 matR;
-					D3DXMatrixAffineTransformation(&matR, this->chipSize / 100.0f, &ge->Map_center, &this->map_QT, NULL);
-					//ML::Vec3 temp = matR.TransformCoord(this->arr[z][y][x].Get_Pos());
-					pos = matR.TransformCoord(pos);
-
-					//matR.Inverse();
-					this->arr[z][y][x].Rotate_Box(pos, this->map_QT);
-					//テレポート扉の位置更新
-					if (this->arr[z][y][x].What_Type_Is_this_Box() == BoxType::Teleportaion)
-					{
-						ge->TM.Update_Door_Position(this->sideNumber, pos);
-					}
+				//matR.Inverse();
+				this->arr[z][x].Rotate_Box(pos, this->map_QT);
+				//テレポート扉の位置更新
+				if (this->arr[z][x].What_Type_Is_this_Box() == BoxType::Teleportaion)
+				{
+					ge->TM.Update_Door_Position(this->sideNumber, pos);
 				}
 			}
 		}
+		
 	}
 
 	//-------------------------------------------------------------------------------------------

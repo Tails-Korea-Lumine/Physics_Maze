@@ -55,8 +55,8 @@ namespace Map3d
 	
 		//追加したい変数・メソッドはここに追加する	
 		//変数
-		Bbox arr[8][1][8];
-		int sizeZ, sizeY, sizeX;
+		Bbox arr[8][8];
+		int sizeZ, sizeX;
 		int mapSize;
 		int sideNumber;
 		float chipSize;
