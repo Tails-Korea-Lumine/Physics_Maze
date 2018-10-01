@@ -239,8 +239,7 @@ bool Collision::Hit_Check(std::vector<After_Collision>* result, const ML::Box3D&
 	this->Get_ShortisetPoints_BoxtoSphere(&all_Points, box, pos, r);	
 	//球の頂点座標
 	this->Get_Poionts_to_Sphere(&all_Points, pos, r);
-
-	bool collision_Flag;	
+		
 	//コンストラクタによってゼロベクトルとfalseで生成される
 	After_Collision collision_True;
 	//衝突判定スタート
@@ -263,10 +262,10 @@ bool Collision::Hit_Check(std::vector<After_Collision>* result, const ML::Box3D&
 			}	
 
 			//それ以外の場合であたり判定を行う
-			if (collision_Flag = this->Check_Collision(tri, p))
+			if (this->Check_Collision(tri, p))
 			{				
 				//以下あたった三角形の法線ベクトルとフラグを返す処理
-				collision_True.collision_Flag = collision_Flag;
+				collision_True.collision_Flag =true;
 				collision_True.normal = tri.normal;
 				result->push_back(collision_True);
 				//ポリゴン1個あたり1つの点の衝突が起きたらそれで次のポリゴンの判定をする
