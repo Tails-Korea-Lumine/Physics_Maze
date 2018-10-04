@@ -28,7 +28,8 @@ private:
 	BoxType chip;//マスのマップチップ
 	ML::Vec3 pos;//中心点の座標
 	ML::Box3D collision_Base;//一個一個の判定範囲
-	ML::QT boxQT;//マップの回転量	
+	ML::QT boxQT;//マップの回転量
+	Collision col;//あたり判定コンポネント
 	
 	//衝突判定
 	//判定の正不正だけをもらう関数
@@ -60,5 +61,16 @@ public:
 	Bbox();
 	//引数 : (箱のタイプ,位置,あたり判定矩形,初期回転量)
 	Bbox(BoxType chip, ML::Vec3 pos, ML::Box3D base, ML::QT qt);
+	//コピーコンストラクタ
+	Bbox operator= (const Bbox& b)
+	{		
+		this->boxQT = b.boxQT;
+		this->chip = b.chip;
+		this->collision_Base = b.collision_Base;
+		this->pos = b.pos;
+
+		return b;
+	}
+
 	~Bbox(){}
 };

@@ -3,6 +3,7 @@
 
 #define TRIANGLE_ON_CUBE 12
 #define VERTEX_ON_CUBE 8
+#define ROOT3 1.732050f
 
 void Collision::Get_Triangle_Box3D(std::vector<Triangle>* result, const ML::Box3D& box, const ML::QT& rotation) const
 {
@@ -228,7 +229,7 @@ void Collision::Get_Poionts_to_Sphere(std::vector<ML::Vec3>* result ,const ML::V
 }
 
 //マス別に呼ばれる関数
-bool Collision::Hit_Check(std::vector<After_Collision>* result, const ML::Box3D& box, const ML::Vec3& pos, const float& r, const ML::Vec3& speed, const ML::QT& Rotation) const
+bool Collision::Hit_Check(std::vector<After_Collision>* result, const ML::Box3D& box, const ML::Vec3& pos, const float& r, const ML::Vec3& speed, const ML::QT& Rotation)
 {	
 	//一個のマスにある12個の三角形
 	std::vector<Triangle> all_Tri;
@@ -236,43 +237,55 @@ bool Collision::Hit_Check(std::vector<After_Collision>* result, const ML::Box3D&
 
 	std::vector<ML::Vec3> all_Points;
 	//最短距離の座標も追加
-	this->Get_ShortisetPoints_BoxtoSphere(&all_Points, box, pos, r);	
+	this->Get_ShortisetPoints_Box_to_Sphere(&all_Points, box);	
 	//球の頂点座標
 	this->Get_Poionts_to_Sphere(&all_Points, pos, r);
-		
 	//コンストラクタによってゼロベクトルとfalseで生成される
 	After_Collision collision_True;
-	//衝突判定スタート
-	for (const auto& tri : all_Tri)
-	{
-		
-		collision_True = After_Collision();
-		for (const auto& p : all_Points)
-		{
-			//マスとマス接触面でおかしい加速を防ぐ
-			//移動ベクトルと衝突した三角形の法線ベクトルのcos値
-			float cosSN;
-			MyMath::Vector_Dot(&cosSN, speed, tri.normal);
-			//cos値が1ということは内角が0度だということ、つまり物理的にあり得ない衝突
-			//もしものために誤差範囲まで確認
-			if (cosSN >= this->judge)
-			{
-				//なので無視する
-				continue;
-			}	
 
-			//それ以外の場合であたり判定を行う
-			if (this->Check_Collision(tri, p))
-			{				
-				//以下あたった三角形の法線ベクトルとフラグを返す処理
-				collision_True.collision_Flag =true;
-				collision_True.normal = tri.normal;
-				result->push_back(collision_True);
-				//ポリゴン1個あたり1つの点の衝突が起きたらそれで次のポリゴンの判定をする
-				break;
+	//以前に判断したことに対して処理を別にする
+	//以前の判定で衝突が起こる可能性があったので精密判定をする
+	if (this->pricision_Flag)
+	{
+		//衝突判定スタート
+		for (const auto& tri : all_Tri)
+		{
+			collision_True = After_Collision();
+			for (const auto& p : all_Points)
+			{
+				//マスとマス接触面でおかしい加速を防ぐ
+				//移動ベクトルと衝突した三角形の法線ベクトルのcos値
+				float cosSN;
+				MyMath::Vector_Dot(&cosSN, speed, tri.normal);
+				//cos値が1ということは内角が0度だということ、つまり物理的にあり得ない衝突
+				//もしものために誤差範囲まで確認
+				if (cosSN >= this->judge)
+				{
+					//なので無視する
+					continue;
+				}
+
+				//それ以外の場合であたり判定を行う
+				if (this->Check_Collision(tri, p))
+				{
+					//以下あたった三角形の法線ベクトルとフラグを返す処理
+					collision_True.collision_Flag = true;
+					collision_True.normal = tri.normal;
+					result->push_back(collision_True);
+					//ポリゴン1個あたり1つの点の衝突が起きたらそれで次のポリゴンの判定をする
+					break;
+				}
 			}
 		}
-	}
+	}	
+	
+	//精密判定は現在位置で行って精密判定フラグは移動したと予想されるところで判定をする
+	ML::Vec3 next_Pos = pos + speed;
+	ML::Vec3 box_Center = { box.x + (box.w / 2), box.y + (box.h / 2), box.z + (box.d / 2) };
+	//次の位置がボックスの対角線を半直径とする球とあったていると精密判定フラグを立てる
+	ML::Vec3(next_Pos - box_Center).Length() <= r + ROOT3 / 2.0f*(box.x) ? this->pricision_Flag = true : this->pricision_Flag = false;	
+	
+	
 	if (collision_True.collision_Flag)
 	{
 		return true;
@@ -282,23 +295,38 @@ bool Collision::Hit_Check(std::vector<After_Collision>* result, const ML::Box3D&
 }
 
 //Box3dと球体の最短距離の点を取る
-void Collision::Get_ShortisetPoints_BoxtoSphere(std::vector<ML::Vec3>* result, const ML::Box3D& box, const ML::Vec3& pos, const float& r) const
+void Collision::Get_ShortisetPoints_Box_to_Sphere(std::vector<ML::Vec3>* result, const ML::Box3D& box) const
 {
-	//ボックスの中心を確保する
-	ML::Vec3 center_of_Box = ML::Vec3(box.x + box.w / 2, box.y + box.h / 2, box.z + box.d / 2);
-	//二つの中心の相対距離を算出
-	ML::Vec3 relative_Distance = center_of_Box - pos;
+	//ver1.0
+	////ボックスの中心を確保する
+	//ML::Vec3 center_of_Box = ML::Vec3(box.x + box.w / 2, box.y + box.h / 2, box.z + box.d / 2);
+	////二つの中心の相対距離を算出
+	//ML::Vec3 relative_Distance = center_of_Box - pos;
 
-	//相対距離を方向性だけを残すために正規化する
-	relative_Distance = relative_Distance.Normalize();
+	////相対距離を方向性だけを残すために正規化する
+	//relative_Distance = relative_Distance.Normalize();
+
+	//
+	////最短距離が出る方向のベクトルに半直径を掛けて
+	////最短距離の点を返す
+	//for (float d = r + 2; d > r - 2; d --)
+	//{
+	//	result->push_back(pos + (relative_Distance * d));
+	//}
 
 	
-	//最短距離が出る方向のベクトルに半直径を掛けて
-	//最短距離の点を返す
-	for (float d = r + 2; d > r - 2; d --)
-	{
-		result->push_back(pos + (relative_Distance * d));
-	}
 
+	//ver2.0
+	//引数でもらったボックスに外接する球に内包する点だけを残す	
+	//外接する球の半直径
+	float outer_Sphere_R = ROOT3 / 2.0f*(box.x);
+	//外接する球の中心点
+	ML::Vec3 box_Center = { box.x + (box.w / 2), box.y + (box.h / 2), box.z + (box.d / 2) };
+
+	result->erase(remove_if(result->begin(), result->end(),
+							[&](ML::Vec3 p)->bool{return ML::Vec3(p - box_Center).Length() <= outer_Sphere_R;}
+						),
+		result->end()
+	);
 	
 }

@@ -318,7 +318,7 @@ namespace  Map3d
 					break;
 				}
 
-
+				
 				this->arr[z][x] = Bbox(BoxType(chip), pos, base, this->map_QT);
 			}
 			
