@@ -7,7 +7,7 @@
 #include  "Task_MapCore.h"
 #include  "Task_MapFence.h"
 
-#define TERMINATION_SPEED 2.0f
+#define TERMINATION_SPEED 4.2f
 
 namespace  Ball
 {

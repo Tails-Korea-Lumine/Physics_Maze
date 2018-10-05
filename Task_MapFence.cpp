@@ -71,7 +71,7 @@ namespace  MapFence
 			break;
 		}
 		//データのゼロクリア
-		ZeroMemory(this->arr, sizeof(this->arr));
+		//ZeroMemory(this->arr, sizeof(this->arr));
 		//this->sizeX = 0;
 		this->sizeY = 0;
 		this->sizeX = 0;
@@ -322,12 +322,11 @@ namespace  MapFence
 					this->arr[y][x].Get_Collision_Poligon(&this->col_Poligons, pos, r, speed);
 					
 
-					//ver0.2で使った処理
-					//判定で当たったら処理を止める
-					/*if (this->is_Collision().collision_Flag)
+					//全体衝突結果に保存する
+					for (auto& c : this->col_Poligons)
 					{
-					return;
-					}*/
+						ge->collision_Result.push_back(c);
+					}
 				}
 			}
 		}

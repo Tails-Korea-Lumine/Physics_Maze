@@ -236,6 +236,12 @@ namespace  Map_Core
 		//}
 		this->barrier.Get_Collision_Poligon(&this->col_Poligons, pos, r, speed);
 
+		//‘S‘ÌÕ“ËŒ‹‰Ê‚É•Û‘¶‚·‚é
+		for (auto& c : this->col_Poligons)
+		{
+			ge->collision_Result.push_back(c);
+		}
+
 		return ball_was_Collision_to_Core;
 	}
 	

@@ -11,7 +11,7 @@
 #include "easing.h"
 #include "MyMath.h"
 
-#define PRECISION 5
+#define PRECISION 3
 
 namespace  Physics_Manager
 {
@@ -279,7 +279,7 @@ namespace  Physics_Manager
 			}
 			
 			//”»’è‚ÌŒ‹‰Ê‚ğ•Û‘¶
-			core->Get_Collision_Poligon(&ge->collision_Result);
+			/*core->Get_Collision_Poligon(&ge->collision_Result);
 			for (auto i = map->begin(); i != map->end(); i++)
 			{
 				(*i)->Get_Collision_Poligon(&ge->collision_Result);
@@ -287,7 +287,7 @@ namespace  Physics_Manager
 			for (auto i = fence->begin(); i != fence->end(); i++)
 			{
 				(*i)->Get_Collision_Poligon(&ge->collision_Result);
-			}			
+			}*/
 			
 
 			//ˆÊ’u•â³‚ğdŠ|‚¯‚é

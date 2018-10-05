@@ -68,6 +68,7 @@ public:
 		this->chip = b.chip;
 		this->collision_Base = b.collision_Base;
 		this->pos = b.pos;
+		this->col = Collision();
 
 		return b;
 	}

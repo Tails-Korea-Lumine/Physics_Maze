@@ -233,13 +233,10 @@ bool Collision::Hit_Check(std::vector<After_Collision>* result, const ML::Box3D&
 {	
 	//一個のマスにある12個の三角形
 	std::vector<Triangle> all_Tri;
-	this->Get_Triangle_Box3D(&all_Tri, box, Rotation);
-
-	std::vector<ML::Vec3> all_Points;
-	//最短距離の座標も追加
-	this->Get_ShortisetPoints_Box_to_Sphere(&all_Points, box);	
+	
 	//球の頂点座標
-	this->Get_Poionts_to_Sphere(&all_Points, pos, r);
+	std::vector<ML::Vec3> all_Points;	
+	
 	//コンストラクタによってゼロベクトルとfalseで生成される
 	After_Collision collision_True;
 
@@ -247,6 +244,12 @@ bool Collision::Hit_Check(std::vector<After_Collision>* result, const ML::Box3D&
 	//以前の判定で衝突が起こる可能性があったので精密判定をする
 	if (this->pricision_Flag)
 	{
+		//三角形を取り出す
+		this->Get_Triangle_Box3D(&all_Tri, box, Rotation);
+		//球から点を取り出す
+		this->Get_Poionts_to_Sphere(&all_Points, pos, r);
+		//最短距離の座標
+		this->Get_ShortisetPoints_Box_to_Sphere(&all_Points, box);
 		//衝突判定スタート
 		for (const auto& tri : all_Tri)
 		{
@@ -283,7 +286,7 @@ bool Collision::Hit_Check(std::vector<After_Collision>* result, const ML::Box3D&
 	ML::Vec3 next_Pos = pos + speed;
 	ML::Vec3 box_Center = { box.x + (box.w / 2), box.y + (box.h / 2), box.z + (box.d / 2) };
 	//次の位置がボックスの対角線を半直径とする球とあったていると精密判定フラグを立てる
-	ML::Vec3(next_Pos - box_Center).Length() <= r + ROOT3 / 2.0f*(box.x) ? this->pricision_Flag = true : this->pricision_Flag = false;	
+	ML::Vec3(next_Pos - box_Center).Length() <= abs(r + ROOT3 / 2.0f*(box.w)) ? this->pricision_Flag = true : this->pricision_Flag = false;	
 	
 	
 	if (collision_True.collision_Flag)
@@ -319,12 +322,12 @@ void Collision::Get_ShortisetPoints_Box_to_Sphere(std::vector<ML::Vec3>* result,
 	//ver2.0
 	//引数でもらったボックスに外接する球に内包する点だけを残す	
 	//外接する球の半直径
-	float outer_Sphere_R = ROOT3 / 2.0f*(box.x);
+	float outer_Sphere_R = abs(ROOT3 / 2.0f*(box.w));
 	//外接する球の中心点
-	ML::Vec3 box_Center = { box.x + (box.w / 2), box.y + (box.h / 2), box.z + (box.d / 2) };
+	ML::Vec3 box_Center = ML::Vec3(box.x + (box.w / 2), box.y + (box.h / 2), box.z + (box.d / 2) );
 
 	result->erase(remove_if(result->begin(), result->end(),
-							[&](ML::Vec3 p)->bool{return ML::Vec3(p - box_Center).Length() <= outer_Sphere_R;}
+							[&](ML::Vec3& p)->bool{return ML::Vec3(p - box_Center).Length() > outer_Sphere_R;}
 						),
 		result->end()
 	);

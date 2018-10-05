@@ -52,6 +52,11 @@ public:
 	{
 		this->pricision_Flag = false;
 	}
+
+	Collision operator= (const Collision& c)
+	{
+		return c;
+	}
 };
 
 //static Collision col = Collision();

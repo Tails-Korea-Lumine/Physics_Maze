@@ -76,7 +76,7 @@ namespace  Map3d
 			break;
 		}
 		//データのゼロクリア
-		ZeroMemory(this->arr, sizeof(this->arr));
+		//ZeroMemory(this->arr, sizeof(this->arr));
 		this->sizeX = 0;
 		this->sizeZ = 0;
 		this->chipSize = 100.0f;
@@ -407,14 +407,11 @@ namespace  Map3d
 				}
 				//this->collision_Tri = this->col.Hit_Check(Mass, pos, r, this->map_QT); //(ver0.2で使った処理)				
 
-					
-
-				//ver0.2で使った処理
-				//判定で当たったら処理を止める
-				/*if (this->is_Collision().collision_Flag)
+				//全体衝突結果に保存する
+				for (auto& c : this->col_Poligons)
 				{
-				return;
-				}*/
+					ge->collision_Result.push_back(c);
+				}
 			}
 			
 		}
