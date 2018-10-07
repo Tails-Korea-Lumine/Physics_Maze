@@ -141,11 +141,12 @@ namespace  Ball
 		}
 
 		//終端速度を指定
-		if (this->speed.Length() > TERMINATION_SPEED)
+		//仕様変更して終端速度まで行く場合があんまりないのでコメントアウト(2018/10/08)
+		/*if (this->speed.Length() > TERMINATION_SPEED)
 		{
 			this->speed = this->speed.Normalize();
 			this->speed *= TERMINATION_SPEED;
-		}
+		}*/
 
 		//移動(フレーム終了する直前に行う)
 		this->pos += this->speed;
@@ -174,7 +175,46 @@ namespace  Ball
 
 	//--------------------------------------------------------------------
 	//追加メソッド
+	//外角の点を全部取り出す
+	void Object::Get_Poionts_to_Sphere(std::vector<ML::Vec3>* result) const
+	{
+		const int increasing_Dgree = 15;
+		//球の上にある点を全部取り出す処理
 
+		//最初に回転させる点を計算
+		std::vector<ML::Vec3> points;
+		ML::Vec3 y = this->pos + ML::Vec3(0, this->r, 0);
+
+		//縦方向に切った断面の片方を取る処理
+		for (int i = 0; i < 180; i += increasing_Dgree)
+		{
+			//回転行列生成
+			ML::Mat4x4 matRx;
+			ML::QT qtX = ML::QT(ML::Vec3(1, 0, 0), ML::ToRadian((float)i));
+
+			D3DXMatrixAffineTransformation(&matRx, 1.0f, &this->pos, &qtX, NULL);
+
+			points.push_back(matRx.TransformCoord(y));
+		}
+
+		//取り出した点を回転しながら結果保存用ヴェクターにプッシュバック
+		for (int d = 0; d < 360; d += increasing_Dgree)
+		{
+			//回転行列生成
+			ML::Mat4x4 matRy;
+			ML::QT qtY = ML::QT(ML::Vec3(0, 1, 0), ML::ToRadian((float)d));
+
+			D3DXMatrixAffineTransformation(&matRy, 1.0f, &this->pos, &qtY, NULL);
+
+			for (auto& p : points)
+			{
+				result->push_back(matRy.TransformCoord(p));
+			}
+		}
+	}
+	//-------------------------------------------------------------------------------------
+	
+	//あたり判定フラグを確認
 	bool Object::Is_Collision() const
 	{
 		return this->collision_Flag;
@@ -219,10 +259,10 @@ namespace  Ball
 
 	//------------------------------------------------------------------------------
 	//コアとあたってない時コアの方に引っ張られる
-	void Object::Graviation_Pull(const ML::Vec3& force)
+	/*void Object::Graviation_Pull(const ML::Vec3& force)
 	{
 		this->speed += force;
-	}
+	}*/
 	//-----------------------------------------------------------------------------
 	//テレポートしたかを確認
 	bool Object::Is_Teleport_Now() const

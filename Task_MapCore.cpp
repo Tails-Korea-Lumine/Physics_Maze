@@ -203,14 +203,14 @@ namespace  Map_Core
 	//------------------------------------------------------------------------------------
 	//あたり判定
 
-	bool Object::Core_Check_Hit(const ML::Vec3& pos, const float& r, const ML::Vec3& speed)
+	bool Object::Core_Check_Hit(std::vector<ML::Vec3>& all_Points, const ML::Vec3& pos, const float& r, const ML::Vec3& speed)
 	{
 		//接触三角形を判定前にクリアする	
 		this->col_Poligons.clear();
 
 		//判定関数
 		//std::vector<After_Collision> poligonC
-		this->core.Get_Collision_Poligon(&this->col_Poligons, pos, r, speed);
+		this->core.Get_Collision_Poligon(&this->col_Poligons, all_Points, pos, r, speed);
 		
 		bool ball_was_Collision_to_Core = false;
 
@@ -234,7 +234,7 @@ namespace  Map_Core
 		//	//std::vector<After_Collision> poligonB
 		//	this->barrier[b].Get_Collision_Poligon(&this->col_Poligons, pos, r, speed);			
 		//}
-		this->barrier.Get_Collision_Poligon(&this->col_Poligons, pos, r, speed);
+		this->barrier.Get_Collision_Poligon(&this->col_Poligons, all_Points, pos, r, speed);
 
 		//全体衝突結果に保存する
 		for (auto& c : this->col_Poligons)

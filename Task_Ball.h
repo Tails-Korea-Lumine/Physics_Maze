@@ -81,6 +81,10 @@ namespace Ball
 		float Get_Radious() const;
 		//速度
 		ML::Vec3 Get_Speed() const;
+
+		//ボールの座標から6個の頂点を取り出す
+		void Get_Poionts_to_Sphere(std::vector<ML::Vec3>* result) const;		
+
 		//テレポートしたかを確認するタスク
 		bool Is_Teleport_Now() const;
 		//あたり判定による方向転換及び移動
@@ -90,6 +94,6 @@ namespace Ball
 		//テレポート(指定した場所に即移動する)引数 : (目的地)
 		void Teleportation(const ML::Vec3& objectPos);
 		//コアとあたってない時コアの方に引っ張られる
-		void Graviation_Pull(const ML::Vec3& force);
+		//void Graviation_Pull(const ML::Vec3& force);
 	};
 }

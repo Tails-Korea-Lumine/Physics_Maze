@@ -143,6 +143,9 @@ namespace  Physics_Manager
 			delicate = (float)precision;
 		}
 
+		//ボールの全ドットを格納する場所
+		std::vector<ML::Vec3> all_Points;
+
 		//std::vector<After_Collision> Result;
 		for (unsigned int i = 0; i < precision; i++)
 		{
@@ -254,28 +257,28 @@ namespace  Physics_Manager
 				(*f)->Map_Rotate();
 			}
 			
+			//ボールの外角ドットを取り出しておく
+			all_Points.clear();
+			ball->Get_Poionts_to_Sphere(&all_Points);
 
 			//あたり判定は毎回マップのほうで行う	
 			ge->collision_Result.clear();			
 			
 			//コアとボールが接触していない時、引力をかける(バリアの外に出られなくようにする仕組み)
-			if (!core->Core_Check_Hit(ball->Get_Pos(), ball->Get_Radious(), ball->Get_Speed()))
-			{
-				ML::Vec3 force = ge->Map_center - ball->Get_Pos();
-				ball->Graviation_Pull(force.Normalize());
-			}
+			core->Core_Check_Hit(all_Points, ball->Get_Pos(), ball->Get_Radious(), ball->Get_Speed());
+			
 			//ボールとマップのあたり判定
 			for (auto m = map->begin(); m != map->end(); m++)
 			{
 				//ボールが存在しているマップの法線ベクトルを収得
-				if ((*m)->Map_Check_Hit(ball->Get_Pos(), ball->Get_Radious(), ball->Get_Speed()))
+				if ((*m)->Map_Check_Hit(all_Points, ball->Get_Pos(), ball->Get_Radious(), ball->Get_Speed()))
 				{
 					(*m)->Get_Normal_Side(&side_Normal);
 				}
 			}
 			for (auto f = fence->begin(); f != fence->end(); f++)
 			{
-				(*f)->Map_Check_Hit(ball->Get_Pos(), ball->Get_Radious(), ball->Get_Speed());
+				(*f)->Map_Check_Hit(all_Points, ball->Get_Pos(), ball->Get_Radious(), ball->Get_Speed());
 			}
 			
 			//判定の結果を保存
@@ -296,9 +299,10 @@ namespace  Physics_Manager
 				ball->Fix_Position_for_Rotate(frame_QT_All);
 			}
 
-			//ボールを移動させる
-			ball->Move_Ball();
+			
 		}
+		//ボールを移動させる
+		ball->Move_Ball();
 		//カメラ目的地をボールがある面が見えるように設定
 		if (side_Normal.Is_Zero_Vec() == false && (in1.B4.down || ball->Is_Teleport_Now()))
 		{

@@ -69,7 +69,7 @@ namespace MapFence
 		//外部ファイルからの読み込み
 		bool Map_Load(string f_);
 		//球とマップのあたり判定
-		void Map_Check_Hit(const ML::Vec3& pos, const float& r, const ML::Vec3& speed);
+		void Map_Check_Hit(std::vector<ML::Vec3>& all_Points, const ML::Vec3& pos, const float& r, const ML::Vec3& speed);
 		//マップの回転
 		void Map_Rotate();
 		//あたり判定の結果を返す関数

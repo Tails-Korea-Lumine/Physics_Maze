@@ -65,7 +65,7 @@ namespace Map_Core
 	public:
 		//メソッド
 		void Rotate_Core_and_Barrier();
-		bool Core_Check_Hit(const ML::Vec3& pos, const float& r, const ML::Vec3& speed);//球とマップのあたり判定
+		bool Core_Check_Hit(std::vector<ML::Vec3>& all_Points, const ML::Vec3& pos, const float& r, const ML::Vec3& speed);//球とマップのあたり判定
 		//ほかのプログラムにあたり判定が終わったポリゴンを渡す関数
 		void Get_Collision_Poligon(std::vector<After_Collision>* result) const;		
 

@@ -2,6 +2,8 @@
 #pragma warning(disable:4996)
 #include "myLib.h"
 
+#define ROOT3 1.732050f
+
 //内積・外積を行うネームスペース
 namespace MyMath
 {

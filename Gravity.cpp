@@ -79,7 +79,7 @@ void Gravity::Reflaction_Vector(ML::Vec3* force, const ML::Vec3& normal, const f
 	//ML::Vec3 after_Reflection;
 	
 	*force += (2 * after_Normal);
-	*force *= 0.3f;
+	*force *= 0.75f;
 
 	//d‚³‚É‰‚¶‚ÄŒ¸‚ç‚µ‚Ä•Ô‚·
 	//return after_Reflection *0.6f;

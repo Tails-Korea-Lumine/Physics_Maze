@@ -286,7 +286,7 @@ namespace  MapFence
 		return true;
 	}
 	//-----------------------------------------------------------------------
-	void Object::Map_Check_Hit(const ML::Vec3& pos, const float& r, const ML::Vec3& speed)
+	void Object::Map_Check_Hit(std::vector<ML::Vec3>& all_Points, const ML::Vec3& pos, const float& r, const ML::Vec3& speed)
 	{
 		//多重衝突まで適用したver0.3(2018/04/16)
 
@@ -319,7 +319,7 @@ namespace  MapFence
 					}									
 					//this->collision_Tri = this->col.Hit_Check(Mass, pos, r, this->map_QT); //(ver0.2で使った処理)
 					//std::vector<After_Collision> poligon 
-					this->arr[y][x].Get_Collision_Poligon(&this->col_Poligons, pos, r, speed);
+					this->arr[y][x].Get_Collision_Poligon(&this->col_Poligons, all_Points, pos, r, speed);
 					
 
 					//全体衝突結果に保存する

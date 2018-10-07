@@ -327,7 +327,7 @@ namespace  Map3d
 		return true;
 	}
 	//-----------------------------------------------------------------------
-	bool Object::Map_Check_Hit(const ML::Vec3& pos, const float& r, const ML::Vec3& speed)
+	bool Object::Map_Check_Hit(std::vector<ML::Vec3>& all_Points, const ML::Vec3& pos, const float& r, const ML::Vec3& speed)
 	{
 		//多重衝突まで適用したver0.3(2018/04/16)
 
@@ -363,7 +363,7 @@ namespace  Map3d
 					break;
 				//ゴール旗はクリア判定
 				case BoxType::Goal:
-					if (this->arr[z][x].Player_was_Clear_the_Game(pos, r, speed))
+					if (this->arr[z][x].Player_was_Clear_the_Game(all_Points,pos, r, speed))
 					{
 						ML::Vec3 distance = this->arr[z][x].Get_Pos() - pos;
 						auto ball = ge->GetTask_One_G<Ball::Object>("ボール");
@@ -374,7 +374,7 @@ namespace  Map3d
 					break;
 				//扉はテレポート
 				case BoxType::Teleportaion:						
-					if (this->arr[z][x].Player_was_Hit_the_Door(pos, r, speed))
+					if (this->arr[z][x].Player_was_Hit_the_Door(all_Points, pos, r, speed))
 					{						
 						auto ball = ge->GetTask_One_G<Ball::Object>("ボール");
 						ML::Vec3 exitpos;
@@ -394,7 +394,7 @@ namespace  Map3d
 					}
 					break;
 				case BoxType::LightSwitch:
-					if (this->arr[z][x].Player_Turnoff_the_Switch(pos, r, speed))
+					if (this->arr[z][x].Player_Turnoff_the_Switch(all_Points, pos, r, speed))
 					{
 						//カメラマンにライトを3秒間オフする命令を送る
 						ge->GetTask_One_G<CameraMan::Object>("カメラマン")->Turnoff_the_Light();
@@ -402,7 +402,7 @@ namespace  Map3d
 					break;
 				//壁はただのあたり判定
 				case BoxType::Wall:
-					this->arr[z][x].Get_Collision_Poligon(&this->col_Poligons, pos, r, speed);
+					this->arr[z][x].Get_Collision_Poligon(&this->col_Poligons, all_Points, pos, r, speed);
 					break;
 				}
 				//this->collision_Tri = this->col.Hit_Check(Mass, pos, r, this->map_QT); //(ver0.2で使った処理)				

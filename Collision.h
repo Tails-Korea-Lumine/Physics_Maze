@@ -30,13 +30,7 @@ private:
 	//次のフレームに精密判定をするのかを確認するフラグ
 	bool pricision_Flag;
 
-	//メソッド
-	//SUKAプログラムのBox3dから12個の三角形を取り出す
-	void Get_Triangle_Box3D(std::vector<Triangle>* result, const ML::Box3D& box, const ML::QT& rotation) const;
-	//ボールの座標から6個の頂点を取り出す
-	void Get_Poionts_to_Sphere(std::vector<ML::Vec3>* result, const ML::Vec3& pos, const float& r) const;
-	//Box3dと球体の最短距離の点を取る 引数 : (ボックスのあたり判定範囲, 球の中心, 半直径)
-	void Get_ShortisetPoints_Box_to_Sphere(std::vector<ML::Vec3>* result, const ML::Box3D& box) const;
+	//メソッド	
 	//一個の点と三角形の衝突判定を行う
 	bool Check_Collision(const Triangle& tri, const ML::Vec3& p) const;
 
@@ -44,8 +38,8 @@ public:
 	//実際ほかのプログラムで呼び出す関数
 
 	//球体と立方体衝突判定関数
-	//引数：(結果を保存するstd::vectorのアドレス、判定するマス、ボールの位置、ボールの直径の半分、ボールの移動ベクトル、ワールド回転量)
-	bool Hit_Check(std::vector<After_Collision>* result, const ML::Box3D& box, const ML::Vec3& pos, const float& r, const ML::Vec3& speed, const ML::QT& worldR);
+	//引数：(結果を保存するstd::vectorのアドレス、判定するマスの三角形、ボックスの中心点、ボックスの長さ、ボールの外角ドット、ボールの中心点、ボールの半直径、ボールの移動ベクトル、ワールド回転量)
+	bool Hit_Check(std::vector<After_Collision>* result,const std::vector<Triangle>& all_Tri, const ML::Vec3 box_Center, const float& box_Length, std::vector<ML::Vec3>& all_Points, const ML::Vec3& ball_Pos, const float& r, const ML::Vec3& speed, const ML::QT& worldR);
 	
 	
 	Collision() :judge(_CMATH_::cosf(ML::ToRadian(359)))
