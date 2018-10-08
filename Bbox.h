@@ -31,10 +31,7 @@ private:
 	ML::QT boxQT;//マップの回転量
 	Collision col;//あたり判定コンポネント
 	
-	//衝突判定
-	//判定の正不正だけをもらう関数
-	bool Get_Collision_Bool(std::vector<ML::Vec3>& all_Points, const ML::Vec3& pos, const float& r, const ML::Vec3& speed);
-
+	
 	//あたり判定範囲を三角形で変換させる
 	//SUKAプログラムのBox3dから12個の三角形を取り出す
 	void Get_Triangle_Box3D(std::vector<Triangle>* result, const ML::Box3D& box, const ML::QT& rotation) const;
@@ -56,12 +53,9 @@ public:
 	//判定の結果値をもらう関数
 	void Get_Collision_Poligon(std::vector<After_Collision>* result,std::vector<ML::Vec3> all_Points , const ML::Vec3& pos, const float& r, const ML::Vec3& speed);
 
-	//ゲームクリア判定
-	bool Player_was_Clear_the_Game(std::vector<ML::Vec3>& all_Points, const ML::Vec3& pos, const float& r, const ML::Vec3 speed);
-	//テレポートするかを判定
-	bool Player_was_Hit_the_Door(std::vector<ML::Vec3>& all_Points, const ML::Vec3& pos, const float& r, const ML::Vec3 speed);
-	//ライトのスイッチを押したかを判別
-	bool Player_Turnoff_the_Switch(std::vector<ML::Vec3>& all_Points, const ML::Vec3& pos, const float& r, const ML::Vec3 speed);
+	//判定の正不正だけをもらう関数
+	bool Get_Collision_Bool(std::vector<ML::Vec3>& all_Points, const ML::Vec3& pos, const float& r, const ML::Vec3& speed);
+
 
 	//コンストラクタ・デストラクタ
 	//引数なしコンストラクタ(ゼロクリア)

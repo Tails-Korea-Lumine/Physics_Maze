@@ -314,7 +314,7 @@ namespace  Map3d
 					break;
 				//スイッチはあたり判定範囲を小さく	
 				case BoxType::LightSwitch:
-					base = ML::Box3D(-10, -10, -10, 20, 20, 20);
+					base = ML::Box3D(base.x / 10, base.y / 10, base.z / 10, base.w / 10, base.h / 10, base.d / 10);
 					break;
 				}
 
@@ -343,11 +343,7 @@ namespace  Map3d
 			{
 				//一定距離以内のものだけ判定をする
 				ML::Vec3 d = this->arr[z][x].Get_Pos() - pos;
-				//dは絶対値の距離(distance)
-				if (d.Length() < 0)
-				{
-					d *= -1;
-				}
+				//dは絶対値の距離(distance)				
 				//一定距離以上だったら判定せず次に項目に
 				if (d.Length() > this->chipSize)
 				{
@@ -363,7 +359,7 @@ namespace  Map3d
 					break;
 				//ゴール旗はクリア判定
 				case BoxType::Goal:
-					if (this->arr[z][x].Player_was_Clear_the_Game(all_Points,pos, r, speed))
+					if (this->arr[z][x].Get_Collision_Bool(all_Points,pos, r, speed))
 					{
 						ML::Vec3 distance = this->arr[z][x].Get_Pos() - pos;
 						auto ball = ge->GetTask_One_G<Ball::Object>("ボール");
@@ -374,7 +370,7 @@ namespace  Map3d
 					break;
 				//扉はテレポート
 				case BoxType::Teleportaion:						
-					if (this->arr[z][x].Player_was_Hit_the_Door(all_Points, pos, r, speed))
+					if (this->arr[z][x].Get_Collision_Bool(all_Points, pos, r, speed))
 					{						
 						auto ball = ge->GetTask_One_G<Ball::Object>("ボール");
 						ML::Vec3 exitpos;
@@ -394,7 +390,7 @@ namespace  Map3d
 					}
 					break;
 				case BoxType::LightSwitch:
-					if (this->arr[z][x].Player_Turnoff_the_Switch(all_Points, pos, r, speed))
+					if (this->arr[z][x].Get_Collision_Bool(all_Points, pos, r, speed))
 					{
 						//カメラマンにライトを3秒間オフする命令を送る
 						ge->GetTask_One_G<CameraMan::Object>("カメラマン")->Turnoff_the_Light();

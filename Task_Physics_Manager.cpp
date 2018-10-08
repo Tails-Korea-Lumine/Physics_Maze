@@ -262,12 +262,13 @@ namespace  Physics_Manager
 			ball->Get_Poionts_to_Sphere(&all_Points);
 
 			//あたり判定は毎回マップのほうで行う	
-			ge->collision_Result.clear();			
+			ge->collision_Result.clear();					
 			
-			//コアとボールが接触していない時、引力をかける(バリアの外に出られなくようにする仕組み)
+			
+			//ボールとマップのあたり判定及び保存
+			//コア
 			core->Core_Check_Hit(all_Points, ball->Get_Pos(), ball->Get_Radious(), ball->Get_Speed());
-			
-			//ボールとマップのあたり判定
+			//面
 			for (auto m = map->begin(); m != map->end(); m++)
 			{
 				//ボールが存在しているマップの法線ベクトルを収得
@@ -276,31 +277,20 @@ namespace  Physics_Manager
 					(*m)->Get_Normal_Side(&side_Normal);
 				}
 			}
+			//フェンス
 			for (auto f = fence->begin(); f != fence->end(); f++)
 			{
 				(*f)->Map_Check_Hit(all_Points, ball->Get_Pos(), ball->Get_Radious(), ball->Get_Speed());
-			}
-			
-			//判定の結果を保存
-			/*core->Get_Collision_Poligon(&ge->collision_Result);
-			for (auto i = map->begin(); i != map->end(); i++)
-			{
-				(*i)->Get_Collision_Poligon(&ge->collision_Result);
-			}
-			for (auto i = fence->begin(); i != fence->end(); i++)
-			{
-				(*i)->Get_Collision_Poligon(&ge->collision_Result);
-			}*/
+			}		
 			
 
 			//位置補正を仕掛ける
 			if (ge->collision_Result.size() != 0)
 			{
 				ball->Fix_Position_for_Rotate(frame_QT_All);
-			}
-
-			
+			}			
 		}
+
 		//ボールを移動させる
 		ball->Move_Ball();
 		//カメラ目的地をボールがある面が見えるように設定

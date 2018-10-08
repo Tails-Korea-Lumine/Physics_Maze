@@ -302,11 +302,7 @@ namespace  MapFence
 				{
 					//ˆê’è‹——£ˆÈ“à‚Ì‚à‚Ì‚¾‚¯”»’è‚ğ‚·‚é
 					ML::Vec3 d = this->arr[y][x].Get_Pos() - pos;
-					//d‚Íâ‘Î’l‚Ì‹——£
-					if (d.Length() < 0)
-					{
-						d *= -1;
-					}
+					//d‚Íâ‘Î’l‚Ì‹——£					
 					//ˆê’è‹——£ˆÈã‚¾‚Á‚½‚ç”»’è‚¹‚¸Ÿ‚É€–Ú‚É
 					if (d.Length() > this->chipSize)
 					{

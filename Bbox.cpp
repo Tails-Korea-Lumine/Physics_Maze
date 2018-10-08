@@ -213,25 +213,6 @@ Bbox::Bbox(BoxType chip, ML::Vec3 pos, ML::Box3D base, ML::QT qt)
 }
 
 
-
-//クリア判定
-bool Bbox::Player_was_Clear_the_Game(std::vector<ML::Vec3>& all_Points, const ML::Vec3& pos, const float& r, const ML::Vec3 speed)
-{
-	return this->Get_Collision_Bool(all_Points, pos, r, speed);
-}
-
-//テレポートさせるかを判定
-bool Bbox::Player_was_Hit_the_Door(std::vector<ML::Vec3>& all_Points, const ML::Vec3& pos, const float& r, const ML::Vec3 speed)
-{
-	return this->Get_Collision_Bool(all_Points, pos, r, speed);
-}
-
-//ライトをオフするかを判定
-bool Bbox::Player_Turnoff_the_Switch(std::vector<ML::Vec3>& all_Points, const ML::Vec3& pos, const float& r, const ML::Vec3 speed)
-{
-	return this->Get_Collision_Bool(all_Points, pos, r, speed);
-}
-
 //あたってるかあたってないか論理的な結果だけを求める処理
 bool Bbox::Get_Collision_Bool(std::vector<ML::Vec3>& all_Points, const ML::Vec3& pos, const float& r, const ML::Vec3& speed)
 {
@@ -240,6 +221,7 @@ bool Bbox::Get_Collision_Bool(std::vector<ML::Vec3>& all_Points, const ML::Vec3&
 
 	this->Get_Collision_Poligon(&check, all_Points, pos, r, speed);
 
-	//結果のサイズが０ではないならあたっている
-	return check.size() != 0 ? true : false;
+	//あたらなかった時はヴェクターの一番前のフラグがfalseで返されるので
+	//一番前のフラグで判断する
+	return check[0].collision_Flag;
 }
