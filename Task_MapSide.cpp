@@ -46,35 +46,8 @@ namespace  Map3d
 		this->sideNumber = sideNum;
 		this->mapSize = 8;//基本は8X8
 		this->rendering_Judge = _CMATH_::cosf(ML::ToRadian(JUDGE_DEGREE_EIGHTYFIVE));
-		this->render3D_Priority[0] = 1.0f;
-		//面ごとに別の初期値を与える
-		switch(sideNumber)
-		{
-		case 0:
-			this->map_QT = ML::QT(0.0f);
-			this->Normal_Side = ML::Vec3(0, 1, 0);
-			break;
-		case 1:
-			this->map_QT = ML::QT(ML::Vec3(1, 0, 0), ML::ToRadian(90));
-			this->Normal_Side = ML::Vec3(0, 0, 1);
-			break;
-		case 2:
-			this->map_QT = ML::QT(ML::Vec3(0, 0, 1), ML::ToRadian(90));
-			this->Normal_Side = ML::Vec3(-1, 0, 0);
-			break;
-		case 3:
-			this->map_QT = ML::QT(ML::Vec3(0, 0, 1), ML::ToRadian(-90));
-			this->Normal_Side = ML::Vec3(1, 0, 0);
-			break;
-		case 4:
-			this->map_QT = ML::QT(ML::Vec3(1, 0, 0), ML::ToRadian(-90));
-			this->Normal_Side = ML::Vec3(0, 0, -1);
-			break;
-		case 5:
-			this->map_QT = ML::QT(ML::Vec3(1, 0, 0), ML::ToRadian(180));
-			this->Normal_Side = ML::Vec3(0, -1, 0);
-			break;
-		}
+
+		
 		//データのゼロクリア
 		//ZeroMemory(this->arr, sizeof(this->arr));
 		this->sizeX = 0;
@@ -98,7 +71,45 @@ namespace  Map3d
 			this->Map_Load("./data/map/Hard/map" + to_string(sideNum) + ".txt");
 			break;
 		}
-			
+		//面ごとに別の初期値を与える
+		switch (sideNumber)
+		{
+		case 0:
+			this->Map_Rotate( ML::QT(0.0f));
+			this->Normal_Side = ML::Vec3(0, 1, 0);
+			break;
+		case 1:
+			this->Map_Rotate(ML::QT(ML::Vec3(1, 0, 0), ML::ToRadian(90)));
+			this->Normal_Side = ML::Vec3(0, 0, 1);
+			break;
+		case 2:
+			this->Map_Rotate( ML::QT(ML::Vec3(0, 0, 1), ML::ToRadian(90)));
+			this->Normal_Side = ML::Vec3(-1, 0, 0);
+			break;
+		case 3:
+			this->Map_Rotate(ML::QT(ML::Vec3(0, 0, 1), ML::ToRadian(-90)));
+			this->Normal_Side = ML::Vec3(1, 0, 0);
+			break;
+		case 4:
+			this->Map_Rotate( ML::QT(ML::Vec3(1, 0, 0), ML::ToRadian(-90)));
+			this->Normal_Side = ML::Vec3(0, 0, -1);
+			break;
+		case 5:
+			this->Map_Rotate( ML::QT(ML::Vec3(1, 0, 0), ML::ToRadian(180)));
+			this->Normal_Side = ML::Vec3(0, -1, 0);
+			break;
+		}
+
+		//スタート位置にボールを置く
+		this->Init_Positioning_Ball();
+
+		//for文を減らすためジャグ配列みたいなかたちにする
+		for (auto& j : this->arr)
+		{
+			j.erase(remove_if(j.begin(), j.end(), [](Bbox& b) {return (int)b.What_Type_Is_this_Box() <= (int)BoxType::Road ? true : false; })
+				, j.end()
+			);
+		}
 
 		//★タスクの生成
 
@@ -215,18 +226,18 @@ namespace  Map3d
 		ML::Mat4x4 matS;
 		matS.Scaling(this->chipSize);
 		
-		for (int z = 0; z < this->sizeZ; z++)
+		for (auto& z : this->arr)
 		{
-			for (int x = 0; x < this->sizeX; x++)
+			for (auto& x : z)
 			{
 				//道はレンダリングしない
-				if (this->arr[z][x].What_Type_Is_this_Box() == BoxType::Road)
+				/*if (this->arr[z][x].What_Type_Is_this_Box() == BoxType::Road)
 				{
 					continue;
-				}
+				}*/
 					 
 				ML::Mat4x4 matT;
-				matT.Translation(this->arr[z][x].Get_Pos());
+				matT.Translation(x.Get_Pos());
 
 				ML::Mat4x4 matR;
 				matR.RotationQuaternion(this->map_QT);
@@ -242,24 +253,14 @@ namespace  Map3d
 				//matR.Inverse();
 
 				DG::EffectState().param.matWorld = matS * matR * matT;
-				DG::Mesh_Draw(this->chipName[(int)this->arr[z][x].What_Type_Is_this_Box()]);
+				DG::Mesh_Draw(this->chipName[(int)x.What_Type_Is_this_Box()]);
 			}
 		}
 		
 	}
 
 	//-----------------------------------------------------------------------------------
-	//追加メソッド	
-	//あたっているかを返す関数	
-
-	void Object::Get_Collision_Poligon(std::vector<After_Collision>* result) const
-	{
-		for (auto p : this->col_Poligons)
-		{
-			result->push_back(p);
-		}
-	}
-	//---------------------------------------------------------------------------------------
+	//追加メソッド		
 	//外部ファイルからのマップロード
 	bool Object::Map_Load(string f_)
 	{
@@ -284,29 +285,23 @@ namespace  Map3d
 		fin >> this->sizeX >> this->sizeZ;
 		//マップ配列データの読みこみ
 		
-		for (int z = this->sizeZ - 1; z >= 0; z--)
+		for (int z = 0; z < this->sizeZ; z++)
 		{
+			std::vector<Bbox> t;
+			t.clear();
 			for (int x = 0; x < this->sizeX; x++)
 			{
 				int chip;
 				fin >> chip;
-				ML::Vec3 pos = ML::Vec3(x*this->chipSize + this->chipSize / 2, this->chipSize + this->chipSize / 2, z*this->chipSize + this->chipSize / 2);
+				ML::Vec3 pos = ML::Vec3(x*this->chipSize + this->chipSize / 2, this->chipSize + this->chipSize / 2, (this->sizeZ - 1 - z) * this->chipSize + this->chipSize / 2);
+				pos += ge->Map_center - ML::Vec3((this->mapSize*this->chipSize / 2), -((this->mapSize - 2)*this->chipSize / 2), (this->mapSize*this->chipSize / 2));
+
 				ML::Box3D base = ML::Box3D(-this->chipSize / 2, -this->chipSize / 2, -this->chipSize / 2, this->chipSize, this->chipSize, this->chipSize);				
 				ML::Mat4x4 matR;
 				ML::Vec3 objectPos;
 				//生成すること以外に何か処理を加える必要があるもの
 				switch (BoxType(chip))
-				{
-				//スタート位置
-				case  BoxType::Start:
-					objectPos = pos + ge->Map_center - ML::Vec3((this->mapSize*this->chipSize / 2), -((this->mapSize - 2)*this->chipSize / 2), (this->mapSize*this->chipSize / 2));
-					D3DXMatrixAffineTransformation(&matR, this->chipSize / 100.0f, &ge->Map_center, &this->map_QT, NULL);
-						
-					objectPos = matR.TransformCoord(objectPos);
-
-					ge->GetTask_One_G<Ball::Object>("ボール")->Teleportation(objectPos);
-					chip = int(BoxType::Road);
-					break;
+				{				
 				//テレポート
 				case BoxType::Teleportaion:		
 
@@ -319,12 +314,34 @@ namespace  Map3d
 				}
 
 				
-				this->arr[z][x] = Bbox(BoxType(chip), pos, base, this->map_QT);
+				//this->arr[z][x] = Bbox(BoxType(chip), pos, base, this->map_QT);
+				t.push_back(Bbox(BoxType(chip), pos, base, this->map_QT));
 			}
-			
+			this->arr.push_back(t);
 		}
 		fin.close();
+
+		
+		
 		return true;
+	}
+	//---------------------------------------------------------------------------------------
+	//ボールをスタート位置に置く
+	void Object::Init_Positioning_Ball()
+	{
+		//スタート位置が配列の中にあるかを確認してボールを強制移動させる
+		for (auto& z : this->arr)
+		{
+			for (auto& x : z)
+			{
+				if (x.What_Type_Is_this_Box() == BoxType::Start)
+				{
+					auto ball = ge->GetTask_One_G<Ball::Object>("ボール");
+
+					ball->Teleportation(x.Get_Pos());
+				}
+			}
+		}
 	}
 	//-----------------------------------------------------------------------
 	bool Object::Map_Check_Hit(std::vector<ML::Vec3>& all_Points, const ML::Vec3& pos, const float& r, const ML::Vec3& speed)
@@ -337,21 +354,22 @@ namespace  Map3d
 		bool ball_on_This_Side = false;
 		//判定スタート
 		
-		for (int z = 0; z < this->sizeZ; z++)
+		for (auto& z : this->arr)
 		{
-			for (int x = 0; x < this->sizeX; x++)
+			for (auto& x : z)
 			{
 				//一定距離以内のものだけ判定をする
-				ML::Vec3 d = this->arr[z][x].Get_Pos() - pos;
-				//dは絶対値の距離(distance)				
-				//一定距離以上だったら判定せず次に項目に
+				ML::Vec3 d = x.Get_Pos() - pos;
+
 				if (d.Length() > this->chipSize)
 				{
 					continue;
 				}
+
+				//dは絶対値の距離(distance)					
 				ball_on_This_Side = true;
 				//boxType別に処理を分ける
-				switch (this->arr[z][x].What_Type_Is_this_Box())
+				switch (x.What_Type_Is_this_Box())
 				{
 				//道は判定なし
 				case BoxType::Road:
@@ -359,9 +377,9 @@ namespace  Map3d
 					break;
 				//ゴール旗はクリア判定
 				case BoxType::Goal:
-					if (this->arr[z][x].Get_Collision_Bool(all_Points,pos, r, speed))
+					if (x.Get_Collision_Bool(all_Points,pos, r, speed))
 					{
-						ML::Vec3 distance = this->arr[z][x].Get_Pos() - pos;
+						ML::Vec3 distance = x.Get_Pos() - pos;
 						auto ball = ge->GetTask_One_G<Ball::Object>("ボール");
 						ball->Teleportation(pos + (distance*0.01f));
 							
@@ -370,7 +388,7 @@ namespace  Map3d
 					break;
 				//扉はテレポート
 				case BoxType::Teleportaion:						
-					if (this->arr[z][x].Get_Collision_Bool(all_Points, pos, r, speed))
+					if (x.Get_Collision_Bool(all_Points, pos, r, speed))
 					{						
 						auto ball = ge->GetTask_One_G<Ball::Object>("ボール");
 						ML::Vec3 exitpos;
@@ -379,7 +397,7 @@ namespace  Map3d
 							ball->Teleportation(exitpos);
 							auto eff = ge->eff_Manager.lock();
 							//テレポートインのエフェクト
-							eff->Add_Effect(pos, this->arr[z][x].Get_Pos(), ML::Vec3(0, 0, 0), BEffect::effType::Teleportin);
+							eff->Add_Effect(pos, x.Get_Pos(), ML::Vec3(0, 0, 0), BEffect::effType::Teleportin);
 							//テレポートインの音を鳴らす
 							DM::Sound_Play(this->res->seTeleportIn, false);
 							//テレポートアウトのエフェクト
@@ -390,7 +408,7 @@ namespace  Map3d
 					}
 					break;
 				case BoxType::LightSwitch:
-					if (this->arr[z][x].Get_Collision_Bool(all_Points, pos, r, speed))
+					if (x.Get_Collision_Bool(all_Points, pos, r, speed))
 					{
 						//カメラマンにライトを3秒間オフする命令を送る
 						ge->GetTask_One_G<CameraMan::Object>("カメラマン")->Turnoff_the_Light();
@@ -398,7 +416,7 @@ namespace  Map3d
 					break;
 				//壁はただのあたり判定
 				case BoxType::Wall:
-					this->arr[z][x].Get_Collision_Poligon(&this->col_Poligons, all_Points, pos, r, speed);
+					x.Get_Collision_Poligon(&this->col_Poligons, all_Points, pos, r, speed);
 					break;
 				}
 				//this->collision_Tri = this->col.Hit_Check(Mass, pos, r, this->map_QT); //(ver0.2で使った処理)				
@@ -417,16 +435,17 @@ namespace  Map3d
 
 	//------------------------------------------------------------------------
 	//回転させる
-	void Object::Map_Rotate()
+	void Object::Map_Rotate(const ML::QT& qt)
 	{
-		
-		for (int z = 0; z < this->sizeZ; z++)
+		//クォータニオン更新
+		this->UpDate_Quartanion(qt);
+		for (auto& z : this->arr)
 		{
-			for (int x = 0; x < this->sizeX; x++)
+			for (auto& x : z)
 			{
 
-				ML::Vec3 pos = ML::Vec3(x*this->chipSize + this->chipSize / 2, this->chipSize + this->chipSize / 2, z*this->chipSize + this->chipSize / 2);
-				pos += ge->Map_center - ML::Vec3((this->mapSize*this->chipSize / 2), -((this->mapSize-2)*this->chipSize / 2), (this->mapSize*this->chipSize / 2));
+				ML::Vec3 pos = x.Get_Pos();
+				//pos += ge->Map_center - ML::Vec3((this->mapSize*this->chipSize / 2), -((this->mapSize-2)*this->chipSize / 2), (this->mapSize*this->chipSize / 2));
 				//D3DXMatrixAffineTransformation(&matR, this->chipSize / 100.0f, &ML::Vec3(1050,50,1050), &qtW, NULL);
 				//matR.Inverse();
 
@@ -437,14 +456,14 @@ namespace  Map3d
 				matR *= matMove;
 				}*/
 				ML::Mat4x4 matR;
-				D3DXMatrixAffineTransformation(&matR, this->chipSize / 100.0f, &ge->Map_center, &this->map_QT, NULL);
+				D3DXMatrixAffineTransformation(&matR, this->chipSize / 100.0f, &ge->Map_center, &qt, NULL);
 				//ML::Vec3 temp = matR.TransformCoord(this->arr[z][y][x].Get_Pos());
 				pos = matR.TransformCoord(pos);
 
 				//matR.Inverse();
-				this->arr[z][x].Rotate_Box(pos, this->map_QT);
+				x.Rotate_Box(pos, this->map_QT);
 				//テレポート扉の位置更新
-				if (this->arr[z][x].What_Type_Is_this_Box() == BoxType::Teleportaion)
+				if (x.What_Type_Is_this_Box() == BoxType::Teleportaion)
 				{
 					ge->TM.Update_Door_Position(this->sideNumber, pos);
 				}

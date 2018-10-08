@@ -7,7 +7,7 @@
 #include  "Task_MapCore.h"
 #include  "Task_MapFence.h"
 
-#define TERMINATION_SPEED 15
+#define TERMINATION_SPEED 6
 
 namespace  Ball
 {
@@ -88,6 +88,12 @@ namespace  Ball
 		//処理せずに次のフレームに移る
 		if (ge->collision_Result.size() == 0)
 		{
+			//終端速度を指定		
+			if (this->speed.Length() > TERMINATION_SPEED)
+			{
+				this->speed = this->speed.Normalize();
+				this->speed *= TERMINATION_SPEED;
+			}
 			//移動(フレーム終了する直前に行う)
 			this->pos += this->speed;
 			return;

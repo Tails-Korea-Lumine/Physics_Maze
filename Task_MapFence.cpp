@@ -35,41 +35,7 @@ namespace  MapFence
 		this->fenceNumber = sideNum;
 		this->mapSize = 8;//基本は8X8難易度によって増加される(2018/04/21)
 		this->render3D_Priority[0] = 1.0f;
-		//面ごとに別の初期値を与える
-		switch(fenceNumber)
-		{
-		case 0:
-		case 8:
-			this->map_QT = ML::QT(0.0f);
-			break;
-		case 9:
-		case 1:
-			this->map_QT = ML::QT(ML::Vec3(0, 1, 0), ML::ToRadian(90));
-			break;
-		case 10:
-		case 2:
-			this->map_QT = ML::QT(ML::Vec3(0, 1, 0), ML::ToRadian(180));
-			break;
-		case 11:
-		case 3:
-			this->map_QT = ML::QT(ML::Vec3(0, 1, 0), ML::ToRadian(-90));
-			break;
-		case 4:
-			this->map_QT = ML::QT(ML::Vec3(1, 0, 0), ML::ToRadian(90));
-			break;
-		case 5:
-			this->map_QT = ML::QT(ML::Vec3(1, 0, 0), ML::ToRadian(90));
-			this->map_QT *= ML::QT(ML::Vec3(0, 1, 0), ML::ToRadian(90));
-			break;
-		case 6:
-			this->map_QT = ML::QT(ML::Vec3(1, 0, 0), ML::ToRadian(90));
-			this->map_QT *= ML::QT(ML::Vec3(0, 1, 0), ML::ToRadian(180));
-			break;
-		case 7:
-			this->map_QT = ML::QT(ML::Vec3(1, 0, 0), ML::ToRadian(90));
-			this->map_QT *= ML::QT(ML::Vec3(0, 1, 0), ML::ToRadian(-90));
-			break;
-		}
+		
 		//データのゼロクリア
 		//ZeroMemory(this->arr, sizeof(this->arr));
 		//this->sizeX = 0;
@@ -93,7 +59,38 @@ namespace  MapFence
 			this->Map_Load("./data/fence/Hard/line" + to_string(sideNum) + ".txt");
 			break;
 		}
-		
+		//面ごとに別の初期値を与える
+		switch (fenceNumber)
+		{
+		case 0:
+		case 8:
+			this->Map_Rotate( ML::QT(0.0f));
+			break;
+		case 9:
+		case 1:
+			this->Map_Rotate(ML::QT(ML::Vec3(0, 1, 0), ML::ToRadian(90)));
+			break;
+		case 10:
+		case 2:
+			this->Map_Rotate( ML::QT(ML::Vec3(0, 1, 0), ML::ToRadian(180)));
+			break;
+		case 11:
+		case 3:
+			this->Map_Rotate(ML::QT(ML::Vec3(0, 1, 0), ML::ToRadian(-90)));
+			break;
+		case 4:
+			this->Map_Rotate(ML::QT(ML::Vec3(1, 0, 0), ML::ToRadian(90)));
+			break;
+		case 5:
+			this->Map_Rotate( ML::QT(ML::Vec3(1, 0, 0), ML::ToRadian(90))* ML::QT(ML::Vec3(0, 1, 0), ML::ToRadian(90)));			
+			break;
+		case 6:
+			this->Map_Rotate(ML::QT(ML::Vec3(1, 0, 0), ML::ToRadian(90))* ML::QT(ML::Vec3(0, 1, 0), ML::ToRadian(180)));			
+			break;
+		case 7:
+			this->Map_Rotate(ML::QT(ML::Vec3(1, 0, 0), ML::ToRadian(90)) * ML::QT(ML::Vec3(0, 1, 0), ML::ToRadian(-90)));			
+			break;
+		}
 
 		//★タスクの生成
 
@@ -204,45 +201,34 @@ namespace  MapFence
 		
 		ML::Mat4x4 matW;
 		//matS.Scaling(this->chipSize);
-		for (int y = 0; y < this->sizeY; y++)
+		for (auto& y : this->arr)
 		{
-			for (int x = 0; x < this->sizeX; x++)
-			{
-				//for (int x = 0; x < this->sizeX; x++)
+			for (auto& x : y)
+			{		
+				
+				//道はレンダリングしない
+				/*if (this->arr[y][x].What_Type_Is_this_Box() == BoxType::Road)
 				{
-					//道はレンダリングしない
-					if (this->arr[y][x].What_Type_Is_this_Box() == BoxType::Road)
-					{
-						continue;
-					}
+					continue;
+				}*/
 					 
-				/*	ML::Mat4x4 matT;
-					matT.Translation(this->arr[z][y][x].Get_Pos());
+			/*	ML::Mat4x4 matT;
+				matT.Translation(this->arr[z][y][x].Get_Pos());
 
-					ML::Mat4x4 matR;
-					matR.RotationQuaternion(this->map_QT);*/
+				ML::Mat4x4 matR;
+				matR.RotationQuaternion(this->map_QT);*/
 					
-					D3DXMatrixAffineTransformation(&matW, this->chipSize, NULL, &this->map_QT, &this->arr[y][x].Get_Pos());
+				D3DXMatrixAffineTransformation(&matW, this->chipSize, NULL, &this->map_QT, &x.Get_Pos());
 
-					DG::EffectState().param.matWorld = matW;
-					DG::Mesh_Draw(this->chipName[(int)this->arr[y][x].What_Type_Is_this_Box()]);
-				}
+				DG::EffectState().param.matWorld = matW;
+				DG::Mesh_Draw(this->chipName[(int)x.What_Type_Is_this_Box()]);
+				
 			}
 		}
 	}
 
 	//-----------------------------------------------------------------------------------
-	//追加メソッド	
-	//あたっているかを返す関数	
-
-	void Object::Get_Collision_Poligon(std::vector<After_Collision>* result) const
-	{
-		for (auto p : this->col_Poligons)
-		{
-			result->push_back(p);
-		}
-	}
-	//---------------------------------------------------------------------------------------
+	//追加メソッド		
 	//外部ファイルからのマップロード
 	bool Object::Map_Load(string f_)
 	{
@@ -268,6 +254,8 @@ namespace  MapFence
 		//マップ配列データの読みこみ
 		for (int y = 0; y < this->sizeY; y++)
 		{
+			std::vector<Bbox> t;
+			t.clear();
 			for (int x = 0; x < sizeX; x++)
 			{
 				//for (int x = 0; x < this->sizeX; x++)
@@ -275,14 +263,33 @@ namespace  MapFence
 					int chip;
 					fin >> chip;
 					ML::Vec3 pos = ML::Vec3(x * this->chipSize + this->chipSize / 2, y*this->chipSize + this->chipSize / 2, this->chipSize + this->chipSize / 2);
+					if (this->fenceNumber < 8)
+					{
+						pos += ge->Map_center - ML::Vec3((this->mapSize*this->chipSize / 2), -(this->mapSize*this->chipSize / 2), -((this->mapSize - 2)*this->chipSize / 2));
+					}
+					else
+					{
+						pos += ge->Map_center - ML::Vec3(((this->mapSize + 2)*this->chipSize / 2), (this->mapSize*this->chipSize / 2), -((this->mapSize - 2)*this->chipSize / 2));
+					}
+
 					ML::Box3D base = ML::Box3D(-this->chipSize / 2, -this->chipSize / 2, -this->chipSize / 2, this->chipSize, this->chipSize, this->chipSize);				
 
 
-					this->arr[y][x] = Bbox(BoxType(chip), pos, base, this->map_QT);
+					//this->arr[y][x] = Bbox(BoxType(chip), pos, base, this->map_QT);
+					t.push_back(Bbox(BoxType(chip), pos, base, this->map_QT));
 				}
+				this->arr.push_back(t);
 			}
 		}
 		fin.close();
+
+		//for文を減らすためジャグ配列みたいなかたちにする
+		for (auto& j : this->arr)
+		{
+			j.erase(remove_if(j.begin(), j.end(), [](Bbox& b) {return b.What_Type_Is_this_Box() == BoxType::Road ? true : false; })
+				, j.end()
+			);
+		}
 		return true;
 	}
 	//-----------------------------------------------------------------------
@@ -294,28 +301,28 @@ namespace  MapFence
 		this->col_Poligons.clear();
 
 		//判定スタート
-		for (int y = 0; y < this->sizeY; y++)
+		for (auto& y : this->arr)
 		{
-			for (int x = 0; x < this->sizeX; x++)
+			for (auto& x : y)
 			{
 				//for (int x = 0; x < this->sizeX; x++)
 				{
 					//一定距離以内のものだけ判定をする
-					ML::Vec3 d = this->arr[y][x].Get_Pos() - pos;
-					//dは絶対値の距離					
-					//一定距離以上だったら判定せず次に項目に
+					ML::Vec3 d = x.Get_Pos() - pos;					
+
 					if (d.Length() > this->chipSize)
 					{
 						continue;
 					}
+
 					//道は判定しない
-					if (this->arr[y][x].What_Type_Is_this_Box() == BoxType::Road)
+					if (x.What_Type_Is_this_Box() == BoxType::Road)
 					{
 						continue;
 					}									
 					//this->collision_Tri = this->col.Hit_Check(Mass, pos, r, this->map_QT); //(ver0.2で使った処理)
 					//std::vector<After_Collision> poligon 
-					this->arr[y][x].Get_Collision_Poligon(&this->col_Poligons, all_Points, pos, r, speed);
+					x.Get_Collision_Poligon(&this->col_Poligons, all_Points, pos, r, speed);
 					
 
 					//全体衝突結果に保存する
@@ -330,27 +337,28 @@ namespace  MapFence
 
 	//------------------------------------------------------------------------
 	//回転させる
-	void Object::Map_Rotate()
+	void Object::Map_Rotate(const ML::QT& qt)
 	{
-			
+		//クォータニオン更新
+		this->UpDate_Quartanion(qt);
 
-		for (int y = 0; y < this->sizeY; y++)
+		for (auto& y : this->arr)
 		{
-			for (int x = 0; x < this->sizeX; x++)
+			for (auto& x : y)
 			{
 				//for (int x = 0; x < this->sizeX; x++)
 				{
 
-					ML::Vec3 pos = ML::Vec3(x * this->chipSize + this->chipSize / 2, y*this->chipSize + this->chipSize / 2, this->chipSize + this->chipSize / 2);
+					ML::Vec3 pos = x.Get_Pos();
 
-					if (this->fenceNumber < 8)
+					/*if (this->fenceNumber < 8)
 					{
 						pos += ge->Map_center - ML::Vec3((this->mapSize*this->chipSize / 2), -(this->mapSize*this->chipSize / 2), -((this->mapSize - 2)*this->chipSize / 2));
 					}
 					else
 					{
 						pos += ge->Map_center - ML::Vec3(((this->mapSize+2)*this->chipSize / 2), (this->mapSize*this->chipSize / 2), -((this->mapSize -2)*this->chipSize / 2));
-					}
+					}*/
 
 					//D3DXMatrixAffineTransformation(&matR, this->chipSize / 100.0f, &ML::Vec3(1050,50,1050), &qtW, NULL);
 					//matR.Inverse();
@@ -362,12 +370,12 @@ namespace  MapFence
 					matR *= matMove;
 					}*/
 					ML::Mat4x4 matR;
-					D3DXMatrixAffineTransformation(&matR, this->chipSize / 100.0f, &ge->Map_center, &this->map_QT, NULL);
+					D3DXMatrixAffineTransformation(&matR, this->chipSize / 100.0f, &ge->Map_center, &qt, NULL);
 					//ML::Vec3 temp = matR.TransformCoord(this->arr[z][y][x].Get_Pos());
 					pos = matR.TransformCoord(pos);
 
 					//matR.Inverse();
-					this->arr[y][x].Rotate_Box(pos, this->map_QT);
+					x.Rotate_Box(pos, this->map_QT);
 				}
 			}
 		}

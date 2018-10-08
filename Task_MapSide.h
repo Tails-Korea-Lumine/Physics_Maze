@@ -55,7 +55,8 @@ namespace Map3d
 	
 		//追加したい変数・メソッドはここに追加する	
 		//変数
-		Bbox arr[8][8];
+		//Bbox arr[8][8];
+		std::vector<std::vector<Bbox>> arr;
 		int sizeZ, sizeX;
 		int mapSize;
 		int sideNumber;
@@ -76,15 +77,16 @@ namespace Map3d
 		bool Map_Load(string f_);
 		//レンダリングするかを確認するメソッド
 		bool Is_Need_Render();
-	public:
-		bool Map_Check_Hit(std::vector<ML::Vec3>& all_Points, const ML::Vec3& pos, const float& r, const ML::Vec3& speed);//球とマップのあたり判定
-		void Map_Rotate();
-		
-		void Get_Collision_Poligon(std::vector<After_Collision>* result) const;
-
 		//クォータニオンを更新する関数
 		void UpDate_Quartanion(const ML::QT& qt);
-
+		//ボールをスタート位置に置く
+		void Init_Positioning_Ball();
+	public:
+		//あたり判定
+		bool Map_Check_Hit(std::vector<ML::Vec3>& all_Points, const ML::Vec3& pos, const float& r, const ML::Vec3& speed);//球とマップのあたり判定
+		//回転
+		void Map_Rotate(const ML::QT& qt);		
+	
 		void Get_Normal_Side(ML::Vec3*) const;		
 	};
 }

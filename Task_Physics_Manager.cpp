@@ -231,7 +231,7 @@ namespace  Physics_Manager
 			ML::QT frame_QT_All = this->frame_QTxp * this->frame_QTxm * this->frame_QTyp * this->frame_QTym *this->frame_QTzm * this->frame_QTzp;
 
 			//各タスクの回転量を更新
-			core->UpDate_Quartanion(frame_QT_All);
+			/*core->UpDate_Quartanion(frame_QT_All);
 			for (auto m = map->begin(); m != map->end(); m++)
 			{
 				(*m)->UpDate_Quartanion(frame_QT_All);
@@ -239,7 +239,7 @@ namespace  Physics_Manager
 			for (auto f = fence->begin(); f != fence->end(); f++)
 			{
 				(*f)->UpDate_Quartanion(frame_QT_All);
-			}
+			}*/
 			
 
 			//ワールド回転量に反映
@@ -247,14 +247,14 @@ namespace  Physics_Manager
 
 
 			//回転
-			core->Rotate_Core_and_Barrier();
+			core->Rotate_Core_and_Barrier(frame_QT_All);
 			for (auto m = map->begin(); m != map->end(); m++)
 			{
-				(*m)->Map_Rotate();
+				(*m)->Map_Rotate(frame_QT_All);
 			}
 			for (auto f = fence->begin(); f != fence->end(); f++)
 			{
-				(*f)->Map_Rotate();
+				(*f)->Map_Rotate(frame_QT_All);
 			}
 			
 			//ボールの外角ドットを取り出しておく

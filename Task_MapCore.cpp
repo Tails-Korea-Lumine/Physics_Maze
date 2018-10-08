@@ -183,11 +183,13 @@ namespace  Map_Core
 	//追加メソッド
 
 	//回転
-	void Object::Rotate_Core_and_Barrier()
+	void Object::Rotate_Core_and_Barrier(const ML::QT& qt)
 	{
+		//クォータニオン更新
+		this->UpDate_Quartanion(qt);
 		ML::Mat4x4 matR;
 		//matRをアフィン変換行列に作る
-		D3DXMatrixAffineTransformation(&matR, 1.0f, &ge->Map_center, &this->map_QT,NULL);
+		D3DXMatrixAffineTransformation(&matR, 1.0f, &ge->Map_center, &qt,NULL);
 		
 		//回転開始
 		ML::Vec3 temp = matR.TransformCoord(ge->Map_center);
@@ -243,17 +245,7 @@ namespace  Map_Core
 		}
 
 		return ball_was_Collision_to_Core;
-	}
-	
-	//-----------------------------------------------------------------------------------
-	//ほかのプログラムにあたり判定が終わったポリゴンを渡す関数
-	void Object::Get_Collision_Poligon(std::vector<After_Collision>* result) const
-	{
-		for (auto p : this->col_Poligons)
-		{
-			result->push_back(p);
-		}
-	}
+	}	
 
 	//-------------------------------------------------------------------------------------------
 	//クォータニオンを更新する関数
