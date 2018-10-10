@@ -188,7 +188,7 @@ BoxType Bbox::What_Type_Is_this_Box() const
 	return this->chip;
 }
 
-ML::Vec3 Bbox::Get_Pos() const
+const ML::Vec3& Bbox::Get_Pos() const
 {
 	return this->pos;
 }

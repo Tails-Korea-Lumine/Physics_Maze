@@ -211,38 +211,26 @@ namespace  Map3d
 			//必要ないときはこのまま処理終了
 			return;
 		}
-
-		ML::Mat4x4 matS;
-		matS.Scaling(this->chipSize);
-		
+				
+		//行列生成
+		ML::Mat4x4 matW;
 		for (int z = 0; z < this->sizeZ; z++)
 		{
 			for (int x = 0; x < this->sizeX; x++)
 			{
 				//道はレンダリングしない
-				if (this->arr[z][x].What_Type_Is_this_Box() == BoxType::Road)
+				BoxType now_Type = this->arr[z][x].What_Type_Is_this_Box();
+				if (now_Type == BoxType::Road)
 				{
 					continue;
-				}
-					 
-				ML::Mat4x4 matT;
-				matT.Translation(this->arr[z][x].Get_Pos());
-
-				ML::Mat4x4 matR;
-				matR.RotationQuaternion(this->map_QT);
-				//D3DXMatrixAffineTransformation(&matR, this->chipSize / 100.0f, NULL, &qtW, NULL);
-				////matR.Inverse();
-
-				//if (this->map_Rotation.Length() != 0)
-				//{
-				//	ML::Mat4x4 matMove;
-				//	D3DXMatrixAffineTransformation(&matMove, this->chipSize / 100.0f, NULL, &qtM, NULL);
-				//	matR *= matMove;
-				//}
-				//matR.Inverse();
-
-				DG::EffectState().param.matWorld = matS * matR * matT;
-				DG::Mesh_Draw(this->chipName[(int)this->arr[z][x].What_Type_Is_this_Box()]);
+				}			
+				
+				//アフィン変換
+				D3DXMatrixAffineTransformation(&matW, this->chipSize , NULL, &this->map_QT, &this->arr[z][x].Get_Pos());				
+				//ワールド行列に上書き
+				DG::EffectState().param.matWorld = matW;
+				//レンダリング
+				DG::Mesh_Draw(this->chipName[(int)now_Type]);
 			}
 		}
 		
@@ -474,7 +462,7 @@ namespace  Map3d
 		float c = 0.0f;
 		//視線ベクトル
 		ML::Vec3 sv = ge->camera[0]->target - ge->camera[0]->pos;
-		MyMath::Vector_Dot(&c, sv.Normalize(), this->Normal_Side);
+		MyMath::Vector_Dot(&c, sv, this->Normal_Side);
 
 		//内積値が-90 < cos < 90の間はレンダリングをしない
 		return c > this->rendering_Judge? false : true;
