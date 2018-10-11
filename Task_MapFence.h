@@ -62,20 +62,25 @@ namespace MapFence
 		//ボールのほうに渡す情報
 		std::vector< After_Collision> col_Poligons;
 		//回転量
-		ML::QT map_QT;		
-		
-	public:
+		ML::QT map_QT;
+
 		//メソッド
 		//外部ファイルからの読み込み
 		bool Map_Load(string f_);
+		//クォータニオンを更新する関数
+		void UpDate_Quartanion(const ML::QT& qt);
+		//配列ソート
+		void Array_Sorting();
+		
+	public:
+		
 		//球とマップのあたり判定
 		void Map_Check_Hit(std::vector<ML::Vec3>& all_Points, const ML::Vec3& pos, const float& r, const ML::Vec3& speed);
 		//マップの回転
-		void Map_Rotate();
+		void Map_Rotate(const ML::QT& qt);
 		//あたり判定の結果を返す関数
-		void Get_Collision_Poligon(std::vector<After_Collision>* result) const;
-		//クォータニオンを更新する関数
-		void UpDate_Quartanion(const ML::QT& qt);
+		//void Get_Collision_Poligon(std::vector<After_Collision>* result) const;
+		
 		
 	};
 }

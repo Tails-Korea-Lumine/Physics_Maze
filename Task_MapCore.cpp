@@ -183,21 +183,24 @@ namespace  Map_Core
 	//追加メソッド
 
 	//回転
-	void Object::Rotate_Core_and_Barrier()
+	void Object::Rotate_Core_and_Barrier(const ML::QT& qt)
 	{
+		//全体の回転値更新
+		this->UpDate_Quartanion(qt);
+
 		ML::Mat4x4 matR;
 		//matRをアフィン変換行列に作る
-		D3DXMatrixAffineTransformation(&matR, 1.0f, &ge->Map_center, &this->map_QT,NULL);
+		D3DXMatrixAffineTransformation(&matR, 1.0f, &ge->Map_center, &qt,NULL);
 		
 		//回転開始
 		ML::Vec3 temp = matR.TransformCoord(ge->Map_center);
-		this->core.Rotate_Box(temp, this->map_QT);
+		this->core.Rotate_Box(&matR, qt);
 		/*for (int b = 0; b < 6; b++)
 		{
 			ML::Vec3 btemp = matR.TransformCoord(this->b_ini_pos[b]);
 			this->barrier[b].Rotate_Box(btemp, this->map_QT);
 		}*/
-		this->barrier.Rotate_Box(temp, this->map_QT);
+		this->barrier.Rotate_Box(&matR, qt);
 	}
 
 	//------------------------------------------------------------------------------------

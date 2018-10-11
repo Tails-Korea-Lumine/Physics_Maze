@@ -5,11 +5,11 @@
 #define VERTEX_ON_CUBE 8
 
 
-void Bbox::Rotate_Box(const ML::Vec3& pos, const ML::QT& q)
+void Bbox::Rotate_Box(ML::Mat4x4* mat, const ML::QT& q)
 {
 	//‰ñ“]—Ê‚ÆˆÊ’u‚ðXV
-	this->pos = pos;
-	this->boxQT = q;
+	this->pos = mat->TransformCoord(pos);
+	this->boxQT *= q;
 }
 
 void Bbox::Get_Triangle_Box3D(std::vector<Triangle>* result, const ML::Box3D& box, const ML::QT& rotation) const

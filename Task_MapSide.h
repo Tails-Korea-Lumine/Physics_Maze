@@ -76,15 +76,20 @@ namespace Map3d
 		bool Map_Load(string f_);
 		//レンダリングするかを確認するメソッド
 		bool Is_Need_Render();
-	public:
-		bool Map_Check_Hit(std::vector<ML::Vec3>& all_Points, const ML::Vec3& pos, const float& r, const ML::Vec3& speed);//球とマップのあたり判定
-		void Map_Rotate();
-		
-		void Get_Collision_Poligon(std::vector<After_Collision>* result) const;
-
+		//配列ソート及びボールをスタート位置に置く
+		void Array_Sorting();
 		//クォータニオンを更新する関数
 		void UpDate_Quartanion(const ML::QT& qt);
 
+	public:
+		//球とマップのあたり判定
+		bool Map_Check_Hit(std::vector<ML::Vec3>& all_Points, const ML::Vec3& pos, const float& r, const ML::Vec3& speed);
+		//マップ回転
+		void Map_Rotate(const ML::QT& qt);
+		
+		//void Get_Collision_Poligon(std::vector<After_Collision>* result) const;
+
+		//マップの法線ベクトルを返す処理
 		void Get_Normal_Side(ML::Vec3*) const;		
 	};
 }
