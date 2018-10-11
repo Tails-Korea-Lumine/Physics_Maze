@@ -158,22 +158,12 @@ namespace  Map_Core
 	void  Object::Render3D_L0()
 	{
 		//レンダリング処理、バリアはレンダリングをしない
-		ML::Mat4x4 matS, matR, matT;
+		ML::Mat4x4 matW;
 
-		matS.Scaling(this->mapSize * 100.0f);
-		matR.RotationQuaternion(this->map_QT);
-		//for (int i = 0; i < 6; i++)
-		//{
-		//	matT.Translation(this->barrier[i].Get_Pos());
+		//アフィン変換
+		D3DXMatrixAffineTransformation(&matW, this->mapSize * 100.0f, NULL, &this->map_QT,&this->core.Get_Pos());
 
-		//	DG::EffectState().param.matWorld = matS * matR * matT;
-
-		//	DG::Mesh_Draw(this->res->meshName);
-		//}
-
-		matT.Translation(this->core.Get_Pos());
-
-		DG::EffectState().param.matWorld = matS * matR * matT;
+		DG::EffectState().param.matWorld = matW;
 
 		DG::Mesh_Draw(this->res->meshName);
 
@@ -195,18 +185,14 @@ namespace  Map_Core
 		//回転開始
 		ML::Vec3 temp = matR.TransformCoord(ge->Map_center);
 		this->core.Rotate_Box(&matR, qt);
-		/*for (int b = 0; b < 6; b++)
-		{
-			ML::Vec3 btemp = matR.TransformCoord(this->b_ini_pos[b]);
-			this->barrier[b].Rotate_Box(btemp, this->map_QT);
-		}*/
+		
 		this->barrier.Rotate_Box(&matR, qt);
 	}
 
 	//------------------------------------------------------------------------------------
 	//あたり判定
 
-	bool Object::Core_Check_Hit(std::vector<ML::Vec3>& all_Points, const ML::Vec3& pos, const float& r, const ML::Vec3& speed)
+	void Object::Core_Check_Hit(std::vector<ML::Vec3>& all_Points, const ML::Vec3& pos, const float& r, const ML::Vec3& speed)
 	{
 		//接触三角形を判定前にクリアする	
 		this->col_Poligons.clear();
@@ -215,28 +201,6 @@ namespace  Map_Core
 		//std::vector<After_Collision> poligonC
 		this->core.Get_Collision_Poligon(&this->col_Poligons, all_Points, pos, r, speed);
 		
-		bool ball_was_Collision_to_Core = false;
-
-		if (this->col_Poligons.size() != 0)
-		{
-			ball_was_Collision_to_Core = true;
-		}
-		//for (int b = 0; b < 6; b++)
-		//{
-		//	//相対距離の絶対値をとる
-		//	ML::Vec3 d = this->barrier[b].Get_Pos() - pos;
-		//	if (d.Length() < 0)
-		//	{
-		//		d *= -1;
-		//	}
-		//	//一定距離以内のものだけ判定をする
-		//	if (d.Length() > (this->mapSize + 4) * 53)
-		//	{
-		//		continue;
-		//	}
-		//	//std::vector<After_Collision> poligonB
-		//	this->barrier[b].Get_Collision_Poligon(&this->col_Poligons, pos, r, speed);			
-		//}
 		this->barrier.Get_Collision_Poligon(&this->col_Poligons, all_Points, pos, r, speed);
 
 		//全体衝突結果に保存する
@@ -244,20 +208,9 @@ namespace  Map_Core
 		{
 			ge->collision_Result.push_back(c);
 		}
-
-		return ball_was_Collision_to_Core;
+		//Graviation_Pullの削除によって戻り値が不要になった
+		//return ball_was_Collision_to_Core;
 	}
-	
-	//-----------------------------------------------------------------------------------
-	//ほかのプログラムにあたり判定が終わったポリゴンを渡す関数
-	void Object::Get_Collision_Poligon(std::vector<After_Collision>* result) const
-	{
-		for (auto p : this->col_Poligons)
-		{
-			result->push_back(p);
-		}
-	}
-
 	//-------------------------------------------------------------------------------------------
 	//クォータニオンを更新する関数
 	void Object::UpDate_Quartanion(const ML::QT& qt)

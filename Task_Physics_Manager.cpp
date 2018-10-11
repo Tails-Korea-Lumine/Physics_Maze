@@ -148,34 +148,7 @@ namespace  Physics_Manager
 
 		//std::vector<After_Collision> Result;
 		for (unsigned int i = 0; i < precision; i++)
-		{
-			//zŽ²‰ñ“]‚ªƒ{ƒ^ƒ“‚ð‰Ÿ‚µ‚È‚ª‚ç‚â‚éver0.1
-			//if (in1.B1.on)
-			//{
-			//	//ƒXƒeƒBƒbƒN‚Å“ü—Í
-			//	if (in1.LStick.axis.x != 0)
-			//	{
-			//		frame_QTx = ML::QT(ML::Vec3(0, 0, 1), ML::ToRadian(-in1.LStick.axis.x / float(delicate)));
-			//		//this->map_QT *= frame_QT;
-			//	}
-			//}
-			////‰Ÿ‚³‚ê‚Ä‚¢‚È‚¢Žž‚ÍYŽ²‰ñ“]‚ÆXŽ²‰ñ“]
-			//else
-			//{
-
-			//	if (in1.LStick.axis.y != 0)
-			//	{
-			//		frame_QTx = ML::QT(ML::Vec3(1, 0, 0), ML::ToRadian(-in1.LStick.axis.y / float(delicate)));
-			//		//this->map_QT *= frame_QT;
-			//	}
-
-			//	if (in1.LStick.axis.x != 0)
-			//	{
-			//		frame_QTy = ML::QT(ML::Vec3(0, 1, 0), ML::ToRadian(-in1.LStick.axis.x / float(delicate)));
-			//		//this->map_QT *= frame_QT;
-			//	}
-			//}
-			
+		{			
 			//‰ñ“]‚ðeasing‚ÅŒ¸‘¬‰^“®‚³‚¹‚éver0.3
 			
 			if (ge->game.lock()->GET_READY())
@@ -230,23 +203,7 @@ namespace  Physics_Manager
 			//ƒtƒŒ[ƒ€‰ñ“]—Ê‚Ì‚Ü‚Æ‚ß				
 			ML::QT frame_QT_All = this->frame_QTxp * this->frame_QTxm * this->frame_QTyp * this->frame_QTym *this->frame_QTzm * this->frame_QTzp;
 
-			//Šeƒ^ƒXƒN‚Ì‰ñ“]—Ê‚ðXV
-			/*core->UpDate_Quartanion(frame_QT_All);
-			for (auto m = map->begin(); m != map->end(); m++)
-			{
-				(*m)->UpDate_Quartanion(frame_QT_All);
-			}
-			for (auto f = fence->begin(); f != fence->end(); f++)
-			{
-				(*f)->UpDate_Quartanion(frame_QT_All);
-			}*/
-			
-
-			//ƒ[ƒ‹ƒh‰ñ“]—Ê‚É”½‰f
-			//ge->World_Rotation = this->map_QT;		
-
-
-			//‰ñ“]
+			//Šeƒ^ƒXƒN‚Ì‰ñ“]—Ê‚ðXV‹y‚Ñ‰ñ“]
 			core->Rotate_Core_and_Barrier(frame_QT_All);
 			for (auto m = map->begin(); m != map->end(); m++)
 			{

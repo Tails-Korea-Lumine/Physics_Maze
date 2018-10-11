@@ -87,8 +87,6 @@ namespace Map3d
 		//マップ回転
 		void Map_Rotate(const ML::QT& qt);
 		
-		//void Get_Collision_Poligon(std::vector<After_Collision>* result) const;
-
 		//マップの法線ベクトルを返す処理
 		void Get_Normal_Side(ML::Vec3*) const;		
 	};

@@ -126,69 +126,7 @@ namespace  MapFence
 	//「更新」１フレーム毎に行う処理
 	void  Object::UpDate()
 	{
-		//ボールの情報を修得
-		//auto ball = ge->GetTask_One_G<Ball::Object>("ボール");
-
-		//this->frame_QT = ML::QT(0.0f);
-		//auto in1 = DI::GPad_GetState("P1");
-
-		//for (int i = 0; i < 10; i++)
-		//{
-		//	//スティックが倒された量を更新
-		//	if (in1.B1.on)
-		//	{
-		//		//スティックで入力
-		//		if (in1.LStick.axis.x != 0)
-		//		{
-		//			this->frame_QT = ML::QT(ML::Vec3(0, 0, 1), ML::ToRadian(-in1.LStick.axis.x / 10.0f));
-		//			this->map_QT *= this->frame_QT;
-		//		}
-		//	}
-		//	//押されていない時はY軸回転とX軸回転
-		//	else
-		//	{
-
-		//		if (in1.LStick.axis.y != 0)
-		//		{
-		//			this->frame_QT = ML::QT(ML::Vec3(1, 0, 0), ML::ToRadian(-in1.LStick.axis.y / 10.0f));
-		//			this->map_QT *= this->frame_QT;
-		//		}
-
-		//		if (in1.LStick.axis.x != 0)
-		//		{
-		//			this->frame_QT = ML::QT(ML::Vec3(0, 1, 0), ML::ToRadian(-in1.LStick.axis.x / 10.0f));
-		//			this->map_QT *= this->frame_QT;
-		//		}
-		//	}
-
-		//	//ワールド回転量に反映
-		//	//ge->World_Rotation = this->map_QT;		
-
-
-		//	//回転
-
-		//	this->Map_Rotate();
-
-
-
-		//	//あたり判定は毎回マップのほうで行う	
-
-		//	//ボールとマップのあたり判定
-		//	if (ball != nullptr)
-		//	{
-		//		this->Map_Check_Hit(ball->Get_Pos(), ball->Get_Radious(), ball->Get_Speed());
-		//	}
-
-		//	//位置補正を仕掛ける
-		//	for (auto p : this->col_Poligons)
-		//	{
-		//		if (p.collision_Flag)
-		//		{
-		//			ball->Fix_Position_for_Rotate(this->frame_QT);
-		//			break;
-		//		}
-		//	}
-		//}
+		
 	}
 	//-------------------------------------------------------------------
 	//「２Ｄ描画」１フレーム毎に行う処理
@@ -206,41 +144,25 @@ namespace  MapFence
 		{
 			for (int x = 0; x < this->sizeX; x++)
 			{
-				//for (int x = 0; x < this->sizeX; x++)
+				
+				//道はレンダリングしない
+				if (this->arr[y][x].What_Type_Is_this_Box() == BoxType::Road)
 				{
-					//道は配列の後ろに積めておいたので発見したらその後は処理せずにbreak
-					if (this->arr[y][x].What_Type_Is_this_Box() == BoxType::Road)
-					{
-						continue;
-					}
-					 
-				/*	ML::Mat4x4 matT;
-					matT.Translation(this->arr[z][y][x].Get_Pos());
-
-					ML::Mat4x4 matR;
-					matR.RotationQuaternion(this->map_QT);*/
-					
-					D3DXMatrixAffineTransformation(&matW, this->chipSize, NULL, &this->map_QT, &this->arr[y][x].Get_Pos());
-
-					DG::EffectState().param.matWorld = matW;
-					DG::Mesh_Draw(this->chipName[(int)this->arr[y][x].What_Type_Is_this_Box()]);
+					continue;
 				}
+					 
+				//描画
+				D3DXMatrixAffineTransformation(&matW, this->chipSize, NULL, &this->map_QT, &this->arr[y][x].Get_Pos());
+
+				DG::EffectState().param.matWorld = matW;
+				DG::Mesh_Draw(this->chipName[(int)this->arr[y][x].What_Type_Is_this_Box()]);
+				
 			}
 		}
 	}
 
 	//-----------------------------------------------------------------------------------
-	//追加メソッド	
-	//あたっているかを返す関数	
-
-	/*void Object::Get_Collision_Poligon(std::vector<After_Collision>* result) const
-	{
-		for (auto p : this->col_Poligons)
-		{
-			result->push_back(p);
-		}
-	}*/
-	//---------------------------------------------------------------------------------------
+	//追加メソッド		
 	//外部ファイルからのマップロード
 	bool Object::Map_Load(string f_)
 	{
@@ -268,26 +190,26 @@ namespace  MapFence
 		{
 			for (int x = 0; x < sizeX; x++)
 			{
-				//for (int x = 0; x < this->sizeX; x++)
+				//チップ番号(ボックスタイプ)読み込み
+				int chip;
+				fin >> chip;
+				//マップ中央を基準にした初期位置算出
+				ML::Vec3 pos = ML::Vec3(x * this->chipSize + this->chipSize / 2, y*this->chipSize + this->chipSize / 2, this->chipSize + this->chipSize / 2);
+
+				if (this->fenceNumber < 8)
 				{
-					int chip;
-					fin >> chip;
-					ML::Vec3 pos = ML::Vec3(x * this->chipSize + this->chipSize / 2, y*this->chipSize + this->chipSize / 2, this->chipSize + this->chipSize / 2);
-
-					if (this->fenceNumber < 8)
-					{
-						pos += ge->Map_center - ML::Vec3((this->mapSize*this->chipSize / 2), -(this->mapSize*this->chipSize / 2), -((this->mapSize - 2)*this->chipSize / 2));
-					}
-					else
-					{
-						pos += ge->Map_center - ML::Vec3(((this->mapSize + 2)*this->chipSize / 2), (this->mapSize*this->chipSize / 2), -((this->mapSize - 2)*this->chipSize / 2));
-					}
-
-					ML::Box3D base = ML::Box3D(-this->chipSize / 2, -this->chipSize / 2, -this->chipSize / 2, this->chipSize, this->chipSize, this->chipSize);				
-
-
-					this->arr[y][x] = Bbox(BoxType(chip), pos, base, this->map_QT);
+					pos += ge->Map_center - ML::Vec3((this->mapSize*this->chipSize / 2), -(this->mapSize*this->chipSize / 2), -((this->mapSize - 2)*this->chipSize / 2));
 				}
+				else
+				{
+					pos += ge->Map_center - ML::Vec3(((this->mapSize + 2)*this->chipSize / 2), (this->mapSize*this->chipSize / 2), -((this->mapSize - 2)*this->chipSize / 2));
+				}
+				//あたり判定用矩形
+				ML::Box3D base = ML::Box3D(-this->chipSize / 2, -this->chipSize / 2, -this->chipSize / 2, this->chipSize, this->chipSize, this->chipSize);				
+
+				//配列に登録
+				this->arr[y][x] = Bbox(BoxType(chip), pos, base, this->map_QT);
+				
 			}
 		}
 		fin.close();
@@ -348,28 +270,12 @@ namespace  MapFence
 		{
 			for (int x = 0; x < this->sizeX; x++)
 			{
-				//for (int x = 0; x < this->sizeX; x++)
-				{
-
-					//ML::Vec3 pos = ML::Vec3(x * this->chipSize + this->chipSize / 2, y*this->chipSize + this->chipSize / 2, this->chipSize + this->chipSize / 2);					
-
-					//D3DXMatrixAffineTransformation(&matR, this->chipSize / 100.0f, &ML::Vec3(1050,50,1050), &qtW, NULL);
-					//matR.Inverse();
-
-					/*if (this->map_Rotation.Length() != 0)
-					{
-					ML::Mat4x4 matMove;
-					D3DXMatrixAffineTransformation(&matMove, this->chipSize / 100.0f, &ge->Map_center, &qtM, NULL);
-					matR *= matMove;
-					}*/
-					ML::Mat4x4 matR;
-					D3DXMatrixAffineTransformation(&matR, this->chipSize / 100.0f, &ge->Map_center, &qt, NULL);
-					//ML::Vec3 temp = matR.TransformCoord(this->arr[z][y][x].Get_Pos());
-					//pos = matR.TransformCoord(pos);
-
-					//matR.Inverse();
-					this->arr[y][x].Rotate_Box(&matR, qt);
-				}
+				//回転行列生成
+				ML::Mat4x4 matR;
+				D3DXMatrixAffineTransformation(&matR, this->chipSize / 100.0f, &ge->Map_center, &qt, NULL);
+				//ボックスに個別で渡す
+				this->arr[y][x].Rotate_Box(&matR, qt);
+				
 			}
 		}
 	}

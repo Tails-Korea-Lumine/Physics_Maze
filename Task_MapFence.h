@@ -78,9 +78,6 @@ namespace MapFence
 		void Map_Check_Hit(std::vector<ML::Vec3>& all_Points, const ML::Vec3& pos, const float& r, const ML::Vec3& speed);
 		//ƒ}ƒbƒv‚Ì‰ñ“]
 		void Map_Rotate(const ML::QT& qt);
-		//‚ ‚½‚è”»’è‚ÌŒ‹‰Ê‚ğ•Ô‚·ŠÖ”
-		//void Get_Collision_Poligon(std::vector<After_Collision>* result) const;
-		
 		
 	};
 }

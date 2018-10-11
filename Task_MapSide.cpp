@@ -133,69 +133,7 @@ namespace  Map3d
 	//「更新」１フレーム毎に行う処理
 	void  Object::UpDate()
 	{
-		//ボールの情報を修得
-		//auto ball = ge->GetTask_One_G<Ball::Object>("ボール");
-
-		//this->frame_QT = ML::QT(0.0f);
-		//auto in1 = DI::GPad_GetState("P1");
-
-		//for (int i = 0; i < 10; i++)
-		//{
-		//	//スティックが倒された量を更新
-		//	if (in1.B1.on)
-		//	{
-		//		//スティックで入力
-		//		if (in1.LStick.axis.x != 0)
-		//		{
-		//			this->frame_QT = ML::QT(ML::Vec3(0, 0, 1), ML::ToRadian(-in1.LStick.axis.x / 10.0f));
-		//			this->map_QT *= this->frame_QT;
-		//		}
-		//	}
-		//	//押されていない時はY軸回転とX軸回転
-		//	else
-		//	{
-
-		//		if (in1.LStick.axis.y != 0)
-		//		{
-		//			this->frame_QT = ML::QT(ML::Vec3(1, 0, 0), ML::ToRadian(-in1.LStick.axis.y / 10.0f));
-		//			this->map_QT *= this->frame_QT;
-		//		}
-
-		//		if (in1.LStick.axis.x != 0)
-		//		{
-		//			this->frame_QT = ML::QT(ML::Vec3(0, 1, 0), ML::ToRadian(-in1.LStick.axis.x / 10.0f));
-		//			this->map_QT *= this->frame_QT;
-		//		}
-		//	}
-
-		//	//ワールド回転量に反映
-		//	//ge->World_Rotation = this->map_QT;		
-
-
-		//	//回転
-
-		//	this->Map_Rotate();
-
-
-
-		//	//あたり判定は毎回マップのほうで行う	
-
-		//	//ボールとマップのあたり判定
-		//	if (ball != nullptr)
-		//	{
-		//		this->Map_Check_Hit(ball->Get_Pos(), ball->Get_Radious(), ball->Get_Speed());
-		//	}
-
-		//	//位置補正を仕掛ける
-		//	for (auto p : this->col_Poligons)
-		//	{
-		//		if (p.collision_Flag)
-		//		{
-		//			ball->Fix_Position_for_Rotate(this->frame_QT);
-		//			break;
-		//		}
-		//	}
-		//}
+	
 	}
 	//-------------------------------------------------------------------
 	//「２Ｄ描画」１フレーム毎に行う処理
@@ -225,6 +163,7 @@ namespace  Map3d
 				{
 					break;
 				}
+				//スタート位置はレンダリング無視
 				else if (now_Type == BoxType::Start)
 				{
 					continue;
@@ -242,17 +181,7 @@ namespace  Map3d
 	}
 
 	//-----------------------------------------------------------------------------------
-	//追加メソッド	
-	//あたっているかを返す関数	
-
-	/*void Object::Get_Collision_Poligon(std::vector<After_Collision>* result) const
-	{
-		for (auto p : this->col_Poligons)
-		{
-			result->push_back(p);
-		}
-	}*/
-	//---------------------------------------------------------------------------------------
+	//追加メソッド		
 	//外部ファイルからのマップロード
 	bool Object::Map_Load(string f_)
 	{
@@ -262,6 +191,7 @@ namespace  Map3d
 		{
 			return false;
 		}
+		//レンダリングするメッシュの個数
 		int chipNum;
 		fin >> chipNum;
 		//チップファイル名読み込みと、メッシュのロード
@@ -281,11 +211,13 @@ namespace  Map3d
 		{
 			for (int x = 0; x < this->sizeX; x++)
 			{
+				//チップ番号(ボックスタイプ)読み込み
 				int chip;
 				fin >> chip;
+				//マップ中央を基準にした初期位置算出
 				ML::Vec3 pos = ML::Vec3(x*this->chipSize + this->chipSize / 2, this->chipSize + this->chipSize / 2, z*this->chipSize + this->chipSize / 2);
 				pos += ge->Map_center - ML::Vec3((this->mapSize*this->chipSize / 2), -((this->mapSize - 2)*this->chipSize / 2), (this->mapSize*this->chipSize / 2));
-
+				//あたり判定用矩形
 				ML::Box3D base = ML::Box3D(-this->chipSize / 2, -this->chipSize / 2, -this->chipSize / 2, this->chipSize, this->chipSize, this->chipSize);				
 				ML::Mat4x4 matR;
 				
@@ -303,7 +235,7 @@ namespace  Map3d
 					break;
 				}
 
-				
+				//配列に登録
 				this->arr[z][x] = Bbox(BoxType(chip), pos, base, this->map_QT);
 			}
 			
@@ -314,14 +246,12 @@ namespace  Map3d
 	//-----------------------------------------------------------------------
 	bool Object::Map_Check_Hit(std::vector<ML::Vec3>& all_Points, const ML::Vec3& pos, const float& r, const ML::Vec3& speed)
 	{
-		//多重衝突まで適用したver0.3(2018/04/16)
-
 		//接触三角形を判定前にクリアする
 		this->col_Poligons.clear();
-		//std::vector<After_Collision> poligon;
+		//ボールがこの面にあるかを確認するためのフラグ	
 		bool ball_on_This_Side = false;
-		//判定スタート
-		
+
+		//判定スタート		
 		for (int z = 0; z < this->sizeZ; z++)
 		{
 			for (int x = 0; x < this->sizeX; x++)
@@ -341,6 +271,7 @@ namespace  Map3d
 					continue;
 				}
 				ball_on_This_Side = true;
+
 				//boxType別に処理を分ける
 				switch (now_Type)
 				{
@@ -380,6 +311,7 @@ namespace  Map3d
 						}
 					}
 					break;
+				//スイッチは光源をけす
 				case BoxType::LightSwitch:
 					if (this->arr[z][x].Get_Collision_Bool(all_Points, pos, r, speed))
 					{
@@ -391,8 +323,7 @@ namespace  Map3d
 				case BoxType::Wall:
 					this->arr[z][x].Get_Collision_Poligon(&this->col_Poligons, all_Points, pos, r, speed);
 					break;
-				}
-				//this->collision_Tri = this->col.Hit_Check(Mass, pos, r, this->map_QT); //(ver0.2で使った処理)				
+				}		
 
 				//全体衝突結果に保存する
 				for (auto& c : this->col_Poligons)
@@ -402,7 +333,7 @@ namespace  Map3d
 			}
 			
 		}
-		
+		//戻り値はボールがこの面にあるかを確認したフラグ
 		return ball_on_This_Side;
 	}
 
@@ -417,24 +348,11 @@ namespace  Map3d
 		{
 			for (int x = 0; x < this->sizeX; x++)
 			{
-
-				//ML::Vec3 pos = ML::Vec3(x*this->chipSize + this->chipSize / 2, this->chipSize + this->chipSize / 2, z*this->chipSize + this->chipSize / 2);
-				//pos += ge->Map_center - ML::Vec3((this->mapSize*this->chipSize / 2), -((this->mapSize-2)*this->chipSize / 2), (this->mapSize*this->chipSize / 2));
-				//D3DXMatrixAffineTransformation(&matR, this->chipSize / 100.0f, &ML::Vec3(1050,50,1050), &qtW, NULL);
-				//matR.Inverse();
-
-				/*if (this->map_Rotation.Length() != 0)
-				{
-				ML::Mat4x4 matMove;
-				D3DXMatrixAffineTransformation(&matMove, this->chipSize / 100.0f, &ge->Map_center, &qtM, NULL);
-				matR *= matMove;
-				}*/
+				//回転行列生成
 				ML::Mat4x4 matR;
-				D3DXMatrixAffineTransformation(&matR, this->chipSize / 100.0f, &ge->Map_center, &qt, NULL);
-				//ML::Vec3 temp = matR.TransformCoord(this->arr[z][y][x].Get_Pos());
-				//pos = matR.TransformCoord(pos);
+				D3DXMatrixAffineTransformation(&matR, this->chipSize / 100.0f, &ge->Map_center, &qt, NULL);				
 
-				//ボックスの回転
+				//ボックスに個別で渡す
 				this->arr[z][x].Rotate_Box(&matR, qt);
 				//テレポート扉の位置更新
 				if (this->arr[z][x].What_Type_Is_this_Box() == BoxType::Teleportaion)
