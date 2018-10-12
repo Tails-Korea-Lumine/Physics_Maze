@@ -38,8 +38,7 @@ namespace  MapFence
 		//データのゼロクリア
 		//ZeroMemory(this->arr, sizeof(this->arr));
 		//this->sizeX = 0;
-		this->sizeY = 0;
-		this->sizeX = 0;
+		this->size = 0;
 		this->chipSize = 100.0f;
 		for (int i = 0; i < _countof(this->chipName); i++)
 		{
@@ -110,8 +109,7 @@ namespace  MapFence
 			}
 		}
 		//this->sizeX = 0;
-		this->sizeY = 0;
-		this->sizeX = 0;
+		this->size = 0;
 		this->col_Poligons.clear();
 
 		if (!ge->QuitFlag() && this->nextTaskCreate)
@@ -140,24 +138,23 @@ namespace  MapFence
 		
 		ML::Mat4x4 matW;
 		//matS.Scaling(this->chipSize);
-		for (int y = 0; y < this->sizeY; y++)
+		for (int i = 0; i < this->size; i++)
 		{
-			for (int x = 0; x < this->sizeX; x++)
+			
+				
+			//道はレンダリングしない
+			if (this->arr[i].What_Type_Is_this_Box() == BoxType::Road)
 			{
-				
-				//道はレンダリングしない
-				if (this->arr[y][x].What_Type_Is_this_Box() == BoxType::Road)
-				{
-					continue;
-				}
-					 
-				//描画
-				D3DXMatrixAffineTransformation(&matW, this->chipSize, NULL, &this->map_QT, &this->arr[y][x].Get_Pos());
-
-				DG::EffectState().param.matWorld = matW;
-				DG::Mesh_Draw(this->chipName[(int)this->arr[y][x].What_Type_Is_this_Box()]);
-				
+				continue;
 			}
+					 
+			//描画
+			D3DXMatrixAffineTransformation(&matW, this->chipSize, NULL, &this->map_QT, &this->arr[i].Get_Pos());
+
+			DG::EffectState().param.matWorld = matW;
+			DG::Mesh_Draw(this->chipName[(int)this->arr[i].What_Type_Is_this_Box()]);
+				
+			
 		}
 	}
 
@@ -184,33 +181,35 @@ namespace  MapFence
 			DG::Mesh_CreateFromSOBFile(this->chipName[c], chipFilePath);
 		}
 		//マップ配列サイズの読み込み
-		fin >> this->sizeX >> this->sizeY;
+		fin >> this->size;
 		//マップ配列データの読みこみ
-		for (int y = 0; y < this->sizeY; y++)
+		for (int i = 0; i < this->size; i++)
 		{
-			for (int x = 0; x < sizeX; x++)
+			
+			
+			//チップ番号(ボックスタイプ)読み込み
+			int chip;
+			fin >> chip;
+			//マップ中央を基準にした初期位置算出
+			ML::Vec3 pos;
+
+			if (this->fenceNumber < 8)
 			{
-				//チップ番号(ボックスタイプ)読み込み
-				int chip;
-				fin >> chip;
-				//マップ中央を基準にした初期位置算出
-				ML::Vec3 pos = ML::Vec3(x * this->chipSize + this->chipSize / 2, y*this->chipSize + this->chipSize / 2, this->chipSize + this->chipSize / 2);
-
-				if (this->fenceNumber < 8)
-				{
-					pos += ge->Map_center - ML::Vec3((this->mapSize*this->chipSize / 2), -(this->mapSize*this->chipSize / 2), -((this->mapSize - 2)*this->chipSize / 2));
-				}
-				else
-				{
-					pos += ge->Map_center - ML::Vec3(((this->mapSize + 2)*this->chipSize / 2), (this->mapSize*this->chipSize / 2), -((this->mapSize - 2)*this->chipSize / 2));
-				}
-				//あたり判定用矩形
-				ML::Box3D base = ML::Box3D(-this->chipSize / 2, -this->chipSize / 2, -this->chipSize / 2, this->chipSize, this->chipSize, this->chipSize);				
-
-				//配列に登録
-				this->arr[y][x] = Bbox(BoxType(chip), pos, base, this->map_QT);
-				
+				pos = ML::Vec3(i * this->chipSize + this->chipSize / 2, this->chipSize + this->chipSize / 2, this->chipSize + this->chipSize / 2);
+				pos += ge->Map_center - ML::Vec3((this->mapSize*this->chipSize / 2), -(this->mapSize*this->chipSize / 2), -((this->mapSize - 2)*this->chipSize / 2));
 			}
+			else
+			{
+				pos = ML::Vec3(this->chipSize + this->chipSize / 2, i * this->chipSize + this->chipSize / 2, this->chipSize + this->chipSize / 2);
+				pos += ge->Map_center - ML::Vec3(((this->mapSize + 2)*this->chipSize / 2), (this->mapSize*this->chipSize / 2), -((this->mapSize - 2)*this->chipSize / 2));
+			}
+			//あたり判定用矩形
+			ML::Box3D base = ML::Box3D(-this->chipSize / 2, -this->chipSize / 2, -this->chipSize / 2, this->chipSize, this->chipSize, this->chipSize);				
+
+			//配列に登録
+			this->arr[i] = Bbox(BoxType(chip), pos, base, this->map_QT);
+				
+			
 		}
 		fin.close();
 		return true;
@@ -224,38 +223,33 @@ namespace  MapFence
 		this->col_Poligons.clear();
 
 		//判定スタート
-		for (int y = 0; y < this->sizeY; y++)
+		for (int i = 0; i < this->size; i++)
 		{
-			for (int x = 0; x < this->sizeX; x++)
+			//道は配列の後ろに積めておいたので発見したらその後は処理せずにbreak
+			if (this->arr[i].What_Type_Is_this_Box() == BoxType::Road)
 			{
-				//for (int x = 0; x < this->sizeX; x++)
-				{
-					//道は配列の後ろに積めておいたので発見したらその後は処理せずにbreak
-					if (this->arr[y][x].What_Type_Is_this_Box() == BoxType::Road)
-					{
-						continue;
-					}
-					//一定距離以内のものだけ判定をする
-					ML::Vec3 d = this->arr[y][x].Get_Pos() - pos;
-					//dは絶対値の距離					
-					//一定距離以上だったら判定せず次に項目に
-					if (d.Length() > this->chipSize)
-					{
-						continue;
-					}
+				continue;
+			}
+			//一定距離以内のものだけ判定をする
+			ML::Vec3 d = this->arr[i].Get_Pos() - pos;
+			//dは絶対値の距離					
+			//一定距離以上だったら判定せず次に項目に
+			if (d.Length() > this->chipSize)
+			{
+				continue;
+			}
 													
-					//this->collision_Tri = this->col.Hit_Check(Mass, pos, r, this->map_QT); //(ver0.2で使った処理)
-					//std::vector<After_Collision> poligon 
-					this->arr[y][x].Get_Collision_Poligon(&this->col_Poligons, all_Points, pos, r, speed);
+			//this->collision_Tri = this->col.Hit_Check(Mass, pos, r, this->map_QT); //(ver0.2で使った処理)
+			//std::vector<After_Collision> poligon 
+			this->arr[i].Get_Collision_Poligon(&this->col_Poligons, all_Points, pos, r, speed);
 					
 
-					//全体衝突結果に保存する
-					for (auto& c : this->col_Poligons)
-					{
-						ge->collision_Result.push_back(c);
-					}
-				}
+			//全体衝突結果に保存する
+			for (auto& c : this->col_Poligons)
+			{
+				ge->collision_Result.push_back(c);
 			}
+			
 		}
 	}
 
@@ -266,17 +260,15 @@ namespace  MapFence
 		//全体の回転値更新
 		this->UpDate_Quartanion(qt);
 
-		for (int y = 0; y < this->sizeY; y++)
+		for (int i = 0; i < this->size; i++)
 		{
-			for (int x = 0; x < this->sizeX; x++)
-			{
-				//回転行列生成
-				ML::Mat4x4 matR;
-				D3DXMatrixAffineTransformation(&matR, this->chipSize / 100.0f, &ge->Map_center, &qt, NULL);
-				//ボックスに個別で渡す
-				this->arr[y][x].Rotate_Box(&matR, qt);
-				
-			}
+			
+			//回転行列生成
+			ML::Mat4x4 matR;
+			D3DXMatrixAffineTransformation(&matR, this->chipSize / 100.0f, &ge->Map_center, &qt, NULL);
+			//ボックスに個別で渡す
+			this->arr[i].Rotate_Box(&matR, qt);				
+			
 		}
 	}
 
@@ -290,37 +282,37 @@ namespace  MapFence
 	//配列ソート及びボールをスタート位置に置く
 	void Object::Array_Sorting()
 	{
-		//一時的にコピーする場所
-		Bbox temp;
-		//配列のボックスタイプが道ならば後ろに置く
-		for (int y = 0; y < this->sizeY; y++)
-		{
-			for (int x = 0; x < this->sizeX; x++)
-			{
-				//道のボックスは後ろに積める
-				if (this->arr[y][x].What_Type_Is_this_Box() == BoxType::Road)
-				{
-					temp = this->arr[y][x];
-					//1個先のものに上書きする
-					for (int i = x; i < this->sizeX - 1; i++)
-					{
-						this->arr[y][i] = this->arr[y][i + 1];
-					}
-					this->arr[y][this->sizeX - 1] = temp;
-				}
-				else if (this->arr[y][x].What_Type_Is_this_Box() == BoxType::Start)
-				{
-					//ボールをその位置に置く
-					ge->GetTask_One_G<Ball::Object>("ボール")->Teleportation(this->arr[y][x].Get_Pos());
-				}
-				//道を発見したのに1個先のものが道以外だったら
-				if (this->arr[y][x].What_Type_Is_this_Box() == BoxType::Road && this->arr[y][x + 1].What_Type_Is_this_Box() != BoxType::Road)
-				{
-					//積める処理のやり直し
-					y--;
-				}
-			}
-		}
+		////一時的にコピーする場所
+		//Bbox temp;
+		////配列のボックスタイプが道ならば後ろに置く
+		//for (int j = 0; j < this->sizeY; j++)
+		//{
+		//	for (int x = 0; x < this->sizeX; x++)
+		//	{
+		//		//道のボックスは後ろに積める
+		//		if (this->arr[y][x].What_Type_Is_this_Box() == BoxType::Road)
+		//		{
+		//			temp = this->arr[y][x];
+		//			//1個先のものに上書きする
+		//			for (int i = x; i < this->sizeX - 1; i++)
+		//			{
+		//				this->arr[y][i] = this->arr[y][i + 1];
+		//			}
+		//			this->arr[y][this->sizeX - 1] = temp;
+		//		}
+		//		else if (this->arr[y][x].What_Type_Is_this_Box() == BoxType::Start)
+		//		{
+		//			//ボールをその位置に置く
+		//			ge->GetTask_One_G<Ball::Object>("ボール")->Teleportation(this->arr[y][x].Get_Pos());
+		//		}
+		//		//道を発見したのに1個先のものが道以外だったら
+		//		if (this->arr[y][x].What_Type_Is_this_Box() == BoxType::Road && this->arr[y][x + 1].What_Type_Is_this_Box() != BoxType::Road)
+		//		{
+		//			//積める処理のやり直し
+		//			y--;
+		//		}
+		//	}
+		//}
 	}
 	//★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★
 	//以下は基本的に変更不要なメソッド
