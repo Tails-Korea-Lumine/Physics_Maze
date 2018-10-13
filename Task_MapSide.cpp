@@ -153,9 +153,11 @@ namespace  Map3d
 				
 		//行列生成
 		ML::Mat4x4 matW;
-		for (int z = 0; z < this->sizeZ; z++)
+		int z, x;
+//#pragma ompparallel for private(z,x)
+		for (z = 0; z < this->sizeZ; z++)
 		{
-			for (int x = 0; x < this->sizeX; x++)
+			for (x = 0; x < this->sizeX; x++)
 			{
 				//道は配列の後ろに積めておいたので発見したらその後は処理せずにbreak
 				BoxType now_Type = this->arr[z][x].What_Type_Is_this_Box();
@@ -168,7 +170,10 @@ namespace  Map3d
 				{
 					continue;
 				}
-				
+				else if (this->Is_Need_Render(z, x) == false)
+				{
+					continue;
+				}
 				//アフィン変換
 				D3DXMatrixAffineTransformation(&matW, this->chipSize , NULL, &this->map_QT, &this->arr[z][x].Get_Pos());				
 				//ワールド行列に上書き
@@ -389,6 +394,20 @@ namespace  Map3d
 
 		//内積値が-90 < cos < 90の間はレンダリングをしない
 		return c > this->rendering_Judge? false : true;
+	}
+	//---------------------------------------------------------------------------------------------
+	//レンダリングするかしないかを確認するためのメソッド(マス別)
+	bool Object::Is_Need_Render(const unsigned int& z ,const unsigned int& x)
+	{
+		ML::Vec3 d_Cmc = (ge->Map_center - ge->camera[0]->pos);
+		const float judge = d_Cmc.Length() + (this->chipSize * this->mapSize / 3.0f);
+
+		//判定する距離よりマップの0番とカメラとの距離が遠いならレンダリングしない
+		ML::Vec3 d_Cf0 = this->arr[z][x].Get_Pos() - ge->camera[0]->pos;
+
+		//図った距離で返す
+		return d_Cf0.Length() < judge ? true : false;
+
 	}
 	//-----------------------------------------------------------------------------------------
 	//マップの法線ベクトルを返すメソッド

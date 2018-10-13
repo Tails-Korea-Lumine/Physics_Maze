@@ -76,6 +76,7 @@ namespace Map3d
 		bool Map_Load(string f_);
 		//レンダリングするかを確認するメソッド
 		bool Is_Need_Render();
+		bool Is_Need_Render(const unsigned int& z ,const unsigned int& index);
 		//配列ソート及びボールをスタート位置に置く
 		void Array_Sorting();
 		//クォータニオンを更新する関数

@@ -91,7 +91,7 @@ namespace  MapFence
 			break;
 		}
 		
-		
+		this->Array_Sorting();
 		//★タスクの生成
 
 		return  true;
@@ -134,25 +134,35 @@ namespace  MapFence
 	}
 
 	void  Object::Render3D_L0()
-	{
+	{		
+		//先にレンダリングが必要なのかを確認する
+		/*if (this->Is_Need_Render(0) == false)
+		{
+			return;
+		}*/
 		
 		ML::Mat4x4 matW;
 		//matS.Scaling(this->chipSize);
 		for (int i = 0; i < this->size; i++)
 		{
 			
-				
+			BoxType now_Type = this->arr[i].What_Type_Is_this_Box();
 			//道はレンダリングしない
-			if (this->arr[i].What_Type_Is_this_Box() == BoxType::Road)
+			if (now_Type == BoxType::Road)
+			{
+				return;
+			}
+			//個別にもレンダリングが必要かを確認(フレームが上がるかのテスト)
+			if (this->Is_Need_Render(i) == false)
 			{
 				continue;
 			}
-					 
+
 			//描画
 			D3DXMatrixAffineTransformation(&matW, this->chipSize, NULL, &this->map_QT, &this->arr[i].Get_Pos());
 
 			DG::EffectState().param.matWorld = matW;
-			DG::Mesh_Draw(this->chipName[(int)this->arr[i].What_Type_Is_this_Box()]);
+			DG::Mesh_Draw(this->chipName[(int)now_Type]);
 				
 			
 		}
@@ -196,12 +206,12 @@ namespace  MapFence
 			if (this->fenceNumber < 8)
 			{
 				pos = ML::Vec3(i * this->chipSize + this->chipSize / 2, this->chipSize + this->chipSize / 2, this->chipSize + this->chipSize / 2);
-				pos += ge->Map_center - ML::Vec3((this->mapSize*this->chipSize / 2), -(this->mapSize*this->chipSize / 2), -((this->mapSize - 2)*this->chipSize / 2));
+				pos += ge->Map_center - ML::Vec3((this->mapSize*this->chipSize / 2), -((this->mapSize-2)*this->chipSize / 2), -((this->mapSize - 2)*this->chipSize / 2));
 			}
 			else
 			{
 				pos = ML::Vec3(this->chipSize + this->chipSize / 2, i * this->chipSize + this->chipSize / 2, this->chipSize + this->chipSize / 2);
-				pos += ge->Map_center - ML::Vec3(((this->mapSize + 2)*this->chipSize / 2), (this->mapSize*this->chipSize / 2), -((this->mapSize - 2)*this->chipSize / 2));
+				pos += ge->Map_center - ML::Vec3(((this->mapSize + 4)*this->chipSize / 2), (this->mapSize*this->chipSize / 2), -((this->mapSize - 2)*this->chipSize / 2));
 			}
 			//あたり判定用矩形
 			ML::Box3D base = ML::Box3D(-this->chipSize / 2, -this->chipSize / 2, -this->chipSize / 2, this->chipSize, this->chipSize, this->chipSize);				
@@ -228,7 +238,7 @@ namespace  MapFence
 			//道は配列の後ろに積めておいたので発見したらその後は処理せずにbreak
 			if (this->arr[i].What_Type_Is_this_Box() == BoxType::Road)
 			{
-				continue;
+				break;
 			}
 			//一定距離以内のものだけ判定をする
 			ML::Vec3 d = this->arr[i].Get_Pos() - pos;
@@ -282,38 +292,60 @@ namespace  MapFence
 	//配列ソート及びボールをスタート位置に置く
 	void Object::Array_Sorting()
 	{
-		////一時的にコピーする場所
-		//Bbox temp;
-		////配列のボックスタイプが道ならば後ろに置く
-		//for (int j = 0; j < this->sizeY; j++)
-		//{
-		//	for (int x = 0; x < this->sizeX; x++)
-		//	{
-		//		//道のボックスは後ろに積める
-		//		if (this->arr[y][x].What_Type_Is_this_Box() == BoxType::Road)
-		//		{
-		//			temp = this->arr[y][x];
-		//			//1個先のものに上書きする
-		//			for (int i = x; i < this->sizeX - 1; i++)
-		//			{
-		//				this->arr[y][i] = this->arr[y][i + 1];
-		//			}
-		//			this->arr[y][this->sizeX - 1] = temp;
-		//		}
-		//		else if (this->arr[y][x].What_Type_Is_this_Box() == BoxType::Start)
-		//		{
-		//			//ボールをその位置に置く
-		//			ge->GetTask_One_G<Ball::Object>("ボール")->Teleportation(this->arr[y][x].Get_Pos());
-		//		}
-		//		//道を発見したのに1個先のものが道以外だったら
-		//		if (this->arr[y][x].What_Type_Is_this_Box() == BoxType::Road && this->arr[y][x + 1].What_Type_Is_this_Box() != BoxType::Road)
-		//		{
-		//			//積める処理のやり直し
-		//			y--;
-		//		}
-		//	}
-		//}
+		//一時的にコピーする場所
+		Bbox temp;
+
+		bool sort_Not_Over = true;
+		while (sort_Not_Over)
+		{
+			int i = 0;
+			//道を発見したら一番後ろに積む
+			for (; i < this->size; i++)
+			{
+				if (this->arr[i].What_Type_Is_this_Box() == BoxType::Road)
+				{
+					//一時保存
+					temp = this->arr[i];
+					//1個ずつ前に引っ張る
+					for (int j = i; j < this->size - 1; j++)
+					{
+						this->arr[j] = this->arr[j + 1];
+					}
+					//一番後ろと書き換え
+					this->arr[this->size - 1] = temp;
+				}
+			}
+			//ちゃんとソートできたかを確認
+			for (i = 0; i < this->size - 1; i++)
+			{
+				if (this->arr[i].What_Type_Is_this_Box() == BoxType::Road && this->arr[i + 1].What_Type_Is_this_Box() != BoxType::Road)
+				{
+					break;
+				}
+			}
+			//ちゃんと終わったのでソート終了
+			if (i == this->size - 1)
+			{
+				sort_Not_Over = false;
+			}
+		}
 	}
+
+	//---------------------------------------------------------------------------------------------
+	//レンダリングするかしないかを確認するためのメソッド
+	bool Object::Is_Need_Render(const unsigned int& index)
+	{
+		ML::Vec3 d_Cmc = (ge->Map_center - ge->camera[0]->pos);
+		const float judge = d_Cmc.Length() + (this->chipSize * this->mapSize / 3.0f);
+
+		//判定する距離よりマップの0番とカメラとの距離が遠いならレンダリングしない
+		ML::Vec3 d_Cf0 = this->arr[index].Get_Pos() - ge->camera[0]->pos;
+
+		//図った距離で返す
+		return d_Cf0.Length() < judge ? true : false;
+
+	}
+
 	//★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★
 	//以下は基本的に変更不要なメソッド
 	//★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★

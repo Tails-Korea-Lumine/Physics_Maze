@@ -71,6 +71,9 @@ namespace MapFence
 		void UpDate_Quartanion(const ML::QT& qt);
 		//配列ソート
 		void Array_Sorting();
+		//レンダリングするかしないかを確認するためのメソッド
+		bool Is_Need_Render(const unsigned int& index);
+
 		
 	public:
 		
