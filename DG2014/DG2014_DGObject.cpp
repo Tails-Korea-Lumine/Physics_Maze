@@ -44,6 +44,7 @@ namespace DG_
 	//------------------------------------------------------------
 	bool DGObject::Initialize(
 					HWND     hw_,
+					IDXGIAdapter* adp,
 					int      w_,
 					int      h_,
 					DWORD    ms_, 
@@ -71,9 +72,11 @@ namespace DG_
 		sd.SampleDesc.Quality = 0;
 		sd.Windowed = !sm_;
 
+		
 
 		HRESULT hr = D3D10CreateDeviceAndSwapChain(
-				NULL,	//ビデオカード選択しない
+				//vAdapters[adapter_Index],	
+				adp,
 				D3D10_DRIVER_TYPE_HARDWARE,	//
 				NULL,
 				0,
@@ -172,6 +175,7 @@ namespace DG_
 	//	DG_ライブラリを生成する
 	DGObject::SP DGObject::Create(
 							HWND        hw_,	//	ウィンドウハンドル
+							IDXGIAdapter* adp,	//	使用するGPU
 							int         w_,		//	横幅
 							int         h_,		//	縦幅
 							DWORD       ms_,	//	マルチサンプル
@@ -181,7 +185,7 @@ namespace DG_
 	{
 		if(winst.expired( )){
 			if( DGObject::SP sp = DGObject::SP(new DGObject) ){
-				if(sp->Initialize(hw_, w_, h_, ms_, sm_, w2D_, h2D_)){
+				if(sp->Initialize(hw_, adp, w_, h_, ms_, sm_, w2D_, h2D_)){
 					winst = sp;
 					//
 					sp->effectState = new DG_::EffectState( );

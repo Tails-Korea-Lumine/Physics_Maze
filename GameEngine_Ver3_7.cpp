@@ -9,12 +9,12 @@ DWORD BTask::uKeyManager = 10000;
 //｜ゲーム環境の初期化																	　｜
 //｜履歴		：2013/02/25	須賀康之	作成										　｜
 //└───────────────────────────────────────────┘
-bool GameEngine::B_Initialize(HWND wnd_)
+bool GameEngine::B_Initialize(HWND wnd_, IDXGIAdapter* adp)
 {
 //	タイマー分解能を1ミリ秒に設定
 	timeBeginPeriod(1);
 	debugMode = false;
-	Initialize(wnd_);
+	Initialize(wnd_,adp);
 	return true;
 }
 //┌───────────────────────────────────────────┐

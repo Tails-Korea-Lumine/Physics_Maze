@@ -1,12 +1,16 @@
 #pragma warning(disable:4996)
 #pragma once
 #pragma warning( disable : 4005 )
+
 #include <d3d10.h>
 #include <d3dx10.h>
 #include <d3dCompiler.h>
+#include <DXGI.h>
+
 #pragma comment(lib,"winmm.lib")
 #pragma comment(lib,"d3d10.lib")
 #pragma comment(lib,"d3dx10.lib")
+#pragma comment(lib,"DXGI.lib")
 #pragma comment(lib,"d3dCompiler.lib")
 #pragma warning( default : 4005 )
 
@@ -46,7 +50,7 @@ namespace DG_
 	//-----------------------------------------------------------------------
 	private:
 		DGObject( );
-		bool Initialize(HWND  hw_,  int  w_,  int  h_,  DWORD  ms_, bool  sm_,  int  w2D_,  int  h2D_);	
+		bool Initialize(HWND  hw_, IDXGIAdapter* adp,  int  w_,  int  h_,  DWORD  ms_, bool  sm_,  int  w2D_,  int  h2D_);
 	//-----------------------------------------------------------------------
 	public:
 		EffectState&		EState( ){	return  *effectState;}
@@ -58,7 +62,7 @@ namespace DG_
 	//-----------------------------------------------------------------------
 	public:
 		//	DG_ライブラリを生成する
-		static DGObject::SP Create(HWND  hw_,  int  w_,  int  h_,  DWORD  ms_,  bool  sm_,  int  w2D_,  int  h2D_);
+		static DGObject::SP Create(HWND  hw_, IDXGIAdapter* adp,  int  w_,  int  h_,  DWORD  ms_,  bool  sm_,  int  w2D_,  int  h2D_);
 		//アクセス
 		static DGObject::SP GetInst( );
 		ID3D10Device&				Device( );		//デバイスオブジェクト

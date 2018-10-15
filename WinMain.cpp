@@ -1,4 +1,6 @@
 #pragma	comment(lib,"winmm")	//	マルチメディア拡張機能を使用するために必要
+#pragma comment(linker, "/entry:WinMainCRTStartup /subsystem:console")
+#include <iostream>
 #include "MyPG.h"
 
 
@@ -16,6 +18,51 @@ int __stdcall WinMain(	HINSTANCE inst_,	//
 {
 	ge = new MyPG::MyGameEngine( );
 
+	//ビデオカード選択が必要かを確認する
+	IDXGIAdapter* padapter = nullptr;
+	IDXGIFactory* factory;
+	//ビデオカードを列挙するファクトリー生成		
+	HRESULT hrfac = CreateDXGIFactory(__uuidof(IDXGIFactory), (void**)&factory);
+
+	//ビデオカード検索
+	UINT i = 0;
+	std::vector <IDXGIAdapter*> vAdapters;
+	while (factory->EnumAdapters(i, &padapter) != DXGI_ERROR_NOT_FOUND)
+	{
+		vAdapters.push_back(padapter);
+		++i;
+	}
+	//各アダプターを解明するDESC
+	DXGI_ADAPTER_DESC desc;
+	//GPU選択に使うインデクス
+	size_t adapter_Index = 0;
+
+	if (vAdapters.size() != 1)
+	{
+		cout << "初期化可能なGPUを2つ以上発見しました。" << endl;
+		//GPUの列挙
+		for (size_t va = 0; va<vAdapters.size(); va++)
+		{
+			vAdapters[va]->GetDesc(&desc);
+
+			int c = 0;
+			cout << to_string(va) + " : ";
+			while (desc.Description[c] != '\0')
+			{
+				cout << (char)desc.Description[c];
+				c++;
+			}
+			cout << endl;
+		}
+
+		cout << "使うGPUを選んでください :";
+		//番号入力
+		do
+		{
+			cin >> adapter_Index;
+		} while (adapter_Index > vAdapters.size());
+	}
+
 	MSG		msg;
 	HWND	wnd;								//	ウインドウハンドル
 	RECT	ws = ML::Rect(0, 0, 
@@ -25,7 +72,7 @@ int __stdcall WinMain(	HINSTANCE inst_,	//
 	if(wnd == nullptr){ return 0;}
 
 //	ゲーム環境の初期化
-	ge->B_Initialize(wnd);
+	ge->B_Initialize(wnd , vAdapters[adapter_Index]);
 
 //	メッセージループ
 	while(1)

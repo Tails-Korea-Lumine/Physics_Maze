@@ -19,11 +19,11 @@ namespace MyPG
 	}
 
 	//ゲームエンジンに追加したものの初期化と開放
-	bool MyGameEngine::Initialize(HWND wnd_)
+	bool MyGameEngine::Initialize(HWND wnd_, IDXGIAdapter* adp)
 	{
 		//　画像描画ライブラリの初期化
 		{
-			bool  rtv = DG::Initialize(	wnd_, this->screenWidth,  this->screenHeight,  this->multiSample,
+			bool  rtv = DG::Initialize(	wnd_, adp, this->screenWidth,  this->screenHeight,  this->multiSample,
 										this->screenMode, this->screen2DWidth, this->screen2DHeight);
 			if (!rtv){
 				//	環境の初期化に失敗

@@ -29,6 +29,7 @@ namespace  DG
 	//-----------------------------------------------------------------------
 	bool  Initialize(
 		HWND		hw_,	//	ウィンドウハンドル
+		IDXGIAdapter* adp,	//  使用するGPU
 		int			w_,		//	横幅
 		int			h_,		//	縦幅
 		DWORD		ms_,	//	マルチサンプル
@@ -37,7 +38,7 @@ namespace  DG
 		int			h2D_)	//	2D描画解像度（無効	
 	{
 		if (!obj){
-			obj = DG_::DGObject::Create(hw_, w_, h_, ms_, sm_, w2D_, h2D_);
+			obj = DG_::DGObject::Create(hw_, adp, w_, h_, ms_, sm_, w2D_, h2D_);
 			//
 			if (obj) {
 				Line_Initialize();

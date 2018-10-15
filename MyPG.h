@@ -63,7 +63,7 @@ namespace  MyPG
 	public:
 		MyGameEngine( );
 	//ゲームエンジンに追加したものの初期化と開放
-		bool Initialize(HWND wnd_);
+		bool Initialize(HWND wnd_, IDXGIAdapter* adp);
 		~MyGameEngine( );
 	//ゲームエンジンに追加したもののステップ処理
 		void UpDate( );

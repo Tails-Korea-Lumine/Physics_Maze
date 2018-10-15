@@ -295,7 +295,7 @@ public:
 		void  B_StepSub_DeleteTask( );
 		void  B_StepSub_Entry( );
 	//	初期化
-	bool B_Initialize(HWND wnd_);
+	bool B_Initialize(HWND wnd_, IDXGIAdapter* adp);
 	//	解放
 	virtual ~GameEngine( );
 	//	タスクの登録
@@ -464,7 +464,7 @@ public:
 		}
 		return w;
 	}
-	virtual bool Initialize(HWND wnd_)=0;
+	virtual bool Initialize(HWND wnd_, IDXGIAdapter* adp)=0;
 	virtual void UpDate( )=0;
 
 	//3DPG1対応により追加

@@ -25,6 +25,7 @@ namespace DG
 	//初期化
 	bool  Initialize(
 		HWND		hw_,	//	ウィンドウハンドル
+		IDXGIAdapter* adp,	//	使用するGPU
 		int			w_,		//	横幅
 		int			h_,		//	縦幅
 		DWORD		ms_,	//	マルチサンプル
