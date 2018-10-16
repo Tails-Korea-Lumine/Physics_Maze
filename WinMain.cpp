@@ -21,6 +21,8 @@ int __stdcall WinMain(	HINSTANCE inst_,	//
 	//ビデオカード選択が必要かを確認する
 	IDXGIAdapter* padapter = nullptr;
 	IDXGIFactory* factory;
+	//各アダプターを解明するDESC
+	DXGI_ADAPTER_DESC desc;
 	//ビデオカードを列挙するファクトリー生成		
 	HRESULT hrfac = CreateDXGIFactory(__uuidof(IDXGIFactory), (void**)&factory);
 
@@ -29,11 +31,15 @@ int __stdcall WinMain(	HINSTANCE inst_,	//
 	std::vector <IDXGIAdapter*> vAdapters;
 	while (factory->EnumAdapters(i, &padapter) != DXGI_ERROR_NOT_FOUND)
 	{
-		vAdapters.push_back(padapter);
+		padapter->GetDesc(&desc);
+		//ビデオメモリが0ならpush_backしない
+		if (desc.DedicatedVideoMemory != 0)
+		{
+			vAdapters.push_back(padapter);
+		}
 		++i;
 	}
-	//各アダプターを解明するDESC
-	DXGI_ADAPTER_DESC desc;
+	
 	//GPU選択に使うインデクス
 	size_t adapter_Index = 0;
 
