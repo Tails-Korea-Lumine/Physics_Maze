@@ -57,13 +57,13 @@ public:
 
 	//メソッド
 	//初期化でメッシュを読み込む関数
-	void LoadEffect(effType handle);
+	void LoadEffect(const effType& handle);
 
 	//初期化メソッド
 	//その場で全部処理するエフェクト
-	void Eff_Initialize(ML::Vec3 pos, ML::Vec3 angle, effType handle);
+	void Eff_Initialize(const ML::Vec3& pos, const ML::Vec3& angle);
 	//目的地まで移動しながら処理するエフェクト
-	void Eff_Initialize(ML::Vec3 pos, ML::Vec3 target, ML::Vec3 angle, effType handle);
+	void Eff_Initialize(const ML::Vec3& pos, const ML::Vec3& target, const ML::Vec3& angle);
 
 	//生成消滅
 	//ゼロクリア

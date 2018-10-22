@@ -4,7 +4,7 @@
 #include "BEffect.h"
 #include "easing.h"
 
-void BEffect::LoadEffect(effType handle)
+void BEffect::LoadEffect(const effType& handle)
 {	
 	switch (handle)
 	{
@@ -12,7 +12,7 @@ void BEffect::LoadEffect(effType handle)
 		this->meshName = "CreateCharactor";
 		//this->filePath = "./data/mesh/effect/CreateCharactor.SOB";
 		this->alpha = 0.0f;
-		this->effect_Life = 140;
+		this->effect_Life = 70;
 		easing::Set("scale_CreateCharactor", easing::EXPOOUT, 0, 100, 110);
 		easing::Set("alpha_CreateCharactor", easing::EXPOOUT, 0, 1, 110);
 
@@ -23,7 +23,7 @@ void BEffect::LoadEffect(effType handle)
 		this->meshName = "CreateItem";
 		//this->filePath = "./data/mesh/effect/CreateItem.SOB";
 		this->alpha = 0.8f;
-		this->effect_Life = 90;
+		this->effect_Life = 45;
 		this->scale = ML::Vec3(200, 100, 200);
 		easing::Set("scaleY_CreateItem", easing::CIRCOUT, 10, 8000, 60);
 
@@ -32,7 +32,7 @@ void BEffect::LoadEffect(effType handle)
 		this->meshName = "DestroyItem";
 		//this->filePath = "./data/mesh/effect/DestroyItem.SOB";
 		this->alpha = 1.0f;
-		this->effect_Life = 30;
+		this->effect_Life = 15;
 		this->scale = ML::Vec3(80.0f, 80.0f, 80.0f);
 		this->pos.y += 100.0f;
 
@@ -42,7 +42,7 @@ void BEffect::LoadEffect(effType handle)
 		this->meshName = "EnemyLanding";
 		//this->filePath = "./data/mesh/effect/EnemyLanding.SOB";
 		this->alpha =0.6f;
-		this->effect_Life = 30;
+		this->effect_Life = 15;
 		this->scale = ML::Vec3(0, 20.0f, 0);
 		this->pos.y -= 40;
 		easing::Set("alpha_EnemyLanding", easing::EXPOIN, 0.6f, 0, 30);
@@ -54,7 +54,7 @@ void BEffect::LoadEffect(effType handle)
 		this->meshName = "Hit_to_Enemy";
 		//this->filePath = "./data/mesh/effect/Hit_the_Enemy.SOB";
 		this->alpha = 0.0f;
-		this->effect_Life = 60;
+		this->effect_Life = 30;
 		this->scale = ML::Vec3(600.0f, 600.0f, 600.0f);
 
 		break;
@@ -63,7 +63,7 @@ void BEffect::LoadEffect(effType handle)
 		this->meshName = "Hit_to_Wall";
 		//this->filePath = "./data/mesh/effect/Hit_the_Wall.SOB";
 		this->alpha = 0.0f;
-		this->effect_Life = 10;
+		this->effect_Life = 5;
 		this->scale = ML::Vec3(50.0f, 50.0f, 50.0f);
 		
 		break;
@@ -72,7 +72,7 @@ void BEffect::LoadEffect(effType handle)
 		this->meshName = "CreateTail";
 		//this->filePath = "./data/mesh/effect/CreateTail.SOB";
 		this->alpha = 1.0f;
-		this->effect_Life = 67;
+		this->effect_Life = 32;
 
 		break;
 
@@ -80,7 +80,7 @@ void BEffect::LoadEffect(effType handle)
 		this->meshName = "DestroyTail";
 		//this->filePath = "./data/mesh/effect/DestroyTail.SOB";
 		this->alpha = 0.8f;
-		this->effect_Life = 300;
+		this->effect_Life = 150;
 		this->scale = ML::Vec3(100.0f, 100.0f, 100.0f);
 		easing::Set("posY_DestroyTail", easing::BACKIN, this->pos.y+100.0f, this->pos.y + 1500.0f, 300);
 		easing::Set("scaleY_DestroyTail", easing::CUBICOUT, 0, 100, 200);
@@ -92,7 +92,7 @@ void BEffect::LoadEffect(effType handle)
 		this->meshName = "Hit_to_Tail";
 		//this->filePath = "./data/mesh/effect/Hit_the_Enemy.SOB";
 		this->alpha = 0.0f;
-		this->effect_Life = 60;
+		this->effect_Life = 30;
 		this->scale = ML::Vec3(600.0f, 600.0f, 600.0f);
 
 		break;
@@ -115,20 +115,20 @@ void BEffect::LoadEffect(effType handle)
 }
 
 
-void BEffect::Eff_Initialize(ML::Vec3 pos, ML::Vec3 angle, effType handle)
+void BEffect::Eff_Initialize(const ML::Vec3& pos, const ML::Vec3& angle)
 {
 	this->pos = pos;
 	this->angle = angle;
-	this->playing_EffectHandle = handle;
+	//this->playing_EffectHandle = handle;
 
-	LoadEffect(handle);	
+	
 }
-void BEffect::Eff_Initialize(ML::Vec3 pos, ML::Vec3 target, ML::Vec3 angle, effType handle)
+void BEffect::Eff_Initialize(const ML::Vec3& pos, const ML::Vec3& target, const ML::Vec3& angle)
 {
 	this->pos = pos;
 	this->target = target;
 	this->angle = angle;
-	this->playing_EffectHandle = handle;
+	//this->playing_EffectHandle = handle;
 
-	LoadEffect(handle);
+	
 }

@@ -51,15 +51,19 @@ private:
 public:
 
 	//生成・消滅
-	Effect() {}
+	Effect(const effType& handle) 
+	{
+		this->playing_EffectHandle = handle;
+		this->LoadEffect(handle);
+	}
 
 	~Effect() {}
 
 	//初期化関数
 	//その場で全部処理するエフェクト
-	void Load_Eff(ML::Vec3 pos, ML::Vec3 angle, effType handle);
+	void Load_Eff(const ML::Vec3& pos, const ML::Vec3& angle);
 	//目的地まで移動しながら処理するエフェクト
-	void Load_Eff(ML::Vec3 pos,ML::Vec3 target, ML::Vec3 angle, effType handle);
+	void Load_Eff(const ML::Vec3& pos, const ML::Vec3& target, const ML::Vec3& angle);
 	
 
 	//メソッド	
@@ -76,7 +80,7 @@ public:
 	//エフェクトタイプをもらう
 	effType Get_Type();
 	//removeで削除する判定式
-	static bool Eff_Judge(Effect* e);
+	bool Eff_Judge();
 
 
 	//消滅関数

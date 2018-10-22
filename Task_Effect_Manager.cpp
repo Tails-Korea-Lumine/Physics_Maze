@@ -30,6 +30,10 @@ namespace  EffectManager
 		this->res = Resource::Create();
 
 		//★データ初期化
+		//エフェクトリストをクリア
+		this->efList.clear();
+		this->play_Effect_List.clear();
+
 		//使用するエフェクトメッシュの生成
 		//テレポートイン
 		DG::Mesh_CreateFromSOBFile("DestroyItem", "./data/mesh/effect/DestroyItem.SOB");
@@ -37,12 +41,15 @@ namespace  EffectManager
 		DG::Mesh_CreateFromSOBFile("CreateItem", "./data/mesh/effect/CreateItem.SOB");
 		//ゲームクリア
 		DG::Mesh_CreateFromSOBFile("DestroyCharactor", "./data/mesh/effect/DestroyPlayer.SOB");
-		//エフェクトリストをクリア
-		this->efList.clear();
+		
+		//必要なエフェクト生成
+		this->Create_Effect(BEffect::effType::Teleportin);
+		this->Create_Effect(BEffect::effType::TeleportOut);
+		this->Create_Effect(BEffect::effType::Game_Clear);
 
 		this->render3D_Priority[0] = 1.0f;
 		//ダミーデータ
-		Effect* dummmy0 = new Effect;
+		Effect* dummmy0 = new Effect(BEffect::effType::CLEAR);
 		dummmy0->Set_Dummy();
 
 		this->efList.push_back(dummmy0);
@@ -66,6 +73,7 @@ namespace  EffectManager
 			}
 		}
 		this->efList.clear();
+		this->play_Effect_List.clear();
 		/*for (auto it = this->efList.begin(); it != this->efList.end(); it++)
 		{
 			if ((*it) != nullptr)
@@ -93,13 +101,13 @@ namespace  EffectManager
 			this->efList.pop_front();
 		}
 		//エフェクトのフレーム毎の変化
-		for (auto it = this->efList.begin(); it != this->efList.end(); it++)
+		for (auto it = this->play_Effect_List.begin(); it != this->play_Effect_List.end(); it++)
 		{
-			if ((*it) == nullptr)
+			if ((*it).Get_Type() == BEffect::effType::CLEAR)
 			{
 				continue;
 			}
-			(*it)->UpDate_Effect((*it)->Get_Type());
+			(*it).UpDate_Effect((*it).Get_Type());
 		}
 		this->Dec_Effect_Life();
 	}
@@ -116,54 +124,75 @@ namespace  EffectManager
 			return;
 		}
 		//エフェクトの再生
-		for (auto it = this->efList.begin(); it != this->efList.end(); it++)
+		for (auto it = this->play_Effect_List.begin(); it != this->play_Effect_List.end(); it++)
 		{
-			if ((*it) == nullptr)
+			if ((*it).Get_Type() == BEffect::effType::CLEAR)
 			{
 				continue;
 			}
-			(*it)->Playing_Effect((*it)->Get_Type());
+			(*it).Playing_Effect((*it).Get_Type());
 		}
 	}
 
 	//--------------------------------------------------------------------------------------
 	//追加メソッド
 	//-----------------------------------------------------------------------------
-	void Object::Add_Effect(ML::Vec3 pos, ML::Vec3 angle, BEffect::effType handle)
-	{
-		Effect* NewEF = new Effect();
-		NewEF->Load_Eff(pos, angle, handle);
-
-		this->efList.push_back(NewEF);
+	void Object::Add_Effect(const ML::Vec3& pos, const ML::Vec3& angle, const BEffect::effType& handle)
+	{	
+		Effect ef(BEffect::effType::CLEAR);
+		//プレイリストに入るエフェクトをコピーする
+		for (auto& el : this->efList)
+		{
+			if (el->Get_Type() == handle)
+			{
+				ef = *el;
+			}
+		}
+		//エフェクト情報設定
+		ef.Load_Eff(pos, angle);
+		//プレイリストにpush_back
+		this->play_Effect_List.push_back(ef);
 	}
-	void Object::Add_Effect(ML::Vec3 pos, ML::Vec3 target, ML::Vec3 angle, BEffect::effType handle)
+	void Object::Add_Effect(const ML::Vec3& pos, const ML::Vec3& target, const ML::Vec3& angle, const BEffect::effType& handle)
 	{
-		Effect* NewEF = new Effect();
-		NewEF->Load_Eff(pos, target, angle, handle);
-
-		this->efList.push_back(NewEF);
+		Effect ef(BEffect::effType::CLEAR);
+		//プレイリストに入るエフェクトをコピーする
+		for (auto& el : this->efList)
+		{
+			if (el->Get_Type() == handle)
+			{
+				ef = *el;
+			}
+		}
+		//エフェクト情報設定
+		ef.Load_Eff(pos, target, angle);
+		//プレイリストにpush_back
+		this->play_Effect_List.push_back(ef);
 	}
+	//-----------------------------------------------------------------------------------
+	//新しいエフェクト生成
+	void Object::Create_Effect(const BEffect::effType& handle)
+	{
+		Effect* NewEf = new Effect(handle);
+		this->efList.push_back(NewEf);
+	}
+	//エフェクト寿命減らし及び削除
 	void Object::Dec_Effect_Life()
 	{
-		if (this->efList.size() <= 1)
+		if (this->play_Effect_List.size() <= 1)
 		{
 			return;
 		}
-		for (auto it = this->efList.begin(); it != this->efList.end(); it++)
+		for (auto it = this->play_Effect_List.begin(); it != this->play_Effect_List.end(); it++)
 		{
-			if ((*it)->Is_Alive())
+			if ((*it).Is_Alive())
 			{
-				(*it)->Dec_Eff();
-			}
-			//ライフが０になったエフェクトはヒ-プから開放
-			else if((*it)->Get_Type() != BEffect::effType::CLEAR)
-			{
-				(*it)->Finalize();				
+				(*it).Dec_Eff();
 			}
 		}
 		//ライフが０になったエフェクトはリストから外す
 		//return it->effect_Life == 0
-		this->efList.remove_if(Effect::Eff_Judge);
+		this->play_Effect_List.remove_if([](Effect& e) {return e.Eff_Judge(); });
 	}	
 	
 	//★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★

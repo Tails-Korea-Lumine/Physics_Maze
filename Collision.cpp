@@ -66,7 +66,7 @@ bool Collision::Hit_Check(std::vector<After_Collision>* result, const std::vecto
 	{	
 		//衝突判定スタート
 		for (const auto& tri : all_Tri)
-		{
+		{			
 			//マスとマス接触面でおかしい加速を防ぐ
 			//移動ベクトルと衝突した三角形の法線ベクトルのcos値
 			float cosSN;
@@ -89,7 +89,7 @@ bool Collision::Hit_Check(std::vector<After_Collision>* result, const std::vecto
 					//以下あたった三角形の法線ベクトルとフラグを返す処理
 					collision_True.collision_Flag = true;
 					collision_True.normal = tri.normal;
-					result->push_back(collision_True);
+					result->push_back(collision_True);					
 					//ポリゴン1個あたり1つの点の衝突が起きたらそれで次のポリゴンの判定をする
 					break;
 				}

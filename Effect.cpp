@@ -6,14 +6,14 @@
 #include "easing.h"
 #include "GameEngine_Ver3_7.h"
 
-void Effect::Load_Eff(ML::Vec3 pos, ML::Vec3 angle, effType handle)
+void Effect::Load_Eff(const ML::Vec3& pos, const ML::Vec3& angle)
 {
-	this->Eff_Initialize(pos, angle, handle);	
+	this->Eff_Initialize(pos, angle);	
 }
 
-void Effect::Load_Eff(ML::Vec3 pos, ML::Vec3 target, ML::Vec3 angle, effType handle)
+void Effect::Load_Eff(const ML::Vec3& pos, const ML::Vec3& target, const ML::Vec3& angle)
 {
-	this->Eff_Initialize(pos, target, angle, handle);
+	this->Eff_Initialize(pos, target, angle);
 }
 
 void Effect::Playing_Effect(effType ef)
@@ -391,13 +391,14 @@ void Effect::UpDate_EF1()
 	//easing function start
 	if (this->effect_Life == 60)
 	{
+		easing::Reset("scaleY_CreateItem");
 		easing::Start("scaleY_CreateItem");
 	}
 	//easing::UpDate();
 	//フレーム毎薄く、大きくなる
-	this->alpha -= 0.003f;
+	this->alpha -= 0.008f;
 
-	this->scale.y = easing::GetPos("scaleY_CreateItem");
+	this->scale.y += 100.0f;
 	
 	//透明度は0以下に落ちないようにする
 	if (this->alpha < 0.0)
@@ -572,6 +573,7 @@ void Effect::UpDate_EF9()
 	}
 	else if (this->effect_Life == 10)
 	{
+		easing::Reset("scale_EF9");
 		easing::Start("scale_EF9");
 	}
 	else if (this->effect_Life < 10)
@@ -594,7 +596,7 @@ void Effect::Finalize()
 
 void Effect::Set_Dummy()
 {
-	this->Eff_Initialize(ML::Vec3(0, 0, 0), ML::Vec3(0, 0, 0), BEffect::effType::CLEAR);
+	this->Eff_Initialize(ML::Vec3(0, 0, 0), ML::Vec3(0, 0, 0));
 	this->effect_Life = -1;
 }
 
@@ -613,7 +615,7 @@ BEffect::effType Effect::Get_Type()
 	return this->playing_EffectHandle;
 }
 
-bool Effect::Eff_Judge(Effect* e)
+bool Effect::Eff_Judge()
 {
-	return e->effect_Life == 0;
+	return this->effect_Life == 0;
 }

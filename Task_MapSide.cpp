@@ -7,7 +7,6 @@
 #include  "Task_Game.h"
 #include  "Task_CameraMan.h"
 
-#define JUDGE_DEGREE_EIGHTYFIVE 85
 
 namespace  Map3d
 {
@@ -45,7 +44,7 @@ namespace  Map3d
 		this->gimicCnt = 0;		
 		this->sideNumber = sideNum;
 		this->mapSize = 8;//基本は8X8
-		this->rendering_Judge = _CMATH_::cosf(ML::ToRadian(JUDGE_DEGREE_EIGHTYFIVE));
+		this->rendering_Judge = _CMATH_::cosf(ML::ToRadian(70));
 		//this->render3D_Priority[0] = 1.0f;
 		//データのゼロクリア
 		//ZeroMemory(this->arr, sizeof(this->arr));
@@ -250,9 +249,7 @@ namespace  Map3d
 	}
 	//-----------------------------------------------------------------------
 	bool Object::Map_Check_Hit(std::vector<ML::Vec3>& all_Points, const ML::Vec3& pos, const float& r, const ML::Vec3& speed)
-	{
-		//接触三角形を判定前にクリアする
-		this->col_Poligons.clear();
+	{		
 		//ボールがこの面にあるかを確認するためのフラグ	
 		bool ball_on_This_Side = false;
 
@@ -261,6 +258,8 @@ namespace  Map3d
 		{
 			for (int x = 0; x < this->sizeX; x++)
 			{
+				//接触三角形を判定前にクリアする
+				this->col_Poligons.clear();
 				//道は配列の後ろに積めておいたので発見したらその後は処理せずにbreak
 				BoxType now_Type = this->arr[z][x].What_Type_Is_this_Box();
 				if (now_Type == BoxType::Road)

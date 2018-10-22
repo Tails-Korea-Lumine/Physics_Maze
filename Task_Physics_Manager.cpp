@@ -240,7 +240,12 @@ namespace  Physics_Manager
 				(*f)->Map_Check_Hit(all_Points, ball->Get_Pos(), ball->Get_Radious(), ball->Get_Speed());
 			}		
 			
+			//判定結果に無駄なデータが入っているなら取り除く
+			ge->collision_Result.erase(remove_if(ge->collision_Result.begin(), ge->collision_Result.end(), [](After_Collision& c) {return !c.collision_Flag; })
+				,ge->collision_Result.end());
 
+			//ボールを移動させる
+			ball->Move_Ball();
 			//位置補正を仕掛ける
 			if (ge->collision_Result.size() != 0)
 			{
@@ -248,8 +253,7 @@ namespace  Physics_Manager
 			}			
 		}
 
-		//ボールを移動させる
-		ball->Move_Ball();
+		
 		//カメラ目的地をボールがある面が見えるように設定
 		if (side_Normal.Is_Zero_Vec() == false && (in1.B4.down || ball->Is_Teleport_Now()))
 		{

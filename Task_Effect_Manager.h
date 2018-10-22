@@ -48,17 +48,20 @@ namespace EffectManager
 	
 		//追加したい変数・メソッドはここに追加する
 		//変数
-		std::list<Effect*> efList;//現在動いているエフェクトリスト
-		
+		//現在存在しているエフェクトリスト
+		std::list<Effect*> efList;
+		//動いているエフェクトリスト
+		std::list<Effect> play_Effect_List;
 
 		//メソッド
 		//全体のライフを1フレームに1ずつ減少させる
 		void Dec_Effect_Life();
-
+		//ゲームで使用するエフェクトを宣言
+		void Create_Effect(const BEffect::effType& handle);
 	public:
 		//外部からの追加命令
-		void Add_Effect(ML::Vec3 pos, ML::Vec3 angle, BEffect::effType handle);
-		void Add_Effect(ML::Vec3 pos,ML::Vec3 target, ML::Vec3 angle, BEffect::effType handle);			
+		void Add_Effect(const ML::Vec3& pos, const ML::Vec3& angle, const BEffect::effType& handle);
+		void Add_Effect(const ML::Vec3& pos, const ML::Vec3& target, const ML::Vec3& angle, const BEffect::effType& handle);			
 
 	};
 }

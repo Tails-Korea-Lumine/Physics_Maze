@@ -7,7 +7,6 @@
 #include  "Task_MapCore.h"
 #include  "Task_MapFence.h"
 
-#define TERMINATION_SPEED 15
 
 namespace  Ball
 {
@@ -42,7 +41,7 @@ namespace  Ball
 		this->speed = ML::Vec3(0, 0, 0);
 		this->moveVec = ML::Vec3(0, 0, 0);
 		this->r = 30.0f;
-		this->m = 40.0f;
+		this->m = 25.0f;
 		this->rot = 0.0f;
 		this->collision_Flag = false;
 		this->teleportation_Flag = false;
@@ -84,6 +83,7 @@ namespace  Ball
 	//あたり判定による方向転換及び移動
 	void Object::Move_Ball()
 	{
+		const float termination_Speed = 6.0f;
 		//もし,どこもあたり判定をせずに動いた場合
 		//処理せずに次のフレームに移る
 		if (ge->collision_Result.size() == 0)
@@ -141,10 +141,10 @@ namespace  Ball
 		}
 
 		//終端速度を指定		
-		if (this->speed.Length() > TERMINATION_SPEED)
+		if (this->speed.Length() > termination_Speed)
 		{
 			this->speed = this->speed.Normalize();
-			this->speed *= TERMINATION_SPEED;
+			this->speed *= termination_Speed;
 		}
 
 		//移動(フレーム終了する直前に行う)
