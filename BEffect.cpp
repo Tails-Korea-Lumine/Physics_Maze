@@ -23,9 +23,8 @@ void BEffect::LoadEffect(const effType& handle)
 		this->meshName = "CreateItem";
 		//this->filePath = "./data/mesh/effect/CreateItem.SOB";
 		this->alpha = 0.8f;
-		this->effect_Life = 45;
-		this->scale = ML::Vec3(200, 100, 200);
-		easing::Set("scaleY_CreateItem", easing::CIRCOUT, 10, 8000, 60);
+		this->effect_Life = 80;
+		this->scale = ML::Vec3(200, 100, 200);		
 
 		break;
 	case Teleportin://2
@@ -101,7 +100,7 @@ void BEffect::LoadEffect(const effType& handle)
 		this->meshName = "DestroyCharactor";
 		//this->filePath = "./data/mesh/effect/DestroyPlayer.SOB";
 		this->alpha = 0.0f;
-		this->effect_Life = 40;
+		this->effect_Life = 60;
 		this->scale = ML::Vec3(0.0f, 0.0f, 0.0f);
 
 		easing::Set("scale_EF9", easing::CUBICIN, 240.0f, 0, 10);

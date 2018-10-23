@@ -94,7 +94,7 @@ namespace  MyPG
 		//マップ全体の中心
 		ML::Vec3 Map_center;
 		//あたり判定の結果
-		std::vector<After_Collision> collision_Result;
+		std::list<After_Collision> collision_Result;
 		//テレポーテーションマネージャー
 		Teleportation_Manager TM;
 		//エフェクトマネージャー

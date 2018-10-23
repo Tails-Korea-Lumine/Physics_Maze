@@ -47,12 +47,7 @@ namespace  EffectManager
 		this->Create_Effect(BEffect::effType::TeleportOut);
 		this->Create_Effect(BEffect::effType::Game_Clear);
 
-		this->render3D_Priority[0] = 1.0f;
-		//ダミーデータ
-		Effect* dummmy0 = new Effect(BEffect::effType::CLEAR);
-		dummmy0->Set_Dummy();
-
-		this->efList.push_back(dummmy0);
+		this->render3D_Priority[0] = 1.0f;		
 
 		//★タスクの生成
 
@@ -95,10 +90,10 @@ namespace  EffectManager
 	{
 		//easing function update
 		easing::UpDate();
-
-		if (this->efList.size() > 60)
+		//念のためプレイリストサイズの上限を決めておく
+		if (this->play_Effect_List.size() > 20)
 		{
-			this->efList.pop_front();
+			this->play_Effect_List.pop_front();
 		}
 		//エフェクトのフレーム毎の変化
 		for (auto it = this->play_Effect_List.begin(); it != this->play_Effect_List.end(); it++)
@@ -109,6 +104,7 @@ namespace  EffectManager
 			}
 			(*it).UpDate_Effect((*it).Get_Type());
 		}
+		//寿命減少
 		this->Dec_Effect_Life();
 	}
 	//-------------------------------------------------------------------
@@ -119,7 +115,7 @@ namespace  EffectManager
 
 	void  Object::Render3D_L0()
 	{
-		if (this->efList.size() <= 1)
+		if (this->play_Effect_List.size() == 0)
 		{
 			return;
 		}
@@ -174,12 +170,14 @@ namespace  EffectManager
 	void Object::Create_Effect(const BEffect::effType& handle)
 	{
 		Effect* NewEf = new Effect(handle);
+		//全体リストにpush_back
 		this->efList.push_back(NewEf);
 	}
+	//----------------------------------------------------------------------------------
 	//エフェクト寿命減らし及び削除
 	void Object::Dec_Effect_Life()
 	{
-		if (this->play_Effect_List.size() <= 1)
+		if (this->play_Effect_List.size() == 0)
 		{
 			return;
 		}
@@ -190,8 +188,7 @@ namespace  EffectManager
 				(*it).Dec_Eff();
 			}
 		}
-		//ライフが０になったエフェクトはリストから外す
-		//return it->effect_Life == 0
+		//ライフが０になったエフェクトはリストから外す		
 		this->play_Effect_List.remove_if([](Effect& e) {return e.Eff_Judge(); });
 	}	
 	

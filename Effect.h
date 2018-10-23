@@ -71,8 +71,6 @@ public:
 	void Playing_Effect(effType ef);
 	//アップデート
 	void UpDate_Effect(effType ef);	
-	//ダミーデータ生成
-	void Set_Dummy();
 	//エフェクトの残り時間を減少させる
 	void Dec_Eff();
 	//エフェクトが生きているかを確認する

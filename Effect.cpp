@@ -387,14 +387,7 @@ void Effect::UpDate_EF0()
 }
 //1番：テレポートアウト
 void Effect::UpDate_EF1()
-{
-	//easing function start
-	if (this->effect_Life == 60)
-	{
-		easing::Reset("scaleY_CreateItem");
-		easing::Start("scaleY_CreateItem");
-	}
-	//easing::UpDate();
+{	
 	//フレーム毎薄く、大きくなる
 	this->alpha -= 0.008f;
 
@@ -592,12 +585,6 @@ void Effect::Finalize()
 	//DG::Mesh_Erase(this->meshName);
 	delete this;
 	this->effect_Life = 0;
-}
-
-void Effect::Set_Dummy()
-{
-	this->Eff_Initialize(ML::Vec3(0, 0, 0), ML::Vec3(0, 0, 0));
-	this->effect_Life = -1;
 }
 
 void Effect::Dec_Eff()
