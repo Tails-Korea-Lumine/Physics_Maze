@@ -579,30 +579,23 @@ void Effect::UpDate_EF9()
 }
 
 
-void Effect::Finalize()
-{
-	
-	//DG::Mesh_Erase(this->meshName);
-	delete this;
-	this->effect_Life = 0;
-}
 
 void Effect::Dec_Eff()
 {
 	this->effect_Life--;
 }
 
-bool Effect::Is_Alive()
+bool Effect::Is_Alive() const
 {
 	return this->effect_Life > 0 ? true : false;
 }
 
-BEffect::effType Effect::Get_Type()
+BEffect::effType Effect::Get_Type() const
 {
 	return this->playing_EffectHandle;
 }
 
-bool Effect::Eff_Judge()
+bool Effect::Eff_Judge() const
 {
 	return this->effect_Life == 0;
 }

@@ -42,7 +42,7 @@ public:
 	bool Hit_Check(std::vector<After_Collision>* result,const std::vector<Triangle>& all_Tri, const ML::Vec3 box_Center, const float& box_Length, std::vector<ML::Vec3>& all_Points, const ML::Vec3& ball_Pos, const float& r, const ML::Vec3& speed, const ML::QT& worldR);
 	
 	
-	Collision() :judge(_CMATH_::cosf(ML::ToRadian(359)))
+	Collision() :judge(_CMATH_::cosf(ML::ToRadian(358)))
 	{
 		this->pricision_Flag = false;
 	}

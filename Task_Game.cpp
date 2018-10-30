@@ -128,13 +128,21 @@ namespace  Game
 	//「更新」１フレーム毎に行う処理
 	void  Object::UpDate()
 	{
-		//auto in = DI::GPad_GetState("P1");
+		auto in = DI::GPad_GetState("P1");
 
 		if (this->Start_Clear_Promotion())
 		{
 			ge->KillAll_G("ボール");
 			ge->GetTask_One_G<UI::Object>("UI")->Start_WipeIn();
 			this->countdownFlag = true;
+		}
+
+		//強制終了
+		if ((in.ST.on && in.SE.on) && ge->getReadyFlag == false)
+		{
+			this->Game_Clear();
+
+			this->timeCnt = 0xffff;
 		}
 
 		//カウントダウン

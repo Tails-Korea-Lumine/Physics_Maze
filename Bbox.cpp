@@ -183,6 +183,19 @@ void Bbox::Get_Collision_Poligon(std::vector<After_Collision>* result, std::vect
 	}
 }
 
+//あたってるかあたってないか論理的な結果だけを求める処理
+bool Bbox::Get_Collision_Bool(std::vector<ML::Vec3>& all_Points, const ML::Vec3& pos, const float& r, const ML::Vec3& speed)
+{
+	//一回あたり判定を行う
+	std::vector<After_Collision> check;
+
+	this->Get_Collision_Poligon(&check, all_Points, pos, r, speed);
+
+	//あたらなかった時はヴェクターの一番前のフラグがfalseで返されるので
+	//一番前のフラグで判断する
+	return check[0].collision_Flag;
+}
+
 BoxType Bbox::What_Type_Is_this_Box() const
 {
 	return this->chip;
@@ -210,18 +223,4 @@ Bbox::Bbox(BoxType chip, ML::Vec3 pos, ML::Box3D base, ML::QT qt)
 	this->collision_Base = base;
 	this->boxQT = qt;
 	
-}
-
-
-//あたってるかあたってないか論理的な結果だけを求める処理
-bool Bbox::Get_Collision_Bool(std::vector<ML::Vec3>& all_Points, const ML::Vec3& pos, const float& r, const ML::Vec3& speed)
-{
-	//一回あたり判定を行う
-	std::vector<After_Collision> check;
-
-	this->Get_Collision_Poligon(&check, all_Points, pos, r, speed);
-
-	//あたらなかった時はヴェクターの一番前のフラグがfalseで返されるので
-	//一番前のフラグで判断する
-	return check[0].collision_Flag;
 }

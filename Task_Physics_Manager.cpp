@@ -3,11 +3,6 @@
 //-------------------------------------------------------------------
 #include  "MyPG.h"
 #include  "Task_Physics_Manager.h"
-#include  "Task_CameraMan.h"
-#include  "Task_MapCore.h"
-#include  "Task_MapSide.h"
-#include  "Task_MapFence.h"
-#include  "Task_Ball.h"
 #include "easing.h"
 #include "MyMath.h"
 
@@ -111,6 +106,7 @@ namespace  Physics_Manager
 	//マップの処理をいっぺんに管理する
 	void Object::Managing(const unsigned int precision)
 	{
+		
 		auto in1 = DI::GPad_GetState("P1");
 		//ほかのタスクの情報をもらってくる
 		auto map = ge->GetTask_Group_GN<Map3d::Object>("マップ", "Side");
@@ -119,12 +115,12 @@ namespace  Physics_Manager
 		auto ball = ge->GetTask_One_G<Ball::Object>("ボール");
 		auto cm = ge->GetTask_One_G<CameraMan::Object>("カメラマン");
 
-		//情報をもらうものの中1個でも足りないなら処理をしない
-		if (map == nullptr || fence == nullptr || core == nullptr || ball == nullptr || cm == nullptr)
+		//ボールが存在しない場合処理しない
+		if (ball == nullptr)
 		{
 			return;
 		}
-
+		//カメラ移動中なら処理しない
 		if (cm->Is_Moving_Now() == true)
 		{
 			return;

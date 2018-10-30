@@ -4,6 +4,12 @@
 //物理運動マネージャ
 //-------------------------------------------------------------------
 #include "GameEngine_Ver3_7.h"
+#include  "Task_CameraMan.h"
+#include  "Task_MapCore.h"
+#include  "Task_MapSide.h"
+#include  "Task_MapFence.h"
+#include  "Task_Ball.h"
+
 
 namespace Physics_Manager
 {

@@ -58,13 +58,13 @@ namespace  EffectManager
 	bool  Object::Finalize()
 	{
 		//★データ＆タスク解放
-		//リストの開放
 		DG::Mesh_Clear();
-		if (this->efList.size() != 0)
+		if (this->efList.size() != 0)		
 		{
-			for (auto i : this->efList)
+			//リストの開放
+			for (auto e : this->efList)
 			{
-				i->Finalize();
+				delete e;
 			}
 		}
 		this->efList.clear();
