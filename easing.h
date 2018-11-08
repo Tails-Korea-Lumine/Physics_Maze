@@ -90,6 +90,9 @@ namespace easing{
   //‹­§“I‚ÉI—¹‚³‚¹‚é
   void Set_End(const std::string& name);
 
+  //------------------------------------------------------------
+  //ˆ—‚ğ‰‚ß‚©‚ç‚â‚è’¼‚·
+  void Re_Start(const std::string& name);
 }
 
 

@@ -157,7 +157,7 @@ void Bbox::Get_ShortisetPoints_Box_to_Sphere(std::vector<ML::Vec3>* result, cons
 
 	result->erase(remove_if(result->begin(), result->end(),
 		[&](ML::Vec3& p)->bool {return ML::Vec3(p - this->Get_Pos()).Length() > outer_Sphere_R; }
-	),
+							),
 		result->end()
 	);
 
@@ -216,7 +216,7 @@ Bbox::Bbox()
 	
 }
 //引数 : (箱のタイプ,位置,あたり判定矩形,初期回転量)
-Bbox::Bbox(BoxType chip, ML::Vec3 pos, ML::Box3D base, ML::QT qt)
+Bbox::Bbox(const BoxType& chip, const ML::Vec3& pos, const ML::Box3D& base, const ML::QT& qt)
 {
 	this->chip = chip;
 	this->pos = pos;

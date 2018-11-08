@@ -88,6 +88,15 @@ namespace  Ball
 		//処理せずに次のフレームに移る
 		if (ge->collision_Result.size() == 0)
 		{
+			//今回のフレームに衝突しなかったら
+			//衝突フラグを無効にする
+			this->collision_Flag = false;
+			//終端速度を指定		
+			if (this->speed.Length() > termination_Speed)
+			{
+				this->speed = this->speed.Normalize();
+				this->speed *= termination_Speed;
+			}
 			//移動(フレーム終了する直前に行う)
 			this->pos += this->speed;
 			return;
@@ -95,9 +104,6 @@ namespace  Ball
 		//前回フレームのあたり判定結果を確認
 		if (this->Is_Collision())
 		{
-			//今回フレームで衝突があったことを確認するフラグ
-			bool cnt = false;
-
 			//結果の数分ループする
 			for (auto p : ge->collision_Result)
 			{
@@ -107,17 +113,7 @@ namespace  Ball
 					//今回のフレームに衝突だったら
 					//斜め線加速をする
 					this->G.CollisionOver_Accelerate(&this->speed, p.normal);
-					//フラグを立てる
-					cnt = true;
-					this->collision_Flag = true;
-
-				}
-				else if (cnt == false)
-				{
-					//今回のフレームに衝突しなかったら
-					//衝突フラグを無効にする
-					this->collision_Flag = false;
-				}
+				}				
 			}
 		}
 		else
@@ -130,11 +126,7 @@ namespace  Ball
 				{
 					//今回のフレームに衝突だったら
 					//反射角で跳ね返す
-
-					this->G.Reflaction_Vector(&this->speed, p.normal, this->m);
-
-					//衝突フラグを有効にする
-					this->collision_Flag = true;
+					this->G.Reflaction_Vector(&this->speed, p.normal, this->m);					
 				}
 			}
 
@@ -147,6 +139,8 @@ namespace  Ball
 			this->speed *= termination_Speed;
 		}
 
+		//フラグを立てる					
+		this->collision_Flag = true;
 		//移動(フレーム終了する直前に行う)
 		this->pos += this->speed;
 

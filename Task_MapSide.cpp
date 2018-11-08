@@ -153,7 +153,7 @@ namespace  Map3d
 		//行列生成
 		ML::Mat4x4 matW;
 		int z, x;
-//#pragma ompparallel for private(z,x)
+
 		for (z = 0; z < this->sizeZ; z++)
 		{
 			for (x = 0; x < this->sizeX; x++)
@@ -240,7 +240,7 @@ namespace  Map3d
 				}
 
 				//配列に登録
-				this->arr[z][x] = Bbox(BoxType(chip), pos, base, this->map_QT);
+				this->arr[z][x] = Bbox((BoxType)chip, pos, base, this->map_QT);
 			}
 			
 		}
@@ -392,7 +392,7 @@ namespace  Map3d
 		MyMath::Vector_Dot(&c, sv, this->Normal_Side);
 
 		//内積値が-90 < cos < 90の間はレンダリングをしない
-		return c > this->rendering_Judge? false : true;
+		return c <= this->rendering_Judge;
 	}
 	//---------------------------------------------------------------------------------------------
 	//レンダリングするかしないかを確認するためのメソッド(マス別)
@@ -405,7 +405,7 @@ namespace  Map3d
 		ML::Vec3 d_Cf0 = this->arr[z][x].Get_Pos() - ge->camera[0]->pos;
 
 		//図った距離で返す
-		return d_Cf0.Length() < judge ? true : false;
+		return d_Cf0.Length() < judge;
 
 	}
 	//-----------------------------------------------------------------------------------------

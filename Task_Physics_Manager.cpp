@@ -151,34 +151,28 @@ namespace  Physics_Manager
 			{
 				//入力されてる所のeasingデータをリセットさせる
 				if (in1.LStick.axis.y > 0)
-				{
-					easing::Reset("Decrese_StickVolumeXM");
-					easing::Start("Decrese_StickVolumeXM");
+				{					
+					easing::Re_Start("Decrese_StickVolumeXM");
 				}
 				else if (in1.LStick.axis.y < 0)
 				{
-					easing::Reset("Decrese_StickVolumeXP");
-					easing::Start("Decrese_StickVolumeXP");
+					easing::Re_Start("Decrese_StickVolumeXP");
 				}
 				if (in1.LStick.axis.x > 0)
 				{
-					easing::Reset("Decrese_StickVolumeYM");
-					easing::Start("Decrese_StickVolumeYM");
+					easing::Re_Start("Decrese_StickVolumeYM");
 				}
 				else if (in1.LStick.axis.x < 0)
 				{
-					easing::Reset("Decrese_StickVolumeYP");
-					easing::Start("Decrese_StickVolumeYP");
+					easing::Re_Start("Decrese_StickVolumeYP");
 				}
 				if (in1.Triger.axis.x <0)
 				{
-					easing::Reset("Decrese_StickVolumeZM");
-					easing::Start("Decrese_StickVolumeZM");
+					easing::Re_Start("Decrese_StickVolumeZM");
 				}
 				else if (in1.Triger.axis.x >0)
 				{
-					easing::Reset("Decrese_StickVolumeZP");
-					easing::Start("Decrese_StickVolumeZP");
+					easing::Re_Start("Decrese_StickVolumeZP");
 				}
 			}
 			//easingデータが回転量で更新される
@@ -237,7 +231,7 @@ namespace  Physics_Manager
 			}		
 			
 			//判定結果に無駄なデータが入っているなら取り除く
-			ge->collision_Result.erase(remove_if(ge->collision_Result.begin(), ge->collision_Result.end(), [](After_Collision& c) {return !c.collision_Flag; })
+			ge->collision_Result.erase(remove_if(ge->collision_Result.begin(), ge->collision_Result.end(), [](const After_Collision& c) {return !c.collision_Flag; })
 				,ge->collision_Result.end());
 
 			//ボールを移動させる

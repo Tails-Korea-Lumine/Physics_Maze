@@ -61,7 +61,7 @@ public:
 	//引数なしコンストラクタ(ゼロクリア)
 	Bbox();
 	//引数 : (箱のタイプ,位置,あたり判定矩形,初期回転量)
-	Bbox(BoxType chip, ML::Vec3 pos, ML::Box3D base, ML::QT qt);
+	Bbox(const BoxType& chip, const ML::Vec3& pos, const ML::Box3D& base, const ML::QT& qt);
 	//コピーコンストラクタ
 	Bbox operator= (const Bbox& b)
 	{		

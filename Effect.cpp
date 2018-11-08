@@ -16,11 +16,11 @@ void Effect::Load_Eff(const ML::Vec3& pos, const ML::Vec3& target, const ML::Vec
 	this->Eff_Initialize(pos, target, angle);
 }
 
-void Effect::Playing_Effect(effType ef)
+void Effect::Playing_Effect()
 {
 	//ˆø”‚É‡‚¤ŠÖ”‚ðŒÄ‚Ô
 
-	switch (ef)
+	switch (this->playing_EffectHandle)
 	{
 	case effType::CreateCharactor:
 		this->Playing_EF0();
@@ -59,12 +59,12 @@ void Effect::Playing_Effect(effType ef)
 }
 
 
-void Effect::UpDate_Effect(effType ef)
+void Effect::UpDate_Effect()
 {
 	
 	//ˆø”‚É‡‚¤ŠÖ”‚ðŒÄ‚Ô
 
-	switch (ef)
+	switch (this->playing_EffectHandle)
 	{
 	case effType::CreateCharactor:
 		this->UpDate_EF0();

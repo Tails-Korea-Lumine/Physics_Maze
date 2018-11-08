@@ -515,3 +515,10 @@ void easing::Set_End(const std::string& name)
 	}
 }
 
+//------------------------------------------------------------
+//ˆ—‚ğ‰‚ß‚©‚ç‚â‚è’¼‚·
+void easing::Re_Start(const std::string& name)
+{
+	easing::Reset(name);
+	easing::Start(name);
+}

@@ -102,7 +102,7 @@ namespace  EffectManager
 			{
 				continue;
 			}
-			(*it).UpDate_Effect((*it).Get_Type());
+			(*it).UpDate_Effect();
 		}
 		//寿命減少
 		this->Dec_Effect_Life();
@@ -115,10 +115,6 @@ namespace  EffectManager
 
 	void  Object::Render3D_L0()
 	{
-		if (this->play_Effect_List.size() == 0)
-		{
-			return;
-		}
 		//エフェクトの再生
 		for (auto it = this->play_Effect_List.begin(); it != this->play_Effect_List.end(); it++)
 		{
@@ -126,7 +122,7 @@ namespace  EffectManager
 			{
 				continue;
 			}
-			(*it).Playing_Effect((*it).Get_Type());
+			(*it).Playing_Effect();
 		}
 	}
 
