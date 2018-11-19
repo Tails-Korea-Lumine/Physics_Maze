@@ -77,11 +77,13 @@ namespace Map3d
 		//レンダリングするかを確認するメソッド
 		bool Is_Need_Render();
 		bool Is_Need_Render(const unsigned int& z ,const unsigned int& index);
+		//連続していて使えない面を探す
+		void Check_Unusable_Side();
 		//配列ソート及びボールをスタート位置に置く
 		void Array_Sorting();
 		//クォータニオンを更新する関数
 		void UpDate_Quartanion(const ML::QT& qt);
-
+		
 	public:
 		//球とマップのあたり判定
 		bool Map_Check_Hit(std::vector<ML::Vec3>& all_Points, const ML::Vec3& pos, const float& r, const ML::Vec3& speed);

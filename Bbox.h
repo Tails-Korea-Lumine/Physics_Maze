@@ -30,6 +30,8 @@ private:
 	ML::Box3D collision_Base;//一個一個の判定範囲
 	ML::QT boxQT;//マップの回転量
 	Collision col;//あたり判定コンポネント
+	//ほかのボックスと重なって使えない面を確認するフラグ
+	bool unusable_Triagle[12];
 	
 	
 	//あたり判定範囲を三角形で変換させる
@@ -43,6 +45,9 @@ public:
 	//メソッド	
 	//回転関数　引数 : (回転した位置 , 回転量)
 	void Rotate_Box(ML::Mat4x4* mat, const ML::QT& q);
+
+	//あたり判定に必要ない三角形を表示しておく
+	void Check_Unusable_Poligon(const unsigned int& num);
 	
 	//BoxTypeを確認する
 	BoxType What_Type_Is_this_Box() const;
@@ -69,6 +74,10 @@ public:
 		this->chip = b.chip;
 		this->collision_Base = b.collision_Base;
 		this->pos = b.pos;
+		for (int i = 0; i < 12; i++)
+		{
+			this->unusable_Triagle[i] = b.unusable_Triagle[i];
+		}
 		this->col = Collision();
 
 		return b;

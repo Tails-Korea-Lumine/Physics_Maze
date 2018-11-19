@@ -98,7 +98,7 @@ namespace  Map3d
 			break;
 		}
 		
-		
+		this->Check_Unusable_Side();
 		this->Array_Sorting();
 		//★タスクの生成
 
@@ -223,7 +223,6 @@ namespace  Map3d
 				pos += ge->Map_center - ML::Vec3((this->mapSize*this->chipSize / 2), -((this->mapSize - 2)*this->chipSize / 2), (this->mapSize*this->chipSize / 2));
 				//あたり判定用矩形
 				ML::Box3D base = ML::Box3D(-this->chipSize / 2, -this->chipSize / 2, -this->chipSize / 2, this->chipSize, this->chipSize, this->chipSize);				
-				ML::Mat4x4 matR;
 				
 				//生成すること以外に何か処理を加える必要があるもの
 				switch (BoxType(chip))
@@ -413,6 +412,53 @@ namespace  Map3d
 	void Object::Get_Normal_Side(ML::Vec3* result)const
 	{
 		*result = this->Normal_Side;
+	}
+	//連続していて使えない面を探す
+	void Object::Check_Unusable_Side()
+	{
+		//最小値、最大値を超えないようにする
+		auto Inside_Range = [this](const size_t& cx, const size_t& cz)
+		{return cx >= 0 && cx < this->sizeX && cz >= 0 && cz < this->sizeZ; };
+
+		//引数たちが両方壁なのか判断する
+		auto Judge = [](const Bbox& b1, const Bbox& b2)
+		{return b1.What_Type_Is_this_Box() == BoxType::Wall && b2.What_Type_Is_this_Box() == BoxType::Wall; };
+		//各ボックスに連続するボックスがあるかを確認
+		for (size_t z = 0; z < this->sizeZ; z++)
+		{
+			for (size_t x = 0; x < this->sizeX; x++)
+			{
+				//判別開始
+				//手前
+				if (Inside_Range(x, z-1) && Judge(this->arr[z - 1][x], this->arr[z][x]))
+				{
+					//無効ポリゴンを表示しておく
+					this->arr[z][x].Check_Unusable_Poligon(0);
+					this->arr[z][x].Check_Unusable_Poligon(1);
+				}
+				//奥
+				if (Inside_Range(x, z + 1) && Judge(this->arr[z + 1][x], this->arr[z][x]))
+				{
+					//無効ポリゴンを表示しておく
+					this->arr[z][x].Check_Unusable_Poligon(4);
+					this->arr[z][x].Check_Unusable_Poligon(5);
+				}
+				//左
+				if (Inside_Range(x - 1, z) && Judge(this->arr[z][x-1], this->arr[z][x]))
+				{
+					//無効ポリゴンを表示しておく
+					this->arr[z][x].Check_Unusable_Poligon(2);
+					this->arr[z][x].Check_Unusable_Poligon(3);
+				}
+				//右
+				if (Inside_Range(x + 1, z) && Judge(this->arr[z][x+1], this->arr[z][x]))
+				{
+					//無効ポリゴンを表示しておく
+					this->arr[z][x].Check_Unusable_Poligon(6);
+					this->arr[z][x].Check_Unusable_Poligon(7);
+				}
+			}
+		}
 	}
 
 	//-------------------------------------------------------------------------------------

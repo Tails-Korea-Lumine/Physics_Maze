@@ -47,6 +47,7 @@ void Bbox::Get_Triangle_Box3D(std::vector<Triangle>* result, const ML::Box3D& bo
 
 
 	//三角形の情報入力
+	//z-
 	t[0] =
 	{
 		vertex_Index[0],
@@ -60,6 +61,7 @@ void Bbox::Get_Triangle_Box3D(std::vector<Triangle>* result, const ML::Box3D& bo
 		vertex_Index[4],
 		vertex_Index[7],
 	};
+	//x-
 	MyMath::Get_Normal_to_Vector_Cross(&t[1].normal, (t[1].b - t[1].a), (t[1].c - t[1].a));
 	t[2] =
 	{
@@ -74,6 +76,7 @@ void Bbox::Get_Triangle_Box3D(std::vector<Triangle>* result, const ML::Box3D& bo
 		vertex_Index[5],
 		vertex_Index[4],
 	};
+	//z+
 	MyMath::Get_Normal_to_Vector_Cross(&t[3].normal, (t[3].b - t[3].a), (t[3].c - t[3].a));
 	t[4] =
 	{
@@ -90,6 +93,7 @@ void Bbox::Get_Triangle_Box3D(std::vector<Triangle>* result, const ML::Box3D& bo
 		vertex_Index[6],
 
 	};
+	//x+
 	MyMath::Get_Normal_to_Vector_Cross(&t[5].normal, (t[5].b - t[5].a), (t[5].c - t[5].a));
 	t[6] =
 	{
@@ -106,6 +110,7 @@ void Bbox::Get_Triangle_Box3D(std::vector<Triangle>* result, const ML::Box3D& bo
 		vertex_Index[6],
 
 	};
+	//y+
 	MyMath::Get_Normal_to_Vector_Cross(&t[7].normal, (t[7].c - t[7].a), (t[7].b - t[7].a));
 	t[8] =
 	{
@@ -121,6 +126,7 @@ void Bbox::Get_Triangle_Box3D(std::vector<Triangle>* result, const ML::Box3D& bo
 		vertex_Index[5],
 		vertex_Index[6],
 	};
+	//y-
 	MyMath::Get_Normal_to_Vector_Cross(&t[9].normal, (t[9].b - t[9].a), (t[9].c - t[9].a));
 	t[10] =
 	{
@@ -141,9 +147,20 @@ void Bbox::Get_Triangle_Box3D(std::vector<Triangle>* result, const ML::Box3D& bo
 	//std::vector resultに登録させる
 	for (int i = 0; i < TRIANGLE_ON_CUBE; i++)
 	{
+		//使用不可能なら処理しない
+		if (this->unusable_Triagle[i])
+		{
+			continue;
+		}
 		t[i].normal = t[i].normal.Normalize();
 		result->push_back(t[i]);
 	}
+}
+
+//あたり判定に必要ない三角形を表示しておく
+void Bbox::Check_Unusable_Poligon(const unsigned int& num)
+{
+	this->unusable_Triagle[num] = true;
 }
 
 //Box3dと球体の最短距離の点を取る
@@ -213,7 +230,10 @@ Bbox::Bbox()
 	this->pos = ML::Vec3(0, 0, 0);
 	this->collision_Base = ML::Box3D(0, 0, 0, 0, 0, 0);
 	this->boxQT = ML::QT(0.0f);
-	
+	for (int i = 0; i < TRIANGLE_ON_CUBE; i++)
+	{
+		this->unusable_Triagle[i] = true;
+	}
 }
 //引数 : (箱のタイプ,位置,あたり判定矩形,初期回転量)
 Bbox::Bbox(const BoxType& chip, const ML::Vec3& pos, const ML::Box3D& base, const ML::QT& qt)
@@ -222,5 +242,8 @@ Bbox::Bbox(const BoxType& chip, const ML::Vec3& pos, const ML::Box3D& base, cons
 	this->pos = pos;
 	this->collision_Base = base;
 	this->boxQT = qt;
-	
+	for (int i = 0; i < TRIANGLE_ON_CUBE; i++)
+	{
+		this->unusable_Triagle[i] = false;
+	}
 }
