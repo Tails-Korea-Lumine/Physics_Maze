@@ -54,7 +54,7 @@ bool Collision::Check_Collision(const Triangle& tri, const ML::Vec3& p) const
 }
 
 //マス別に呼ばれる関数
-bool Collision::Hit_Check(std::vector<After_Collision>* result, const std::vector<Triangle>& all_Tri, const ML::Vec3 box_Center, const float& box_Length, std::vector<ML::Vec3>& all_Points, const ML::Vec3& ball_Pos, const float& r, const ML::Vec3& speed, const ML::QT& worldR)
+bool Collision::Hit_Check(std::vector<After_Collision>* result, const std::vector<Triangle>& all_Tri, const ML::Vec3 box_Center, const float& box_Length, std::vector<ML::Vec3>& all_Points, const ML::Vec3& ball_Pos, const float& r, const ML::Vec3& speed)
 {		
 	//コンストラクタによってゼロベクトルとfalseで生成される
 	After_Collision collision_True;

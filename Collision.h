@@ -13,11 +13,13 @@ struct Triangle
 struct After_Collision
 {
 	bool collision_Flag;
+	string collision_Id;
 	ML::Vec3 normal;
 
 	After_Collision()
 	{
 		this->collision_Flag = false;
+		this->collision_Id = "";
 		this->normal = ML::Vec3(0, 0, 0);
 	}
 };
@@ -39,7 +41,7 @@ public:
 
 	//球体と立方体衝突判定関数
 	//引数：(結果を保存するstd::vectorのアドレス、判定するマスの三角形、ボックスの中心点、ボックスの長さ、ボールの外角ドット、ボールの中心点、ボールの半直径、ボールの移動ベクトル、ワールド回転量)
-	bool Hit_Check(std::vector<After_Collision>* result,const std::vector<Triangle>& all_Tri, const ML::Vec3 box_Center, const float& box_Length, std::vector<ML::Vec3>& all_Points, const ML::Vec3& ball_Pos, const float& r, const ML::Vec3& speed, const ML::QT& worldR);
+	bool Hit_Check(std::vector<After_Collision>* result,const std::vector<Triangle>& all_Tri, const ML::Vec3 box_Center, const float& box_Length, std::vector<ML::Vec3>& all_Points, const ML::Vec3& ball_Pos, const float& r, const ML::Vec3& speed);
 	
 	
 	Collision() :judge(_CMATH_::cosf(ML::ToRadian(358)))

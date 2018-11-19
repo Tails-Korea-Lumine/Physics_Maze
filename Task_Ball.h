@@ -64,7 +64,7 @@ namespace Ball
 		//回転量
 		float rot;
 		//接触しているかを判定するフラグ
-		bool collision_Flag;
+		std::map<string, bool>collision_Flag;
 		//重力
 		Gravity G;
 		//テレポートをしたのかを判別するフラグ
@@ -72,7 +72,7 @@ namespace Ball
 
 		//メソッド
 		//一個前のフレームで衝突したかを返す
-		bool Is_Collision() const;
+		bool Is_Collision(const string&) const;
 	public:
 		//その時のボールの情報を返す関数
 		//位置
@@ -93,7 +93,8 @@ namespace Ball
 		void Fix_Position_for_Rotate(const ML::QT& qt);
 		//テレポート(指定した場所に即移動する)引数 : (目的地)
 		void Teleportation(const ML::Vec3& objectPos);
-		//コアとあたってない時コアの方に引っ張られる
-		//void Graviation_Pull(const ML::Vec3& force);
+
+		//衝突フラグを登録する
+		void Set_Id_And_Flag(const string& id);
 	};
 }

@@ -173,6 +173,8 @@ namespace  MapFence
 	//外部ファイルからのマップロード
 	bool Object::Map_Load(string f_)
 	{
+		//ID登録のためにボールタスクをもらっておく
+		auto ball = ge->GetTask_One_G<Ball::Object>("ボール");
 		//外部ファイルから読み込み
 		ifstream fin(f_);
 		if (!fin)
@@ -194,9 +196,7 @@ namespace  MapFence
 		fin >> this->size;
 		//マップ配列データの読みこみ
 		for (int i = 0; i < this->size; i++)
-		{
-			
-			
+		{			
 			//チップ番号(ボックスタイプ)読み込み
 			int chip;
 			fin >> chip;
@@ -216,8 +216,11 @@ namespace  MapFence
 			//あたり判定用矩形
 			ML::Box3D base = ML::Box3D(-this->chipSize / 2, -this->chipSize / 2, -this->chipSize / 2, this->chipSize, this->chipSize, this->chipSize);				
 
+			//ボックスのID生成
+			string id = to_string(this->fenceNumber) + to_string(i);
+			ball->Set_Id_And_Flag(id);
 			//配列に登録
-			this->arr[i] = Bbox(BoxType(chip), pos, base, this->map_QT);
+			this->arr[i] = Bbox(BoxType(chip), pos, base, this->map_QT,id);
 				
 			
 		}

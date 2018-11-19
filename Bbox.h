@@ -30,6 +30,8 @@ private:
 	ML::Box3D collision_Base;//一個一個の判定範囲
 	ML::QT boxQT;//マップの回転量
 	Collision col;//あたり判定コンポネント
+	//ボックスのID
+	string box_Id;
 	//ほかのボックスと重なって使えない面を確認するフラグ
 	bool unusable_Triagle[12];
 	
@@ -65,14 +67,15 @@ public:
 	//コンストラクタ・デストラクタ
 	//引数なしコンストラクタ(ゼロクリア)
 	Bbox();
-	//引数 : (箱のタイプ,位置,あたり判定矩形,初期回転量)
-	Bbox(const BoxType& chip, const ML::Vec3& pos, const ML::Box3D& base, const ML::QT& qt);
+	//引数 : (箱のタイプ,位置,あたり判定矩形,初期回転量,ボックスのID)
+	Bbox(const BoxType& chip, const ML::Vec3& pos, const ML::Box3D& base, const ML::QT& qt, const string id);
 	//コピーコンストラクタ
 	Bbox operator= (const Bbox& b)
 	{		
 		this->boxQT = b.boxQT;
 		this->chip = b.chip;
 		this->collision_Base = b.collision_Base;
+		this->box_Id = b.box_Id;
 		this->pos = b.pos;
 		for (int i = 0; i < 12; i++)
 		{

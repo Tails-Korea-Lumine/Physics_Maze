@@ -8,42 +8,11 @@ void Gravity::Accelerate(ML::Vec3* speed, const float& Weight) const
 
 void Gravity::CollisionOver_Accelerate(ML::Vec3* speed, const ML::Vec3& normal) const
 {
-	/*//法線ベクトルと速度の角度とサイン値
-	float sin , seta;
-
-	sin = Gravity::Vector_Dot(-speed, normal);
-
-	seta = _CMATH_::asin(sin);
-
-	//方向が変わった後の力の量
-	float force;
-
-	force = this->G_acceleration.y * sin;
-
-	//回転軸は壁面の法線ベクトルと速度ベクトルの外積でもらえる別の法線ベクトル
-	//回転量は反時計回りなので-(90-θ) = θ-90
-
-	//回転用行列
-	ML::Mat4x4 rotation;
-
-	rotation.RotationAxis(Gravity::Get_Normal_to_Vector_Cross(-speed, normal), (seta - 90));
-
-	rotation.TransformNormal(speed);
-	
-	//各要素に変化後の力の量を掛ける
-	speed *= force;*/
-
-	//----------------------------------------------------------------------------
-	//このうえはver0.1
-
 	float fn;
 	MyMath::Get_Vector_Dot(&fn, *speed, normal);
 	//fn *= speed.Length();
 	//絶対値に変える
-	if (fn < 0)
-	{
-		fn *= -1;
-	}	
+	fn = abs(fn);
 	
 	//長さを力に合わせた後のベクトルの大きさ
 	ML::Vec3 after_Normal;
@@ -65,10 +34,7 @@ void Gravity::Reflaction_Vector(ML::Vec3* force, const ML::Vec3& normal, const f
 	MyMath::Get_Vector_Dot(&fn, *force, normal);
 	//fn *= force.Length();
 	//絶対値に変える
-	if (fn < 0)
-	{
-		fn *= -1;
-	}	
+	fn = abs(fn);
 
 	//長さを力に合わせた後のベクトルの大きさ
 	ML::Vec3 after_Normal;

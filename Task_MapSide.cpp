@@ -189,6 +189,8 @@ namespace  Map3d
 	//外部ファイルからのマップロード
 	bool Object::Map_Load(string f_)
 	{
+		//ID登録のためにボールタスクをもらっておく
+		auto ball = ge->GetTask_One_G<Ball::Object>("ボール");
 		//外部ファイルから読み込み
 		ifstream fin(f_);
 		if (!fin)
@@ -237,9 +239,11 @@ namespace  Map3d
 					base = ML::Box3D(base.x / 10, base.y / 10, base.z / 10, base.w / 10, base.h / 10, base.d / 10);
 					break;
 				}
-
+				//ボックスのID生成
+				string id = to_string(this->sideNumber) + to_string(z) + to_string(x);
+				ball->Set_Id_And_Flag(id);
 				//配列に登録
-				this->arr[z][x] = Bbox((BoxType)chip, pos, base, this->map_QT);
+				this->arr[z][x] = Bbox((BoxType)chip, pos, base, this->map_QT,id);
 			}
 			
 		}

@@ -43,7 +43,7 @@ namespace  Ball
 		this->r = 30.0f;
 		this->m = 25.0f;
 		this->rot = 0.0f;
-		this->collision_Flag = false;
+		this->collision_Flag.clear();
 		this->teleportation_Flag = false;
 
 	
@@ -57,6 +57,7 @@ namespace  Ball
 	{
 		//★データ＆タスク解放
 		ge->eff_Manager.lock()->Add_Effect(this->Get_Pos(), ML::Vec3(0, 0, 0), BEffect::effType::Game_Clear);
+		this->collision_Flag.clear();
 
 		if (!ge->QuitFlag() && this->nextTaskCreate)
 		{
@@ -90,7 +91,10 @@ namespace  Ball
 		{
 			//今回のフレームに衝突しなかったら
 			//衝突フラグを無効にする
-			this->collision_Flag = false;
+			for (auto& cf : this->collision_Flag)
+			{
+				cf.second = false;
+			}
 			//終端速度を指定		
 			if (this->speed.Length() > termination_Speed)
 			{
@@ -102,35 +106,28 @@ namespace  Ball
 			return;
 		}
 		//前回フレームのあたり判定結果を確認
-		if (this->Is_Collision())
+		
+		//結果の数分ループする
+		for (auto p : ge->collision_Result)
 		{
-			//結果の数分ループする
-			for (auto p : ge->collision_Result)
+			//前のフレームで衝突だったら、今回のフレームでの衝突判定でやること
+			if (this->Is_Collision(p.collision_Id))
 			{
-				//前のフレームで衝突だったら、今回のフレームでの衝突判定でやること
-				if (p.collision_Flag)
-				{
-					//今回のフレームに衝突だったら
-					//斜め線加速をする
-					this->G.CollisionOver_Accelerate(&this->speed, p.normal);
-				}				
+				//今回のフレームに衝突だったら
+				//斜め線加速をする
+				this->G.CollisionOver_Accelerate(&this->speed, p.normal);
+			}		
+			//前のフレームで衝突ではなかったら、今回のフレームでの衝突判定でやること			
+			else
+			{
+				//今回のフレームに衝突だったら
+				//反射角で跳ね返す
+				this->G.Reflaction_Vector(&this->speed, p.normal, this->m);
+				//IDに相当するフラグは立てておく
+				this->collision_Flag.find(p.collision_Id)->second = true;
 			}
 		}
-		else
-		{
-			//結果の数分ループする
-			for (auto p : ge->collision_Result)
-			{
-				//前のフレームで衝突ではなかったら、今回のフレームでの衝突判定でやること			
-				if (p.collision_Flag)
-				{
-					//今回のフレームに衝突だったら
-					//反射角で跳ね返す
-					this->G.Reflaction_Vector(&this->speed, p.normal, this->m);					
-				}
-			}
-
-		}
+		
 
 		//終端速度を指定		
 		if (this->speed.Length() > termination_Speed)
@@ -139,8 +136,18 @@ namespace  Ball
 			this->speed *= termination_Speed;
 		}
 
-		//フラグを立てる					
-		this->collision_Flag = true;
+		//フラグを衝突判定結果にいないものはfalseに変える
+		for (auto& p : ge->collision_Result)
+		{
+			for(auto& cf : this->collision_Flag)
+			{
+				if (cf.first != p.collision_Id)
+				{
+					cf.second = false;
+				}
+			}
+		}
+		
 		//移動(フレーム終了する直前に行う)
 		this->pos += this->speed;
 
@@ -208,9 +215,13 @@ namespace  Ball
 	//-------------------------------------------------------------------------------------
 	
 	//あたり判定フラグを確認
-	bool Object::Is_Collision() const
+	bool Object::Is_Collision(const string& id) const
 	{
-		return this->collision_Flag;
+		if (id == "core" || id == "barrier")
+		{
+			return true;
+		}
+		return this->collision_Flag.find(id)->second;
 	}
 
 	//---------------------------------------------------------------------
@@ -261,6 +272,11 @@ namespace  Ball
 	bool Object::Is_Teleport_Now() const
 	{
 		return this->teleportation_Flag;
+	}
+	//衝突フラグを登録する
+	void Object::Set_Id_And_Flag(const string& id)
+	{
+		this->collision_Flag.insert(std::pair<string, bool>(id, false));
 	}
 	//★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★
 	//以下は基本的に変更不要なメソッド

@@ -193,10 +193,18 @@ void Bbox::Get_Collision_Poligon(std::vector<After_Collision>* result, std::vect
 	this->Get_ShortisetPoints_Box_to_Sphere(&all_Points, area);
 
 	//あたり判定結果をresultに保存
-	if (!this->col.Hit_Check(result,all_Tri, this->pos, area.w, all_Points, pos, r, speed, this->boxQT))
+	if (!this->col.Hit_Check(result,all_Tri, this->pos, area.w, all_Points, pos, r, speed))
 	{
 		//当たらなかった時だけゼロベクトルリザルトをpushbackする
 		result->push_back(After_Collision());
+	}
+	//新しい判定結果にはIDをつけておく
+	for (auto& r : *result)
+	{
+		if (r.collision_Id == "")
+		{
+			r.collision_Id = this->box_Id;
+		}
 	}
 }
 
@@ -235,12 +243,13 @@ Bbox::Bbox()
 		this->unusable_Triagle[i] = true;
 	}
 }
-//引数 : (箱のタイプ,位置,あたり判定矩形,初期回転量)
-Bbox::Bbox(const BoxType& chip, const ML::Vec3& pos, const ML::Box3D& base, const ML::QT& qt)
+//引数 : (箱のタイプ,位置,あたり判定矩形,初期回転量,ボックスのID)
+Bbox::Bbox(const BoxType& chip, const ML::Vec3& pos, const ML::Box3D& base, const ML::QT& qt, const string id)
+	:box_Id(id)
 {
 	this->chip = chip;
 	this->pos = pos;
-	this->collision_Base = base;
+	this->collision_Base = base;	
 	this->boxQT = qt;
 	for (int i = 0; i < TRIANGLE_ON_CUBE; i++)
 	{

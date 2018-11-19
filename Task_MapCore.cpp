@@ -28,6 +28,8 @@ namespace  Map_Core
 	//「初期化」タスク生成時に１回だけ行う処理
 	bool  Object::Initialize(Difficult_Range di)
 	{
+		//ID登録のためにボールタスクをもらっておく
+		auto ball = ge->GetTask_One_G<Ball::Object>("ボール");
 		//スーパークラス初期化
 		__super::Initialize(defGroupName, defName, true);
 		//リソースクラス生成orリソース共有
@@ -38,7 +40,8 @@ namespace  Map_Core
 		this->map_QT = ML::QT(0.0f);
 		
 		//コアの初期化
-		this->core = Bbox(BoxType::Core, ge->Map_center, ML::Box3D(-50 * this->mapSize, -50 * this->mapSize, -50 * this->mapSize, 100 * this->mapSize, 100 * this->mapSize, 100 * this->mapSize), this->map_QT);
+		this->core = Bbox(BoxType::Core, ge->Map_center, ML::Box3D(-50 * this->mapSize, -50 * this->mapSize, -50 * this->mapSize, 100 * this->mapSize, 100 * this->mapSize, 100 * this->mapSize), this->map_QT,"core");
+		ball->Set_Id_And_Flag("core");
 		//バリアの初期化
 		//各面ごとバリアを置いたver0.5
 		////各面に価するあたり判定範囲
@@ -62,7 +65,8 @@ namespace  Map_Core
 		//this->barrier[5] = Bbox(BoxType::Barrier, b_ini_pos[5] , XZ, this->map_QT);
 
 		//逆向きのバリア一個ですますver0.6
-		this->barrier = Bbox(BoxType::Barrier, ge->Map_center, ML::Box3D(50 * (this->mapSize+2), 50 * (this->mapSize+2), 50 * (this->mapSize+2), -100 * (this->mapSize+2), -100 * (this->mapSize+2), -100 * (this->mapSize+2)), this->map_QT);
+		this->barrier = Bbox(BoxType::Barrier, ge->Map_center, ML::Box3D(50 * (this->mapSize+2), 50 * (this->mapSize+2), 50 * (this->mapSize+2), -100 * (this->mapSize+2), -100 * (this->mapSize+2), -100 * (this->mapSize+2)), this->map_QT,"barrier");
+		ball->Set_Id_And_Flag("barrier");
 
 		//★タスクの生成
 
