@@ -69,8 +69,12 @@ namespace MapFence
 		bool Map_Load(string f_);
 		//クォータニオンを更新する関数
 		void UpDate_Quartanion(const ML::QT& qt);
+		//連続していて使えない面を探す
+		void Check_Unusable_Side();
 		//配列ソート
 		void Array_Sorting();
+		//ボールタスクのフラグにIDを組み込める
+		void Insert_Id_To_Ball();
 		//レンダリングするかしないかを確認するためのメソッド
 		bool Is_Need_Render(const unsigned int& index);
 

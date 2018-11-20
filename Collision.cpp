@@ -1,5 +1,5 @@
 #include "Collision.h"
-#include "MyMath.h"
+
 
 bool Collision::Check_Collision(const Triangle& tri, const ML::Vec3& p) const
 {
@@ -71,25 +71,28 @@ bool Collision::Hit_Check(std::vector<After_Collision>* result, const std::vecto
 			//移動ベクトルと衝突した三角形の法線ベクトルのcos値
 			float cosSN;
 			MyMath::Vector_Dot(&cosSN, speed, tri.normal);
+			//cos値が1ということは内角が0度だということ、つまり物理的にあり得ない衝突
+			//もしものために誤差範囲まで確認
+			if (cosSN >= this->judge)
+			{
+				//なので無視する
+				continue;
+			}
 
 			collision_True = After_Collision();
 			for (const auto& p : all_Points)
-			{				
-				//cos値が1ということは内角が0度だということ、つまり物理的にあり得ない衝突
-				//もしものために誤差範囲まで確認
-				if (cosSN >= this->judge)
-				{
-					//なので無視する
-					continue;
-				}
-
+			{
 				//それ以外の場合であたり判定を行う
 				if (this->Check_Collision(tri, p))
 				{
 					//以下あたった三角形の法線ベクトルとフラグを返す処理
 					collision_True.collision_Flag = true;
 					collision_True.normal = tri.normal;
-					result->push_back(collision_True);					
+					//もう登録されているものなのか確認する
+					if (result->size() == 0 || collision_True != result->at(result->size() - 1))
+					{
+						result->push_back(collision_True);
+					}
 					//ポリゴン1個あたり1つの点の衝突が起きたらそれで次のポリゴンの判定をする
 					break;
 				}

@@ -90,8 +90,9 @@ namespace  MapFence
 			this->Map_Rotate(ML::QT(ML::Vec3(1, 0, 0), ML::ToRadian(90)) * ML::QT(ML::Vec3(0, 1, 0), ML::ToRadian(-90)));
 			break;
 		}
-		
+		this->Check_Unusable_Side();
 		this->Array_Sorting();
+		this->Insert_Id_To_Ball();
 		//★タスクの生成
 
 		return  true;
@@ -172,9 +173,7 @@ namespace  MapFence
 	//追加メソッド		
 	//外部ファイルからのマップロード
 	bool Object::Map_Load(string f_)
-	{
-		//ID登録のためにボールタスクをもらっておく
-		auto ball = ge->GetTask_One_G<Ball::Object>("ボール");
+	{		
 		//外部ファイルから読み込み
 		ifstream fin(f_);
 		if (!fin)
@@ -217,8 +216,7 @@ namespace  MapFence
 			ML::Box3D base = ML::Box3D(-this->chipSize / 2, -this->chipSize / 2, -this->chipSize / 2, this->chipSize, this->chipSize, this->chipSize);				
 
 			//ボックスのID生成
-			string id = to_string(this->fenceNumber) + to_string(i);
-			ball->Set_Id_And_Flag(id);
+			string id = to_string(this->fenceNumber) + to_string(i);			
 			//配列に登録
 			this->arr[i] = Bbox(BoxType(chip), pos, base, this->map_QT,id);
 				
@@ -291,6 +289,57 @@ namespace  MapFence
 	{
 		this->map_QT *= qt;
 	}
+	//------------------------------------------------------------------------------------------------------------
+	//連続していて使えない面を探す
+	void Object::Check_Unusable_Side()
+	{
+		//最小値、最大値を超えないようにする
+		auto Inside_Range = [this](const size_t& ci)
+		{return ci >= 0 && ci < this->size; };
+
+		//引数たちが両方壁なのか判断する
+		auto Judge = [](const Bbox& b1, const Bbox& b2)
+		{return b1.What_Type_Is_this_Box() == BoxType::Wall && b2.What_Type_Is_this_Box() == BoxType::Wall; };
+		//各ボックスに連続するボックスがあるかを確認
+		for (size_t i = 0; i < this->size; i++)
+		{			
+			//判別開始
+			//左
+			if (this->fenceNumber < 8)
+			{
+				if (Inside_Range(i - 1) && Judge(this->arr[i - 1], this->arr[i]))
+				{
+					//無効ポリゴンを表示しておく
+					this->arr[i].Check_Unusable_Poligon(2);
+					this->arr[i].Check_Unusable_Poligon(3);
+				}
+				//右
+				if (Inside_Range(i + 1) && Judge(this->arr[i + 1], this->arr[i]))
+				{
+					//無効ポリゴンを表示しておく
+					this->arr[i].Check_Unusable_Poligon(6);
+					this->arr[i].Check_Unusable_Poligon(7);
+				}
+			}
+			else
+			{
+				//下
+				if (Inside_Range(i - 1) && Judge(this->arr[i - 1], this->arr[i]))
+				{
+					//無効ポリゴンを表示しておく
+					this->arr[i].Check_Unusable_Poligon(10);
+					this->arr[i].Check_Unusable_Poligon(11);
+				}
+				//上
+				if (Inside_Range(i + 1) && Judge(this->arr[i + 1], this->arr[i]))
+				{
+					//無効ポリゴンを表示しておく
+					this->arr[i].Check_Unusable_Poligon(8);
+					this->arr[i].Check_Unusable_Poligon(9);
+				}
+			}
+		}
+	}
 	//-------------------------------------------------------------------------------------
 	//配列ソート及びボールをスタート位置に置く
 	void Object::Array_Sorting()
@@ -331,6 +380,24 @@ namespace  MapFence
 			{
 				sort_Not_Over = false;
 			}
+		}
+	}
+	//ボールタスクのフラグにIDを組み込める
+	void Object::Insert_Id_To_Ball()
+	{
+		//ID登録のためにボールタスクをもらっておく
+		auto ball = ge->GetTask_One_G<Ball::Object>("ボール");
+
+		for (size_t i = 0; i < this->size; i++)
+		{			
+			//道は配列の後ろに積んでおいたので見つかったらbreak
+			if (this->arr[i].What_Type_Is_this_Box() == BoxType::Road)
+			{
+				break;
+			}
+			//それ以外はフラグ登録
+			ball->Set_Id_And_Flag(this->arr[i].Get_Id());
+			
 		}
 	}
 

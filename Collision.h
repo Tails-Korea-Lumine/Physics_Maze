@@ -1,5 +1,6 @@
 #pragma once
 #include "myLib.h"
+#include "MyMath.h"
 
 //三角形の基本情報
 //頂点と法線ベクトル
@@ -21,6 +22,19 @@ struct After_Collision
 		this->collision_Flag = false;
 		this->collision_Id = "";
 		this->normal = ML::Vec3(0, 0, 0);
+	}
+
+	//比較演算子オーバーロード
+	bool operator==(const After_Collision& ac)
+	{
+		float check;
+		MyMath::Vector_Dot(&check, this->normal, ac.normal);
+		return check >= _CMATH_::cosf(ML::ToRadian(358));
+	}
+
+	bool operator!=(const After_Collision& ac)
+	{
+		return *this == ac ? false : true;
 	}
 };
 

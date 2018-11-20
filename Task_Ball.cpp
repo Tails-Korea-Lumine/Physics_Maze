@@ -84,7 +84,7 @@ namespace  Ball
 	//‚ ‚½‚è”»’è‚É‚æ‚é•ûŒü“]Š·‹y‚ÑˆÚ“®
 	void Object::Move_Ball()
 	{
-		const float termination_Speed = 6.0f;
+		const float termination_Speed = 4.0f;
 		//‚à‚µ,‚Ç‚±‚à‚ ‚½‚è”»’è‚ð‚¹‚¸‚É“®‚¢‚½ê‡
 		//ˆ—‚¹‚¸‚ÉŽŸ‚ÌƒtƒŒ[ƒ€‚ÉˆÚ‚é
 		if (ge->collision_Result.size() == 0)

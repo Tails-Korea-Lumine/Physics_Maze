@@ -81,6 +81,8 @@ namespace Map3d
 		void Check_Unusable_Side();
 		//配列ソート及びボールをスタート位置に置く
 		void Array_Sorting();
+		//ボールタスクのフラグにIDを組み込める
+		void Insert_Id_To_Ball();
 		//クォータニオンを更新する関数
 		void UpDate_Quartanion(const ML::QT& qt);
 		

@@ -231,6 +231,11 @@ const ML::Vec3& Bbox::Get_Pos() const
 	return this->pos;
 }
 
+string Bbox::Get_Id() const
+{
+	return this->box_Id;
+}
+
 //引数なしコンストラクタ(ゼロクリア)
 Bbox::Bbox()
 {

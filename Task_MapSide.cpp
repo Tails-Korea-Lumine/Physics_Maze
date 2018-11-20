@@ -100,6 +100,7 @@ namespace  Map3d
 		
 		this->Check_Unusable_Side();
 		this->Array_Sorting();
+		this->Insert_Id_To_Ball();
 		//★タスクの生成
 
 		return  true;
@@ -188,9 +189,7 @@ namespace  Map3d
 	//追加メソッド		
 	//外部ファイルからのマップロード
 	bool Object::Map_Load(string f_)
-	{
-		//ID登録のためにボールタスクをもらっておく
-		auto ball = ge->GetTask_One_G<Ball::Object>("ボール");
+	{		
 		//外部ファイルから読み込み
 		ifstream fin(f_);
 		if (!fin)
@@ -240,8 +239,7 @@ namespace  Map3d
 					break;
 				}
 				//ボックスのID生成
-				string id = to_string(this->sideNumber) + to_string(z) + to_string(x);
-				ball->Set_Id_And_Flag(id);
+				string id = to_string(this->sideNumber) + to_string(z) + to_string(x);				
 				//配列に登録
 				this->arr[z][x] = Bbox((BoxType)chip, pos, base, this->map_QT,id);
 			}
@@ -503,6 +501,26 @@ namespace  Map3d
 					z--;
 					break;
 				}
+			}
+		}
+	}
+	//ボールタスクのフラグにIDを組み込める
+	void Object::Insert_Id_To_Ball()
+	{
+		//ID登録のためにボールタスクをもらっておく
+		auto ball = ge->GetTask_One_G<Ball::Object>("ボール");
+
+		for (size_t z = 0; z < this->sizeZ; z++)
+		{
+			for (size_t x = 0; x < this->sizeX; x++)
+			{
+				//道は配列の後ろに積んでおいたので見つかったらbreak
+				if (this->arr[z][x].What_Type_Is_this_Box() == BoxType::Road)
+				{
+					break;
+				}
+				//それ以外はフラグ登録
+				ball->Set_Id_And_Flag(this->arr[z][x].Get_Id());
 			}
 		}
 	}
