@@ -158,9 +158,36 @@ void Bbox::Get_Triangle_Box3D(std::vector<Triangle>* result, const ML::Box3D& bo
 }
 
 //あたり判定に必要ない三角形を表示しておく
-void Bbox::Check_Unusable_Poligon(const unsigned int& num)
+void Bbox::Marking_On_Unusable_Poligon(const Box_Side& side)
 {
-	this->unusable_Triagle[num] = true;
+	//引数の方向に相当する番号のところをマーキング
+	switch (side)
+	{
+	case Box_Side::Xplus:
+		this->unusable_Triagle[6] = true;
+		this->unusable_Triagle[7] = true;
+		break;
+	case Box_Side::Xminus:
+		this->unusable_Triagle[2] = true;
+		this->unusable_Triagle[3] = true;
+		break;
+	case Box_Side::Yplus:
+		this->unusable_Triagle[8] = true;
+		this->unusable_Triagle[9] = true;
+		break;
+	case Box_Side::Yminus:
+		this->unusable_Triagle[10] = true;
+		this->unusable_Triagle[11] = true;
+		break;
+	case Box_Side::Zplus:
+		this->unusable_Triagle[4] = true;
+		this->unusable_Triagle[5] = true;
+		break;
+	case Box_Side::Zminus:
+		this->unusable_Triagle[0] = true;
+		this->unusable_Triagle[1] = true;
+		break;
+	}
 }
 
 //Box3dと球体の最短距離の点を取る
@@ -180,7 +207,7 @@ void Bbox::Get_ShortisetPoints_Box_to_Sphere(std::vector<ML::Vec3>* result, cons
 
 }
 
-void Bbox::Get_Collision_Poligon(std::vector<After_Collision>* result, std::vector<ML::Vec3> all_Points, const ML::Vec3& pos, const float& r, const ML::Vec3& speed)
+bool Bbox::Get_Collision_Poligon(std::vector<After_Collision>* result, std::vector<ML::Vec3> all_Points, const ML::Vec3& pos, const float& r, const ML::Vec3& speed)
 {
 	//位置補正したあたり判定用矩形
 	ML::Box3D area = this->collision_Base.OffsetCopy(this->pos);
@@ -206,20 +233,10 @@ void Bbox::Get_Collision_Poligon(std::vector<After_Collision>* result, std::vect
 			r.collision_Id = this->box_Id;
 		}
 	}
+	//0番のフラグを戻り値で返す
+	return result->at(0).collision_Flag;
 }
 
-//あたってるかあたってないか論理的な結果だけを求める処理
-bool Bbox::Get_Collision_Bool(std::vector<ML::Vec3>& all_Points, const ML::Vec3& pos, const float& r, const ML::Vec3& speed)
-{
-	//一回あたり判定を行う
-	std::vector<After_Collision> check;
-
-	this->Get_Collision_Poligon(&check, all_Points, pos, r, speed);
-
-	//あたらなかった時はヴェクターの一番前のフラグがfalseで返されるので
-	//一番前のフラグで判断する
-	return check[0].collision_Flag;
-}
 
 BoxType Bbox::What_Type_Is_this_Box() const
 {

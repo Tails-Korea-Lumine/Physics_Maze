@@ -22,6 +22,15 @@ enum BoxType
 	//追加の余地あり
 };
 
+//ボックスの面
+//あたり判定不要ポリゴン表示に使用する
+enum Box_Side
+{
+	Xplus, Xminus,
+	Yplus, Yminus,
+	Zplus, Zminus,
+};
+
 class Bbox 
 {
 private:
@@ -49,7 +58,7 @@ public:
 	void Rotate_Box(ML::Mat4x4* mat, const ML::QT& q);
 
 	//あたり判定に必要ない三角形を表示しておく
-	void Check_Unusable_Poligon(const unsigned int& num);
+	void Marking_On_Unusable_Poligon(const Box_Side&);
 	
 	//BoxTypeを確認する
 	BoxType What_Type_Is_this_Box() const;
@@ -60,11 +69,7 @@ public:
 
 	//衝突判定
 	//判定の結果値をもらう関数
-	void Get_Collision_Poligon(std::vector<After_Collision>* result,std::vector<ML::Vec3> all_Points , const ML::Vec3& pos, const float& r, const ML::Vec3& speed);
-
-	//判定の正不正だけをもらう関数
-	bool Get_Collision_Bool(std::vector<ML::Vec3>& all_Points, const ML::Vec3& pos, const float& r, const ML::Vec3& speed);
-
+	bool Get_Collision_Poligon(std::vector<After_Collision>* result,std::vector<ML::Vec3> all_Points , const ML::Vec3& pos, const float& r, const ML::Vec3& speed);
 
 	//コンストラクタ・デストラクタ
 	//引数なしコンストラクタ(ゼロクリア)

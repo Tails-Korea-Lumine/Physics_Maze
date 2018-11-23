@@ -82,9 +82,23 @@ namespace  Ball
 	}
 	//-------------------------------------------------------------------
 	//あたり判定による方向転換及び移動
-	void Object::Move_Ball()
+	void Object::Move_Ball(const unsigned int& precisioin)
 	{
-		const float termination_Speed = 4.0f;
+		//1フレームの終端速度
+		const float termination_Speed = 7.0f;
+
+		//終端速度及び物理精密度による速度処理
+		auto Clamp_Speed = [&](ML::Vec3& speed)
+		{
+			//終端速度に調整する場合
+			if (speed.Length() > termination_Speed)
+			{
+				speed = this->speed.Normalize();
+				speed *= termination_Speed;
+			}
+			return speed / (float)precisioin;
+		};
+		
 		//もし,どこもあたり判定をせずに動いた場合
 		//処理せずに次のフレームに移る
 		if (ge->collision_Result.size() == 0)
@@ -95,14 +109,9 @@ namespace  Ball
 			{
 				cf.second = false;
 			}
-			//終端速度を指定		
-			if (this->speed.Length() > termination_Speed)
-			{
-				this->speed = this->speed.Normalize();
-				this->speed *= termination_Speed;
-			}
+			
 			//移動(フレーム終了する直前に行う)
-			this->pos += this->speed;
+			this->pos += Clamp_Speed(this->speed);
 			return;
 		}
 		//前回フレームのあたり判定結果を確認
@@ -122,19 +131,11 @@ namespace  Ball
 			{
 				//今回のフレームに衝突だったら
 				//反射角で跳ね返す
-				this->G.Reflaction_Vector(&this->speed, p.normal, this->m);
+				this->G.Reflaction_Vector(&this->speed, p.normal);
 				//IDに相当するフラグは立てておく
 				this->collision_Flag.find(p.collision_Id)->second = true;
 			}
-		}
-		
-
-		//終端速度を指定		
-		if (this->speed.Length() > termination_Speed)
-		{
-			this->speed = this->speed.Normalize();
-			this->speed *= termination_Speed;
-		}
+		}		
 
 		//フラグを衝突判定結果にいないものはfalseに変える
 		for (auto& p : ge->collision_Result)
@@ -149,8 +150,7 @@ namespace  Ball
 		}
 		
 		//移動(フレーム終了する直前に行う)
-		this->pos += this->speed;
-
+		this->pos += Clamp_Speed(this->speed);
 	}
 	
 	//「２Ｄ描画」１フレーム毎に行う処理

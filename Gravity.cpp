@@ -27,8 +27,15 @@ void Gravity::CollisionOver_Accelerate(ML::Vec3* speed, const ML::Vec3& normal) 
 	//return after_Collision;
 }
 
-void Gravity::Reflaction_Vector(ML::Vec3* force, const ML::Vec3& normal, const float& weight) const
-{	
+void Gravity::Reflaction_Vector(ML::Vec3* force, const ML::Vec3& normal) const
+{
+	//単位ベクトルより小さくなった場合は斜め加速をさせる
+	if (force->Length() <= 1.0f)
+	{
+		this->CollisionOver_Accelerate(force, normal);
+		return;
+	}
+
 	//壁面の法線ベクトルの大きさを変更
 	float fn;
 	MyMath::Get_Vector_Dot(&fn, *force, normal);
@@ -42,11 +49,7 @@ void Gravity::Reflaction_Vector(ML::Vec3* force, const ML::Vec3& normal, const f
 	after_Normal = normal * fn;
 
 	//反射角に変換したベクトル
-	//ML::Vec3 after_Reflection;
-	
 	*force += (2 * after_Normal);
-	*force *= 0.75f;
-
-	//重さに応じて減らして返す
-	//return after_Reflection *0.6f;
+	//慣性を考えて60％にする
+	*force *= 0.6f;	
 }

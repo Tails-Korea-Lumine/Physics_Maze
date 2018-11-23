@@ -55,7 +55,8 @@ namespace  Map3d
 		{
 			this->chipName[i] = "";
 		}
-		this->col_Poligons.clear();
+		this->col_Poligons.clear();		
+
 		//外部ファイルからの読み込み
 		switch (di)
 		{
@@ -70,7 +71,7 @@ namespace  Map3d
 			break;
 		}
 		//面ごとに別の初期値を与える
-		switch(sideNumber)
+		switch (sideNumber)
 		{
 		case 0:
 			this->Map_Rotate(ML::QT(0.0f));
@@ -153,7 +154,7 @@ namespace  Map3d
 				
 		//行列生成
 		ML::Mat4x4 matW;
-		int z, x;
+		size_t z, x;
 
 		for (z = 0; z < this->sizeZ; z++)
 		{
@@ -161,7 +162,7 @@ namespace  Map3d
 			{
 				//道は配列の後ろに積めておいたので発見したらその後は処理せずにbreak
 				BoxType now_Type = this->arr[z][x].What_Type_Is_this_Box();
-				if (now_Type == BoxType::Road)
+				if (now_Type == BoxType::Road || now_Type == BoxType::Clear)
 				{
 					break;
 				}
@@ -212,22 +213,22 @@ namespace  Map3d
 		fin >> this->sizeX >> this->sizeZ;
 		//マップ配列データの読みこみ
 		
-		for (int z = this->sizeZ - 1; z >= 0; z--)
+		for (size_t z = 0; z < this->sizeZ; z++)
 		{
-			for (int x = 0; x < this->sizeX; x++)
+			for (size_t x = 0; x < this->sizeX; x++)
 			{
 				//チップ番号(ボックスタイプ)読み込み
 				int chip;
 				fin >> chip;
 				//マップ中央を基準にした初期位置算出
-				ML::Vec3 pos = ML::Vec3(x*this->chipSize + this->chipSize / 2, this->chipSize + this->chipSize / 2, z*this->chipSize + this->chipSize / 2);
+				ML::Vec3 pos = ML::Vec3(x*this->chipSize + this->chipSize / 2, this->chipSize + this->chipSize / 2, (this->sizeZ - 1 - z)*this->chipSize + this->chipSize / 2);
 				pos += ge->Map_center - ML::Vec3((this->mapSize*this->chipSize / 2), -((this->mapSize - 2)*this->chipSize / 2), (this->mapSize*this->chipSize / 2));
 				//あたり判定用矩形
 				ML::Box3D base = ML::Box3D(-this->chipSize / 2, -this->chipSize / 2, -this->chipSize / 2, this->chipSize, this->chipSize, this->chipSize);				
 				
 				//生成すること以外に何か処理を加える必要があるもの
 				switch (BoxType(chip))
-				{				
+				{
 				//テレポート
 				case BoxType::Teleportaion:		
 
@@ -236,6 +237,14 @@ namespace  Map3d
 				//スイッチはあたり判定範囲を小さく	
 				case BoxType::LightSwitch:
 					base = ML::Box3D(base.x / 10, base.y / 10, base.z / 10, base.w / 10, base.h / 10, base.d / 10);
+					break;
+				case BoxType::Start:
+					//ボールをスタート位置に置く
+					ML::Mat4x4 matR;
+					D3DXMatrixAffineTransformation(&matR, 1.0f, &ge->Map_center, &ML::QT(ML::Vec3(1, 0, 0), ML::ToRadian(-90)), NULL);
+					pos = matR.TransformCoord(pos);
+					ge->GetTask_One_G<Ball::Object>("ボール")->Teleportation(pos);
+					chip = (int)BoxType::Road;
 					break;
 				}
 				//ボックスのID生成
@@ -250,20 +259,24 @@ namespace  Map3d
 	}
 	//-----------------------------------------------------------------------
 	bool Object::Map_Check_Hit(std::vector<ML::Vec3>& all_Points, const ML::Vec3& pos, const float& r, const ML::Vec3& speed)
-	{		
+	{
+		//ボールに何かをさせるとこがある場合使う
+		auto ball = ge->GetTask_One_G<Ball::Object>("ボール");
 		//ボールがこの面にあるかを確認するためのフラグ	
 		bool ball_on_This_Side = false;
+		//テレポートアウトする場所
+		ML::Vec3 exitpos;
 
 		//判定スタート		
-		for (int z = 0; z < this->sizeZ; z++)
+		for (size_t z = 0; z < this->sizeZ; z++)
 		{
-			for (int x = 0; x < this->sizeX; x++)
+			for (size_t x = 0; x < this->sizeX; x++)
 			{
 				//接触三角形を判定前にクリアする
 				this->col_Poligons.clear();
 				//道は配列の後ろに積めておいたので発見したらその後は処理せずにbreak
 				BoxType now_Type = this->arr[z][x].What_Type_Is_this_Box();
-				if (now_Type == BoxType::Road)
+				if (now_Type == BoxType::Road || now_Type == BoxType::Clear)
 				{
 					break;
 				}
@@ -277,63 +290,50 @@ namespace  Map3d
 				}
 				ball_on_This_Side = true;
 
-				//boxType別に処理を分ける
+				//判定開始
+				if (!this->arr[z][x].Get_Collision_Poligon(&this->col_Poligons, all_Points, pos, r, speed))
+				{
+					//あたってないマスなら次のマスに移行
+					continue;
+				}				
+
+				//ギミック処理
 				switch (now_Type)
 				{
-				//スタート位置は判定なし
-				case BoxType::Start:
-					continue;
-					break;
 				//ゴール旗はクリア判定
-				case BoxType::Goal:
-					if (this->arr[z][x].Get_Collision_Bool(all_Points,pos, r, speed))
-					{
-						ML::Vec3 distance = this->arr[z][x].Get_Pos() - pos;
-						auto ball = ge->GetTask_One_G<Ball::Object>("ボール");
-						ball->Teleportation(pos + (distance*0.01f));
-							
-						ge->game.lock()->Game_Clear();							
-					}
+				case BoxType::Goal:										
+					ball->Teleportation(pos + (d*0.01f));
+					//ゲームタスクにクリア処理をさせる
+					ge->game.lock()->Game_Clear();
 					break;
 				//扉はテレポート
-				case BoxType::Teleportaion:						
-					if (this->arr[z][x].Get_Collision_Bool(all_Points, pos, r, speed))
-					{						
-						auto ball = ge->GetTask_One_G<Ball::Object>("ボール");
-						ML::Vec3 exitpos;
-						if (ge->TM.Find_Exit(this->sideNumber,&exitpos))
-						{								
-							ball->Teleportation(exitpos);
-							auto eff = ge->eff_Manager.lock();
-							//テレポートインのエフェクト
-							eff->Add_Effect(pos, this->arr[z][x].Get_Pos(), ML::Vec3(0, 0, 0), BEffect::effType::Teleportin);
-							//テレポートインの音を鳴らす
-							DM::Sound_Play(this->res->seTeleportIn, false);
-							//テレポートアウトのエフェクト
-							eff->Add_Effect(exitpos, this->Normal_Side, BEffect::effType::TeleportOut);
-							//テレポートアウトの音を鳴らす
-							DM::Sound_Play(this->res->seTeleportOut, false);
-						}
+				case BoxType::Teleportaion:					
+					if (ge->TM.Find_Exit(this->sideNumber, &exitpos))
+					{
+						ball->Teleportation(exitpos);
+						auto eff = ge->eff_Manager.lock();
+						//テレポートインのエフェクト
+						eff->Add_Effect(pos, this->arr[z][x].Get_Pos(), ML::Vec3(0, 0, 0), BEffect::effType::Teleportin);
+						//テレポートインの音を鳴らす
+						DM::Sound_Play(this->res->seTeleportIn, false);
+						//テレポートアウトのエフェクト
+						eff->Add_Effect(exitpos, this->Normal_Side, BEffect::effType::TeleportOut);
+						//テレポートアウトの音を鳴らす
+						DM::Sound_Play(this->res->seTeleportOut, false);
 					}
 					break;
 				//スイッチは光源をけす
 				case BoxType::LightSwitch:
-					if (this->arr[z][x].Get_Collision_Bool(all_Points, pos, r, speed))
+					//カメラマンにライトを3秒間オフする命令を送る
+					ge->GetTask_One_G<CameraMan::Object>("カメラマン")->Turnoff_the_Light();
+					break;
+				//ギミックでない障害物はあたり判定結果を保存する
+				default:
+					for (auto& c : this->col_Poligons)
 					{
-						//カメラマンにライトを3秒間オフする命令を送る
-						ge->GetTask_One_G<CameraMan::Object>("カメラマン")->Turnoff_the_Light();
+						ge->collision_Result.push_back(c);
 					}
 					break;
-				//壁はただのあたり判定
-				case BoxType::Wall:
-					this->arr[z][x].Get_Collision_Poligon(&this->col_Poligons, all_Points, pos, r, speed);
-					break;
-				}		
-
-				//全体衝突結果に保存する
-				for (auto& c : this->col_Poligons)
-				{
-					ge->collision_Result.push_back(c);
 				}
 			}
 			
@@ -349,9 +349,9 @@ namespace  Map3d
 		//マップ全体の回転値更新
 		this->UpDate_Quartanion(qt);
 
-		for (int z = 0; z < this->sizeZ; z++)
+		for (size_t z = 0; z < this->sizeZ; z++)
 		{
-			for (int x = 0; x < this->sizeX; x++)
+			for (size_t x = 0; x < this->sizeX; x++)
 			{
 				//回転行列生成
 				ML::Mat4x4 matR;
@@ -431,33 +431,29 @@ namespace  Map3d
 			for (size_t x = 0; x < this->sizeX; x++)
 			{
 				//判別開始
-				//手前
+				//奥
 				if (Inside_Range(x, z-1) && Judge(this->arr[z - 1][x], this->arr[z][x]))
 				{
 					//無効ポリゴンを表示しておく
-					this->arr[z][x].Check_Unusable_Poligon(0);
-					this->arr[z][x].Check_Unusable_Poligon(1);
+					this->arr[z][x].Marking_On_Unusable_Poligon(Box_Side::Zplus);
 				}
-				//奥
+				//手前
 				if (Inside_Range(x, z + 1) && Judge(this->arr[z + 1][x], this->arr[z][x]))
 				{
 					//無効ポリゴンを表示しておく
-					this->arr[z][x].Check_Unusable_Poligon(4);
-					this->arr[z][x].Check_Unusable_Poligon(5);
+					this->arr[z][x].Marking_On_Unusable_Poligon(Box_Side::Zminus);
 				}
 				//左
-				if (Inside_Range(x - 1, z) && Judge(this->arr[z][x-1], this->arr[z][x]))
+				if (Inside_Range(x - 1, z) && Judge(this->arr[z][x - 1], this->arr[z][x]))
 				{
 					//無効ポリゴンを表示しておく
-					this->arr[z][x].Check_Unusable_Poligon(2);
-					this->arr[z][x].Check_Unusable_Poligon(3);
+					this->arr[z][x].Marking_On_Unusable_Poligon(Box_Side::Xminus);
 				}
 				//右
 				if (Inside_Range(x + 1, z) && Judge(this->arr[z][x+1], this->arr[z][x]))
 				{
 					//無効ポリゴンを表示しておく
-					this->arr[z][x].Check_Unusable_Poligon(6);
-					this->arr[z][x].Check_Unusable_Poligon(7);
+					this->arr[z][x].Marking_On_Unusable_Poligon(Box_Side::Xplus);
 				}
 			}
 		}
@@ -467,40 +463,49 @@ namespace  Map3d
 	//配列ソート及びボールをスタート位置に置く
 	void Object::Array_Sorting()
 	{
-		//一時的にコピーする場所
-		Bbox temp;
-		//配列のボックスタイプが道ならば後ろに置く
-		for (int z = 0; z < this->sizeZ; z++)
+		////一時的にコピーする場所
+		//Bbox temp;
+		////配列のボックスタイプが道ならば後ろに置く
+		//for (size_t z = 0; z < this->sizeZ; z++)
+		//{
+		//	for (size_t x = 0; x < this->sizeX - 1; x++)
+		//	{
+		//		//道のボックスは後ろに積める
+		//		if (this->arr[z][x].What_Type_Is_this_Box() == BoxType::Road)
+		//		{					
+		//			temp = this->arr[z][x];
+		//			//1個先のものに上書きする
+		//			for (size_t i = x; i < this->sizeX - 1; i++)
+		//			{
+		//				this->arr[z][i] = this->arr[z][i + 1];
+		//			}
+		//			this->arr[z][this->sizeX - 1] = temp;					
+		//		}				
+		//	}
+		//	//ちゃんと積んでいるかを確認
+		//	for (size_t x = 0; x < this->sizeX-1; x++)
+		//	{
+		//		//道を発見したのに1個先のものが道以外だったら
+		//		if (this->arr[z][x].What_Type_Is_this_Box() == BoxType::Road && this->arr[z][x+1].What_Type_Is_this_Box() != BoxType::Road)
+		//		{
+		//			//積める処理のやり直し
+		//			z--;
+		//			break;
+		//		}
+		//	}
+		//}
+
+		//2次元配列なので、sizeZ分ソート処理を回す
+		for (size_t z = 0; z < this->sizeZ; z++)
 		{
-			for (int x = 0; x < this->sizeX - 1; x++)
+			//stl remove_ifで削除(無効データに上書きする)ところをもらいながら
+			//データを前に積める
+			auto remove_Point = remove_if(&this->arr[z][0], &this->arr[z][this->sizeX], [](const Bbox& b) {return b.What_Type_Is_this_Box() == BoxType::Road; });
+
+			//無効データに上書きする
+			for (; remove_Point != &this->arr[z][this->sizeX]; remove_Point++)
 			{
-				//道のボックスは後ろに積める
-				if (this->arr[z][x].What_Type_Is_this_Box() == BoxType::Road)
-				{					
-					temp = this->arr[z][x];
-					//1個先のものに上書きする
-					for (int i = x; i < this->sizeX - 1; i++)
-					{
-						this->arr[z][i] = this->arr[z][i + 1];
-					}
-					this->arr[z][this->sizeX - 1] = temp;					
-				}
-				else if (this->arr[z][x].What_Type_Is_this_Box() == BoxType::Start)
-				{
-					//ボールをその位置に置く
-					ge->GetTask_One_G<Ball::Object>("ボール")->Teleportation(this->arr[z][x].Get_Pos());
-				}
-			}
-			//ちゃんと積んでいるかを確認
-			for (int x = 0; x < this->sizeX-1; x++)
-			{
-				//道を発見したのに1個先のものが道以外だったら
-				if (this->arr[z][x].What_Type_Is_this_Box() == BoxType::Road && this->arr[z][x+1].What_Type_Is_this_Box() != BoxType::Road)
-				{
-					//積める処理のやり直し
-					z--;
-					break;
-				}
+				*remove_Point = Bbox();
 			}
 		}
 	}
@@ -514,8 +519,9 @@ namespace  Map3d
 		{
 			for (size_t x = 0; x < this->sizeX; x++)
 			{
+				auto now_Type = this->arr[z][x].What_Type_Is_this_Box();
 				//道は配列の後ろに積んでおいたので見つかったらbreak
-				if (this->arr[z][x].What_Type_Is_this_Box() == BoxType::Road)
+				if (now_Type == BoxType::Road || now_Type == BoxType::Clear)
 				{
 					break;
 				}

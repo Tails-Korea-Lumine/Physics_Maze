@@ -144,12 +144,12 @@ namespace  MapFence
 		
 		ML::Mat4x4 matW;
 		//matS.Scaling(this->chipSize);
-		for (int i = 0; i < this->size; i++)
+		for (size_t i = 0; i < this->size; i++)
 		{
 			
 			BoxType now_Type = this->arr[i].What_Type_Is_this_Box();
 			//道はレンダリングしない
-			if (now_Type == BoxType::Road)
+			if (now_Type == BoxType::Road || now_Type == BoxType::Clear)
 			{
 				return;
 			}
@@ -194,7 +194,7 @@ namespace  MapFence
 		//マップ配列サイズの読み込み
 		fin >> this->size;
 		//マップ配列データの読みこみ
-		for (int i = 0; i < this->size; i++)
+		for (size_t i = 0; i < this->size; i++)
 		{			
 			//チップ番号(ボックスタイプ)読み込み
 			int chip;
@@ -234,10 +234,11 @@ namespace  MapFence
 		this->col_Poligons.clear();
 
 		//判定スタート
-		for (int i = 0; i < this->size; i++)
+		for (size_t i = 0; i < this->size; i++)
 		{
+			auto now_Type = this->arr[i].What_Type_Is_this_Box();
 			//道は配列の後ろに積めておいたので発見したらその後は処理せずにbreak
-			if (this->arr[i].What_Type_Is_this_Box() == BoxType::Road)
+			if (now_Type == BoxType::Road || now_Type == BoxType::Clear)
 			{
 				break;
 			}
@@ -271,7 +272,7 @@ namespace  MapFence
 		//全体の回転値更新
 		this->UpDate_Quartanion(qt);
 
-		for (int i = 0; i < this->size; i++)
+		for (size_t i = 0; i < this->size; i++)
 		{
 			
 			//回転行列生成
@@ -310,15 +311,13 @@ namespace  MapFence
 				if (Inside_Range(i - 1) && Judge(this->arr[i - 1], this->arr[i]))
 				{
 					//無効ポリゴンを表示しておく
-					this->arr[i].Check_Unusable_Poligon(2);
-					this->arr[i].Check_Unusable_Poligon(3);
+					this->arr[i].Marking_On_Unusable_Poligon(Box_Side::Xminus);
 				}
 				//右
 				if (Inside_Range(i + 1) && Judge(this->arr[i + 1], this->arr[i]))
 				{
 					//無効ポリゴンを表示しておく
-					this->arr[i].Check_Unusable_Poligon(6);
-					this->arr[i].Check_Unusable_Poligon(7);
+					this->arr[i].Marking_On_Unusable_Poligon(Box_Side::Xplus);
 				}
 			}
 			else
@@ -327,15 +326,13 @@ namespace  MapFence
 				if (Inside_Range(i - 1) && Judge(this->arr[i - 1], this->arr[i]))
 				{
 					//無効ポリゴンを表示しておく
-					this->arr[i].Check_Unusable_Poligon(10);
-					this->arr[i].Check_Unusable_Poligon(11);
+					this->arr[i].Marking_On_Unusable_Poligon(Box_Side::Yminus);
 				}
 				//上
 				if (Inside_Range(i + 1) && Judge(this->arr[i + 1], this->arr[i]))
 				{
 					//無効ポリゴンを表示しておく
-					this->arr[i].Check_Unusable_Poligon(8);
-					this->arr[i].Check_Unusable_Poligon(9);
+					this->arr[i].Marking_On_Unusable_Poligon(Box_Side::Yplus);
 				}
 			}
 		}
@@ -344,42 +341,14 @@ namespace  MapFence
 	//配列ソート及びボールをスタート位置に置く
 	void Object::Array_Sorting()
 	{
-		//一時的にコピーする場所
-		Bbox temp;
+		//stl remove_ifで削除(無効データに上書きする)ところをもらいながら
+		//データを前に積める
+		auto remove_Point = remove_if(&this->arr[0], &this->arr[this->size], [](const Bbox& b) {return b.What_Type_Is_this_Box() == BoxType::Road; });
 
-		bool sort_Not_Over = true;
-		while (sort_Not_Over)
+		//無効データに上書きする
+		for (; remove_Point != &this->arr[this->size]; remove_Point++)
 		{
-			int i = 0;
-			//道を発見したら一番後ろに積む
-			for (; i < this->size; i++)
-			{
-				if (this->arr[i].What_Type_Is_this_Box() == BoxType::Road)
-				{
-					//一時保存
-					temp = this->arr[i];
-					//1個ずつ前に引っ張る
-					for (int j = i; j < this->size - 1; j++)
-					{
-						this->arr[j] = this->arr[j + 1];
-					}
-					//一番後ろと書き換え
-					this->arr[this->size - 1] = temp;
-				}
-			}
-			//ちゃんとソートできたかを確認
-			for (i = 0; i < this->size - 1; i++)
-			{
-				if (this->arr[i].What_Type_Is_this_Box() == BoxType::Road && this->arr[i + 1].What_Type_Is_this_Box() != BoxType::Road)
-				{
-					break;
-				}
-			}
-			//ちゃんと終わったのでソート終了
-			if (i == this->size - 1)
-			{
-				sort_Not_Over = false;
-			}
+			*remove_Point = Bbox();
 		}
 	}
 	//ボールタスクのフラグにIDを組み込める
@@ -390,8 +359,9 @@ namespace  MapFence
 
 		for (size_t i = 0; i < this->size; i++)
 		{			
-			//道は配列の後ろに積んでおいたので見つかったらbreak
-			if (this->arr[i].What_Type_Is_this_Box() == BoxType::Road)
+			auto now_Type = this->arr[i].What_Type_Is_this_Box();
+			//道は配列の後ろに積めておいたので発見したらその後は処理せずにbreak
+			if (now_Type == BoxType::Road || now_Type == BoxType::Clear)
 			{
 				break;
 			}

@@ -235,7 +235,7 @@ namespace  Physics_Manager
 				,ge->collision_Result.end());
 
 			//ボールを移動させる
-			ball->Move_Ball();
+			ball->Move_Ball(precision);
 			//位置補正を仕掛ける
 			if (ge->collision_Result.size() != 0)
 			{

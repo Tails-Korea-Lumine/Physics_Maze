@@ -17,7 +17,7 @@ public:
 	void CollisionOver_Accelerate(ML::Vec3* speed, const ML::Vec3& normal) const;
 
 	//”½ËƒxƒNƒgƒ‹‚ğ‹‚ß‚é
-	void Reflaction_Vector(ML::Vec3* force, const ML::Vec3& normal, const float& weight) const;
+	void Reflaction_Vector(ML::Vec3* force, const ML::Vec3& normal) const;
 
 
 //¶¬Á–Åš
