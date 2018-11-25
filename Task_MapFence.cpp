@@ -253,7 +253,10 @@ namespace  MapFence
 													
 			//this->collision_Tri = this->col.Hit_Check(Mass, pos, r, this->map_QT); //(ver0.2‚Åg‚Á‚½ˆ—)
 			//std::vector<After_Collision> poligon 
-			this->arr[i].Get_Collision_Poligon(&this->col_Poligons, all_Points, pos, r, speed);
+			if (!this->arr[i].Get_Collision_Poligon(&this->col_Poligons, all_Points, pos, r, speed))
+			{
+				continue;
+			}
 					
 
 			//‘S‘ÌÕ“ËŒ‹‰Ê‚É•Û‘¶‚·‚é
@@ -273,8 +276,7 @@ namespace  MapFence
 		this->UpDate_Quartanion(qt);
 
 		for (size_t i = 0; i < this->size; i++)
-		{
-			
+		{			
 			//‰ñ“]s—ñ¶¬
 			ML::Mat4x4 matR;
 			D3DXMatrixAffineTransformation(&matR, this->chipSize / 100.0f, &ge->Map_center, &qt, NULL);

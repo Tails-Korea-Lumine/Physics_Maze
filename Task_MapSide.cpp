@@ -165,12 +165,7 @@ namespace  Map3d
 				if (now_Type == BoxType::Road || now_Type == BoxType::Clear)
 				{
 					break;
-				}
-				//スタート位置はレンダリング無視
-				else if (now_Type == BoxType::Start)
-				{
-					continue;
-				}
+				}				
 				else if (this->Is_Need_Render(z, x) == false)
 				{
 					continue;
@@ -352,7 +347,7 @@ namespace  Map3d
 		for (size_t z = 0; z < this->sizeZ; z++)
 		{
 			for (size_t x = 0; x < this->sizeX; x++)
-			{
+			{				
 				//回転行列生成
 				ML::Mat4x4 matR;
 				D3DXMatrixAffineTransformation(&matR, this->chipSize / 100.0f, &ge->Map_center, &qt, NULL);				
@@ -360,7 +355,8 @@ namespace  Map3d
 				//ボックスに個別で渡す
 				this->arr[z][x].Rotate_Box(&matR, qt);
 				//テレポート扉の位置更新
-				if (this->arr[z][x].What_Type_Is_this_Box() == BoxType::Teleportaion)
+				BoxType now_Type = this->arr[z][x].What_Type_Is_this_Box();
+				if (now_Type == BoxType::Teleportaion)
 				{
 					ge->TM.Update_Door_Position(this->sideNumber, this->arr[z][x].Get_Pos());
 				}

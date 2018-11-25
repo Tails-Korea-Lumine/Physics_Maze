@@ -45,12 +45,7 @@ bool Collision::Check_Collision(const Triangle& tri, const ML::Vec3& p) const
 
 	//誤差まで確認(誤差の範囲は変わる余地がある 2018/03/16)
 	//0.99756405026
-	if (check  >= this->judge)
-	{
-		return true;
-	}
-
-	return false;
+	return check >= this->judge;
 }
 
 //マス別に呼ばれる関数
@@ -103,7 +98,7 @@ bool Collision::Hit_Check(std::vector<After_Collision>* result, const std::vecto
 	//精密判定は現在位置で行って精密判定フラグは移動したと予想されるところで判定をする
 	ML::Vec3 next_Pos = ball_Pos + speed;
 	//次の位置がボックスの対角線を半直径とする球とあったていると精密判定フラグを立てる
-	ML::Vec3(next_Pos - box_Center).Length() <= r + abs( ROOT3 / 2.0f*(box_Length)) ? this->pricision_Flag = true : this->pricision_Flag = false;
+	this->pricision_Flag = ML::Vec3(next_Pos - box_Center).Length() <= r + abs( ROOT3 / 2.0f*(box_Length));
 	
 	
 	if (collision_True.collision_Flag)

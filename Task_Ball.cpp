@@ -217,6 +217,10 @@ namespace  Ball
 	//あたり判定フラグを確認
 	bool Object::Is_Collision(const string& id) const
 	{
+		if (this->collision_Flag.count(id) == 0)
+		{
+			return true;
+		}
 		if (id == "core" || id == "barrier")
 		{
 			return true;
