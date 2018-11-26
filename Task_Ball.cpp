@@ -6,7 +6,7 @@
 #include  "Task_MapSide.h"
 #include  "Task_MapCore.h"
 #include  "Task_MapFence.h"
-
+#include <iostream>
 
 namespace  Ball
 {
@@ -41,7 +41,7 @@ namespace  Ball
 		this->speed = ML::Vec3(0, 0, 0);
 		this->moveVec = ML::Vec3(0, 0, 0);
 		this->r = 30.0f;
-		this->m = 25.0f;
+		this->m = 15.0f;
 		this->rot = 0.0f;
 		this->collision_Flag.clear();
 		this->teleportation_Flag = false;
@@ -79,6 +79,11 @@ namespace  Ball
 
 		//テレポートフラグを無効に
 		this->teleportation_Flag = false;
+		float sl = this->speed.Length();
+		if (sl > 4.0f)
+		{
+			cout << sl << endl;
+		}
 	}
 	//-------------------------------------------------------------------
 	//あたり判定による方向転換及び移動
@@ -124,29 +129,25 @@ namespace  Ball
 			{
 				//今回のフレームに衝突だったら
 				//斜め線加速をする
-				this->G.CollisionOver_Accelerate(&this->speed, p.normal);
+				this->G.Diagonal_Accelerate(&this->speed, p.normal);
 			}		
 			//前のフレームで衝突ではなかったら、今回のフレームでの衝突判定でやること			
 			else
 			{
 				//今回のフレームに衝突だったら
 				//反射角で跳ね返す
-				this->G.Reflaction_Vector(&this->speed, p.normal);
-				//IDに相当するフラグは立てておく
-				this->collision_Flag.find(p.collision_Id)->second = true;
+				this->G.Reflaction_Vector(&this->speed, p.normal);				
 			}
 		}		
 
 		//フラグを衝突判定結果にいないものはfalseに変える
+		for (auto& cf : this->collision_Flag)
+		{
+			cf.second = false;
+		}
 		for (auto& p : ge->collision_Result)
 		{
-			for(auto& cf : this->collision_Flag)
-			{
-				if (cf.first != p.collision_Id)
-				{
-					cf.second = false;
-				}
-			}
+			this->collision_Flag.find(p.collision_Id)->second = true;
 		}
 		
 		//移動(フレーム終了する直前に行う)

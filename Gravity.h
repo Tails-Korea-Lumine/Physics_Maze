@@ -14,7 +14,7 @@ public:
 	//加速させる
 	void Accelerate(ML::Vec3* speed, const float& Weight) const;
 	//壁とぶつかった後の移動方向と速度を返す
-	void CollisionOver_Accelerate(ML::Vec3* speed, const ML::Vec3& normal) const;
+	void Diagonal_Accelerate(ML::Vec3* speed, const ML::Vec3& normal) const;
 
 	//反射ベクトルを求める
 	void Reflaction_Vector(ML::Vec3* force, const ML::Vec3& normal) const;

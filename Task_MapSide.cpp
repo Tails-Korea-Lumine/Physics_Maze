@@ -398,7 +398,7 @@ namespace  Map3d
 		ML::Vec3 d_Cmc = (ge->Map_center - ge->camera[0]->pos);
 		const float judge = d_Cmc.Length() + (this->chipSize * this->mapSize / 3.0f);
 
-		//判定する距離よりマップの0番とカメラとの距離が遠いならレンダリングしない
+		//判定する距離よりマスとカメラとの距離が遠いならレンダリングしない
 		ML::Vec3 d_Cf0 = this->arr[z][x].Get_Pos() - ge->camera[0]->pos;
 
 		//図った距離で返す

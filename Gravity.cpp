@@ -6,7 +6,7 @@ void Gravity::Accelerate(ML::Vec3* speed, const float& Weight) const
 	*speed += (Weight * this->G_acceleration );
 }
 
-void Gravity::CollisionOver_Accelerate(ML::Vec3* speed, const ML::Vec3& normal) const
+void Gravity::Diagonal_Accelerate(ML::Vec3* speed, const ML::Vec3& normal) const
 {
 	float fn;
 	MyMath::Get_Vector_Dot(&fn, *speed, normal);
@@ -32,7 +32,7 @@ void Gravity::Reflaction_Vector(ML::Vec3* force, const ML::Vec3& normal) const
 	//単位ベクトルより小さくなった場合は斜め加速をさせる
 	if (force->Length() <= 1.0f)
 	{
-		this->CollisionOver_Accelerate(force, normal);
+		this->Diagonal_Accelerate(force, normal);
 		return;
 	}
 
