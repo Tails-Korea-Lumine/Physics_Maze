@@ -1,6 +1,7 @@
 #pragma	comment(lib,"winmm")	//	マルチメディア拡張機能を使用するために必要
 #pragma comment(linker, "/entry:WinMainCRTStartup /subsystem:console")
 #include <iostream>
+#include <dxgi.h>
 #include "MyPG.h"
 
 
@@ -16,8 +17,6 @@ int __stdcall WinMain(	HINSTANCE inst_,	//
 						LPSTR,				//
 						int showCmd)		//
 {
-	ge = new MyPG::MyGameEngine( );
-
 	//ビデオカード選択が必要かを確認する
 	IDXGIAdapter* padapter = nullptr;
 	IDXGIFactory* factory;
@@ -68,6 +67,23 @@ int __stdcall WinMain(	HINSTANCE inst_,	//
 			cin >> adapter_Index;
 		} while (adapter_Index > vAdapters.size());
 	}
+	//モニターサイズを列挙帯からとる
+	i = 0;
+	IDXGIOutput* poutput;
+	DXGI_OUTPUT_DESC odesc;
+	std::vector <IDXGIOutput*> vOutput;
+	//モニターを列挙させて保存する
+	while (vAdapters[adapter_Index]->EnumOutputs(i, &poutput) != DXGI_ERROR_NOT_FOUND)
+	{
+		poutput->GetDesc(&odesc);		
+		vOutput.push_back(poutput);		
+		++i;
+	}
+	//メインモニターのサイズをもらう
+	vOutput.at(0)->GetDesc(&odesc);
+	RECT monitor_Rect = odesc.DesktopCoordinates;
+	//ゲーム環境生成に使う
+	ge = new MyPG::MyGameEngine(monitor_Rect.right,monitor_Rect.bottom);
 
 	MSG		msg;
 	HWND	wnd;								//	ウインドウハンドル

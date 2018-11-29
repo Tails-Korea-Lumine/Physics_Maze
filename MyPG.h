@@ -61,7 +61,7 @@ namespace  MyPG
 	class MyGameEngine : public GameEngine
 	{
 	public:
-		MyGameEngine( );
+		MyGameEngine(const int& sizeX, const int& sizeY );
 	//ゲームエンジンに追加したものの初期化と開放
 		bool Initialize(HWND wnd_, IDXGIAdapter* adp);
 		~MyGameEngine( );

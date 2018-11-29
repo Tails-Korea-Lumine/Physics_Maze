@@ -3,14 +3,14 @@
 
 namespace MyPG
 {	
-	MyGameEngine::MyGameEngine( )
+	MyGameEngine::MyGameEngine(const int& sizeX, const int& sizeY)
 	:GameEngine(
 	//	環境情報
-		1920,							//	画面サイズX
-		1080,							//	画面サイズY
+		sizeX,							//	画面サイズX
+		sizeY,							//	画面サイズY
 		1,								//	表示倍率
 		1,								//	マルチサンプル(1or2or4)
-		false,							//	フルスクリーンモード
+		true,							//	フルスクリーンモード
 		480,							//	2D描画用解像度X(現在非対応）
 		270,							//	2D描画用解像度Y(現在非対応）
 		"SPINNING CUBE",				//	ウインドウタイトル

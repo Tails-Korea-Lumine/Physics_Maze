@@ -126,10 +126,11 @@ namespace  Title
 
 		//easing function set
 		//SPINNING CUBE
+		const float latter_Distance = 130.0f;
 				
 		for (int j = 0; j < 12; j++)
 		{
-			easing::Set("Title_x" + to_string(j), easing::QUARTINOUT, -140.0f + (100.0f * j), 180.0f + (130.0f * j), 100);
+			easing::Set("Title_x" + to_string(j), easing::QUARTINOUT, 0.0f + (latter_Distance * j), (ge->screenWidth/2.0f)-(latter_Distance*6.0f) + (latter_Distance * j), 100);
 		}
 		
 		/*easing::Set("Title_1_x", easing::QUARTINOUT, 1280, 240, 110);
