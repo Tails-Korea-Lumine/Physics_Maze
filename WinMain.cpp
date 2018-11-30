@@ -73,11 +73,14 @@ int __stdcall WinMain(	HINSTANCE inst_,	//
 	DXGI_OUTPUT_DESC odesc;
 	std::vector <IDXGIOutput*> vOutput;
 	//モニターを列挙させて保存する
-	while (vAdapters[adapter_Index]->EnumOutputs(i, &poutput) != DXGI_ERROR_NOT_FOUND)
+	for (auto& adps : vAdapters)
 	{
-		poutput->GetDesc(&odesc);		
-		vOutput.push_back(poutput);		
-		++i;
+		while (adps->EnumOutputs(i, &poutput) != DXGI_ERROR_NOT_FOUND)
+		{
+			poutput->GetDesc(&odesc);
+			vOutput.push_back(poutput);
+			++i;
+		}
 	}
 	//メインモニターのサイズをもらう
 	vOutput.at(0)->GetDesc(&odesc);

@@ -459,38 +459,6 @@ namespace  Map3d
 	//配列ソート及びボールをスタート位置に置く
 	void Object::Array_Sorting()
 	{
-		////一時的にコピーする場所
-		//Bbox temp;
-		////配列のボックスタイプが道ならば後ろに置く
-		//for (size_t z = 0; z < this->sizeZ; z++)
-		//{
-		//	for (size_t x = 0; x < this->sizeX - 1; x++)
-		//	{
-		//		//道のボックスは後ろに積める
-		//		if (this->arr[z][x].What_Type_Is_this_Box() == BoxType::Road)
-		//		{					
-		//			temp = this->arr[z][x];
-		//			//1個先のものに上書きする
-		//			for (size_t i = x; i < this->sizeX - 1; i++)
-		//			{
-		//				this->arr[z][i] = this->arr[z][i + 1];
-		//			}
-		//			this->arr[z][this->sizeX - 1] = temp;					
-		//		}				
-		//	}
-		//	//ちゃんと積んでいるかを確認
-		//	for (size_t x = 0; x < this->sizeX-1; x++)
-		//	{
-		//		//道を発見したのに1個先のものが道以外だったら
-		//		if (this->arr[z][x].What_Type_Is_this_Box() == BoxType::Road && this->arr[z][x+1].What_Type_Is_this_Box() != BoxType::Road)
-		//		{
-		//			//積める処理のやり直し
-		//			z--;
-		//			break;
-		//		}
-		//	}
-		//}
-
 		//2次元配列なので、sizeZ分ソート処理を回す
 		for (size_t z = 0; z < this->sizeZ; z++)
 		{
