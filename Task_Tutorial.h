@@ -59,6 +59,7 @@ namespace Tutorial
 
 		int timeCnt;
 		bool page_Change_Flag;
+		int page_Change_Speed;
 
 		int posx[3];//チュートリアルページ切り替え用
 		int posy;//テュートリアルページの表示位置-528=<posy=<720 変更可能性あり

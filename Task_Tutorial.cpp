@@ -7,7 +7,6 @@
 #include "Task_UI.h"
 #include "easing.h"
 
-#define SCROLL_MAX_RANGE -200
 namespace  Tutorial
 {
 	Resource::WP  Resource::instance;
@@ -69,6 +68,7 @@ namespace  Tutorial
 
 		this->timeCnt = 990;//0~80ではない数値で初期化
 		this->page_Change_Flag = false;
+		this->page_Change_Speed = (int)ge->screenWidth / 80;
 
 		this->vol = 1000;
 
@@ -126,7 +126,8 @@ namespace  Tutorial
 	//「更新」１フレーム毎に行う処理
 	void  Object::UpDate()
 	{
-		int scroll_Speed = 8;
+		const int scroll_Speed = 8;
+		const int scroll_Max_Range = -200;
 
 		easing::UpDate();
 
@@ -162,15 +163,8 @@ namespace  Tutorial
 		//ページ切り替えの動き
 		this->Page_Chage(this->page_Change_Flag);
 
-		//posyの範囲設定
-		if (this->posy < SCROLL_MAX_RANGE)
-		{
-			this->posy = SCROLL_MAX_RANGE;
-		}
-		if (this->posy > 0)
-		{
-			this->posy = 0;
-		}		
+		//posyの範囲設定		
+		this->posy = min(max(this->posy, scroll_Max_Range), 0);
 
 		//画面切り替え開始
 		if (in.ST.down)
@@ -242,8 +236,7 @@ namespace  Tutorial
 	//-----------------------------------------------------------------------------------
 	//ページ切り替え
 	void Object::Page_Chage(bool page_Move_Right)
-	{
-		int page_Changing_Speed = 24;
+	{		
 		if (this->Can_I_Change_the_Page())
 		{
 			return;
@@ -258,7 +251,7 @@ namespace  Tutorial
 			}
 			for (int i = 0; i < 3; i++)
 			{
-				this->posx[i] -= page_Changing_Speed;
+				this->posx[i] -= this->page_Change_Speed;
 			}
 		}
 		//左のページを見る
@@ -270,7 +263,7 @@ namespace  Tutorial
 			}
 			for (int i = 0; i < 3; i++)
 			{
-				this->posx[i] += page_Changing_Speed;
+				this->posx[i] += this->page_Change_Speed;
 			}
 		}
 		
