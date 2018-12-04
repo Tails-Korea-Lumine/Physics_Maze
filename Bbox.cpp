@@ -10,6 +10,10 @@ void Bbox::Rotate_Box(ML::Mat4x4* mat, const ML::QT& q)
 	//回転量と位置を更新
 	this->pos = mat->TransformCoord(pos);
 	this->boxQT *= q;
+	if (this->collision_Base != nullptr)
+	{
+		this->collision_Base->Rotation(q);
+	}
 }
 
 void Bbox::Get_Triangle_Box3D(std::vector<Triangle>* result, const ML::Box3D& box, const ML::QT& rotation) const
@@ -207,20 +211,25 @@ void Bbox::Get_ShortisetPoints_Box_to_Sphere(std::vector<ML::Vec3>* result, cons
 
 }
 
-bool Bbox::Get_Collision_Poligon(std::vector<After_Collision>* result, std::vector<ML::Vec3> all_Points, const ML::Vec3& pos, const float& r, const ML::Vec3& speed)
+bool Bbox::Get_Collision_Poligon(std::vector<After_Collision>* result, ML::Collsion::Shape* ball, const ML::Vec3& speed)
 {
 	//位置補正したあたり判定用矩形
-	ML::Box3D area = this->collision_Base.OffsetCopy(this->pos);
+	//ML::Box3D area = this->collision_Base.OffsetCopy(this->pos);
+
+	auto area = this->collision_Base->Clone();
+	area->Offset(this->pos);
+	
 
 	//自分の三角形を取り出す
 	std::vector<Triangle> all_Tri;
-	this->Get_Triangle_Box3D(&all_Tri, area, this->boxQT);	
+	//this->Get_Triangle_Box3D(&all_Tri, area, this->boxQT);	
 
 	//もらったボールのドットから自分に近い一部だけを残す
-	this->Get_ShortisetPoints_Box_to_Sphere(&all_Points, area);
+	//this->Get_ShortisetPoints_Box_to_Sphere(&all_Points, area);
 
 	//あたり判定結果をresultに保存
-	if (!this->col.Hit_Check(result,all_Tri, this->pos, area.w, all_Points, pos, r, speed))
+	//if (!this->col.Hit_Check(result,all_Tri, this->pos, area.w, all_Points, pos, r, speed))
+	if(!this->col.Hit_Check(result,area->Clone(),ball->Clone(),speed))
 	{
 		//当たらなかった時だけゼロベクトルリザルトをpushbackする
 		result->push_back(After_Collision());
@@ -258,7 +267,7 @@ Bbox::Bbox()
 {
 	this->chip = BoxType::Clear;
 	this->pos = ML::Vec3(0, 0, 0);
-	this->collision_Base = ML::Box3D(0, 0, 0, 0, 0, 0);
+	this->collision_Base = nullptr;
 	this->boxQT = ML::QT(0.0f);
 	for (int i = 0; i < TRIANGLE_ON_CUBE; i++)
 	{
@@ -266,12 +275,12 @@ Bbox::Bbox()
 	}
 }
 //引数 : (箱のタイプ,位置,あたり判定矩形,初期回転量,ボックスのID)
-Bbox::Bbox(const BoxType& chip, const ML::Vec3& pos, const ML::Box3D& base, const ML::QT& qt, const string id)
+Bbox::Bbox(const BoxType& chip, const ML::Vec3& pos, ML::Collsion::Shape* base, const ML::QT& qt, const string id)
 	:box_Id(id)
 {
 	this->chip = chip;
 	this->pos = pos;
-	this->collision_Base = base;	
+	this->collision_Base = base;
 	this->boxQT = qt;
 	for (int i = 0; i < TRIANGLE_ON_CUBE; i++)
 	{

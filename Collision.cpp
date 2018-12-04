@@ -109,3 +109,21 @@ bool Collision::Hit_Check(std::vector<After_Collision>* result, const std::vecto
 	return false;
 }
 
+//obb sphere intersection計算で行うあたり判定
+bool Collision::Hit_Check(std::vector<After_Collision>* result, ML::Collsion::Shape::SP box, ML::Collsion::Shape::SP ball, const ML::Vec3& speed)
+{
+	//結果をもらっておく場所
+	ML::Collsion::Shape::ExtParam extparam;
+	After_Collision collision_True;
+	//あたり判定開始
+	if (box->Hit(ball, extparam) == false)
+	{
+		return false;
+	}
+
+	//判定結果保存
+	collision_True.collision_Flag = true;
+	collision_True.normal = extparam.pushOut;
+
+	result->push_back(collision_True);
+}

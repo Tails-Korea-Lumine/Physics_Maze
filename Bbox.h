@@ -36,7 +36,7 @@ class Bbox
 private:
 	BoxType chip;//マスのマップチップ
 	ML::Vec3 pos;//中心点の座標
-	ML::Box3D collision_Base;//一個一個の判定範囲
+	ML::Collsion::Shape* collision_Base;//一個一個の判定範囲
 	ML::QT boxQT;//マップの回転量
 	Collision col;//あたり判定コンポネント
 	//ボックスのID
@@ -66,22 +66,24 @@ public:
 	const ML::Vec3& Get_Pos() const;
 	//idを返す関数
 	string Get_Id() const;
+	//開放処理
+	void Finalize();
 
 	//衝突判定
 	//判定の結果値をもらう関数
-	bool Get_Collision_Poligon(std::vector<After_Collision>* result,std::vector<ML::Vec3> all_Points , const ML::Vec3& pos, const float& r, const ML::Vec3& speed);
+	bool Get_Collision_Poligon(std::vector<After_Collision>* result, ML::Collsion::Shape* ball, const ML::Vec3& speed);
 
 	//コンストラクタ・デストラクタ
 	//引数なしコンストラクタ(ゼロクリア)
 	Bbox();
 	//引数 : (箱のタイプ,位置,あたり判定矩形,初期回転量,ボックスのID)
-	Bbox(const BoxType& chip, const ML::Vec3& pos, const ML::Box3D& base, const ML::QT& qt, const string id);
+	Bbox(const BoxType& chip, const ML::Vec3& pos, ML::Collsion::Shape* base, const ML::QT& qt, const string id);
 	//コピーコンストラクタ
 	Bbox operator= (const Bbox& b)
 	{		
 		this->boxQT = b.boxQT;
 		this->chip = b.chip;
-		this->collision_Base = b.collision_Base;
+		this->collision_Base = b.collision_Base;		
 		this->box_Id = b.box_Id;
 		this->pos = b.pos;
 		for (int i = 0; i < 12; i++)
@@ -93,5 +95,8 @@ public:
 		return b;
 	}
 
-	~Bbox(){}
+	~Bbox()
+	{
+		
+	}
 };
