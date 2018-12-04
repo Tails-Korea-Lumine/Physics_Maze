@@ -535,7 +535,7 @@ namespace ML
 			return  true;
 		}
 		//コピーを生成して返す
-		Shape::SP   AABB::Clone()
+		Shape::SP   AABB::Clone() const
 		{
 			return  AABB::Create(this->pos, this->size_h);
 		}
@@ -602,9 +602,9 @@ namespace ML
 		}
 	//球体--------------------------------------------------------------------------
 		//生成
-		Sphere::SP  Sphere::Create(const  ML::Vec3&  p_, float  r_)
+		Sphere*  Sphere::Create(const  ML::Vec3&  p_, float  r_)
 		{
-			shared_ptr<Sphere>  ob = shared_ptr<Sphere>(new  Sphere());
+			Sphere*  ob = new  Sphere();
 			if (ob){
 				if (ob->Initialize(p_, r_)){
 					return  ob;
@@ -621,9 +621,9 @@ namespace ML
 			return  true;
 		}
 		//コピーを生成して返す
-		Shape::SP   Sphere::Clone()
+		Shape::SP   Sphere::Clone() const
 		{
-			return  Sphere::Create(this->pos, this->rad);
+			return  shared_ptr<Sphere>(Sphere::Create(this->pos, this->rad));
 		}
 
 		//AABBとの接触
@@ -694,9 +694,9 @@ namespace ML
 		}
 	//OBB--------------------------------------------------------------------------
 		//生成
-		OBB::SP  OBB::Create(const ML::Vec3&  p_, const ML::Vec3& s_, const ML::QT& a_)
+		OBB*  OBB::Create(const ML::Vec3&  p_, const ML::Vec3& s_, const ML::QT& a_)
 		{
-			shared_ptr<OBB>  ob = shared_ptr<OBB>(new  OBB());
+			OBB*  ob = new  OBB();
 			if (ob){
 				if (ob->Initialize(p_, s_, a_)){
 					return  ob;
@@ -714,9 +714,9 @@ namespace ML
 			return  true;
 		}
 		//コピーを生成して返す
-		Shape::SP   OBB::Clone()
+		Shape::SP   OBB::Clone() const
 		{
-			return  OBB::Create(this->pos, this->size_h, this->angle);
+			return  shared_ptr<OBB>(OBB::Create(this->pos, this->size_h, this->angle));
 		}
 		//AABBとの接触
 		bool OBB::Hit(const class AABB& b_, ExtParam&  ex_)
@@ -828,7 +828,7 @@ namespace ML
 			for (auto  it = this->child.begin();
 				it != this->child.end();
 				it++){
-				ob->child.push_back((*it)->Clone());
+				//ob->child.push_back((*it)->Clone());
 			}
 			return  ob;
 		}
@@ -878,7 +878,8 @@ namespace ML
 			for (auto itA = this->child.begin(); itA != this->child.end(); itA++){
 				//Bの子全てと判定させる
 				for (auto itB = b_->child.begin(); itB != b_->child.end(); itB++){
-					if ((*itA)->Hit((*itB), ep_)){
+					//if ((*itA)->Hit((*itB), ep_))
+					{
 						return true;
 					}
 				}

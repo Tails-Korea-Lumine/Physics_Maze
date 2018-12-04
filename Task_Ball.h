@@ -57,6 +57,9 @@ namespace Ball
 		ML::Vec3 speed;
 		//フレーム内の移動量変化を全部計算したベクトル
 		ML::Vec3 moveVec;
+		//球体型のあたり判定範囲
+		ML::Collsion::Shape* hit_Base;
+
 		//半直径
 		float r;
 		//重さ
@@ -77,13 +80,13 @@ namespace Ball
 		//その時のボールの情報を返す関数
 		//位置
 		ML::Vec3 Get_Pos() const;
-		//半直径
-		float Get_Radious() const;
+		//あたり判定範囲
+		ML::Collsion::Shape* Get_Hit_Base() const;
 		//速度
 		ML::Vec3 Get_Speed() const;
 
 		//ボールの座標から6個の頂点を取り出す
-		void Get_Poionts_to_Sphere(std::vector<ML::Vec3>* result) const;		
+		//void Get_Poionts_to_Sphere(std::vector<ML::Vec3>* result) const;		
 
 		//テレポートしたかを確認するタスク
 		bool Is_Teleport_Now() const;

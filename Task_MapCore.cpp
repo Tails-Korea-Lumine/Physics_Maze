@@ -40,7 +40,7 @@ namespace  Map_Core
 		this->map_QT = ML::QT(0.0f);
 		
 		//コアの初期化
-		this->core = Bbox(BoxType::Core, ge->Map_center, ML::Box3D(-50 * this->mapSize, -50 * this->mapSize, -50 * this->mapSize, 100 * this->mapSize, 100 * this->mapSize, 100 * this->mapSize), this->map_QT,"core");
+		this->core = Bbox(BoxType::Core, ge->Map_center, ML::Collsion::OBB::Create(ge->Map_center, ML::Vec3(50 * mapSize, 50 * mapSize, 50 * mapSize), this->map_QT), this->map_QT, "core");
 		ball->Set_Id_And_Flag("core");
 		//バリアの初期化
 		//各面ごとバリアを置いたver0.5
@@ -65,7 +65,7 @@ namespace  Map_Core
 		//this->barrier[5] = Bbox(BoxType::Barrier, b_ini_pos[5] , XZ, this->map_QT);
 
 		//逆向きのバリア一個ですますver0.6
-		this->barrier = Bbox(BoxType::Barrier, ge->Map_center, ML::Box3D(50 * (this->mapSize+2), 50 * (this->mapSize+2), 50 * (this->mapSize+2), -100 * (this->mapSize+2), -100 * (this->mapSize+2), -100 * (this->mapSize+2)), this->map_QT,"barrier");
+		this->barrier = Bbox(BoxType::Barrier, ge->Map_center, ML::Collsion::OBB::Create(ge->Map_center, ML::Vec3(-50 * mapSize, -50 * mapSize, -50 * mapSize), this->map_QT), this->map_QT,"barrier");
 		ball->Set_Id_And_Flag("barrier");
 
 		//★タスクの生成
@@ -196,16 +196,16 @@ namespace  Map_Core
 	//------------------------------------------------------------------------------------
 	//あたり判定
 
-	void Object::Core_Check_Hit(std::vector<ML::Vec3>& all_Points, const ML::Vec3& pos, const float& r, const ML::Vec3& speed)
+	void Object::Core_Check_Hit(ML::Collsion::Shape* ball, const ML::Vec3& speed)
 	{
 		//接触三角形を判定前にクリアする	
 		this->col_Poligons.clear();
 
 		//判定関数
 		//std::vector<After_Collision> poligonC
-		this->core.Get_Collision_Poligon(&this->col_Poligons, all_Points, pos, r, speed);
+		this->core.Get_Collision_Poligon(&this->col_Poligons, ball, speed);
 		
-		this->barrier.Get_Collision_Poligon(&this->col_Poligons, all_Points, pos, r, speed);
+		this->barrier.Get_Collision_Poligon(&this->col_Poligons, ball, speed);
 
 		//全体衝突結果に保存する
 		for (auto& c : this->col_Poligons)

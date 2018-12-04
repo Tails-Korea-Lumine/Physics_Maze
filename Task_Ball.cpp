@@ -46,6 +46,8 @@ namespace  Ball
 		this->collision_Flag.clear();
 		this->teleportation_Flag = false;
 
+		this->hit_Base = ML::Collsion::Sphere::Create(this->pos, this->r);
+
 	
 		//★タスクの生成
 
@@ -58,6 +60,8 @@ namespace  Ball
 		//★データ＆タスク解放
 		ge->eff_Manager.lock()->Add_Effect(this->Get_Pos(), ML::Vec3(0, 0, 0), BEffect::effType::Game_Clear);
 		this->collision_Flag.clear();
+
+		delete this->hit_Base;
 
 		if (!ge->QuitFlag() && this->nextTaskCreate)
 		{
@@ -116,7 +120,9 @@ namespace  Ball
 			}
 			
 			//移動(フレーム終了する直前に行う)
-			this->pos += Clamp_Speed(this->speed);
+			ML::Vec3 vec = Clamp_Speed(this->speed);
+			this->pos += vec;
+			this->hit_Base->Offset(vec);
 			return;
 		}
 		//前回フレームのあたり判定結果を確認
@@ -151,7 +157,9 @@ namespace  Ball
 		}
 		
 		//移動(フレーム終了する直前に行う)
-		this->pos += Clamp_Speed(this->speed);
+		ML::Vec3 vec = Clamp_Speed(this->speed);
+		this->pos += vec;
+		this->hit_Base->Offset(vec);
 	}
 	
 	//「２Ｄ描画」１フレーム毎に行う処理
@@ -177,42 +185,42 @@ namespace  Ball
 	//--------------------------------------------------------------------
 	//追加メソッド
 	//外角の点を全部取り出す
-	void Object::Get_Poionts_to_Sphere(std::vector<ML::Vec3>* result) const
-	{
-		const int increasing_Dgree = 15;
-		//球の上にある点を全部取り出す処理
+	//void Object::Get_Poionts_to_Sphere(std::vector<ML::Vec3>* result) const
+	//{
+	//	const int increasing_Dgree = 15;
+	//	//球の上にある点を全部取り出す処理
 
-		//最初に回転させる点を計算
-		std::vector<ML::Vec3> points;
-		ML::Vec3 y = this->pos + ML::Vec3(0, this->r, 0);
+	//	//最初に回転させる点を計算
+	//	std::vector<ML::Vec3> points;
+	//	ML::Vec3 y = this->pos + ML::Vec3(0, this->r, 0);
 
-		//縦方向に切った断面の片方を取る処理
-		for (int i = 0; i < 180; i += increasing_Dgree)
-		{
-			//回転行列生成
-			ML::Mat4x4 matRx;
-			ML::QT qtX = ML::QT(ML::Vec3(1, 0, 0), ML::ToRadian((float)i));
+	//	//縦方向に切った断面の片方を取る処理
+	//	for (int i = 0; i < 180; i += increasing_Dgree)
+	//	{
+	//		//回転行列生成
+	//		ML::Mat4x4 matRx;
+	//		ML::QT qtX = ML::QT(ML::Vec3(1, 0, 0), ML::ToRadian((float)i));
 
-			D3DXMatrixAffineTransformation(&matRx, 1.0f, &this->pos, &qtX, NULL);
+	//		D3DXMatrixAffineTransformation(&matRx, 1.0f, &this->pos, &qtX, NULL);
 
-			points.push_back(matRx.TransformCoord(y));
-		}
+	//		points.push_back(matRx.TransformCoord(y));
+	//	}
 
-		//取り出した点を回転しながら結果保存用ヴェクターにプッシュバック
-		for (int d = 0; d < 360; d += increasing_Dgree)
-		{
-			//回転行列生成
-			ML::Mat4x4 matRy;
-			ML::QT qtY = ML::QT(ML::Vec3(0, 1, 0), ML::ToRadian((float)d));
+	//	//取り出した点を回転しながら結果保存用ヴェクターにプッシュバック
+	//	for (int d = 0; d < 360; d += increasing_Dgree)
+	//	{
+	//		//回転行列生成
+	//		ML::Mat4x4 matRy;
+	//		ML::QT qtY = ML::QT(ML::Vec3(0, 1, 0), ML::ToRadian((float)d));
 
-			D3DXMatrixAffineTransformation(&matRy, 1.0f, &this->pos, &qtY, NULL);
+	//		D3DXMatrixAffineTransformation(&matRy, 1.0f, &this->pos, &qtY, NULL);
 
-			for (auto& p : points)
-			{
-				result->push_back(matRy.TransformCoord(p));
-			}
-		}
-	}
+	//		for (auto& p : points)
+	//		{
+	//			result->push_back(matRy.TransformCoord(p));
+	//		}
+	//	}
+	//}
 	//-------------------------------------------------------------------------------------
 	
 	//あたり判定フラグを確認
@@ -237,9 +245,9 @@ namespace  Ball
 		return this->pos;
 	}
 	//半直径
-	float Object::Get_Radious() const
+	ML::Collsion::Shape* Object::Get_Hit_Base() const
 	{
-		return this->r;
+		return this->hit_Base;
 	}
 	//速度
 	ML::Vec3 Object::Get_Speed() const
@@ -263,6 +271,9 @@ namespace  Ball
 	void Object::Teleportation(const ML::Vec3& objectPos)
 	{
 		this->teleportation_Flag = true;
+
+		ML::Vec3 vec = objectPos - this->pos;
+		this->hit_Base->Offset(vec);
 		this->pos = objectPos;
 	}
 

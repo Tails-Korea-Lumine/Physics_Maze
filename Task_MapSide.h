@@ -88,7 +88,7 @@ namespace Map3d
 		
 	public:
 		//球とマップのあたり判定
-		bool Map_Check_Hit(std::vector<ML::Vec3>& all_Points, const ML::Vec3& pos, const float& r, const ML::Vec3& speed);
+		bool Map_Check_Hit(ML::Collsion::Shape* ball, const ML::Vec3& speed);
 		//マップ回転
 		void Map_Rotate(const ML::QT& qt);
 		

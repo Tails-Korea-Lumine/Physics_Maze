@@ -206,7 +206,7 @@ namespace  Physics_Manager
 			
 			//ボールの外角ドットを取り出しておく
 			all_Points.clear();
-			ball->Get_Poionts_to_Sphere(&all_Points);
+			//ball->Get_Poionts_to_Sphere(&all_Points);
 
 			//あたり判定は毎回マップのほうで行う	
 			ge->collision_Result.clear();					
@@ -214,12 +214,12 @@ namespace  Physics_Manager
 			
 			//ボールとマップのあたり判定及び保存
 			//コア
-			core->Core_Check_Hit(all_Points, ball->Get_Pos(), ball->Get_Radious(), ball->Get_Speed());
+			core->Core_Check_Hit(ball->Get_Hit_Base(), ball->Get_Speed());
 			//面
 			for (auto m = map->begin(); m != map->end(); m++)
 			{
 				//ボールが存在しているマップの法線ベクトルを収得
-				if ((*m)->Map_Check_Hit(all_Points, ball->Get_Pos(), ball->Get_Radious(), ball->Get_Speed()))
+				if ((*m)->Map_Check_Hit(ball->Get_Hit_Base(), ball->Get_Speed()))
 				{
 					(*m)->Get_Normal_Side(&side_Normal);
 				}
@@ -227,7 +227,7 @@ namespace  Physics_Manager
 			//フェンス
 			for (auto f = fence->begin(); f != fence->end(); f++)
 			{
-				(*f)->Map_Check_Hit(all_Points, ball->Get_Pos(), ball->Get_Radious(), ball->Get_Speed());
+				(*f)->Map_Check_Hit(ball->Get_Hit_Base(), ball->Get_Speed());
 			}		
 			
 			//判定結果に無駄なデータが入っているなら取り除く

@@ -68,7 +68,7 @@ namespace Map_Core
 		//‰ñ“]
 		void Rotate_Core_and_Barrier(const ML::QT& qt);
 		//‹…‚Æƒ}ƒbƒv‚Ì‚ ‚½‚è”»’è
-		void Core_Check_Hit(std::vector<ML::Vec3>& all_Points, const ML::Vec3& pos, const float& r, const ML::Vec3& speed);
+		void Core_Check_Hit(ML::Collsion::Shape* ball, const ML::Vec3& speed);
 		
 	};
 }

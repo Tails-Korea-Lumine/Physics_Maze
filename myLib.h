@@ -480,10 +480,12 @@ namespace ML
 			virtual bool HitRay(const ML::Vec3&  p_,
 								const ML::Vec3&  d_,
 								float&  dist_) = 0;			//Rayとの接触
-			virtual Shape::SP   Clone() = 0;					//コピーを生成して返す
+			virtual Shape::SP   Clone() const = 0 ;					//コピーを生成して返す
 			virtual void  Offset(const  ML::Vec3  ofs_){ pos += ofs_; }	//移動させる
-			virtual void  Rotation(const  ML::QT  rot_){ angle *= rot_; }	//回転させる
+			virtual void  Rotation(const  ML::QT&  rot_){ angle *= rot_; }	//回転させる
 		};
+
+
 		//ＡＡＢＢクラス----------------------------------------------------
 		class AABB : public Shape
 		{
@@ -501,8 +503,10 @@ namespace ML
 						const ML::Vec3&  d_,
 						float&  dist_);					//Rayとの接触
 			static  SP  Create(const ML::Vec3&  p_, const ML::Vec3&  s_);
-			Shape::SP   Clone();		//コピーを生成して返す
+			Shape::SP   Clone() const;		//コピーを生成して返す
 		};
+
+
 		//球体クラス----------------------------------------------------
 		class Sphere : public Shape
 		{
@@ -519,9 +523,11 @@ namespace ML
 			bool HitRay(const ML::Vec3&  p_,
 						const ML::Vec3&  d_,
 						float&  dist_);					//Rayとの接触
-			static  SP  Create(const ML::Vec3&  p_, float  r_);
-			Shape::SP   Clone();		//コピーを生成して返す
+			static  Sphere*  Create(const ML::Vec3&  p_, float  r_);
+			Shape::SP   Clone() const;		//コピーを生成して返す
 		};
+
+
 		//ＯＢＢクラス----------------------------------------------------
 		class OBB : public Shape
 		{
@@ -538,15 +544,17 @@ namespace ML
 			bool HitRay(const ML::Vec3&  p_,
 						const ML::Vec3&  d_,
 						float&  dist_);					//Rayとの接触
-			static  SP  Create(const ML::Vec3&  p_, const ML::Vec3&  s_, const ML::QT&  a_);
-			Shape::SP   Clone();		//コピーを生成して返す
+			static  OBB*  Create(const ML::Vec3&  p_, const ML::Vec3&  s_, const ML::QT&  a_);
+			Shape::SP   Clone() const;		//コピーを生成して返す
 		};
+
+
 	//複合図形クラス----------------------------------------------------
 		class ShapeContainer
 		{
 		public:
 			typedef  shared_ptr<ShapeContainer>    SP;
-			vector<Shape::SP>  child;
+			vector<Shape*>  child;
 			//↓直で書き換えると子供の図形は置いてきぼりになるので注意（privateが望ましい）
 			ML::Vec3			pos;	//中心点
 			ML::QT				angle;	//向き（クオータニオン）

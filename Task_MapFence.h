@@ -82,7 +82,7 @@ namespace MapFence
 	public:
 		
 		//球とマップのあたり判定
-		void Map_Check_Hit(std::vector<ML::Vec3>& all_Points, const ML::Vec3& pos, const float& r, const ML::Vec3& speed);
+		void Map_Check_Hit(ML::Collsion::Shape* ball, const ML::Vec3& speed);
 		//マップの回転
 		void Map_Rotate(const ML::QT& qt);
 		

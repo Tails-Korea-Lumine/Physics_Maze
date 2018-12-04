@@ -219,7 +219,7 @@ namespace  Map3d
 				ML::Vec3 pos = ML::Vec3(x*this->chipSize + this->chipSize / 2, this->chipSize + this->chipSize / 2, (this->sizeZ - 1 - z)*this->chipSize + this->chipSize / 2);
 				pos += ge->Map_center - ML::Vec3((this->mapSize*this->chipSize / 2), -((this->mapSize - 2)*this->chipSize / 2), (this->mapSize*this->chipSize / 2));
 				//あたり判定用矩形
-				ML::Box3D base = ML::Box3D(-this->chipSize / 2, -this->chipSize / 2, -this->chipSize / 2, this->chipSize, this->chipSize, this->chipSize);				
+				auto base = ML::Collsion::OBB::Create(pos, ML::Vec3(this->chipSize / 2.0f, this->chipSize / 2.0f, this->chipSize / 2.0f), this->map_QT);
 				
 				//生成すること以外に何か処理を加える必要があるもの
 				switch (BoxType(chip))
@@ -231,7 +231,7 @@ namespace  Map3d
 					break;
 				//スイッチはあたり判定範囲を小さく	
 				case BoxType::LightSwitch:
-					base = ML::Box3D(base.x / 10, base.y / 10, base.z / 10, base.w / 10, base.h / 10, base.d / 10);
+					base->size_h / 10.0f;
 					break;
 				case BoxType::Start:
 					//ボールをスタート位置に置く
@@ -253,7 +253,7 @@ namespace  Map3d
 		return true;
 	}
 	//-----------------------------------------------------------------------
-	bool Object::Map_Check_Hit(std::vector<ML::Vec3>& all_Points, const ML::Vec3& pos, const float& r, const ML::Vec3& speed)
+	bool Object::Map_Check_Hit(ML::Collsion::Shape* ball_area, const ML::Vec3& speed)
 	{
 		//ボールに何かをさせるとこがある場合使う
 		auto ball = ge->GetTask_One_G<Ball::Object>("ボール");
@@ -276,7 +276,7 @@ namespace  Map3d
 					break;
 				}
 				//一定距離以内のものだけ判定をする
-				ML::Vec3 d = this->arr[z][x].Get_Pos() - pos;
+				ML::Vec3 d = this->arr[z][x].Get_Pos() - ball_area->pos;
 				//dは絶対値の距離(distance)				
 				//一定距離以上だったら判定せず次に項目に
 				if (d.Length() > this->chipSize)
@@ -286,7 +286,7 @@ namespace  Map3d
 				ball_on_This_Side = true;
 
 				//判定開始
-				if (!this->arr[z][x].Get_Collision_Poligon(&this->col_Poligons, all_Points, pos, r, speed))
+				if (!this->arr[z][x].Get_Collision_Poligon(&this->col_Poligons, ball_area, speed))
 				{
 					//あたってないマスなら次のマスに移行
 					continue;
@@ -297,7 +297,7 @@ namespace  Map3d
 				{
 				//ゴール旗はクリア判定
 				case BoxType::Goal:										
-					ball->Teleportation(pos + (d*0.01f));
+					ball->Teleportation(ball_area->pos + (d*0.01f));
 					//ゲームタスクにクリア処理をさせる
 					ge->game.lock()->Game_Clear();
 					break;
@@ -308,7 +308,7 @@ namespace  Map3d
 						ball->Teleportation(exitpos);
 						auto eff = ge->eff_Manager.lock();
 						//テレポートインのエフェクト
-						eff->Add_Effect(pos, this->arr[z][x].Get_Pos(), ML::Vec3(0, 0, 0), BEffect::effType::Teleportin);
+						eff->Add_Effect(ball_area->pos, this->arr[z][x].Get_Pos(), ML::Vec3(0, 0, 0), BEffect::effType::Teleportin);
 						//テレポートインの音を鳴らす
 						DM::Sound_Play(this->res->seTeleportIn, false);
 						//テレポートアウトのエフェクト

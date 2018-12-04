@@ -213,7 +213,7 @@ namespace  MapFence
 				pos += ge->Map_center - ML::Vec3(((this->mapSize + 4)*this->chipSize / 2), (this->mapSize*this->chipSize / 2), -((this->mapSize - 2)*this->chipSize / 2));
 			}
 			//あたり判定用矩形
-			ML::Box3D base = ML::Box3D(-this->chipSize / 2, -this->chipSize / 2, -this->chipSize / 2, this->chipSize, this->chipSize, this->chipSize);				
+			auto base = ML::Collsion::OBB::Create(pos, ML::Vec3(this->chipSize / 2.0f, this->chipSize / 2.0f, this->chipSize / 2.0f), this->map_QT);
 
 			//ボックスのID生成
 			string id = to_string(this->fenceNumber) + to_string(i);			
@@ -226,7 +226,7 @@ namespace  MapFence
 		return true;
 	}
 	//-----------------------------------------------------------------------
-	void Object::Map_Check_Hit(std::vector<ML::Vec3>& all_Points, const ML::Vec3& pos, const float& r, const ML::Vec3& speed)
+	void Object::Map_Check_Hit(ML::Collsion::Shape* ball_area, const ML::Vec3& speed)
 	{
 		//多重衝突まで適用したver0.3(2018/04/16)
 
@@ -243,7 +243,7 @@ namespace  MapFence
 				break;
 			}
 			//一定距離以内のものだけ判定をする
-			ML::Vec3 d = this->arr[i].Get_Pos() - pos;
+			ML::Vec3 d = this->arr[i].Get_Pos() - ball_area->pos;
 			//dは絶対値の距離					
 			//一定距離以上だったら判定せず次に項目に
 			if (d.Length() > this->chipSize)
@@ -253,7 +253,7 @@ namespace  MapFence
 													
 			//this->collision_Tri = this->col.Hit_Check(Mass, pos, r, this->map_QT); //(ver0.2で使った処理)
 			//std::vector<After_Collision> poligon 
-			if (!this->arr[i].Get_Collision_Poligon(&this->col_Poligons, all_Points, pos, r, speed))
+			if (!this->arr[i].Get_Collision_Poligon(&this->col_Poligons, ball_area, speed))
 			{
 				continue;
 			}
