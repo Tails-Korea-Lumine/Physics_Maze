@@ -49,9 +49,6 @@
     <Filter Include="MyPG\Tasks\game">
       <UniqueIdentifier>{0d2f1ac2-da88-41c8-b171-bbce603f253f}</UniqueIdentifier>
     </Filter>
-    <Filter Include="MyPG\Gravity">
-      <UniqueIdentifier>{2ce5a61e-806c-4992-80b8-ccfc0cc21bdc}</UniqueIdentifier>
-    </Filter>
     <Filter Include="MyPG\Tasks\map">
       <UniqueIdentifier>{ec3c490b-8940-4f06-8f03-23dbaf343a33}</UniqueIdentifier>
     </Filter>
@@ -85,9 +82,6 @@
     <Filter Include="MyPG\BEffect">
       <UniqueIdentifier>{8c914333-62b8-4098-a148-2b18c873c955}</UniqueIdentifier>
     </Filter>
-    <Filter Include="MyPG\Effect">
-      <UniqueIdentifier>{2e85247c-fb87-40d3-857e-4c1791da1421}</UniqueIdentifier>
-    </Filter>
     <Filter Include="MyPG\Tasks\Result">
       <UniqueIdentifier>{f5fc417a-c27b-4a87-a8d2-facb878928dc}</UniqueIdentifier>
     </Filter>
@@ -99,6 +93,33 @@
     </Filter>
     <Filter Include="MyPG\Tasks\Physics_Manager">
       <UniqueIdentifier>{165f9a01-26ef-4713-ae03-34733c34f1d0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="MyPG\Shape">
+      <UniqueIdentifier>{69dabf93-52c6-4f7b-8253-fdd792f0994e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="MyPG\Shape\Cube">
+      <UniqueIdentifier>{c32e2e70-9acb-428c-8e81-1f68afeb0222}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="MyPG\Shape\Sphere">
+      <UniqueIdentifier>{7b76f0fc-68b9-4da0-8a48-91e3ee860ee9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="MyPG\Bbox\Wall">
+      <UniqueIdentifier>{a479f0f0-7746-4b5e-ac3c-2fdf19a86886}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="MyPG\Bbox\Teleportation">
+      <UniqueIdentifier>{523a9660-7659-42aa-9087-199b461e2fad}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="MyPG\Bbox\Light_Switch">
+      <UniqueIdentifier>{30f1223f-ad23-40cb-96a2-071ec3cce9aa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="MyPG\Bbox\Goal">
+      <UniqueIdentifier>{8f5f2b3c-2dd8-4985-828c-09431c16e9b0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="MyPG\BEffect\Effect">
+      <UniqueIdentifier>{2e85247c-fb87-40d3-857e-4c1791da1421}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="MyPG\Physics">
+      <UniqueIdentifier>{2ce5a61e-806c-4992-80b8-ccfc0cc21bdc}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -162,9 +183,6 @@
     <ClCompile Include="Collision.cpp">
       <Filter>MyPG\Collision</Filter>
     </ClCompile>
-    <ClCompile Include="Gravity.cpp">
-      <Filter>MyPG\Gravity</Filter>
-    </ClCompile>
     <ClCompile Include="Bbox.cpp">
       <Filter>MyPG\Bbox</Filter>
     </ClCompile>
@@ -196,7 +214,7 @@
       <Filter>MyPG\Tasks\EffectManager</Filter>
     </ClCompile>
     <ClCompile Include="Effect.cpp">
-      <Filter>MyPG\Effect</Filter>
+      <Filter>MyPG\BEffect\Effect</Filter>
     </ClCompile>
     <ClCompile Include="easing.cpp" />
     <ClCompile Include="MyPG.cpp" />
@@ -215,6 +233,30 @@
     </ClCompile>
     <ClCompile Include="Task_MapSide.cpp">
       <Filter>MyPG\Tasks\map</Filter>
+    </ClCompile>
+    <ClCompile Include="Shape.cpp">
+      <Filter>MyPG\Shape</Filter>
+    </ClCompile>
+    <ClCompile Include="Cube.cpp">
+      <Filter>MyPG\Shape\Cube</Filter>
+    </ClCompile>
+    <ClCompile Include="Wall.cpp">
+      <Filter>MyPG\Bbox\Wall</Filter>
+    </ClCompile>
+    <ClCompile Include="Light_Switch.cpp">
+      <Filter>MyPG\Bbox\Light_Switch</Filter>
+    </ClCompile>
+    <ClCompile Include="Teleportation.cpp">
+      <Filter>MyPG\Bbox\Teleportation</Filter>
+    </ClCompile>
+    <ClCompile Include="Goal.cpp">
+      <Filter>MyPG\Bbox\Goal</Filter>
+    </ClCompile>
+    <ClCompile Include="Sphere.cpp">
+      <Filter>MyPG\Shape\Sphere</Filter>
+    </ClCompile>
+    <ClCompile Include="Physics.cpp">
+      <Filter>MyPG\Physics</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -278,9 +320,6 @@
     <ClInclude Include="Collision.h">
       <Filter>MyPG\Collision</Filter>
     </ClInclude>
-    <ClInclude Include="Gravity.h">
-      <Filter>MyPG\Gravity</Filter>
-    </ClInclude>
     <ClInclude Include="Bbox.h">
       <Filter>MyPG\Bbox</Filter>
     </ClInclude>
@@ -315,7 +354,7 @@
       <Filter>MyPG\Tasks\EffectManager</Filter>
     </ClInclude>
     <ClInclude Include="Effect.h">
-      <Filter>MyPG\Effect</Filter>
+      <Filter>MyPG\BEffect\Effect</Filter>
     </ClInclude>
     <ClInclude Include="easing.h" />
     <ClInclude Include="MyPG.h" />
@@ -333,6 +372,30 @@
     </ClInclude>
     <ClInclude Include="Task_MapSide.h">
       <Filter>MyPG\Tasks\map</Filter>
+    </ClInclude>
+    <ClInclude Include="Shape.h">
+      <Filter>MyPG\Shape</Filter>
+    </ClInclude>
+    <ClInclude Include="Cube.h">
+      <Filter>MyPG\Shape\Cube</Filter>
+    </ClInclude>
+    <ClInclude Include="Wall.h">
+      <Filter>MyPG\Bbox\Wall</Filter>
+    </ClInclude>
+    <ClInclude Include="Light_Switch.h">
+      <Filter>MyPG\Bbox\Light_Switch</Filter>
+    </ClInclude>
+    <ClInclude Include="Teleportation.h">
+      <Filter>MyPG\Bbox\Teleportation</Filter>
+    </ClInclude>
+    <ClInclude Include="Goal.h">
+      <Filter>MyPG\Bbox\Goal</Filter>
+    </ClInclude>
+    <ClInclude Include="Sphere.h">
+      <Filter>MyPG\Shape\Sphere</Filter>
+    </ClInclude>
+    <ClInclude Include="Physics.h">
+      <Filter>MyPG\Physics</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -109,7 +109,7 @@ namespace  Physics_Manager
 		
 		auto in1 = DI::GPad_GetState("P1");
 		//ほかのタスクの情報をもらってくる
-		auto map = ge->GetTask_Group_GN<Map3d::Object>("マップ", "Side");
+		auto map = ge->GetTask_Group_GN<Map_Side::Object>("マップ", "Side");
 		auto fence = ge->GetTask_Group_GN<MapFence::Object>("マップ", "Fence");
 		auto core = ge->GetTask_One_G<Map_Core::Object>("マップ");
 		auto ball = ge->GetTask_One_G<Ball::Object>("ボール");
@@ -206,20 +206,20 @@ namespace  Physics_Manager
 			
 			//ボールの外角ドットを取り出しておく
 			all_Points.clear();
-			ball->Get_Poionts_to_Sphere(&all_Points);
+			//ball->Get_Poionts_to_Sphere(&all_Points);
 
 			//あたり判定は毎回マップのほうで行う	
-			ge->collision_Result.clear();					
+			ge->collision_Result.clear();
 			
 			
 			//ボールとマップのあたり判定及び保存
 			//コア
-			core->Core_Check_Hit(all_Points, ball->Get_Pos(), ball->Get_Radious(), ball->Get_Speed());
+			core->Core_Check_Hit(ball->Get_Collision_Area());
 			//面
 			for (auto m = map->begin(); m != map->end(); m++)
 			{
 				//ボールが存在しているマップの法線ベクトルを収得
-				if ((*m)->Map_Check_Hit(all_Points, ball->Get_Pos(), ball->Get_Radious(), ball->Get_Speed()))
+				if ((*m)->Map_Check_Hit(ball->Get_Collision_Area()))
 				{
 					(*m)->Get_Normal_Side(&side_Normal);
 				}
@@ -227,11 +227,11 @@ namespace  Physics_Manager
 			//フェンス
 			for (auto f = fence->begin(); f != fence->end(); f++)
 			{
-				(*f)->Map_Check_Hit(all_Points, ball->Get_Pos(), ball->Get_Radious(), ball->Get_Speed());
+				(*f)->Map_Check_Hit(ball->Get_Collision_Area());
 			}		
 			
 			//判定結果に無駄なデータが入っているなら取り除く
-			ge->collision_Result.erase(remove_if(ge->collision_Result.begin(), ge->collision_Result.end(), [](const After_Collision& c) {return !c.collision_Flag; })
+			ge->collision_Result.erase(remove_if(ge->collision_Result.begin(), ge->collision_Result.end(), [](const Collision_Data& c) {return !c.collision_Flag; })
 				,ge->collision_Result.end());
 
 			//ボールを移動させる

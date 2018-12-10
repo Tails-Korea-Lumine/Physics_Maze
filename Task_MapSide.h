@@ -10,7 +10,7 @@
 
 
 
-namespace Map3d
+namespace Map_Side
 {
 	//タスクに割り当てるグループ名と固有名
 	const  string  defGroupName("マップ");	//グループ名
@@ -55,7 +55,7 @@ namespace Map3d
 	
 		//追加したい変数・メソッドはここに追加する	
 		//変数
-		Bbox arr[8][8];
+		Bbox* arr[8][8];
 		size_t sizeZ, sizeX;
 		int mapSize;
 		int sideNumber;
@@ -66,8 +66,6 @@ namespace Map3d
 
 		//法線ベクトル
 		ML::Vec3 Normal_Side;
-		//あたり判定結果を保存するvector
-		std::vector< After_Collision> col_Poligons;
 		//回転量
 		ML::QT map_QT;		
 		
@@ -80,15 +78,15 @@ namespace Map3d
 		//連続していて使えない面を探す
 		void Check_Unusable_Side();
 		//配列ソート及びボールをスタート位置に置く
-		void Array_Sorting();
+		//void Array_Sorting();
 		//ボールタスクのフラグにIDを組み込める
-		void Insert_Id_To_Ball();
+		//void Insert_Id_To_Ball();
 		//クォータニオンを更新する関数
 		void UpDate_Quartanion(const ML::QT& qt);
 		
 	public:
 		//球とマップのあたり判定
-		bool Map_Check_Hit(std::vector<ML::Vec3>& all_Points, const ML::Vec3& pos, const float& r, const ML::Vec3& speed);
+		bool Map_Check_Hit(Shape3D* ball);
 		//マップ回転
 		void Map_Rotate(const ML::QT& qt);
 		

@@ -6,6 +6,7 @@
 #include  "Task_MapSide.h"
 #include  "Task_MapCore.h"
 #include  "Task_MapFence.h"
+#include "Physics.h"
 #include <iostream>
 
 namespace  Ball
@@ -37,12 +38,14 @@ namespace  Ball
 		this->res = Resource::Create();
 
 		//★データ初期化
-		this->pos = ML::Vec3(1000, 500, 900);//仮の位置後で調整をかける(2018/04/20)
+		//this->pos = ML::Vec3(1000, 500, 900);//仮の位置後で調整をかける(2018/04/20)
 		this->speed = ML::Vec3(0, 0, 0);
-		this->moveVec = ML::Vec3(0, 0, 0);
-		this->r = 30.0f;
+		//this->moveVec = ML::Vec3(0, 0, 0);
+
+		float r = 30.0f;
+		this->sphere = new Sphere(ML::Vec3(1000, 500, 900), ML::Vec3(r, r, r), ML::QT());
 		this->m = 15.0f;
-		this->rot = 0.0f;
+		//this->rot = 0.0f;
 		this->collision_Flag.clear();
 		this->teleportation_Flag = false;
 
@@ -58,6 +61,7 @@ namespace  Ball
 		//★データ＆タスク解放
 		ge->eff_Manager.lock()->Add_Effect(this->Get_Pos(), ML::Vec3(0, 0, 0), BEffect::effType::Game_Clear);
 		this->collision_Flag.clear();
+		delete this->sphere;
 
 		if (!ge->QuitFlag() && this->nextTaskCreate)
 		{
@@ -72,13 +76,15 @@ namespace  Ball
 	void  Object::UpDate()
 	{
 		//重力加速
-		this->G.Accelerate(&this->speed,this->m);				
+		Physics::Gravity_Accelerate(&this->speed,this->m);				
 			
 		//回転量上昇
-		this->rot += this->speed.Length();
+		//this->rot += this->speed.Length();
 
 		//テレポートフラグを無効に
 		this->teleportation_Flag = false;
+
+		//デバッグ用
 		float sl = this->speed.Length();
 		if (sl > 4.0f)
 		{
@@ -110,13 +116,10 @@ namespace  Ball
 		{
 			//今回のフレームに衝突しなかったら
 			//衝突フラグを無効にする
-			for (auto& cf : this->collision_Flag)
-			{
-				cf.second = false;
-			}
+			this->collision_Flag.clear();
 			
 			//移動(フレーム終了する直前に行う)
-			this->pos += Clamp_Speed(this->speed);
+			this->sphere->Offset(Clamp_Speed(this->speed));
 			return;
 		}
 		//前回フレームのあたり判定結果を確認
@@ -129,29 +132,26 @@ namespace  Ball
 			{
 				//今回のフレームに衝突だったら
 				//斜め線加速をする
-				this->G.Diagonal_Accelerate(&this->speed, p.normal);
+				Physics::Diagonal_Accelerate(&this->speed, p.normal);
 			}		
 			//前のフレームで衝突ではなかったら、今回のフレームでの衝突判定でやること			
 			else
 			{
 				//今回のフレームに衝突だったら
 				//反射角で跳ね返す
-				this->G.Reflaction_Vector(&this->speed, p.normal);				
+				Physics::Reflaction_Vector(&this->speed, p.normal);
 			}
 		}		
 
 		//フラグを衝突判定結果にいないものはfalseに変える
-		for (auto& cf : this->collision_Flag)
-		{
-			cf.second = false;
-		}
+		this->collision_Flag.clear();
 		for (auto& p : ge->collision_Result)
-		{
-			this->collision_Flag.find(p.collision_Id)->second = true;
+		{			
+			this->collision_Flag.push_back(p.collision_Id);
 		}
 		
 		//移動(フレーム終了する直前に行う)
-		this->pos += Clamp_Speed(this->speed);
+		this->sphere->Offset(Clamp_Speed(this->speed));
 	}
 	
 	//「２Ｄ描画」１フレーム毎に行う処理
@@ -161,72 +161,29 @@ namespace  Ball
 
 	void  Object::Render3D_L0()
 	{
-		ML::Mat4x4 matT;
-		ML::Mat4x4 matS;
-		ML::Mat4x4 matR;
-		//移動行列
-		matT.Translation(this->pos);
-		//拡縮行列
-		matS.Scaling(this->r);
-		//回転行列
-		matR.RotationAxis((ge->Map_center - this->pos), ML::ToRadian(this->rot));
-		DG::EffectState().param.matWorld = matS * matR * matT;
+		ML::Mat4x4 mat;
+
+		D3DXMatrixAffineTransformation(&mat, this->sphere->Get_Length().x, NULL, &this->sphere->Get_Quaternion(), &this->sphere->Get_Center());
+
+		DG::EffectState().param.matWorld = mat;
+
 		DG::Mesh_Draw(this->res->meshName);
 	}
 
 	//--------------------------------------------------------------------
 	//追加メソッド
-	//外角の点を全部取り出す
-	void Object::Get_Poionts_to_Sphere(std::vector<ML::Vec3>* result) const
-	{
-		const int increasing_Dgree = 15;
-		//球の上にある点を全部取り出す処理
 
-		//最初に回転させる点を計算
-		std::vector<ML::Vec3> points;
-		ML::Vec3 y = this->pos + ML::Vec3(0, this->r, 0);
-
-		//縦方向に切った断面の片方を取る処理
-		for (int i = 0; i < 180; i += increasing_Dgree)
-		{
-			//回転行列生成
-			ML::Mat4x4 matRx;
-			ML::QT qtX = ML::QT(ML::Vec3(1, 0, 0), ML::ToRadian((float)i));
-
-			D3DXMatrixAffineTransformation(&matRx, 1.0f, &this->pos, &qtX, NULL);
-
-			points.push_back(matRx.TransformCoord(y));
-		}
-
-		//取り出した点を回転しながら結果保存用ヴェクターにプッシュバック
-		for (int d = 0; d < 360; d += increasing_Dgree)
-		{
-			//回転行列生成
-			ML::Mat4x4 matRy;
-			ML::QT qtY = ML::QT(ML::Vec3(0, 1, 0), ML::ToRadian((float)d));
-
-			D3DXMatrixAffineTransformation(&matRy, 1.0f, &this->pos, &qtY, NULL);
-
-			for (auto& p : points)
-			{
-				result->push_back(matRy.TransformCoord(p));
-			}
-		}
-	}
-	//-------------------------------------------------------------------------------------
-	
 	//あたり判定フラグを確認
 	bool Object::Is_Collision(const string& id) const
 	{
-		if (this->collision_Flag.count(id) == 0)
+		for (auto& cf : this->collision_Flag)
 		{
-			return true;
+			if (cf == id)
+			{
+				return true;
+			}
 		}
-		if (id == "core" || id == "barrier")
-		{
-			return true;
-		}
-		return this->collision_Flag.find(id)->second;
+		return false;
 	}
 
 	//---------------------------------------------------------------------
@@ -234,12 +191,12 @@ namespace  Ball
 	//位置
 	ML::Vec3 Object::Get_Pos() const
 	{
-		return this->pos;
+		return this->sphere->Get_Center();
 	}
 	//半直径
 	float Object::Get_Radious() const
 	{
-		return this->r;
+		return this->sphere->Get_Length().x;
 	}
 	//速度
 	ML::Vec3 Object::Get_Speed() const
@@ -255,7 +212,8 @@ namespace  Ball
 		ML::Mat4x4 matR;
 		D3DXMatrixAffineTransformation(&matR, 1, &ge->Map_center, &qt, NULL);
 
-		this->pos = matR.TransformCoord(this->pos);
+		//this->pos = matR.TransformCoord(this->pos);
+		this->sphere->Rotation(&matR, qt);
 	}
 
 	//----------------------------------------------------------------------------
@@ -263,7 +221,8 @@ namespace  Ball
 	void Object::Teleportation(const ML::Vec3& objectPos)
 	{
 		this->teleportation_Flag = true;
-		this->pos = objectPos;
+		//this->pos = objectPos;
+		this->sphere->Set_Position(objectPos);
 	}
 
 	//------------------------------------------------------------------------------
@@ -278,10 +237,10 @@ namespace  Ball
 	{
 		return this->teleportation_Flag;
 	}
-	//衝突フラグを登録する
-	void Object::Set_Id_And_Flag(const string& id)
+	//あたり判定範囲をもらう
+	Shape3D* Object::Get_Collision_Area()
 	{
-		this->collision_Flag.insert(std::pair<string, bool>(id, false));
+		return this->sphere;
 	}
 	//★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★
 	//以下は基本的に変更不要なメソッド

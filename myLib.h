@@ -21,6 +21,7 @@
 #include <iomanip>
 #include <vector>
 #include <map>
+#include <functional>
 #include <unordered_map>
 //////////////////////////////#include "atlstr.h"
 using namespace std;

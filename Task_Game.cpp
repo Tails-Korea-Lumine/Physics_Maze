@@ -83,7 +83,7 @@ namespace  Game
 		//マップ生成
 		for (int i = 0; i < 6; i++)
 		{
-			auto map = Map3d::Object::Create(true, i,di);
+			auto map = Map_Side::Object::Create(true, i,di);
 		}
 		//フェンス生成
 		for (int f = 0; f < 12; f++)

@@ -4,6 +4,7 @@
 #include  "MyPG.h"
 #include "Task_MapFence.h"
 #include  "Task_Ball.h"
+#include "Wall.h"
 
 namespace  MapFence
 {
@@ -44,7 +45,10 @@ namespace  MapFence
 		{
 			this->chipName[i] = "";
 		}
-		this->col_Poligons.clear();
+		for (size_t i = 0; i < 10; i++)
+		{
+			this->arr[i] = nullptr;
+		}
 		//外部ファイルからの読み込み
 		switch (di)
 		{
@@ -91,8 +95,8 @@ namespace  MapFence
 			break;
 		}
 		this->Check_Unusable_Side();
-		this->Array_Sorting();
-		this->Insert_Id_To_Ball();
+		//this->Array_Sorting();
+		//this->Insert_Id_To_Ball();
 		//★タスクの生成
 
 		return  true;
@@ -108,10 +112,16 @@ namespace  MapFence
 			{
 				DG::Mesh_Erase(this->chipName[i]);
 			}
+		}		
+		//this->col_Poligons.clear();
+		for (size_t i = 0; i < this->size; i++)
+		{
+			if (this->arr[i] != nullptr)
+			{
+				delete arr[i];
+			}
 		}
-		//this->sizeX = 0;
 		this->size = 0;
-		this->col_Poligons.clear();
 
 		if (!ge->QuitFlag() && this->nextTaskCreate)
 		{
@@ -146,24 +156,22 @@ namespace  MapFence
 		//matS.Scaling(this->chipSize);
 		for (size_t i = 0; i < this->size; i++)
 		{
-			
-			BoxType now_Type = this->arr[i].What_Type_Is_this_Box();
-			//道はレンダリングしない
-			if (now_Type == BoxType::Road || now_Type == BoxType::Clear)
+			//登録してないものは無視する
+			if (this->arr[i] == nullptr)
 			{
-				return;
+				continue;
 			}
-			//個別にもレンダリングが必要かを確認(フレームが上がるかのテスト)
-			if (this->Is_Need_Render(i) == false)
+			//個別にもレンダリングが必要かを確認
+			else if (this->Is_Need_Render(i) == false)
 			{
 				continue;
 			}
 
 			//描画
-			D3DXMatrixAffineTransformation(&matW, this->chipSize, NULL, &this->map_QT, &this->arr[i].Get_Pos());
+			D3DXMatrixAffineTransformation(&matW, this->chipSize, NULL, &this->map_QT, &this->arr[i]->Get_Pos());
 
 			DG::EffectState().param.matWorld = matW;
-			DG::Mesh_Draw(this->chipName[(int)now_Type]);
+			DG::Mesh_Draw(this->chipName[(int)this->arr[i]->What_Type_Is_this_Box()]);
 				
 			
 		}
@@ -213,37 +221,32 @@ namespace  MapFence
 				pos += ge->Map_center - ML::Vec3(((this->mapSize + 4)*this->chipSize / 2), (this->mapSize*this->chipSize / 2), -((this->mapSize - 2)*this->chipSize / 2));
 			}
 			//あたり判定用矩形
-			ML::Box3D base = ML::Box3D(-this->chipSize / 2, -this->chipSize / 2, -this->chipSize / 2, this->chipSize, this->chipSize, this->chipSize);				
+			ML::Vec3 base = ML::Vec3(this->chipSize / 2.0f, this->chipSize / 2.0f, this->chipSize / 2.0f);				
 
 			//ボックスのID生成
 			string id = to_string(this->fenceNumber) + to_string(i);			
 			//配列に登録
-			this->arr[i] = Bbox(BoxType(chip), pos, base, this->map_QT,id);
-				
-			
+			this->arr[i] = new Wall(pos, base, this->map_QT, id);
 		}
 		fin.close();
 		return true;
 	}
 	//-----------------------------------------------------------------------
-	void Object::Map_Check_Hit(std::vector<ML::Vec3>& all_Points, const ML::Vec3& pos, const float& r, const ML::Vec3& speed)
+	void Object::Map_Check_Hit(Shape3D* ball)
 	{
-		//多重衝突まで適用したver0.3(2018/04/16)
-
+		std::vector<Collision_Data> col_Poligons;
 		//接触三角形を判定前にクリアする
-		this->col_Poligons.clear();
+		col_Poligons.clear();
 
 		//判定スタート
 		for (size_t i = 0; i < this->size; i++)
 		{
-			auto now_Type = this->arr[i].What_Type_Is_this_Box();
-			//道は配列の後ろに積めておいたので発見したらその後は処理せずにbreak
-			if (now_Type == BoxType::Road || now_Type == BoxType::Clear)
+			if (this->arr[i] == nullptr)
 			{
-				break;
+				continue;
 			}
 			//一定距離以内のものだけ判定をする
-			ML::Vec3 d = this->arr[i].Get_Pos() - pos;
+			ML::Vec3 d = this->arr[i]->Get_Pos() - ball->Get_Center();
 			//dは絶対値の距離					
 			//一定距離以上だったら判定せず次に項目に
 			if (d.Length() > this->chipSize)
@@ -251,16 +254,14 @@ namespace  MapFence
 				continue;
 			}
 													
-			//this->collision_Tri = this->col.Hit_Check(Mass, pos, r, this->map_QT); //(ver0.2で使った処理)
-			//std::vector<After_Collision> poligon 
-			if (!this->arr[i].Get_Collision_Poligon(&this->col_Poligons, all_Points, pos, r, speed))
+			//あたり判定
+			if (!this->arr[i]->Collision_Action(&col_Poligons, ball))
 			{
 				continue;
-			}
-					
+			}					
 
 			//全体衝突結果に保存する
-			for (auto& c : this->col_Poligons)
+			for (auto& c : col_Poligons)
 			{
 				ge->collision_Result.push_back(c);
 			}
@@ -276,13 +277,16 @@ namespace  MapFence
 		this->UpDate_Quartanion(qt);
 
 		for (size_t i = 0; i < this->size; i++)
-		{			
+		{
+			if (this->arr[i] == nullptr)
+			{
+				continue;
+			}
 			//回転行列生成
 			ML::Mat4x4 matR;
 			D3DXMatrixAffineTransformation(&matR, this->chipSize / 100.0f, &ge->Map_center, &qt, NULL);
 			//ボックスに個別で渡す
-			this->arr[i].Rotate_Box(&matR, qt);				
-			
+			this->arr[i]->Rotate_Box(&matR, qt);			
 		}
 	}
 
@@ -301,8 +305,17 @@ namespace  MapFence
 		{return ci >= 0 && ci < this->size; };
 
 		//引数たちが両方壁なのか判断する
-		auto Judge = [](const Bbox& b1, const Bbox& b2)
-		{return b1.What_Type_Is_this_Box() == BoxType::Wall && b2.What_Type_Is_this_Box() == BoxType::Wall; };
+		auto Judge = [](const Bbox* b1, const Bbox* b2)
+		{
+			if (b1 != nullptr && b2 != nullptr)
+			{
+				return b1->What_Type_Is_this_Box() == Bbox::BoxType::Wall && b2->What_Type_Is_this_Box() == Bbox::BoxType::Wall;
+			}
+			else
+			{
+				return false;
+			}
+		};
 		//各ボックスに連続するボックスがあるかを確認
 		for (size_t i = 0; i < this->size; i++)
 		{			
@@ -313,13 +326,13 @@ namespace  MapFence
 				if (Inside_Range(i - 1) && Judge(this->arr[i - 1], this->arr[i]))
 				{
 					//無効ポリゴンを表示しておく
-					this->arr[i].Marking_On_Unusable_Poligon(Box_Side::Xminus);
+					this->arr[i]->Marking_On_Unusable_Side(Box_Side::Xminus);
 				}
 				//右
 				if (Inside_Range(i + 1) && Judge(this->arr[i + 1], this->arr[i]))
 				{
 					//無効ポリゴンを表示しておく
-					this->arr[i].Marking_On_Unusable_Poligon(Box_Side::Xplus);
+					this->arr[i]->Marking_On_Unusable_Side(Box_Side::Xplus);
 				}
 			}
 			else
@@ -328,50 +341,50 @@ namespace  MapFence
 				if (Inside_Range(i - 1) && Judge(this->arr[i - 1], this->arr[i]))
 				{
 					//無効ポリゴンを表示しておく
-					this->arr[i].Marking_On_Unusable_Poligon(Box_Side::Yminus);
+					this->arr[i]->Marking_On_Unusable_Side(Box_Side::Yminus);
 				}
 				//上
 				if (Inside_Range(i + 1) && Judge(this->arr[i + 1], this->arr[i]))
 				{
 					//無効ポリゴンを表示しておく
-					this->arr[i].Marking_On_Unusable_Poligon(Box_Side::Yplus);
+					this->arr[i]->Marking_On_Unusable_Side(Box_Side::Yplus);
 				}
 			}
 		}
 	}
 	//-------------------------------------------------------------------------------------
 	//配列ソート及びボールをスタート位置に置く
-	void Object::Array_Sorting()
-	{
-		//stl remove_ifで削除(無効データに上書きする)ところをもらいながら
-		//データを前に積める
-		auto remove_Point = remove_if(&this->arr[0], &this->arr[this->size], [](const Bbox& b) {return b.What_Type_Is_this_Box() == BoxType::Road; });
+	//void Object::Array_Sorting()
+	//{
+	//	//stl remove_ifで削除(無効データに上書きする)ところをもらいながら
+	//	//データを前に積める
+	//	auto remove_Point = remove_if(&this->arr[0], &this->arr[this->size], [](const Bbox& b) {return b.What_Type_Is_this_Box() == BoxType::Road; });
 
-		//無効データに上書きする
-		for (; remove_Point != &this->arr[this->size]; remove_Point++)
-		{
-			*remove_Point = Bbox();
-		}
-	}
+	//	//無効データに上書きする
+	//	for (; remove_Point != &this->arr[this->size]; remove_Point++)
+	//	{
+	//		*remove_Point = Bbox();
+	//	}
+	//}
 	//ボールタスクのフラグにIDを組み込める
-	void Object::Insert_Id_To_Ball()
-	{
-		//ID登録のためにボールタスクをもらっておく
-		auto ball = ge->GetTask_One_G<Ball::Object>("ボール");
+	//void Object::Insert_Id_To_Ball()
+	//{
+	//	//ID登録のためにボールタスクをもらっておく
+	//	auto ball = ge->GetTask_One_G<Ball::Object>("ボール");
 
-		for (size_t i = 0; i < this->size; i++)
-		{			
-			auto now_Type = this->arr[i].What_Type_Is_this_Box();
-			//道は配列の後ろに積めておいたので発見したらその後は処理せずにbreak
-			if (now_Type == BoxType::Road || now_Type == BoxType::Clear)
-			{
-				break;
-			}
-			//それ以外はフラグ登録
-			ball->Set_Id_And_Flag(this->arr[i].Get_Id());
-			
-		}
-	}
+	//	for (size_t i = 0; i < this->size; i++)
+	//	{			
+	//		auto now_Type = this->arr[i].What_Type_Is_this_Box();
+	//		//道は配列の後ろに積めておいたので発見したらその後は処理せずにbreak
+	//		if (now_Type == BoxType::Road || now_Type == BoxType::Clear)
+	//		{
+	//			break;
+	//		}
+	//		//それ以外はフラグ登録
+	//		ball->Set_Id_And_Flag(this->arr[i].Get_Id());
+	//		
+	//	}
+	//}
 
 	//---------------------------------------------------------------------------------------------
 	//レンダリングするかしないかを確認するためのメソッド
@@ -381,7 +394,7 @@ namespace  MapFence
 		const float judge = d_Cmc.Length() + (this->chipSize * this->mapSize / 3.0f);
 
 		//判定する距離よりマップの0番とカメラとの距離が遠いならレンダリングしない
-		ML::Vec3 d_Cf0 = this->arr[index].Get_Pos() - ge->camera[0]->pos;
+		ML::Vec3 d_Cf0 = this->arr[index]->Get_Pos() - ge->camera[0]->pos;
 
 		//図った距離で返す
 		return d_Cf0.Length() < judge ? true : false;

@@ -1,12 +1,12 @@
-#include "Gravity.h"
+#include "Physics.h"
 #include "MyPG.h"
 
-void Gravity::Accelerate(ML::Vec3* speed, const float& Weight) const
+void Physics::Gravity_Accelerate(ML::Vec3* speed, const float& Weight)
 {
-	*speed += (Weight * this->G_acceleration );
+	*speed += (Weight * G_acceleration );
 }
 
-void Gravity::Diagonal_Accelerate(ML::Vec3* speed, const ML::Vec3& normal) const
+void Physics::Diagonal_Accelerate(ML::Vec3* speed, const ML::Vec3& normal)
 {
 	float fn;
 	MyMath::Get_Vector_Dot(&fn, *speed, normal);
@@ -27,12 +27,12 @@ void Gravity::Diagonal_Accelerate(ML::Vec3* speed, const ML::Vec3& normal) const
 	//return after_Collision;
 }
 
-void Gravity::Reflaction_Vector(ML::Vec3* force, const ML::Vec3& normal) const
+void Physics::Reflaction_Vector(ML::Vec3* force, const ML::Vec3& normal)
 {
 	//単位ベクトルより小さくなった場合は斜め加速をさせる
 	if (force->Length() <= 1.0f)
 	{
-		this->Diagonal_Accelerate(force, normal);
+		Diagonal_Accelerate(force, normal);
 		return;
 	}
 

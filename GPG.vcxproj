@@ -84,6 +84,7 @@
     <ClCompile Include="Bbox.cpp" />
     <ClCompile Include="BEffect.cpp" />
     <ClCompile Include="Collision.cpp" />
+    <ClCompile Include="Cube.cpp" />
     <ClCompile Include="DG2014\DG2014_DGObject.cpp" />
     <ClCompile Include="DG2014\DG2014_Effect.cpp" />
     <ClCompile Include="DG2014\DG2014_Font.cpp" />
@@ -101,10 +102,14 @@
     <ClCompile Include="easing.cpp" />
     <ClCompile Include="Effect.cpp" />
     <ClCompile Include="GameEngine_Ver3_7.cpp" />
-    <ClCompile Include="Gravity.cpp" />
+    <ClCompile Include="Goal.cpp" />
+    <ClCompile Include="Light_Switch.cpp" />
     <ClCompile Include="myLib.cpp" />
     <ClCompile Include="MyMath.cpp" />
     <ClCompile Include="MyPG.cpp" />
+    <ClCompile Include="Physics.cpp" />
+    <ClCompile Include="Shape.cpp" />
+    <ClCompile Include="Sphere.cpp" />
     <ClCompile Include="Task_Ball.cpp" />
     <ClCompile Include="Task_CameraMan.cpp" />
     <ClCompile Include="Task_cursor.cpp" />
@@ -118,7 +123,9 @@
     <ClCompile Include="Task_title.cpp" />
     <ClCompile Include="Task_Tutorial.cpp" />
     <ClCompile Include="Task_UI.cpp" />
+    <ClCompile Include="Teleportation.cpp" />
     <ClCompile Include="Teleportation_Manager.cpp" />
+    <ClCompile Include="Wall.cpp" />
     <ClCompile Include="WinMain.cpp" />
     <ClCompile Include="xnacollision.cpp" />
   </ItemGroup>
@@ -126,6 +133,7 @@
     <ClInclude Include="Bbox.h" />
     <ClInclude Include="BEffect.h" />
     <ClInclude Include="Collision.h" />
+    <ClInclude Include="Cube.h" />
     <ClInclude Include="DG2014\DG2014_DGObject.h" />
     <ClInclude Include="DG2014\DG2014_Effect.h" />
     <ClInclude Include="DG2014\DG2014_Font.h" />
@@ -143,11 +151,15 @@
     <ClInclude Include="Effect.h" />
     <ClInclude Include="EFile.h" />
     <ClInclude Include="GameEngine_Ver3_7.h" />
-    <ClInclude Include="Gravity.h" />
+    <ClInclude Include="Goal.h" />
     <ClInclude Include="library.h" />
+    <ClInclude Include="Light_Switch.h" />
     <ClInclude Include="myLib.h" />
     <ClInclude Include="MyMath.h" />
     <ClInclude Include="MyPG.h" />
+    <ClInclude Include="Physics.h" />
+    <ClInclude Include="Shape.h" />
+    <ClInclude Include="Sphere.h" />
     <ClInclude Include="Task_Ball.h" />
     <ClInclude Include="Task_CameraMan.h" />
     <ClInclude Include="Task_cursor.h" />
@@ -161,7 +173,9 @@
     <ClInclude Include="Task_title.h" />
     <ClInclude Include="Task_Tutorial.h" />
     <ClInclude Include="Task_UI.h" />
+    <ClInclude Include="Teleportation.h" />
     <ClInclude Include="Teleportation_Manager.h" />
+    <ClInclude Include="Wall.h" />
     <ClInclude Include="xnacollision.h" />
   </ItemGroup>
   <ItemGroup>

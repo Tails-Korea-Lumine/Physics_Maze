@@ -53,14 +53,14 @@ namespace MapFence
 	
 		//追加したい変数・メソッドはここに追加する	
 		//変数
-		Bbox arr[10];
+		Bbox* arr[10];
 		size_t size;
 		int mapSize;
 		int fenceNumber;
 		float chipSize;
 		string chipName[10];		
 		//ボールのほうに渡す情報
-		std::vector< After_Collision> col_Poligons;
+		
 		//回転量
 		ML::QT map_QT;
 
@@ -72,9 +72,9 @@ namespace MapFence
 		//連続していて使えない面を探す
 		void Check_Unusable_Side();
 		//配列ソート
-		void Array_Sorting();
+		//void Array_Sorting();
 		//ボールタスクのフラグにIDを組み込める
-		void Insert_Id_To_Ball();
+		//void Insert_Id_To_Ball();
 		//レンダリングするかしないかを確認するためのメソッド
 		bool Is_Need_Render(const unsigned int& index);
 
@@ -82,7 +82,7 @@ namespace MapFence
 	public:
 		
 		//球とマップのあたり判定
-		void Map_Check_Hit(std::vector<ML::Vec3>& all_Points, const ML::Vec3& pos, const float& r, const ML::Vec3& speed);
+		void Map_Check_Hit(Shape3D* ball);
 		//マップの回転
 		void Map_Rotate(const ML::QT& qt);
 		

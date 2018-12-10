@@ -2,7 +2,8 @@
 #include "GameEngine_Ver3_7.h"
 #include <fstream>
 #include <sstream>
-#include "Collision.h"
+//#include "Collision.h"
+#include "MyMath.h"
 #include "Dm2008_Ver1_3.h"
 #include "Teleportation_Manager.h"
 #include "Task_Effect_Manager.h"
@@ -11,6 +12,42 @@
 
 //ゲーム内全域で使用する構造体などを定義する
 //-----------------------------------------------------------------------------------------------
+
+//三角形の基本情報
+//頂点と法線ベクトル
+struct Triangle
+{
+	ML::Vec3 a, b, c;
+	ML::Vec3 normal;
+};
+
+//あたり判定の後に返す構造体
+struct Collision_Data
+{
+	bool collision_Flag;
+	string collision_Id;
+	ML::Vec3 normal;
+
+	Collision_Data()
+	{
+		this->collision_Flag = false;
+		this->collision_Id = "";
+		this->normal = ML::Vec3(0, 0, 0);
+	}
+
+	//比較演算子オーバーロード
+	bool operator==(const Collision_Data& ac)
+	{
+		float check;
+		MyMath::Vector_Dot(&check, this->normal, ac.normal);
+		return check >= _CMATH_::cosf(ML::ToRadian(359));
+	}
+
+	bool operator!=(const Collision_Data& ac)
+	{
+		return *this == ac ? false : true;
+	}
+};
 
 
 
@@ -94,7 +131,7 @@ namespace  MyPG
 		//マップ全体の中心
 		ML::Vec3 Map_center;
 		//あたり判定の結果
-		std::list<After_Collision> collision_Result;
+		std::list<Collision_Data> collision_Result;
 		//テレポーテーションマネージャー
 		Teleportation_Manager TM;
 		//エフェクトマネージャー

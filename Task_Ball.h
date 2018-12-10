@@ -4,7 +4,7 @@
 //ボール
 //-------------------------------------------------------------------
 #include "GameEngine_Ver3_7.h"
-#include  "Gravity.h"
+#include "Sphere.h"
 
 namespace Ball
 {
@@ -52,21 +52,18 @@ namespace Ball
 		//変数
 
 		//現在位置(中心点)
-		ML::Vec3 pos;
+		//ML::Vec3 pos;
 		//移動量
 		ML::Vec3 speed;
-		//フレーム内の移動量変化を全部計算したベクトル
-		ML::Vec3 moveVec;
-		//半直径
-		float r;
+		//判定範囲
+		Shape3D* sphere;
+
 		//重さ
 		float m;
-		//回転量
-		float rot;
+		
 		//接触しているかを判定するフラグ
-		std::map<string, bool>collision_Flag;
-		//重力
-		Gravity G;
+		std::list<string> collision_Flag;
+
 		//テレポートをしたのかを判別するフラグ
 		bool teleportation_Flag;
 
@@ -83,7 +80,7 @@ namespace Ball
 		ML::Vec3 Get_Speed() const;
 
 		//ボールの座標から6個の頂点を取り出す
-		void Get_Poionts_to_Sphere(std::vector<ML::Vec3>* result) const;		
+		//void Get_Poionts_to_Sphere(std::vector<ML::Vec3>* result) const;		
 
 		//テレポートしたかを確認するタスク
 		bool Is_Teleport_Now() const;
@@ -94,7 +91,7 @@ namespace Ball
 		//テレポート(指定した場所に即移動する)引数 : (目的地)
 		void Teleportation(const ML::Vec3& objectPos);
 
-		//衝突フラグを登録する
-		void Set_Id_And_Flag(const string& id);
+		//あたり判定範囲をもらう
+		Shape3D* Get_Collision_Area();
 	};
 }

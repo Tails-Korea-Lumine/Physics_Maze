@@ -54,11 +54,11 @@ namespace Map_Core
 		//追加したい変数・メソッドはここに追加する
 		//変数
 		//真ん中のキューブと外に飛ばされないようにする外壁
-		Bbox core, barrier;		
+		Bbox* core;
+		Bbox* barrier[6];
 		//マップの大きさ
-		int mapSize;
-		//ボールに渡す情報	
-		std::vector< After_Collision> col_Poligons;		
+		int mapSize;		
+				
 		//回転量
 		ML::QT map_QT;		
 		//メソッド
@@ -68,7 +68,7 @@ namespace Map_Core
 		//回転
 		void Rotate_Core_and_Barrier(const ML::QT& qt);
 		//球とマップのあたり判定
-		void Core_Check_Hit(std::vector<ML::Vec3>& all_Points, const ML::Vec3& pos, const float& r, const ML::Vec3& speed);
+		void Core_Check_Hit(Shape3D* ball);
 		
 	};
 }
