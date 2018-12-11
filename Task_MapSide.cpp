@@ -352,7 +352,7 @@ namespace  Map_Side
 				}
 				//回転行列生成
 				ML::Mat4x4 matR;
-				D3DXMatrixAffineTransformation(&matR, this->chipSize / 100.0f, &ge->Map_center, &qt, NULL);				
+				D3DXMatrixAffineTransformation(&matR, 1.0f, &ge->Map_center, &qt, NULL);				
 
 				//ボックスに個別で渡す
 				this->arr[z][x]->Rotate_Box(&matR, qt);				

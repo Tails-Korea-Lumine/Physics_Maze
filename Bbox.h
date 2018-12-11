@@ -41,17 +41,13 @@ protected:
 	//ボックスのID
 	string box_Id;	
 	
-public:
-	//ほかのボックスと重なって使えない面を確認するフラグ
-	bool unusable_Triagle[12];
+public:	
 	//メソッド	
 	//回転関数　引数 : (回転した位置 , 回転量)
 	virtual void Rotate_Box(ML::Mat4x4* mat, const ML::QT& q);
 
 	//あたり判定に必要ない三角形を表示しておく
-	void Marking_On_Unusable_Side(const Box_Side&);
-	//表示したあたり判定に必要ない三角形を確認する
-	bool Get_Marking_Unsuable_Side(const int&);
+	void Marking_On_Unusable_Side(const Box_Side&);	
 	
 	//BoxTypeを確認する
 	BoxType What_Type_Is_this_Box() const;

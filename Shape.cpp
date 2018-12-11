@@ -7,6 +7,10 @@ Shape3D::Shape3D(const ML::Vec3& center, const ML::Vec3& length_H, const ML::QT&
 	this->half_of_Length = length_H;
 	this->quaternion = qt;
 	this->type = Shape3D_Type::Type_Clear;
+	for (size_t i = 0; i < 12; i++)
+	{
+		this->unusable_Triangle[i] = true;
+	}
 }
 
 
@@ -47,4 +51,10 @@ void Shape3D::Rotation(ML::Mat4x4* mat, const ML::QT& qt)
 {
 	this->center = mat->TransformCoord(this->center);
 	this->quaternion *= qt;
+}
+
+//判定しないポリゴンにマーキングしておく処理
+void Shape3D::Marking_On_Unsuable_Poligon(const size_t& i)
+{
+	this->unusable_Triangle[i] = false;
 }

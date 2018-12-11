@@ -225,8 +225,17 @@ namespace  MapFence
 
 			//ƒ{ƒbƒNƒX‚ÌID¶¬
 			string id = to_string(this->fenceNumber) + to_string(i);			
-			//”z—ñ‚É“o˜^
-			this->arr[i] = new Wall(pos, base, this->map_QT, id);
+			switch (Bbox::BoxType(chip))
+			{
+			case Bbox::BoxType::Wall:
+				//”z—ñ‚É“o˜^
+				this->arr[i] = new Wall(pos, base, this->map_QT, id);
+				break;
+			default:
+				continue;
+				break;
+			}
+			
 		}
 		fin.close();
 		return true;
@@ -284,7 +293,7 @@ namespace  MapFence
 			}
 			//‰ñ“]s—ñ¶¬
 			ML::Mat4x4 matR;
-			D3DXMatrixAffineTransformation(&matR, this->chipSize / 100.0f, &ge->Map_center, &qt, NULL);
+			D3DXMatrixAffineTransformation(&matR, 1.0f, &ge->Map_center, &qt, NULL);
 			//ƒ{ƒbƒNƒX‚ÉŒÂ•Ê‚Å“n‚·
 			this->arr[i]->Rotate_Box(&matR, qt);			
 		}

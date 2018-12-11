@@ -2,8 +2,6 @@
 #include "Sphere.h"
 #include "Cube.h"
 
-#define TRIANGLE_ON_CUBE 12
-
 
 bool Collision::Check_Collision_Triangle_Point(const Triangle& tri, const ML::Vec3& p)
 {
@@ -53,13 +51,13 @@ bool Collision::Check_Collision_Triangle_Point(const Triangle& tri, const ML::Ve
 }
 
 //OBBをAABBに戻して判定
-bool Collision::Intersect_AABB_Sphere(ML::Vec3* result, const Shape3D* owner, const Shape3D* visitor)
+void Collision::Intersect_OBB_Sphere(ML::Vec3* result, const Shape3D* owner, const Shape3D* visitor)
 {
 	//今までの回転量で逆行列を作る
-	ML::Mat4x4 matIR;
+	ML::Mat4x4 matR, matIR;
 
-	D3DXMatrixAffineTransformation(&matIR, 1.0f, &owner->Get_Center(), &owner->Get_Quaternion(), NULL);
-	matIR = matIR.Inverse();
+	D3DXMatrixAffineTransformation(&matR, 1.0f, &owner->Get_Center(), &owner->Get_Quaternion(), NULL);
+	matIR = matR.Inverse();
 
 
 	//逆行列に沿って回転した球の中心点
@@ -69,19 +67,18 @@ bool Collision::Intersect_AABB_Sphere(ML::Vec3* result, const Shape3D* owner, co
 	float x = max(owner->center.x - owner->half_of_Length.x, min(alined_Sphere_Center.x, owner->center.x + owner->half_of_Length.x));
 	float y = max(owner->center.y - owner->half_of_Length.y, min(alined_Sphere_Center.y, owner->center.y + owner->half_of_Length.y));
 	float z = max(owner->center.z - owner->half_of_Length.z, min(alined_Sphere_Center.z, owner->center.z + owner->half_of_Length.z));
-
-	//*result = ML::Vec3(x, y, z);
-
-	//完璧に離れているならfalseを返す
-	ML::Vec3 dist = ML::Vec3(x, y, z) - visitor->Get_Center();
-
-	*result = dist.Length() < visitor->Get_Length().x ? ML::Vec3(x, y, z) : visitor->Get_Center() + dist.Normalize() * visitor->Get_Length().x;
-	return true;
+	
+	//相対距離ベクトルをもらって
+	ML::Vec3 dist = ML::Vec3(x, y, z) - alined_Sphere_Center;
+	//相対ベクトルの長さによって近い点を計算
+	*result = dist.Length() <= visitor->Get_Length().x ? ML::Vec3(x, y, z) : alined_Sphere_Center + dist.Normalize() * -visitor->Get_Length().x;
+	//回転を元に戻して処理終了
+	*result = matR.TransformCoord(*result);
 }
 
 
 //マス別に呼ばれる関数
-bool Collision::Check_Collision_Cube_Sphere(std::vector<Collision_Data>* result, const Shape3D* owner, const ML::Vec3& nearest_point, const bool unsuable_Triangle[])
+bool Collision::Check_Collision_Cube_Sphere(std::vector<Collision_Data>* result, const Shape3D* owner, const ML::Vec3& nearest_point)
 {		
 	//コンストラクタによってゼロベクトルとfalseで生成される
 	Collision_Data collision_True;
@@ -129,11 +126,11 @@ bool Collision::Check_Collision_Cube_Sphere(std::vector<Collision_Data>* result,
 	std::vector<Triangle> all_Tri;
 	owner->Get_Triangle_Box3D(&all_Tri);
 
-	for (int i = 0; i < TRIANGLE_ON_CUBE; i++)
+	for (int i = 0; i < all_Tri.size(); i++)
 	{
 		//例外でないかつ三角形と点のあたり判定が合ってる場合で保存する
 		//unsuable_Triangle[i] == false &&
-		if ( Check_Collision_Triangle_Point(all_Tri[i], nearest_point))
+		if (Check_Collision_Triangle_Point(all_Tri[i], nearest_point))
 		{
 			//以下あたった三角形の法線ベクトルとフラグを返す処理
 			collision_True.collision_Flag = true;

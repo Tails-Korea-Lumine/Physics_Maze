@@ -67,7 +67,7 @@ namespace  Map_Core
 
 		for (size_t i = 0; i < 6; i++)
 		{
-			this->barrier[i] = new Wall(ge->Map_center + ML::Vec3(0,50*(this->mapSize+3),0), ML::Vec3(50 * (this->mapSize + 2), 100 , 50 * (this->mapSize + 2)), this->map_QT, "barrier" + to_string(i));
+			this->barrier[i] = new Wall(ge->Map_center + ML::Vec3(0,50*(this->mapSize+3),0), ML::Vec3(50 * (this->mapSize + 2), 50 , 50 * (this->mapSize + 2)), this->map_QT, "barrier");
 			ML::Mat4x4 matR;
 			matR.Identity();
 			//‰ŠúˆÊ’u‚Ü‚Å‰ñ“]

@@ -96,7 +96,7 @@ namespace  Ball
 	void Object::Move_Ball(const unsigned int& precisioin)
 	{
 		//1フレームの終端速度
-		const float termination_Speed = 7.0f;
+		const float termination_Speed = 5.0f;
 
 		//終端速度及び物理精密度による速度処理
 		auto Clamp_Speed = [&](ML::Vec3& speed)

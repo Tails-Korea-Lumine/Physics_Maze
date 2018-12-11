@@ -4,7 +4,7 @@
 bool Wall::Collision_Action(std::vector<Collision_Data>* result, Shape3D* ball) const
 {	
 	//あたり判定結果をresultに保存
-	if (!this->collision_Base->Hit(result, ball, this->unusable_Triagle))
+	if (!this->collision_Base->Hit(result, ball))
 	{
 		//当たらなかった時だけゼロベクトルリザルトをpushbackする
 		result->push_back(Collision_Data());

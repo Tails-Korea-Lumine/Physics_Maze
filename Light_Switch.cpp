@@ -5,7 +5,7 @@
 bool Light_Switch::Collision_Action(std::vector<Collision_Data>* result, Shape3D* ball) const
 {	
 	//‚ ‚½‚è”»’èŒ‹‰Ê‚ðresult‚É•Û‘¶
-	if (!this->collision_Base->Hit(result, ball, this->unusable_Triagle))
+	if (!this->collision_Base->Hit(result, ball))
 	{
 		//“–‚½‚ç‚È‚©‚Á‚½Žž‚Ífalse‚ð•Ô‚·
 		return false;

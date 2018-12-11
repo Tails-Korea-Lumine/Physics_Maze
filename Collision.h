@@ -12,13 +12,13 @@ namespace Collision
 	//一個の点と三角形の衝突判定を行う
 	bool Check_Collision_Triangle_Point(const Triangle& tri, const ML::Vec3& p);
 
-	//OBBをAABBに戻して判定
-	bool Intersect_AABB_Sphere(ML::Vec3* result, const Shape3D* owner, const Shape3D* visitor);
+	//OBBをAABBに戻して一番近い点を算出する処理
+	void Intersect_OBB_Sphere(ML::Vec3* result, const Shape3D* OBB, const Shape3D* Sphere);
 	
 
 	//球体と六面体衝突判定関数
-	//引数：(結果を保存するstd::vectorのアドレス、3次元図形の判定する側、される側、例外のラムダ式)
-	bool Check_Collision_Cube_Sphere(std::vector<Collision_Data>* result, const Shape3D* cube, const ML::Vec3& nearest_point , const bool unsuable_Triangle[]);
+	//引数：(結果を保存するstd::vectorのアドレス、3次元図形の判定する側、される側)
+	bool Check_Collision_Cube_Sphere(std::vector<Collision_Data>* result, const Shape3D* cube, const ML::Vec3& nearest_point);
 	
 };
 

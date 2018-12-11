@@ -135,13 +135,17 @@ void Cube::Get_Triangle_Box3D(std::vector<Triangle>* result) const
 
 	//std::vector result‚É“o˜^‚³‚¹‚é
 	for (int i = 0; i < TRIANGLE_ON_CUBE; i++)
-	{		
+	{
+		if (this->unusable_Triangle[i] == false)
+		{
+			continue;
+		}
 		t[i].normal = t[i].normal.Normalize();
 		result->push_back(t[i]);
 	}
 }
 
-bool Cube::Hit(std::vector<Collision_Data>* result, Shape3D* other, const bool unsuable_Triangle[])
+bool Cube::Hit(std::vector<Collision_Data>* result, Shape3D* other)
 {
 	//‹…‚Æ‚Ì‚ ‚½‚è”»’è‚¾‚¯‚ğ‘z’è‚µ‚Ä‚¢‚é‚Ì‚ÅA‚»‚ÌˆÈŠO‚¾‚Á‚½‚ç”»’è‚µ‚È‚¢
 	if (other->type != Shape3D_Type::Type_Sphere)
@@ -151,13 +155,10 @@ bool Cube::Hit(std::vector<Collision_Data>* result, Shape3D* other, const bool u
 
 	//‹…‚ÆƒLƒ…[ƒu‚ğ‹t‰ñ“]‚µ‚ÄAÅ’Z‹——£‚Ì“_‚ğæ‚é
 	ML::Vec3 nearest_Point;
-	if (Collision::Intersect_AABB_Sphere(&nearest_Point, this, other) == false)
-	{
-		return false;
-	}
+	Collision::Intersect_OBB_Sphere(&nearest_Point, this, other);
 
 	//”»’è
-	return Collision::Check_Collision_Cube_Sphere(result, this, nearest_Point, unsuable_Triangle) ;
+	return Collision::Check_Collision_Cube_Sphere(result, this, nearest_Point) ;
 	
 }
 

@@ -10,7 +10,7 @@ public:
 	//ポリゴン取り出し
 	virtual void Get_Triangle_Box3D(std::vector<Triangle>* result) const override;
 	//あたり判定
-	virtual bool Hit(std::vector<Collision_Data>* result, Shape3D* other, const bool unsuable_Triangle[]) override;
+	virtual bool Hit(std::vector<Collision_Data>* result, Shape3D* other) override;
 
 	//コンストラクタ
 	Cube(const ML::Vec3& center, const ML::Vec3& length_H, const ML::QT& qt);

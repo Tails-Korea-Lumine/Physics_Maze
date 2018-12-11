@@ -7,7 +7,7 @@ void Sphere::Get_Triangle_Box3D(std::vector<Triangle>* r)const
 	return;
 }
 
-bool Sphere::Hit(std::vector<Collision_Data>* result, Shape3D* other,const bool unsuable_Triangle[])
+bool Sphere::Hit(std::vector<Collision_Data>* result, Shape3D* other)
 {
 	//球とのあたり判定だけを想定しているので、その以外だったら判定しない
 	if (other->type != Shape3D_Type::Type_Cube)
@@ -17,13 +17,10 @@ bool Sphere::Hit(std::vector<Collision_Data>* result, Shape3D* other,const bool 
 
 	//球とキューブを逆回転して、最短距離の点を取る
 	ML::Vec3 nearest_Point;
-	if (Collision::Intersect_AABB_Sphere(&nearest_Point, other, this) == false)
-	{
-		return false;
-	}
+	Collision::Intersect_OBB_Sphere(&nearest_Point, other, this);
 
 	//判定
-	return Collision::Check_Collision_Cube_Sphere(result, other, nearest_Point, unsuable_Triangle);
+	return Collision::Check_Collision_Cube_Sphere(result, other, nearest_Point);
 }
 
 Sphere::Sphere(const ML::Vec3& center, const ML::Vec3& length_H, const ML::QT& qt)

@@ -15,6 +15,7 @@ public:
 		Type_Cube = 1,//六面体
 		Type_Sphere = 2,//球
 	};
+
 	//中心点
 	ML::Vec3 center;
 	//各軸の長さの半分
@@ -23,9 +24,10 @@ public:
 	ML::QT quaternion;
 	//どのものにポリモフされたか確認するメンバー
 	Shape3D_Type type;
+	//三角形で判定を行う場合、使えない三角形を確認するフラグ
+	bool unusable_Triangle[12];
 
-private:
-	
+private:	
 
 	
 public:
@@ -42,7 +44,7 @@ public:
 	virtual void Get_Triangle_Box3D(std::vector<Triangle>* result) const =0;
 	//あたり判定
 	//引数 : (判定を保存するヴェクター、判定を行う3次元図形、例外的に判定をしない条件のラムダ式)
-	virtual bool Hit(std::vector<Collision_Data>* result, Shape3D* other, const bool unsuable_Triangle[]) =0;
+	virtual bool Hit(std::vector<Collision_Data>* result, Shape3D* other) =0;
 
 	//移動
 	//引数 : (移動量)
@@ -53,7 +55,10 @@ public:
 
 	//回転
 	//引数 : (回転量)
-	void Rotation(ML::Mat4x4* mat, const ML::QT& qt);	
+	void Rotation(ML::Mat4x4* mat, const ML::QT& qt);
+
+	//判定しないポリゴンにマーキングしておく処理
+	void Marking_On_Unsuable_Poligon(const size_t&);
 
 	//コンストラクタ
 	//引数 : (中心点、長さの半分、初期の回転量)
