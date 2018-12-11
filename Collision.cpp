@@ -70,12 +70,12 @@ bool Collision::Intersect_AABB_Sphere(ML::Vec3* result, const Shape3D* owner, co
 	float y = max(owner->center.y - owner->half_of_Length.y, min(alined_Sphere_Center.y, owner->center.y + owner->half_of_Length.y));
 	float z = max(owner->center.z - owner->half_of_Length.z, min(alined_Sphere_Center.z, owner->center.z + owner->half_of_Length.z));
 
-	*result = ML::Vec3(x, y, z);
+	//*result = ML::Vec3(x, y, z);
 
 	//完璧に離れているならfalseを返す
-	ML::Vec3 dist = *result - visitor->Get_Center();
+	ML::Vec3 dist = ML::Vec3(x, y, z) - visitor->Get_Center();
 
-	//return dist.Length() < visitor->Get_Length().x;
+	*result = dist.Length() < visitor->Get_Length().x ? ML::Vec3(x, y, z) : visitor->Get_Center() + dist.Normalize() * visitor->Get_Length().x;
 	return true;
 }
 
@@ -132,7 +132,8 @@ bool Collision::Check_Collision_Cube_Sphere(std::vector<Collision_Data>* result,
 	for (int i = 0; i < TRIANGLE_ON_CUBE; i++)
 	{
 		//例外でないかつ三角形と点のあたり判定が合ってる場合で保存する
-		if (unsuable_Triangle[i] == false && Check_Collision_Triangle_Point(all_Tri[i], nearest_point))
+		//unsuable_Triangle[i] == false &&
+		if ( Check_Collision_Triangle_Point(all_Tri[i], nearest_point))
 		{
 			//以下あたった三角形の法線ベクトルとフラグを返す処理
 			collision_True.collision_Flag = true;

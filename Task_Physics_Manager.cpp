@@ -6,7 +6,7 @@
 #include "easing.h"
 #include "MyMath.h"
 
-#define PRECISION 3
+#define PRECISION 6
 
 namespace  Physics_Manager
 {
