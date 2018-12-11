@@ -27,7 +27,7 @@ public:
 	//三角形で判定を行う場合、使えない三角形を確認するフラグ
 	bool unusable_Triangle[12];
 
-private:	
+private:
 
 	
 public:

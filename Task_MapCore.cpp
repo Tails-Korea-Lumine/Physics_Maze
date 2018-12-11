@@ -44,29 +44,9 @@ namespace  Map_Core
 		this->core = new Wall(ge->Map_center, ML::Vec3(50 * this->mapSize, 50 * this->mapSize, 50 * this->mapSize), this->map_QT,"core");
 
 		//バリアの初期化
-		//各面ごとバリアを置いたver0.5
-		////各面に価するあたり判定範囲
-		//ML::Box3D XZ, XY, YZ;
-		//XZ = ML::Box3D(-100 * (this->mapSize -2), -50 , -100 * (this->mapSize -2), 100 * (this->mapSize + 4), 100, 100 * (this->mapSize + 4));
-		//XY = ML::Box3D(-100 * (this->mapSize - 2), -100 * (this->mapSize - 2), -50 , 100 * (this->mapSize + 4), 100 * (this->mapSize + 4), 100);
-		//YZ = ML::Box3D(-50 , -100 * (this->mapSize - 2), -100 * (this->mapSize - 2), 100, 100 * (this->mapSize + 4), 100 * (this->mapSize + 4));
-		////面ごとの初期位置		
-		//this->b_ini_pos[0] = ge->Map_center + ML::Vec3(0.0f, 53.0f * (this->mapSize + 3), 0.0f);
-		//this->b_ini_pos[1] = ge->Map_center + ML::Vec3(0.0f, 0.0f, 53.0f * (this->mapSize + 3));
-		//this->b_ini_pos[2] = ge->Map_center + ML::Vec3(-53.0f * (this->mapSize + 3), 0.0f, 0.0f);
-		//this->b_ini_pos[3] = ge->Map_center + ML::Vec3(53.0f * (this->mapSize + 3), 0.0f, 0.0f);
-		//this->b_ini_pos[4] = ge->Map_center + ML::Vec3(0.0f, 0.0f, -53.0f * (this->mapSize + 3));
-		//this->b_ini_pos[5] = ge->Map_center + ML::Vec3(0.0f, -53.0f * (this->mapSize + 3), 0.0f);
-		////Bbox初期化
-		//this->barrier[0] = Bbox(BoxType::Barrier, b_ini_pos[0] , XZ, this->map_QT);
-		//this->barrier[1] = Bbox(BoxType::Barrier, b_ini_pos[1] , XY, this->map_QT);
-		//this->barrier[2] = Bbox(BoxType::Barrier, b_ini_pos[2] , YZ, this->map_QT);
-		//this->barrier[3] = Bbox(BoxType::Barrier, b_ini_pos[3] , YZ, this->map_QT);
-		//this->barrier[4] = Bbox(BoxType::Barrier, b_ini_pos[4] , XY, this->map_QT);
-		//this->barrier[5] = Bbox(BoxType::Barrier, b_ini_pos[5] , XZ, this->map_QT);
-
 		for (size_t i = 0; i < 6; i++)
 		{
+			//Y+方面にまず生成しておいて、その後回転をする方式
 			this->barrier[i] = new Wall(ge->Map_center + ML::Vec3(0,50*(this->mapSize+3),0), ML::Vec3(50 * (this->mapSize + 2), 50 , 50 * (this->mapSize + 2)), this->map_QT, "barrier");
 			ML::Mat4x4 matR;
 			matR.Identity();
@@ -202,7 +182,7 @@ namespace  Map_Core
 		for (auto& c : col_Poligons)
 		{
 			ge->collision_Result.push_back(c);
-		}		
+		}
 	}
 	//-------------------------------------------------------------------------------------------
 	//クォータニオンを更新する関数

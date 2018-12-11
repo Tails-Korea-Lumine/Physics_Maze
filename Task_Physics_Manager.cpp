@@ -6,7 +6,7 @@
 #include "easing.h"
 #include "MyMath.h"
 
-#define PRECISION 6
+#define PRECISION 3
 
 namespace  Physics_Manager
 {
@@ -176,9 +176,9 @@ namespace  Physics_Manager
 				}
 			}
 			//easingデータが回転量で更新される
-			this->frame_QTxp = ML::QT(this->anckerX, ML::ToRadian(-(easing::GetPos("Decrese_StickVolumeXM"))  / delicate));
+			this->frame_QTxm = ML::QT(this->anckerX, ML::ToRadian(-(easing::GetPos("Decrese_StickVolumeXM"))  / delicate));
 						
-			this->frame_QTxm = ML::QT(this->anckerX, ML::ToRadian((easing::GetPos("Decrese_StickVolumeXP")) / delicate));
+			this->frame_QTxp = ML::QT(this->anckerX, ML::ToRadian((easing::GetPos("Decrese_StickVolumeXP")) / delicate));
 			
 			
 			this->frame_QTym = ML::QT(this->anckerY, ML::ToRadian(-(easing::GetPos("Decrese_StickVolumeYM")) / delicate));
@@ -203,15 +203,9 @@ namespace  Physics_Manager
 			{
 				(*f)->Map_Rotate(frame_QT_All);
 			}
-			
-			//ボールの外角ドットを取り出しておく
-			all_Points.clear();
-			//ball->Get_Poionts_to_Sphere(&all_Points);
 
-			//あたり判定は毎回マップのほうで行う	
 			ge->collision_Result.clear();
-			
-			
+			//あたり判定は毎回マップのほうで行う			
 			//ボールとマップのあたり判定及び保存
 			//コア
 			core->Core_Check_Hit(ball->Get_Collision_Area());

@@ -221,7 +221,6 @@ namespace  Ball
 	void Object::Teleportation(const ML::Vec3& objectPos)
 	{
 		this->teleportation_Flag = true;
-		//this->pos = objectPos;
 		this->sphere->Set_Position(objectPos);
 	}
 

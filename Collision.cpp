@@ -81,75 +81,29 @@ void Collision::Intersect_OBB_Sphere(ML::Vec3* result, const Shape3D* owner, con
 bool Collision::Check_Collision_Cube_Sphere(std::vector<Collision_Data>* result, const Shape3D* owner, const ML::Vec3& nearest_point)
 {		
 	//コンストラクタによってゼロベクトルとfalseで生成される
-	Collision_Data collision_True;
+	Collision_Data cd;
 
-
-	//以前に判断したことに対して処理を別にする
-	//以前の判定で衝突が起こる可能性があったので精密判定をする
-	
-		////衝突判定スタート
-		//for (const auto& tri : all_Tri)
-		//{			
-		//	//マスとマス接触面でおかしい加速を防ぐ
-		//	//移動ベクトルと衝突した三角形の法線ベクトルのcos値
-		//	float cosSN;
-		//	MyMath::Vector_Dot(&cosSN, speed, tri.normal);
-		//	//cos値が1ということは内角が0度だということ、つまり物理的にあり得ない衝突
-		//	//もしものために誤差範囲まで確認
-		//	if (cosSN >= judge)
-		//	{
-		//		//なので無視する
-		//		continue;
-		//	}
-
-		//	collision_True = After_Collision();
-		//	for (const auto& p : all_Points)
-		//	{
-		//		//それ以外の場合であたり判定を行う
-		//		if (Collision::Check_Collision(tri, p))
-		//		{
-		//			//以下あたった三角形の法線ベクトルとフラグを返す処理
-		//			collision_True.collision_Flag = true;
-		//			collision_True.normal = tri.normal;
-		//			//もう登録されているものなのか確認する
-		//			if (result->size() == 0 || collision_True != result->at(result->size() - 1))
-		//			{
-		//				result->push_back(collision_True);
-		//			}
-		//			//ポリゴン1個あたり1つの点の衝突が起きたらそれで次のポリゴンの判定をする
-		//			break;
-		//		}
-		//	}
-		//}
 
 	//判定用の三角形を取り出す
 	std::vector<Triangle> all_Tri;
 	owner->Get_Triangle_Box3D(&all_Tri);
 
-	for (int i = 0; i < all_Tri.size(); i++)
+	for (auto& tri : all_Tri)
 	{
 		//例外でないかつ三角形と点のあたり判定が合ってる場合で保存する
 		//unsuable_Triangle[i] == false &&
-		if (Check_Collision_Triangle_Point(all_Tri[i], nearest_point))
+		if (Check_Collision_Triangle_Point(tri, nearest_point))
 		{
 			//以下あたった三角形の法線ベクトルとフラグを返す処理
-			collision_True.collision_Flag = true;
-			collision_True.normal = all_Tri[i].normal;
+			cd.collision_Flag = true;
+			cd.normal = tri.normal;
 			//もう登録されているものなのか確認する
-			if (result->size() == 0 || collision_True != result->at(result->size() - 1))
+			if (result->size() == 0 || cd != result->at(result->size() - 1))
 			{
-				result->push_back(collision_True);
+				result->push_back(cd);
 			}			
 		}
 	}
-		
-	
-	//
-	////精密判定は現在位置で行って精密判定フラグは移動したと予想されるところで判定をする
-	//ML::Vec3 next_Pos = ball_Pos + speed;
-	////次の位置がボックスの対角線を半直径とする球とあったていると精密判定フラグを立てる
-	//this->pricision_Flag = ML::Vec3(next_Pos - box_Center).Length() <= r + abs( ROOT3 / 2.0f*(box_Length));
-	
-	return collision_True.collision_Flag;
-}
 
+	return cd.collision_Flag;
+}

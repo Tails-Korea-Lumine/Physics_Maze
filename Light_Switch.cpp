@@ -12,8 +12,8 @@ bool Light_Switch::Collision_Action(std::vector<Collision_Data>* result, Shape3D
 	}
 	//カメラマンにライトを3秒間オフする命令を送る
 	ge->GetTask_One_G<CameraMan::Object>("カメラマン")->Turnoff_the_Light();
-	//判定は当たったのでtrueを返す
-	return true;
+	//判定は当たったが物理処理はやらないのが望ましいのでfalseを返す
+	return false;
 }
 
 Light_Switch::Light_Switch(const ML::Vec3& pos, const ML::Vec3& half_Of_Length, const ML::QT& qt, const string id)

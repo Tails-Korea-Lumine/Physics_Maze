@@ -1,5 +1,6 @@
 #include "Teleportation.h"
 #include "MyPG.h"
+#include "Task_Ball.h"
 
 bool Teleportation::Collision_Action(std::vector<Collision_Data>* result, Shape3D* ball) const
 {	
@@ -14,17 +15,14 @@ bool Teleportation::Collision_Action(std::vector<Collision_Data>* result, Shape3
 	//テレポートができない時もfalseを返す
 	if (ge->TM.Find_Exit(this->side_Number, &exitpos))
 	{
-		ball->Set_Position(exitpos);
+		//ボールタスクにテレポートの命令を送る
+		ge->GetTask_One_G<Ball::Object>("ボール")->Teleportation(exitpos);
+
 		auto eff = ge->eff_Manager.lock();
 		//テレポートインのエフェクト
-		eff->Add_Effect(ball->Get_Center(), this->Get_Pos(), ML::Vec3(0, 0, 0), BEffect::effType::Teleportin);
-		//テレポートインの音を鳴らす
-		//DM::Sound_Play(this->res->seTeleportIn, false);
+		eff->Add_Effect(ball->Get_Center(), this->Get_Pos(), ML::Vec3(0, 0, 0), BEffect::effType::Teleportin);		
 		//テレポートアウトのエフェクト
 		eff->Add_Effect(exitpos, exitpos - ge->Map_center, BEffect::effType::TeleportOut);
-		//テレポートアウトの音を鳴らす
-		//DM::Sound_Play(this->res->seTeleportOut, false);
-
 		return true;
 	}
 	return false;
