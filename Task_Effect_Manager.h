@@ -3,7 +3,7 @@
 //-------------------------------------------------------------------
 //エフェクトマネージャー
 //-------------------------------------------------------------------
-#include "Effect.h"
+#include "BEffect.h"
 
 namespace EffectManager
 {
@@ -23,6 +23,11 @@ namespace EffectManager
 		static   WP  instance;
 		static  Resource::SP  Create();
 		//共有する変数はここに追加する
+		string mesh_Telein;
+		string mesh_Teleout;
+		string mesh_Gameclear;
+		string seTeleportIn;
+		string seTeleportOut;
 	};
 	//-------------------------------------------------------------------
 	class  Object : public  BTask
@@ -47,20 +52,20 @@ namespace EffectManager
 		//変更可◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇
 	
 		//追加したい変数・メソッドはここに追加する
-		//変数
-		//現在存在しているエフェクトリスト
-		std::list<Effect*> efList;
+		//変数		
 		//動いているエフェクトリスト
-		std::list<Effect> play_Effect_List;
+		std::list<BEffect*> play_Effect_List;
 
 		//メソッド
 		//全体のライフを1フレームに1ずつ減少させる
-		void Dec_Effect_Life();
-		//ゲームで使用するエフェクトを宣言
-		void Create_Effect(const BEffect::effType& handle);
+		void Dec_Effect_Life();		
 	public:
-		//外部からの追加命令
+		//外部からのエフェクト追加命令
+		//移動しないエフェクト
+		//引数 : (生成位置、精製角度、エフェクトの種類)
 		void Add_Effect(const ML::Vec3& pos, const ML::Vec3& angle, const BEffect::effType& handle);
+		//移動をするエフェクト
+		//引数 : (生成位置、目的地、精製角度、エフェクトの種類)
 		void Add_Effect(const ML::Vec3& pos, const ML::Vec3& target, const ML::Vec3& angle, const BEffect::effType& handle);			
 
 	};

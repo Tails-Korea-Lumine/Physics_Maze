@@ -115,11 +115,17 @@
     <Filter Include="MyPG\Bbox\Goal">
       <UniqueIdentifier>{8f5f2b3c-2dd8-4985-828c-09431c16e9b0}</UniqueIdentifier>
     </Filter>
-    <Filter Include="MyPG\BEffect\Effect">
-      <UniqueIdentifier>{2e85247c-fb87-40d3-857e-4c1791da1421}</UniqueIdentifier>
-    </Filter>
     <Filter Include="MyPG\Physics">
       <UniqueIdentifier>{2ce5a61e-806c-4992-80b8-ccfc0cc21bdc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="MyPG\BEffect\Teleport_Out">
+      <UniqueIdentifier>{eefa733c-489e-4462-8c1b-68a241b12aa9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="MyPG\BEffect\Teleport_In">
+      <UniqueIdentifier>{25613767-04c2-4c4a-a8ed-02cb92647975}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="MyPG\BEffect\Game_Clear">
+      <UniqueIdentifier>{3b57d138-9325-45e5-afae-322135222459}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -213,9 +219,6 @@
     <ClCompile Include="Task_Effect_Manager.cpp">
       <Filter>MyPG\Tasks\EffectManager</Filter>
     </ClCompile>
-    <ClCompile Include="Effect.cpp">
-      <Filter>MyPG\BEffect\Effect</Filter>
-    </ClCompile>
     <ClCompile Include="easing.cpp" />
     <ClCompile Include="MyPG.cpp" />
     <ClCompile Include="WinMain.cpp" />
@@ -257,6 +260,15 @@
     </ClCompile>
     <ClCompile Include="Physics.cpp">
       <Filter>MyPG\Physics</Filter>
+    </ClCompile>
+    <ClCompile Include="Teleport_In.cpp">
+      <Filter>MyPG\BEffect\Teleport_In</Filter>
+    </ClCompile>
+    <ClCompile Include="Teleport_Out.cpp">
+      <Filter>MyPG\BEffect\Teleport_Out</Filter>
+    </ClCompile>
+    <ClCompile Include="Game_Clear.cpp">
+      <Filter>MyPG\BEffect\Game_Clear</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -353,9 +365,6 @@
     <ClInclude Include="Task_Effect_Manager.h">
       <Filter>MyPG\Tasks\EffectManager</Filter>
     </ClInclude>
-    <ClInclude Include="Effect.h">
-      <Filter>MyPG\BEffect\Effect</Filter>
-    </ClInclude>
     <ClInclude Include="easing.h" />
     <ClInclude Include="MyPG.h" />
     <ClInclude Include="MyMath.h">
@@ -396,6 +405,15 @@
     </ClInclude>
     <ClInclude Include="Physics.h">
       <Filter>MyPG\Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="Teleport_In.h">
+      <Filter>MyPG\BEffect\Teleport_In</Filter>
+    </ClInclude>
+    <ClInclude Include="Teleport_Out.h">
+      <Filter>MyPG\BEffect\Teleport_Out</Filter>
+    </ClInclude>
+    <ClInclude Include="Game_Clear.h">
+      <Filter>MyPG\BEffect\Game_Clear</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -183,7 +183,6 @@ namespace  CameraMan
 			//移動中フラグを立てる
 			this->moving_Flag = true;
 			//目的地と現在位置が異なる場合
-			//相対距離の25%ずつ移動する
 			ML::Vec3 d = this->destination - this->nowPos;
 			this->nowPos += d * easing::GetPos("Moving_Camera");
 

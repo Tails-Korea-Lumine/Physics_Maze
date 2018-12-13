@@ -159,13 +159,10 @@ namespace  Game
 		ge->TM.Increse_Counter();
 
 		//始まる前の演出が終わったら準備中フラグを無効にする
-		if (!this->GET_READY())
+		if (!this->GET_READY() && this->Is_Camera_Promotion_Over())
 		{
-			if (this->Is_Camera_Promotion_Over())
-			{
-				ge->getReadyFlag = false;
-				this->timeCnt = 0;
-			}
+			ge->getReadyFlag = false;
+			this->timeCnt = 0;
 		}
 		//時間を更新
 		this->timeCnt++;
@@ -176,25 +173,7 @@ namespace  Game
 	//「２Ｄ描画」１フレーム毎に行う処理
 	void  Object::Render2D_AF()
 	{
-		/*auto ball = ge->GetTask_One_G<Ball::Object>("ボール");
-		if (ball == nullptr)
-		{
-			return;
-		}
-		char buf[1024];
-		sprintf(buf, "pos : %4.3f , %4.3f , %4.3f \n"
-			"speed : %4.3f , %4.3f , %4.3f \n"
-			"WorldR : %4.3f , %4.3f , %4.3f",
-			 ball->Get_Pos().x, ball->Get_Pos().y, ball->Get_Pos().z, ball->Get_Speed().x, ball->Get_Speed().y, ball->Get_Speed().z,
-			ge->World_Rotation.x, ge->World_Rotation.y, ge->World_Rotation.z);
 
-		ML::Box2D moji(100, 0, 600, 600);
-		DG::Font_Draw("FontA", moji, buf, ML::Color(1, 1, 0, 1));
-
-		ML::Box2D draw(0, 0, ge->screenWidth, ge->screenHeight);
-		ML::Box2D src(0, 0, 960, 539);*/
-
-		//DG::Image_Draw(this->res->BG_Image, draw, src);
 	}
 
 	void  Object::Render3D_L0()

@@ -28,19 +28,13 @@ public:
 	//---------------------------------------------------------------------------------------------
 	enum effType
 	{
-		CLEAR = -1,
-		CreateCharactor = 0,
-		TeleportOut,
-		Teleportin,
-		EnemyLanding,
-		Hit_to_Enemy,
-		Hit_to_Wall,
-		CreateTail,
-		DestroyTail,
-		Hit_to_Tail,
+		EFF_CLEAR = -1,		
+		TeleportOut =0,
+		Teleportin,		
 		Game_Clear,
 	};
-	effType playing_EffectHandle;
+protected:
+	//effType playing_EffectHandle;
 	int effect_Life;
 	
 	ML::Vec3 pos;//エフェクト再生位置
@@ -51,19 +45,26 @@ public:
 	float alpha;//透明度
 
 	string meshName;//メッシュの名前
-	//string filePath;//メッシュのパス
+	string sound_Name;//サウンドエフェクトの名前
 
-
-
+public:
 	//メソッド
 	//初期化でメッシュを読み込む関数
-	void LoadEffect(const effType& handle);
+	//void LoadEffect(const effType& handle);	
 
-	//初期化メソッド
-	//その場で全部処理するエフェクト
-	void Eff_Initialize(const ML::Vec3& pos, const ML::Vec3& angle);
-	//目的地まで移動しながら処理するエフェクト
-	void Eff_Initialize(const ML::Vec3& pos, const ML::Vec3& target, const ML::Vec3& angle);
+	//仮想関数
+	virtual void Effect_Update() = 0;
+	virtual void Effect_Draw() const = 0;
+
+	//メソッド
+	//エフェクトの残り時間を減少させる
+	void Dec_Eff();
+	//エフェクトが生きているかを確認する
+	bool Is_Alive() const;	
+	
+	//エフェクトセッティング
+	//void Set_Effect(const ML::Vec3& pos, const ML::Vec3& angle);
+	//void Set_Effect(const ML::Vec3& pos, const ML::Vec3& target, const ML::Vec3& angle);
 
 	//生成消滅
 	//ゼロクリア
@@ -73,12 +74,19 @@ public:
 		angle(0, 0, 0),
 		scale(0,0,0),
 		moveVec(0,0,0),
-		playing_EffectHandle(CLEAR),
+		//playing_EffectHandle(EFF_CLEAR),
 		effect_Life(0),
 		alpha(1)
 	{
 		
 	}
+	//コンストラクタ
+	//生成場所だけで行うエフェクト
+	//引数 : (生成位置、生成向き)
+	BEffect(const ML::Vec3& pos, const ML::Vec3& angle);
+	//目的地まで移動しながら処理するエフェクト
+	//引数 : (生成位置、目的地、生成向き)
+	BEffect(const ML::Vec3& pos, const ML::Vec3& target, const ML::Vec3& angle);
 
 	virtual ~BEffect(){}
 };

@@ -100,8 +100,8 @@
     <ClCompile Include="DI2014_Ver3_4.cpp" />
     <ClCompile Include="Dm2008_Ver1_3.cpp" />
     <ClCompile Include="easing.cpp" />
-    <ClCompile Include="Effect.cpp" />
     <ClCompile Include="GameEngine_Ver3_7.cpp" />
+    <ClCompile Include="Game_Clear.cpp" />
     <ClCompile Include="Goal.cpp" />
     <ClCompile Include="Light_Switch.cpp" />
     <ClCompile Include="myLib.cpp" />
@@ -125,6 +125,8 @@
     <ClCompile Include="Task_UI.cpp" />
     <ClCompile Include="Teleportation.cpp" />
     <ClCompile Include="Teleportation_Manager.cpp" />
+    <ClCompile Include="Teleport_In.cpp" />
+    <ClCompile Include="Teleport_Out.cpp" />
     <ClCompile Include="Wall.cpp" />
     <ClCompile Include="WinMain.cpp" />
     <ClCompile Include="xnacollision.cpp" />
@@ -148,9 +150,9 @@
     <ClInclude Include="DI2014_Ver3_4.h" />
     <ClInclude Include="Dm2008_Ver1_3.h" />
     <ClInclude Include="easing.h" />
-    <ClInclude Include="Effect.h" />
     <ClInclude Include="EFile.h" />
     <ClInclude Include="GameEngine_Ver3_7.h" />
+    <ClInclude Include="Game_Clear.h" />
     <ClInclude Include="Goal.h" />
     <ClInclude Include="library.h" />
     <ClInclude Include="Light_Switch.h" />
@@ -175,6 +177,8 @@
     <ClInclude Include="Task_UI.h" />
     <ClInclude Include="Teleportation.h" />
     <ClInclude Include="Teleportation_Manager.h" />
+    <ClInclude Include="Teleport_In.h" />
+    <ClInclude Include="Teleport_Out.h" />
     <ClInclude Include="Wall.h" />
     <ClInclude Include="xnacollision.h" />
   </ItemGroup>

@@ -131,48 +131,12 @@ void Effect::Playing_EF0()
 //1番：テレポートアウト
 void Effect::Playing_EF1()
 {
-	if (this->effect_Life <= 0)
-	{
-		return;
-	}
-	ML::Mat4x4 matS;	
-	matS.Scaling(this->scale);
-	ML::Mat4x4 matT;
-	matT.Translation(this->pos);
-
-	//透明度を設定
-	auto bsBuf = DG::EffectState().BS_Get();
-	DG::EffectState().BS_Alpha();
-	//エフェクトが持つ透明度で描画
-	DG::EffectState().param.objectColor = ML::Color(this->alpha, 1, 1, 1);
-	DG::EffectState().param.matWorld = matS * matT;
-	DG::Mesh_Draw(this->meshName);
-
-	//透明度を元に戻す
-	DG::EffectState().BS_Set(bsBuf);
-	DG::EffectState().param.objectColor = ML::Color(1, 1, 1, 1);
+	
 }
 //2番：テレポートイン
 void Effect::Playing_EF2()
 {
-	if (this->effect_Life <= 0)
-	{
-		return;
-	}
-	ML::Mat4x4 matT,matS;
-	matT.Translation(this->pos);
-	matS.Scaling(this->scale);
-
-	//透明度設定(光なので加算合成)
-	auto bsBuf = DG::EffectState().BS_Get();
-	DG::EffectState().BS_AlphaAdd();
-	DG::EffectState().param.objectColor = ML::Color(this->alpha, 1, 1, 1);
-	DG::EffectState().param.matWorld = matS * matT;
-	DG::Mesh_Draw(this->meshName);
-
-	//透明度を元に戻す
-	DG::EffectState().BS_Set(bsBuf);
-	DG::EffectState().param.objectColor = ML::Color(1, 1, 1, 1);
+	
 }
 //3番：エネミー着地
 void Effect::Playing_EF3()
@@ -323,28 +287,7 @@ void Effect::Playing_EF8()
 //9番：クリアエフェクト
 void Effect::Playing_EF9()
 {
-	if (this->effect_Life < 0)
-	{
-		return;
-	}
-	ML::Mat4x4 matS,matR, matT;
-	matS.Scaling(this->scale);
-	matR.RotationY(this->angle.y);
-	matT.Translation(this->pos);
-
-	//ライティングを無効にする
-	DG::EffectState().param.lightsEnable = false;
-	//透明度設定
-	auto bsBuf = DG::EffectState().BS_Get();
-	DG::EffectState().BS_Alpha();
-	DG::EffectState().param.objectColor = ML::Color(this->alpha, 1, 1, 1);
-	DG::EffectState().param.matWorld = matS * matR * matT;
-	DG::Mesh_Draw(this->meshName);
-
-	//透明度,ライティングを元に戻す
-	DG::EffectState().param.lightsEnable = true;
-	DG::EffectState().BS_Set(bsBuf);
-	DG::EffectState().param.objectColor = ML::Color(1, 1, 1, 1);	
+		
 }
 
 
@@ -388,30 +331,12 @@ void Effect::UpDate_EF0()
 //1番：テレポートアウト
 void Effect::UpDate_EF1()
 {	
-	//フレーム毎薄く、大きくなる
-	this->alpha -= 0.008f;
-
-	this->scale.y += 100.0f;
 	
-	//透明度は0以下に落ちないようにする
-	if (this->alpha < 0.0)
-	{
-		this->alpha = 0.0;
-	}
 }
 //2番：テレポートイン
 void Effect::UpDate_EF2()
 {
-	this->moveVec = this->target - this->pos;//進行方向をもらう
-	//移動
-	this->pos += (this->moveVec * 0.25f);
 	
-	this->alpha -= 0.01f;
-	//透明度は0以下に落ちないようにする
-	if (this->alpha < 0.0)
-	{
-		this->alpha = 0.0;
-	}	
 }
 //3番：エネミー着地
 void Effect::UpDate_EF3()
@@ -554,48 +479,8 @@ void Effect::UpDate_EF8()
 //9番：クリアエフェクト
 void Effect::UpDate_EF9()
 {
-	if (this->effect_Life > 200)
-	{
-		return;
-	}
-	else if (this->effect_Life > 10)
-	{
-		this->scale += ML::Vec3(8.0f, 8.0f, 8.0f);
-		this->angle.y += ML::ToRadian(0.3f);
-		this->alpha += 0.8f;		
-	}
-	else if (this->effect_Life == 10)
-	{
-		easing::Reset("scale_EF9");
-		easing::Start("scale_EF9");
-	}
-	else if (this->effect_Life < 10)
-	{
-		//easing::UpDate();
-		this->scale.x = easing::GetPos("scale_EF9");
-		this->scale.y = easing::GetPos("scale_EF9");
-		this->scale.z = easing::GetPos("scale_EF9");
-	}
+	
 }
 
 
 
-void Effect::Dec_Eff()
-{
-	this->effect_Life--;
-}
-
-bool Effect::Is_Alive() const
-{
-	return this->effect_Life > 0 ? true : false;
-}
-
-BEffect::effType Effect::Get_Type() const
-{
-	return this->playing_EffectHandle;
-}
-
-bool Effect::Eff_Judge() const
-{
-	return this->effect_Life == 0;
-}

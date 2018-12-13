@@ -74,13 +74,6 @@ public:
 	void Playing_Effect();
 	//アップデート
 	void UpDate_Effect();	
-	//エフェクトの残り時間を減少させる
-	void Dec_Eff();
-	//エフェクトが生きているかを確認する
-	bool Is_Alive() const;
-	//エフェクトタイプをもらう
-	effType Get_Type() const;
-	//removeで削除する判定式
-	bool Eff_Judge() const;
+	
 	
 };

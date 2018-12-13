@@ -28,8 +28,7 @@ namespace Map_Side
 		static   WP  instance;
 		static  Resource::SP  Create();
 		//‹¤—L‚·‚é•Ï”‚Í‚±‚±‚É’Ç‰Á‚·‚é
-		string seTeleportIn;
-		string seTeleportOut;
+
 	};
 	//-------------------------------------------------------------------
 	class  Object : public BTask

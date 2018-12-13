@@ -4,6 +4,9 @@
 #include  "MyPG.h"
 #include  "Task_Effect_Manager.h"
 #include  "easing.h"
+#include "Game_Clear.h"
+#include "Teleport_In.h"
+#include "Teleport_Out.h"
 
 namespace  EffectManager
 {
@@ -12,12 +15,36 @@ namespace  EffectManager
 	//リソースの初期化
 	bool  Resource::Initialize()
 	{
+		//使用するエフェクトメッシュの生成
+		//テレポートイン
+		this-> mesh_Telein = "Teleport_In";
+		DG::Mesh_CreateFromSOBFile(mesh_Telein, "./data/mesh/effect/DestroyItem.SOB");
+		//テレポートアウト
+		this-> mesh_Teleout = "Teleport_Out";
+		DG::Mesh_CreateFromSOBFile(mesh_Teleout, "./data/mesh/effect/CreateItem.SOB");
+		//ゲームクリア
+		this-> mesh_Gameclear = "Game_Clear";
+		DG::Mesh_CreateFromSOBFile(mesh_Gameclear, "./data/mesh/effect/DestroyPlayer.SOB");
+
+		//サウンドエフェクト
+		//テレポートイン
+		this-> seTeleportIn = "SETeleIn";
+		DM::Sound_CreateSE(seTeleportIn, "./data/sound/TeleportIn.wav");
+		//テレポートアウト
+		this-> seTeleportOut = "SETeleOut";
+		DM::Sound_CreateSE(seTeleportOut, "./data/sound/TeleportOut.wav");
+
 		return true;
 	}
 	//-------------------------------------------------------------------
 	//リソースの解放
 	bool  Resource::Finalize()
 	{
+		DG::Mesh_Erase(this->mesh_Telein);
+		DG::Mesh_Erase(this->mesh_Gameclear);
+		DG::Mesh_Erase(this->mesh_Teleout);
+		DM::Sound_Erase(seTeleportIn);
+		DM::Sound_Erase(seTeleportOut);
 		return true;
 	}
 	//-------------------------------------------------------------------
@@ -31,21 +58,7 @@ namespace  EffectManager
 
 		//★データ初期化
 		//エフェクトリストをクリア
-		this->efList.clear();
 		this->play_Effect_List.clear();
-
-		//使用するエフェクトメッシュの生成
-		//テレポートイン
-		DG::Mesh_CreateFromSOBFile("DestroyItem", "./data/mesh/effect/DestroyItem.SOB");
-		//テレポートアウト
-		DG::Mesh_CreateFromSOBFile("CreateItem", "./data/mesh/effect/CreateItem.SOB");
-		//ゲームクリア
-		DG::Mesh_CreateFromSOBFile("DestroyCharactor", "./data/mesh/effect/DestroyPlayer.SOB");
-		
-		//必要なエフェクト生成
-		this->Create_Effect(BEffect::effType::Teleportin);
-		this->Create_Effect(BEffect::effType::TeleportOut);
-		this->Create_Effect(BEffect::effType::Game_Clear);
 
 		this->render3D_Priority[0] = 1.0f;		
 
@@ -57,25 +70,17 @@ namespace  EffectManager
 	//「終了」タスク消滅時に１回だけ行う処理
 	bool  Object::Finalize()
 	{
-		//★データ＆タスク解放
-		DG::Mesh_Clear();
-		if (this->efList.size() != 0)		
+		//★データ＆タスク解放		
+		if (this->play_Effect_List.size() != 0)		
 		{
 			//リストの開放
-			for (auto e : this->efList)
+			for (auto e : this->play_Effect_List)
 			{
 				delete e;
 			}
 		}
-		this->efList.clear();
 		this->play_Effect_List.clear();
-		/*for (auto it = this->efList.begin(); it != this->efList.end(); it++)
-		{
-			if ((*it) != nullptr)
-			{
-				delete (*it);
-			}
-		}*/
+		
 		
 		if (!ge->QuitFlag() && this->nextTaskCreate)
 		{
@@ -90,19 +95,11 @@ namespace  EffectManager
 	{
 		//easing function update
 		easing::UpDate();
-		//念のためプレイリストサイズの上限を決めておく
-		if (this->play_Effect_List.size() > 20)
-		{
-			this->play_Effect_List.pop_front();
-		}
+		
 		//エフェクトのフレーム毎の変化
 		for (auto it = this->play_Effect_List.begin(); it != this->play_Effect_List.end(); it++)
-		{
-			if ((*it).Get_Type() == BEffect::effType::CLEAR)
-			{
-				continue;
-			}
-			(*it).UpDate_Effect();
+		{			
+			(*it)->Effect_Update();
 		}
 		//寿命減少
 		this->Dec_Effect_Life();
@@ -117,12 +114,8 @@ namespace  EffectManager
 	{
 		//エフェクトの再生
 		for (auto it = this->play_Effect_List.begin(); it != this->play_Effect_List.end(); it++)
-		{
-			if ((*it).Get_Type() == BEffect::effType::CLEAR)
-			{
-				continue;
-			}
-			(*it).Playing_Effect();
+		{			
+			(*it)->Effect_Draw();
 		}
 	}
 
@@ -131,61 +124,60 @@ namespace  EffectManager
 	//-----------------------------------------------------------------------------
 	void Object::Add_Effect(const ML::Vec3& pos, const ML::Vec3& angle, const BEffect::effType& handle)
 	{	
-		Effect ef(BEffect::effType::CLEAR);
-		//プレイリストに入るエフェクトをコピーする
-		for (auto& el : this->efList)
+		BEffect* ef;
+		//ハンドルに合うエフェクトを生成してリストに登録
+		switch (handle)
 		{
-			if (el->Get_Type() == handle)
-			{
-				ef = *el;
-			}
+		case BEffect::effType::Game_Clear:
+			ef = new Game_Clear(pos, angle, this->res->mesh_Gameclear, "");
+			break;
+		case BEffect::effType::TeleportOut:
+			ef = new Teleport_Out(pos, angle, this->res->mesh_Teleout, this->res->seTeleportOut);
+			break;
+		//条件に合ってないエフェクトハンドルは処理しない
+		default:
+			return;
 		}
-		//エフェクト情報設定
-		ef.Load_Eff(pos, angle);
 		//プレイリストにpush_back
 		this->play_Effect_List.push_back(ef);
 	}
 	void Object::Add_Effect(const ML::Vec3& pos, const ML::Vec3& target, const ML::Vec3& angle, const BEffect::effType& handle)
 	{
-		Effect ef(BEffect::effType::CLEAR);
-		//プレイリストに入るエフェクトをコピーする
-		for (auto& el : this->efList)
-		{
-			if (el->Get_Type() == handle)
-			{
-				ef = *el;
-			}
+		BEffect* ef;
+		//ハンドルに合うエフェクトを生成してリストに登録
+		switch (handle)
+		{		
+		case BEffect::effType::Teleportin:
+			ef = new Teleport_In(pos, target, angle, this->res->mesh_Telein, this->res->seTeleportIn);
+			break;
+			//条件に合ってないエフェクトハンドルは処理しない
+		default:
+			return;
 		}
-		//エフェクト情報設定
-		ef.Load_Eff(pos, target, angle);
 		//プレイリストにpush_back
 		this->play_Effect_List.push_back(ef);
 	}
-	//-----------------------------------------------------------------------------------
-	//新しいエフェクト生成
-	void Object::Create_Effect(const BEffect::effType& handle)
-	{
-		Effect* NewEf = new Effect(handle);
-		//全体リストにpush_back
-		this->efList.push_back(NewEf);
-	}
-	//----------------------------------------------------------------------------------
+	//-----------------------------------------------------------------------------------	
 	//エフェクト寿命減らし及び削除
 	void Object::Dec_Effect_Life()
 	{
-		if (this->play_Effect_List.size() == 0)
+		if (this->play_Effect_List.empty())
 		{
 			return;
 		}
 		for (auto it = this->play_Effect_List.begin(); it != this->play_Effect_List.end(); it++)
 		{
-			if ((*it).Is_Alive())
+			//寿命減少
+			(*it)->Dec_Eff();
+			//ライフが０になったエフェクトは開放処理
+			if ((*it)->Is_Alive() == false)
 			{
-				(*it).Dec_Eff();
+				delete (*it);
+				(*it) = nullptr;
 			}
 		}
-		//ライフが０になったエフェクトはリストから外す		
-		this->play_Effect_List.remove_if([](Effect& e) {return e.Eff_Judge(); });
+		//解放されたものはリストから外す
+		this->play_Effect_List.remove_if([](BEffect* e) {return e == nullptr; });
 	}	
 	
 	//★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★

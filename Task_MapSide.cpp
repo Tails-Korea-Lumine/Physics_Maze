@@ -18,19 +18,13 @@ namespace  Map_Side
 	//-------------------------------------------------------------------
 	//リソースの初期化
 	bool  Resource::Initialize()
-	{
-		this->seTeleportIn = "SETeleIn";
-		DM::Sound_CreateSE(this->seTeleportIn, "./data/sound/TeleportIn.wav");
-		this->seTeleportOut = "SETeleOut";
-		DM::Sound_CreateSE(this->seTeleportOut, "./data/sound/TeleportOut.wav");
+	{	
 		return true;
 	}
 	//-------------------------------------------------------------------
 	//リソースの解放
 	bool  Resource::Finalize()
-	{		
-		DM::Sound_Erase(this->seTeleportOut);
-		DM::Sound_Erase(this->seTeleportIn);
+	{			
 		return true;
 	}
 	//-------------------------------------------------------------------
