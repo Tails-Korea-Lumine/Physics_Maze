@@ -70,6 +70,8 @@ namespace Ball
 		//メソッド
 		//一個前のフレームで衝突したかを返す
 		bool Is_Collision(const string&) const;
+		//転がる表現のために回転させる
+		void Rotate();
 	public:
 		//その時のボールの情報を返す関数
 		//位置

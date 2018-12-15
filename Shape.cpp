@@ -1,12 +1,12 @@
 #include "Shape.h"
 
 //コンストラクタ
-Shape3D::Shape3D(const ML::Vec3& center, const ML::Vec3& length_H, const ML::QT& qt)
+Shape3D::Shape3D(const ML::Vec3& center, const ML::Vec3& length_H, const ML::QT& qt, const Shape3D_Type& type)
+	:type(type)
 {
 	this->center = center;
 	this->half_of_Length = length_H;
 	this->quaternion = qt;
-	this->type = Shape3D_Type::Type_Clear;
 	for (size_t i = 0; i < 12; i++)
 	{
 		this->unusable_Triangle[i] = true;

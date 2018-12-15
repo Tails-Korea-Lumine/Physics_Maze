@@ -165,7 +165,7 @@ bool Cube::Hit(std::vector<Collision_Data>* result, Shape3D* other)
 
 //コンストラクタ
 Cube::Cube(const ML::Vec3& center, const ML::Vec3& length_H, const ML::QT& qt)
-	:Shape3D(center,length_H,qt)
+	:Shape3D(center,length_H,qt,Shape3D_Type::Type_Cube)
 {
-	this->type = Shape3D_Type::Type_Cube;
+	
 }

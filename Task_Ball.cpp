@@ -79,7 +79,7 @@ namespace  Ball
 		Physics::Gravity_Accelerate(&this->speed,this->m);				
 			
 		//回転量上昇
-		//this->rot += this->speed.Length();
+		this->Rotate();
 
 		//テレポートフラグを無効に
 		this->teleportation_Flag = false;
@@ -96,7 +96,7 @@ namespace  Ball
 	void Object::Move_Ball(const unsigned int& precisioin)
 	{
 		//1フレームの終端速度
-		const float termination_Speed = 5.0f;
+		const float termination_Speed = 6.0f;
 
 		//終端速度及び物理精密度による速度処理
 		auto Clamp_Speed = [&](ML::Vec3& speed)
@@ -112,7 +112,7 @@ namespace  Ball
 		
 		//もし,どこもあたり判定をせずに動いた場合
 		//処理せずに次のフレームに移る
-		if (ge->collision_Result.size() == 0)
+		if (ge->collision_Result.empty())
 		{
 			//今回のフレームに衝突しなかったら
 			//衝突フラグを無効にする
@@ -127,14 +127,14 @@ namespace  Ball
 		//結果の数分ループする
 		for (auto p : ge->collision_Result)
 		{
-			//前のフレームで衝突だったら、今回のフレームでの衝突判定でやること
+			//前の処理で衝突だったら、今回のフレームでの衝突判定でやること
 			if (this->Is_Collision(p.collision_Id))
 			{
 				//今回のフレームに衝突だったら
 				//斜め線加速をする
 				Physics::Diagonal_Accelerate(&this->speed, p.normal);
 			}		
-			//前のフレームで衝突ではなかったら、今回のフレームでの衝突判定でやること			
+			//前の処理で衝突ではなかったら、今回のフレームでの衝突判定でやること			
 			else
 			{
 				//今回のフレームに衝突だったら
@@ -143,7 +143,7 @@ namespace  Ball
 			}
 		}		
 
-		//フラグを衝突判定結果にいないものはfalseに変える
+		//今回使ったフラグは全部消して、今回のあたり判定結果のフラグを書き込む
 		this->collision_Flag.clear();
 		for (auto& p : ge->collision_Result)
 		{			
@@ -184,6 +184,32 @@ namespace  Ball
 			}
 		}
 		return false;
+	}
+	//--------------------------------------------------------------
+	//転がる表現のために回転させる
+	void Object::Rotate()
+	{
+		ML::Vec3 anker;
+		float cos;
+		//回転軸を計算する
+		for (auto& col : ge->collision_Result)
+		{
+			//内積で速度と90度の法線ベクトルを探す
+			MyMath::Vector_Dot(&cos, this->speed, col.normal);
+
+			if (cos >= _CMATH_::cosf(ML::ToRadian(90)))
+			{
+				//回転軸を作る
+				MyMath::Get_Normal_to_Vector_Cross(&anker, this->speed, col.normal);
+				//回転行列とクォータニオンの生成
+				ML::QT rot = ML::QT(anker, this->speed.Length());
+				ML::Mat4x4 matR;
+				D3DXMatrixAffineTransformation(&matR, 1.0f, &this->sphere->Get_Center(), &rot, NULL);
+
+				//回転量アップデート
+				this->sphere->Rotation(&matR, rot);
+			}
+		}
 	}
 
 	//---------------------------------------------------------------------

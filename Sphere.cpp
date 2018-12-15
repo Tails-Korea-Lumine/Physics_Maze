@@ -24,7 +24,7 @@ bool Sphere::Hit(std::vector<Collision_Data>* result, Shape3D* other)
 }
 
 Sphere::Sphere(const ML::Vec3& center, const ML::Vec3& length_H, const ML::QT& qt)
-	:Shape3D(center,length_H,qt)
+	:Shape3D(center,length_H,qt, Shape3D_Type::Type_Sphere)
 {
-	this->type = Shape3D_Type::Type_Sphere;
+	
 }

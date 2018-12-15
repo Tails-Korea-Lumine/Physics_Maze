@@ -55,18 +55,20 @@ void Collision::Intersect_OBB_Sphere(ML::Vec3* result, const Shape3D* owner, con
 {
 	//今までの回転量で逆行列を作る
 	ML::Mat4x4 matR, matIR;
+	//キューブの情報をもらっておく
+	ML::Vec3 o_Center = owner->Get_Center();
+	ML::Vec3 o_Halfl = owner->Get_Length();
 
 	D3DXMatrixAffineTransformation(&matR, 1.0f, &owner->Get_Center(), &owner->Get_Quaternion(), NULL);
 	matIR = matR.Inverse();
-
 
 	//逆行列に沿って回転した球の中心点
 	ML::Vec3 alined_Sphere_Center = matIR.TransformCoord(visitor->Get_Center());
 
 	//一番近い点を計算
-	float x = max(owner->center.x - owner->half_of_Length.x, min(alined_Sphere_Center.x, owner->center.x + owner->half_of_Length.x));
-	float y = max(owner->center.y - owner->half_of_Length.y, min(alined_Sphere_Center.y, owner->center.y + owner->half_of_Length.y));
-	float z = max(owner->center.z - owner->half_of_Length.z, min(alined_Sphere_Center.z, owner->center.z + owner->half_of_Length.z));
+	float x = max(o_Center.x - o_Halfl.x, min(alined_Sphere_Center.x, o_Center.x + o_Halfl.x));					  
+	float y = max(o_Center.y - o_Halfl.y, min(alined_Sphere_Center.y, o_Center.y + o_Halfl.y));					  
+	float z = max(o_Center.z - o_Halfl.z, min(alined_Sphere_Center.z, o_Center.z + o_Halfl.z));
 	
 	//相対距離ベクトルをもらって
 	ML::Vec3 dist = ML::Vec3(x, y, z) - alined_Sphere_Center;

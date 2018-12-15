@@ -15,20 +15,18 @@ public:
 		Type_Cube = 1,//六面体
 		Type_Sphere = 2,//球
 	};
-
+	//どのものにポリモフされたか確認するメンバー
+	const Shape3D_Type type;
+protected:
 	//中心点
 	ML::Vec3 center;
 	//各軸の長さの半分
 	ML::Vec3 half_of_Length;
 	//回転量
 	ML::QT quaternion;
-	//どのものにポリモフされたか確認するメンバー
-	Shape3D_Type type;
+	
 	//三角形で判定を行う場合、使えない三角形を確認するフラグ
 	bool unusable_Triangle[12];
-
-private:
-
 	
 public:
 	//ゲッター
@@ -62,7 +60,7 @@ public:
 
 	//コンストラクタ
 	//引数 : (中心点、長さの半分、初期の回転量)
-	Shape3D(const ML::Vec3& center, const ML::Vec3& length_H, const ML::QT& qt);
+	Shape3D(const ML::Vec3& center, const ML::Vec3& length_H, const ML::QT& qt, const Shape3D_Type& type);
 	//デストラクタ
 	virtual ~Shape3D(){}
 };

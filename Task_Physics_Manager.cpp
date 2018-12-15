@@ -231,7 +231,7 @@ namespace  Physics_Manager
 			//ボールを移動させる
 			ball->Move_Ball(precision);
 			//位置補正を仕掛ける
-			if (ge->collision_Result.size() != 0)
+			if (ge->collision_Result.empty() == false)
 			{
 				ball->Fix_Position_for_Rotate(frame_QT_All);
 			}			

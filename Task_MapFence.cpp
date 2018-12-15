@@ -406,7 +406,7 @@ namespace  MapFence
 		ML::Vec3 d_Cf0 = this->arr[index]->Get_Pos() - ge->camera[0]->pos;
 
 		//}‚Á‚½‹——£‚Å•Ô‚·
-		return d_Cf0.Length() < judge ? true : false;
+		return d_Cf0.Length() < judge;
 
 	}
 
