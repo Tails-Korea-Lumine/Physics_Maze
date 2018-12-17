@@ -13,7 +13,7 @@ void Game_Clear::Effect_Update()
 	else if (this->effect_Life < 20)
 	{
 		//‚»‚ÌŒãˆê‹C‚É¬‚³‚­‚È‚é
-		this->scale *= sinf(ML::ToRadian(this->effect_Life));
+		this->scale *= sinf(ML::ToRadian((float)this->effect_Life));
 	}
 }
 

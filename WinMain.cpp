@@ -1,7 +1,7 @@
 #pragma	comment(lib,"winmm")	//	マルチメディア拡張機能を使用するために必要
 #pragma comment(linker, "/entry:WinMainCRTStartup /subsystem:console")
 #include <iostream>
-#include <dxgi.h>
+//#include <dxgi.h>
 #include "MyPG.h"
 
 

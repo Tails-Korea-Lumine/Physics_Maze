@@ -95,16 +95,15 @@ namespace  Ball
 	//あたり判定による方向転換及び移動
 	void Object::Move_Ball(const unsigned int& precisioin)
 	{
-		//1フレームの終端速度
-		const float termination_Speed = 6.0f;
-
 		//終端速度及び物理精密度による速度処理
 		auto Clamp_Speed = [&](ML::Vec3& speed)
 		{
+			//1フレームの終端速度
+			const float termination_Speed = 6.0f;
 			//終端速度に調整する場合
 			if (speed.Length() > termination_Speed)
 			{
-				speed = this->speed.Normalize();
+				speed = speed.Normalize();
 				speed *= termination_Speed;
 			}
 			return speed / (float)precisioin;

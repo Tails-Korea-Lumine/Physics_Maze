@@ -41,13 +41,13 @@ namespace  Map_Core
 		this->map_QT = ML::QT(0.0f);
 		
 		//コアの初期化
-		this->core = new Wall(ge->Map_center, ML::Vec3(50 * this->mapSize, 50 * this->mapSize, 50 * this->mapSize), this->map_QT,"core");
+		this->core = new Wall(ge->Map_center, ML::Vec3(50.0f * this->mapSize, 50.0f * this->mapSize, 50.0f * this->mapSize), this->map_QT,"core");
 
 		//バリアの初期化
 		for (size_t i = 0; i < 6; i++)
 		{
 			//Y+方面にまず生成しておいて、その後回転をする方式
-			this->barrier[i] = new Wall(ge->Map_center + ML::Vec3(0,50*(this->mapSize+3),0), ML::Vec3(50 * (this->mapSize + 2), 50 , 50 * (this->mapSize + 2)), this->map_QT, "barrier");
+			this->barrier[i] = new Wall(ge->Map_center + ML::Vec3(0,50.0f*(this->mapSize+3),0), ML::Vec3(50.0f * (this->mapSize + 2), 50.0f , 50.0f * (this->mapSize + 2)), this->map_QT, "barrier");
 			ML::Mat4x4 matR;
 			matR.Identity();
 			//初期位置まで回転
