@@ -127,6 +127,7 @@
     <ClCompile Include="Teleportation_Manager.cpp" />
     <ClCompile Include="Teleport_In.cpp" />
     <ClCompile Include="Teleport_Out.cpp" />
+    <ClCompile Include="Unstable_Wall.cpp" />
     <ClCompile Include="Wall.cpp" />
     <ClCompile Include="WinMain.cpp" />
     <ClCompile Include="xnacollision.cpp" />
@@ -179,6 +180,7 @@
     <ClInclude Include="Teleportation_Manager.h" />
     <ClInclude Include="Teleport_In.h" />
     <ClInclude Include="Teleport_Out.h" />
+    <ClInclude Include="Unstable_Wall.h" />
     <ClInclude Include="Wall.h" />
     <ClInclude Include="xnacollision.h" />
   </ItemGroup>

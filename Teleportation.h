@@ -10,7 +10,7 @@ private:
 	unsigned int side_Number;
 public:
 	//‚ ‚½‚è”»’è‚Ìs“®
-	bool Collision_Action(std::vector<Collision_Data>* result, Shape3D* ball) const override;
+	bool Collision_Action(std::vector<Collision_Data>* result, Shape3D* ball) override;
 	//‰ñ“]
 	void Rotate_Box(ML::Mat4x4* mat, const ML::QT& q) override;
 

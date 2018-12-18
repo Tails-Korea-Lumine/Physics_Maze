@@ -127,6 +127,9 @@
     <Filter Include="MyPG\BEffect\Game_Clear">
       <UniqueIdentifier>{3b57d138-9325-45e5-afae-322135222459}</UniqueIdentifier>
     </Filter>
+    <Filter Include="MyPG\Bbox\Unstable_Wall">
+      <UniqueIdentifier>{6837d6fb-a738-4e33-b4a5-1cfb9ae6b7f2}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="myLib.cpp">
@@ -269,6 +272,9 @@
     </ClCompile>
     <ClCompile Include="Game_Clear.cpp">
       <Filter>MyPG\BEffect\Game_Clear</Filter>
+    </ClCompile>
+    <ClCompile Include="Unstable_Wall.cpp">
+      <Filter>MyPG\Bbox\Unstable_Wall</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -414,6 +420,9 @@
     </ClInclude>
     <ClInclude Include="Game_Clear.h">
       <Filter>MyPG\BEffect\Game_Clear</Filter>
+    </ClInclude>
+    <ClInclude Include="Unstable_Wall.h">
+      <Filter>MyPG\Bbox\Unstable_Wall</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

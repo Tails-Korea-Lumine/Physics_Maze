@@ -1,7 +1,7 @@
 #include "Wall.h"
 
 
-bool Wall::Collision_Action(std::vector<Collision_Data>* result, Shape3D* ball) const
+bool Wall::Collision_Action(std::vector<Collision_Data>* result, Shape3D* ball) 
 {	
 	//‚ ‚½‚è”»’èŒ‹‰Ê‚ðresult‚É•Û‘¶
 	if (!this->collision_Base->Hit(result, ball))

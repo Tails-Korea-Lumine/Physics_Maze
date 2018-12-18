@@ -26,7 +26,7 @@ public:
 		Goal = 2, //ゴール位置
 		Teleportation = 3, //テレポーテーション
 		LightSwitch = 4, //ライトのスイッチ//スイッチは絶対に行き止まりに設置しない
-		Obstacle3 = 5, //障害物3番(未定)
+		Unstable_Wall = 5, //壊れる壁
 
 		Core = 40, //真ん中のでかいキューブ
 		Barrier = 50, //外に飛ばさないようにする透明な壁
@@ -58,7 +58,7 @@ public:
 
 	//衝突判定
 	//判定の結果値をもらう関数
-	virtual bool Collision_Action(std::vector<Collision_Data>* result, Shape3D* ball) const =0;
+	virtual bool Collision_Action(std::vector<Collision_Data>* result, Shape3D* ball) =0;
 
 	//コンストラクタ・デストラクタ
 	//引数なしコンストラクタ(ゼロクリア)
