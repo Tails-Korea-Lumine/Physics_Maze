@@ -93,7 +93,6 @@ bool Collision::Check_Collision_Cube_Sphere(std::vector<Collision_Data>* result,
 	for (auto& tri : all_Tri)
 	{
 		//例外でないかつ三角形と点のあたり判定が合ってる場合で保存する
-		//unsuable_Triangle[i] == false &&
 		if (Check_Collision_Triangle_Point(tri, nearest_point))
 		{
 			//以下あたった三角形の法線ベクトルとフラグを返す処理

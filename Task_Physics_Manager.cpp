@@ -105,8 +105,7 @@ namespace  Physics_Manager
 	//追加メソッド
 	//マップの処理をいっぺんに管理する
 	void Object::Managing(const unsigned int precision)
-	{
-		
+	{		
 		auto in1 = DI::GPad_GetState("P1");
 		//ほかのタスクの情報をもらってくる
 		auto map = ge->GetTask_Group_GN<Map_Side::Object>("マップ", "Side");
@@ -115,13 +114,8 @@ namespace  Physics_Manager
 		auto ball = ge->GetTask_One_G<Ball::Object>("ボール");
 		auto cm = ge->GetTask_One_G<CameraMan::Object>("カメラマン");
 
-		//ボールが存在しない場合処理しない
-		if (ball == nullptr)
-		{
-			return;
-		}
-		//カメラ移動中なら処理しない
-		if (cm->Is_Moving_Now() == true)
+		//ボールが存在しない場合かカメラ移動中なら処理しない
+		if (ball == nullptr || cm->Is_Moving_Now() == true)
 		{
 			return;
 		}
@@ -129,20 +123,9 @@ namespace  Physics_Manager
 		//ボールが存在している面の法線ベクトル
 		ML::Vec3 side_Normal(0, 0, 0);
 		float delicate = 0.0f;
-		//微調整機能
-		if (in1.B2.on)
-		{
-			delicate = (float)precision * 2.0f;
-		}
-		else
-		{
-			delicate = (float)precision;
-		}
+		//微調整機能		
+		delicate = in1.B2.on ? (float)precision *2.0f : (float)precision;
 
-		//ボールの全ドットを格納する場所
-		std::vector<ML::Vec3> all_Points;
-
-		//std::vector<After_Collision> Result;
 		for (unsigned int i = 0; i < precision; i++)
 		{			
 			//回転をeasingで減速運動させるver0.3
@@ -150,27 +133,27 @@ namespace  Physics_Manager
 			if (ge->game.lock()->GET_READY())
 			{
 				//入力されてる所のeasingデータをリセットさせる
-				if (in1.LStick.axis.y > 0)
+				if (in1.LStick.axis.y > 0.1f)
 				{					
 					easing::Re_Start("Decrese_StickVolumeXM");
 				}
-				else if (in1.LStick.axis.y < 0)
+				else if (in1.LStick.axis.y < -0.1f)
 				{
 					easing::Re_Start("Decrese_StickVolumeXP");
 				}
-				if (in1.LStick.axis.x > 0)
+				if (in1.LStick.axis.x > 0.1f)
 				{
 					easing::Re_Start("Decrese_StickVolumeYM");
 				}
-				else if (in1.LStick.axis.x < 0)
+				else if (in1.LStick.axis.x < -0.1f)
 				{
 					easing::Re_Start("Decrese_StickVolumeYP");
 				}
-				if (in1.Triger.axis.x <0)
+				if (in1.Triger.axis.x <-0.1f)
 				{
 					easing::Re_Start("Decrese_StickVolumeZM");
 				}
-				else if (in1.Triger.axis.x >0)
+				else if (in1.Triger.axis.x >0.1f)
 				{
 					easing::Re_Start("Decrese_StickVolumeZP");
 				}
@@ -224,9 +207,8 @@ namespace  Physics_Manager
 				(*f)->Map_Check_Hit(ball->Get_Collision_Area());
 			}		
 			
-			//判定結果に無駄なデータが入っているなら取り除く
-			ge->collision_Result.erase(remove_if(ge->collision_Result.begin(), ge->collision_Result.end(), [](const Collision_Data& c) {return !c.collision_Flag; })
-				,ge->collision_Result.end());
+			//判定結果に無駄なデータが入っているなら取り除く			
+			ge->collision_Result.remove_if([](const Collision_Data& c) {return !c.collision_Flag; });
 
 			//ボールを移動させる
 			ball->Move_Ball(precision);
@@ -234,9 +216,8 @@ namespace  Physics_Manager
 			if (ge->collision_Result.empty() == false)
 			{
 				ball->Fix_Position_for_Rotate(frame_QT_All);
-			}			
+			}
 		}
-
 		
 		//カメラ目的地をボールがある面が見えるように設定
 		if (side_Normal.Is_Zero_Vec() == false && (in1.B4.down || ball->Is_Teleport_Now()))

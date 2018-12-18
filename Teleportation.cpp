@@ -22,7 +22,7 @@ bool Teleportation::Collision_Action(std::vector<Collision_Data>* result, Shape3
 		//テレポートインのエフェクト
 		eff->Add_Effect(ball->Get_Center(), this->Get_Pos(), ML::Vec3(0, 0, 0), BEffect::effType::Teleportin);		
 		//テレポートアウトのエフェクト
-		eff->Add_Effect(exitpos, exitpos - ge->Map_center, BEffect::effType::TeleportOut);
+		eff->Add_Effect(exitpos, exitpos - this->Get_Pos(), BEffect::effType::TeleportOut);
 		return true;
 	}
 	return false;

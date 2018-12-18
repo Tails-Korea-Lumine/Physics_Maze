@@ -20,17 +20,25 @@ void Teleport_Out::Effect_Draw() const
 	{
 		return;
 	}
-	ML::Mat4x4 matS;
+	ML::Mat4x4 matS, matRT;
 	matS.Scaling(this->scale);
-	ML::Mat4x4 matT;
-	matT.Translation(this->pos);
+	/*ML::Mat4x4 matT;
+	matT.Translation(this->pos);*/
+
+	ML::Vec3 yplus = ML::Vec3(0, 1, 0);
+	ML::Vec3 anker;
+	MyMath::Get_Normal_to_Vector_Cross(&anker, yplus, this->angle);
+	float cos;
+	MyMath::Vector_Dot(&cos, yplus, this->angle);
+	ML::QT qt = ML::QT(anker, acos(cos));
+	D3DXMatrixAffineTransformation(&matRT, 1.0f, NULL, &qt, &this->pos);
 
 	//透明度を設定
 	auto bsBuf = DG::EffectState().BS_Get();
 	DG::EffectState().BS_Alpha();
 	//エフェクトが持つ透明度で描画
 	DG::EffectState().param.objectColor = ML::Color(this->alpha, 1, 1, 1);
-	DG::EffectState().param.matWorld = matS * matT;
+	DG::EffectState().param.matWorld = matS * matRT;
 	DG::Mesh_Draw(this->meshName);
 
 	//透明度を元に戻す
