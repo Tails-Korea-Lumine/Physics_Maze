@@ -18,6 +18,8 @@ namespace  Ball
 	{
 		this->meshName = "Item";
 		DG::Mesh_CreateFromSOBFile(this->meshName, "./data/mesh/Item.SOB");
+		this->hit_Se_Name = "Hit_the_Ball";
+		DM::Sound_CreateSE(this->hit_Se_Name, "./data/sound/Ball_Hit.wav");
 	
 		return true;
 	}
@@ -25,7 +27,8 @@ namespace  Ball
 	//リソースの解放
 	bool  Resource::Finalize()
 	{		
-		DG::Mesh_Erase(this->meshName);		
+		DG::Mesh_Erase(this->meshName);	
+		DM::Sound_Erase(this->hit_Se_Name);
 		return true;
 	}
 	//-------------------------------------------------------------------
@@ -83,7 +86,7 @@ namespace  Ball
 
 		//テレポートフラグを無効に
 		this->teleportation_Flag = false;
-
+		
 		//デバッグ用
 		float sl = this->speed.Length();
 		if (sl > 4.0f)
@@ -95,6 +98,7 @@ namespace  Ball
 	//あたり判定による方向転換及び移動
 	void Object::Move_Ball(const unsigned int& precisioin)
 	{
+		int vol;
 		//終端速度及び物理精密度による速度処理
 		auto Clamp_Speed = [&](ML::Vec3& speed)
 		{
@@ -139,6 +143,8 @@ namespace  Ball
 				//今回のフレームに衝突だったら
 				//反射角で跳ね返す
 				Physics::Reflaction_Vector(&this->speed, p.normal);
+				//DM::Sound_Volume(this->res->hit_Se_Name, int((this->speed.Length() / 6) * 1000));
+				DM::Sound_Play(this->res->hit_Se_Name, false);
 			}
 		}		
 
@@ -233,12 +239,19 @@ namespace  Ball
 	//位置補正用回転関数
 	void Object::Fix_Position_for_Rotate(const ML::QT& qt)
 	{
+		if (ge->collision_Result.empty())
+		{
+			DM::Sound_Volume(this->res->hit_Se_Name, 1000);
+			return;
+		}
 		//マップのフレーム回転量で回転させる
 		ML::Mat4x4 matR;
 		D3DXMatrixAffineTransformation(&matR, 1, &ge->Map_center, &qt, NULL);
 
 		//this->pos = matR.TransformCoord(this->pos);
 		this->sphere->Rotation(&matR, qt);
+
+		DM::Sound_Volume(this->res->hit_Se_Name, 0);
 	}
 
 	//----------------------------------------------------------------------------

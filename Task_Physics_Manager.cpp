@@ -210,13 +210,13 @@ namespace  Physics_Manager
 			//判定結果に無駄なデータが入っているなら取り除く			
 			ge->collision_Result.remove_if([](const Collision_Data& c) {return !c.collision_Flag; });
 
+			
+			//位置補正を仕掛ける
+			
+			ball->Fix_Position_for_Rotate(frame_QT_All);
+			
 			//ボールを移動させる
 			ball->Move_Ball(precision);
-			//位置補正を仕掛ける
-			if (ge->collision_Result.empty() == false)
-			{
-				ball->Fix_Position_for_Rotate(frame_QT_All);
-			}
 		}
 		
 		//カメラ目的地をボールがある面が見えるように設定

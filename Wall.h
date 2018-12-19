@@ -5,6 +5,8 @@
 
 class Wall : public Bbox
 {
+private:
+	
 public:
 	//‚ ‚½‚è”»’è‚Ìs“®
 	bool Collision_Action(std::vector<Collision_Data>* result, Shape3D* ball) override;
