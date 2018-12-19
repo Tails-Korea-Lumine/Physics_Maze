@@ -36,8 +36,8 @@ void Teleportation::Rotate_Box(ML::Mat4x4* mat, const ML::QT& q)
 	ge->TM.Update_Door_Position(this->side_Number, this->Get_Pos());
 }
 
-Teleportation::Teleportation(const ML::Vec3& pos, const ML::Vec3& half_Of_Length, const ML::QT& qt, const string id, const int& side_Number)
-	:Bbox(pos, half_Of_Length, qt, id)
+Teleportation::Teleportation(const ML::Vec3& pos, const ML::Vec3& half_Of_Length, const ML::QT& qt, const string& id, const string& mesh_Name, const int& side_Number)
+	:Bbox(pos, half_Of_Length, qt, id,mesh_Name)
 {
 	this->chip = Bbox::BoxType::Teleportation;
 	this->side_Number = side_Number;

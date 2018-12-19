@@ -21,8 +21,8 @@ bool Wall::Collision_Action(std::vector<Collision_Data>* result, Shape3D* ball)
 	return result->at(0).collision_Flag;
 }
 
-Wall::Wall(const ML::Vec3& pos, const ML::Vec3& half_Of_Length, const ML::QT& qt, const string id)
-	:Bbox(pos,half_Of_Length,qt,id)
+Wall::Wall(const ML::Vec3& pos, const ML::Vec3& half_Of_Length, const ML::QT& qt, const string& id, const string& mesh_Name)
+	:Bbox(pos,half_Of_Length,qt,id,mesh_Name)
 {
 	this->chip = Bbox::BoxType::Wall;
 }

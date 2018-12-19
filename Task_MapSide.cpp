@@ -10,6 +10,7 @@
 #include "Goal.h"
 #include "Wall.h"
 #include "Light_Switch.h"
+#include "Unstable_Wall.h"
 
 
 namespace  Map_Side
@@ -56,13 +57,7 @@ namespace  Map_Side
 			{
 				this->arr[z][x] = nullptr;
 			}
-		}
-
-		for (int i = 0; i < _countof(this->chipName); i++)
-		{
-			this->chipName[i] = "";
-		}
-		
+		}		
 		//外部ファイルからの読み込み
 		switch (di)
 		{
@@ -116,14 +111,7 @@ namespace  Map_Side
 	//「終了」タスク消滅時に１回だけ行う処理
 	bool  Object::Finalize()
 	{
-		//★データ＆タスク解放
-		for (int i = 0; i < _countof(this->chipName); i++)
-		{
-			if (this->chipName[i] != "")
-			{
-				DG::Mesh_Erase(this->chipName[i]);
-			}
-		}
+		//★データ＆タスク解放		
 		for (size_t z = 0; z < this->sizeZ; z++)
 		{
 			for (size_t x = 0; x < this->sizeX; x++)
@@ -167,30 +155,19 @@ namespace  Map_Side
 		{
 			//必要ないときはこのまま処理終了
 			return;
-		}
-				
-		//行列生成
-		ML::Mat4x4 matW;
+		}			
+		
 		size_t z, x;
-
 		for (z = 0; z < this->sizeZ; z++)
 		{
 			for (x = 0; x < this->sizeX; x++)
 			{
-				if (this->arr[z][x] == nullptr)
+				if (this->arr[z][x] == nullptr || this->Is_Need_Render(z, x) == false)
 				{
 					continue;
 				}
-				else if (this->Is_Need_Render(z, x) == false)
-				{
-					continue;
-				}
-				//アフィン変換
-				D3DXMatrixAffineTransformation(&matW, this->chipSize , NULL, &this->map_QT, &this->arr[z][x]->Get_Pos());				
-				//ワールド行列に上書き
-				DG::EffectState().param.matWorld = matW;
-				//レンダリング
-				DG::Mesh_Draw(this->chipName[(int)this->arr[z][x]->What_Type_Is_this_Box()]);
+				//各マスのレンダリング処理
+				this->arr[z][x]->Rendering();
 			}
 		}
 		
@@ -201,6 +178,8 @@ namespace  Map_Side
 	//外部ファイルからのマップロード
 	bool Object::Map_Load(string f_)
 	{
+		//生成したメッシュ名を保存しておく場所
+		string chipName[10];
 		ML::Mat4x4 matR;
 		//外部ファイルから読み込み
 		ifstream fin(f_);
@@ -217,8 +196,8 @@ namespace  Map_Side
 			string chipFileName, chipFilePath;
 			fin >> chipFileName;
 			chipFilePath = "./data/mesh/" + chipFileName;
-			this->chipName[c] = "Map" + to_string(this->sideNumber) + "Chip" + std::to_string(c);
-			DG::Mesh_CreateFromSOBFile(this->chipName[c], chipFilePath);
+			chipName[c] = "Map" + to_string(this->sideNumber) + "Chip" + std::to_string(c);
+			DG::Mesh_CreateFromSOBFile(chipName[c], chipFilePath);
 		}
 		//マップ配列サイズの読み込み
 		fin >> this->sizeX >> this->sizeZ;
@@ -245,13 +224,13 @@ namespace  Map_Side
 				//テレポート
 				case Bbox::BoxType::Teleportation:
 					//配列に登録
-					this->arr[z][x] = new Teleportation(pos, base, this->map_QT, id, this->sideNumber);
+					this->arr[z][x] = new Teleportation(pos, base, this->map_QT, id, chipName[chip], this->sideNumber);
 					break;
 				//スイッチはあたり判定範囲を小さく	
 				case Bbox::BoxType::LightSwitch:
 					base /= 10.0f;
 					//配列に登録
-					this->arr[z][x] = new Light_Switch(pos, base, this->map_QT, id);
+					this->arr[z][x] = new Light_Switch(pos, base, this->map_QT, id, chipName[chip]);
 					break;
 				//ボールをスタート位置に置く
 				case Bbox::BoxType::Start:					
@@ -263,13 +242,17 @@ namespace  Map_Side
 				//基本の壁障害物
 				case Bbox::BoxType::Wall:
 					//配列に登録
-					this->arr[z][x] = new Wall(pos, base, this->map_QT, id);
+					this->arr[z][x] = new Wall(pos, base, this->map_QT, id, chipName[chip]);
 					break;
 				//ゴール位置
 				case Bbox::BoxType::Goal:
-					base /= 10.0f;
+					base /= 10.0f;					
 					//配列に登録
-					this->arr[z][x] = new Goal(pos, base, this->map_QT, id);
+					this->arr[z][x] = new Goal(pos, base, this->map_QT, id, chipName[chip]);
+					break;
+				//壊れる壁
+				case Bbox::BoxType::Unstable_Wall:
+					this->arr[z][x] = new Unstable_Wall(pos, base, this->map_QT, id, chipName[chip]);
 					break;
 				default:
 					continue;
@@ -349,7 +332,7 @@ namespace  Map_Side
 				D3DXMatrixAffineTransformation(&matR, 1.0f, &ge->Map_center, &qt, NULL);				
 
 				//ボックスに個別で渡す
-				this->arr[z][x]->Rotate_Box(&matR, qt);				
+				this->arr[z][x]->Rotate_Box(&matR, qt);
 			}
 		}
 		

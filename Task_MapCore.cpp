@@ -41,13 +41,13 @@ namespace  Map_Core
 		this->map_QT = ML::QT(0.0f);
 		
 		//コアの初期化
-		this->core = new Wall(ge->Map_center, ML::Vec3(50.0f * this->mapSize, 50.0f * this->mapSize, 50.0f * this->mapSize), this->map_QT,"core");
+		this->core = new Wall(ge->Map_center, ML::Vec3(50.0f * this->mapSize, 50.0f * this->mapSize, 50.0f * this->mapSize), this->map_QT,"core",this->res->meshName);
 
 		//バリアの初期化
 		for (size_t i = 0; i < 6; i++)
 		{
 			//Y+方面にまず生成しておいて、その後回転をする方式
-			this->barrier[i] = new Wall(ge->Map_center + ML::Vec3(0,50.0f*(this->mapSize+3),0), ML::Vec3(50.0f * (this->mapSize + 2), 50.0f , 50.0f * (this->mapSize + 2)), this->map_QT, "barrier");
+			this->barrier[i] = new Wall(ge->Map_center + ML::Vec3(0,50.0f*(this->mapSize+3),0), ML::Vec3(50.0f * (this->mapSize + 2), 50.0f , 50.0f * (this->mapSize + 2)), this->map_QT, "barrier","");
 			ML::Mat4x4 matR;
 			matR.Identity();
 			//初期位置まで回転
@@ -128,14 +128,15 @@ namespace  Map_Core
 	void  Object::Render3D_L0()
 	{
 		//レンダリング処理、バリアはレンダリングをしない
-		ML::Mat4x4 matW;
+		//ML::Mat4x4 matW;
 
 		//アフィン変換
-		D3DXMatrixAffineTransformation(&matW, this->mapSize * 100.0f, NULL, &this->map_QT,&this->core->Get_Pos());
+		/*D3DXMatrixAffineTransformation(&matW, this->mapSize * 100.0f, NULL, &this->map_QT,&this->core->Get_Pos());
 
 		DG::EffectState().param.matWorld = matW;
 
-		DG::Mesh_Draw(this->res->meshName);
+		DG::Mesh_Draw(this->res->meshName);*/
+		this->core->Rendering();
 
 	}
 

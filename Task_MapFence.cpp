@@ -5,6 +5,7 @@
 #include "Task_MapFence.h"
 #include  "Task_Ball.h"
 #include "Wall.h"
+#include "Unstable_Wall.h"
 
 namespace  MapFence
 {
@@ -40,11 +41,7 @@ namespace  MapFence
 		//ZeroMemory(this->arr, sizeof(this->arr));
 		//this->sizeX = 0;
 		this->size = 0;
-		this->chipSize = 100.0f;
-		for (int i = 0; i < _countof(this->chipName); i++)
-		{
-			this->chipName[i] = "";
-		}
+		this->chipSize = 100.0f;		
 		for (size_t i = 0; i < 10; i++)
 		{
 			this->arr[i] = nullptr;
@@ -105,15 +102,6 @@ namespace  MapFence
 	//「終了」タスク消滅時に１回だけ行う処理
 	bool  Object::Finalize()
 	{
-		//★データ＆タスク解放
-		for (int i = 0; i < _countof(this->chipName); i++)
-		{
-			if (this->chipName[i] != "")
-			{
-				DG::Mesh_Erase(this->chipName[i]);
-			}
-		}		
-		//this->col_Poligons.clear();
 		for (size_t i = 0; i < this->size; i++)
 		{
 			if (this->arr[i] != nullptr)
@@ -145,35 +133,16 @@ namespace  MapFence
 	}
 
 	void  Object::Render3D_L0()
-	{		
-		//先にレンダリングが必要なのかを確認する
-		/*if (this->Is_Need_Render(0) == false)
-		{
-			return;
-		}*/
-		
-		ML::Mat4x4 matW;
-		//matS.Scaling(this->chipSize);
+	{
 		for (size_t i = 0; i < this->size; i++)
 		{
-			//登録してないものは無視する
-			if (this->arr[i] == nullptr)
+			//登録してないもの、距離がどう過ぎるのは無視する
+			if (this->arr[i] == nullptr || this->Is_Need_Render(i) == false)
 			{
 				continue;
 			}
-			//個別にもレンダリングが必要かを確認
-			else if (this->Is_Need_Render(i) == false)
-			{
-				continue;
-			}
-
 			//描画
-			D3DXMatrixAffineTransformation(&matW, this->chipSize, NULL, &this->map_QT, &this->arr[i]->Get_Pos());
-
-			DG::EffectState().param.matWorld = matW;
-			DG::Mesh_Draw(this->chipName[(int)this->arr[i]->What_Type_Is_this_Box()]);
-				
-			
+			this->arr[i]->Rendering();
 		}
 	}
 
@@ -190,14 +159,15 @@ namespace  MapFence
 		}
 		int chipNum;
 		fin >> chipNum;
+		string chipName[10];
 		//チップファイル名読み込みと、メッシュのロード
 		for (int c = 1; c <= chipNum; c++)
 		{
 			string chipFileName, chipFilePath;
 			fin >> chipFileName;
 			chipFilePath = "./data/mesh/" + chipFileName;
-			this->chipName[c] = "Fence_Chip" + std::to_string(c);
-			DG::Mesh_CreateFromSOBFile(this->chipName[c], chipFilePath);
+			chipName[c] = "Fence_Chip" + std::to_string(c);
+			DG::Mesh_CreateFromSOBFile(chipName[c], chipFilePath);
 		}
 		//マップ配列サイズの読み込み
 		fin >> this->size;
@@ -229,7 +199,11 @@ namespace  MapFence
 			{
 			case Bbox::BoxType::Wall:
 				//配列に登録
-				this->arr[i] = new Wall(pos, base, this->map_QT, id);
+				this->arr[i] = new Wall(pos, base, this->map_QT, id,chipName[chip]);
+				break;
+			case Bbox::BoxType::Unstable_Wall:
+				//配列に登録
+				this->arr[i] = new Unstable_Wall(pos, base, this->map_QT, id, chipName[chip]);
 				break;
 			default:
 				continue;

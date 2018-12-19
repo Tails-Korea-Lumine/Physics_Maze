@@ -12,6 +12,20 @@ void Bbox::Rotate_Box(ML::Mat4x4* mat, const ML::QT& q)
 	this->collision_Base->Rotation(mat, q);
 }
 
+void Bbox::Rendering() const
+{
+	//行列生成
+	ML::Mat4x4 matRT,matS;
+	//スケーリング
+	matS.Scaling(this->collision_Base->Get_Length()*2.0f);
+	//アフィン変換
+	D3DXMatrixAffineTransformation(&matRT, 1.0f, NULL, &this->collision_Base->Get_Quaternion(), &this->collision_Base->Get_Center());
+	//ワールド行列に上書き
+	DG::EffectState().param.matWorld = matS * matRT;
+	//レンダリング
+	DG::Mesh_Draw(this->mesh_Name);
+}
+
 
 //あたり判定に必要ない三角形を表示しておく
 void Bbox::Marking_On_Unusable_Side(const Box_Side& side)
@@ -64,18 +78,23 @@ string Bbox::Get_Id() const
 //引数なしコンストラクタ(ゼロクリア)
 Bbox::Bbox()
 {
-	this->chip = BoxType::Clear;
-	//this->pos = ML::Vec3(0, 0, 0);
-	this->collision_Base = nullptr;
-	//this->boxQT = ML::QT(0.0f);
-	
+	this->chip = BoxType::Clear;	
+	this->collision_Base = nullptr;	
 }
-//引数 : (箱のタイプ,位置,あたり判定矩形,初期回転量,ボックスのID)
-Bbox::Bbox(const ML::Vec3& pos, const ML::Vec3& half_Of_Length, const ML::QT& qt, const string id)
+//引数 : (箱のタイプ,位置,あたり判定矩形,初期回転量,ボックスのID、メッシュ名)
+Bbox::Bbox(const ML::Vec3& pos, const ML::Vec3& half_Of_Length, const ML::QT& qt, const string& id, const string& mesh_Name)
 	:box_Id(id)
+	,mesh_Name(mesh_Name)
 {
-	this->chip = BoxType::Clear;
-	//this->pos = pos;
-	this->collision_Base = new Cube(pos, half_Of_Length, qt);
-	//this->boxQT = qt;	
+	this->chip = BoxType::Clear;	
+	this->collision_Base = new Cube(pos, half_Of_Length, qt);	
+}
+
+Bbox::~Bbox()
+{
+	if (this->collision_Base != nullptr)
+	{
+		delete this->collision_Base;
+	}
+	DG::Mesh_Erase(this->mesh_Name);
 }

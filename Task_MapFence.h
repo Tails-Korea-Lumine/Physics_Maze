@@ -57,8 +57,7 @@ namespace MapFence
 		size_t size;
 		int mapSize;
 		int fenceNumber;
-		float chipSize;
-		string chipName[10];		
+		float chipSize;				
 		//ƒ{[ƒ‹‚Ì‚Ù‚¤‚É“n‚·î•ñ
 		
 		//‰ñ“]—Ê

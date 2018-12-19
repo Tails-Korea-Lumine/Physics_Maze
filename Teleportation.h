@@ -15,5 +15,5 @@ public:
 	void Rotate_Box(ML::Mat4x4* mat, const ML::QT& q) override;
 
 	//コンストラクタ
-	Teleportation(const ML::Vec3& pos, const ML::Vec3& half_Of_Length, const ML::QT& qt, const string id, const int& side_Number);
+	Teleportation(const ML::Vec3& pos, const ML::Vec3& half_Of_Length, const ML::QT& qt, const string& id, const string& mesh_Name, const int& side_Number);
 };

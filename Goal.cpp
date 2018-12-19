@@ -15,8 +15,20 @@ bool Goal::Collision_Action(std::vector<Collision_Data>* result, Shape3D* ball)
 	return true;
 }
 
-Goal::Goal(const ML::Vec3& pos, const ML::Vec3& half_Of_Length, const ML::QT& qt, const string id)
-	:Bbox(pos, half_Of_Length, qt, id)
+void Goal::Rendering() const
+{
+	//行列生成
+	ML::Mat4x4 matW;	
+	//アフィン変換
+	D3DXMatrixAffineTransformation(&matW, 100.0f, NULL, &this->collision_Base->Get_Quaternion(), &this->collision_Base->Get_Center());
+	//ワールド行列に上書き
+	DG::EffectState().param.matWorld = matW;
+	//レンダリング
+	DG::Mesh_Draw(this->mesh_Name);
+}
+
+Goal::Goal(const ML::Vec3& pos, const ML::Vec3& half_Of_Length, const ML::QT& qt, const string& id, const string& mesh_Name)
+	:Bbox(pos, half_Of_Length, qt, id,mesh_Name)
 {
 	this->chip = Bbox::BoxType::Goal;
 }

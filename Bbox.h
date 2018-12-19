@@ -39,12 +39,20 @@ protected:
 	Shape3D* collision_Base;//一個一個の判定範囲
 	//ML::QT boxQT;//マップの回転量
 	//ボックスのID
-	string box_Id;	
+	string box_Id;
+	//メッシュ名
+	string mesh_Name;
 	
 public:	
 	//メソッド	
 	//回転関数　引数 : (回転した位置 , 回転量)
 	virtual void Rotate_Box(ML::Mat4x4* mat, const ML::QT& q);
+	//衝突判定
+	//判定の結果値をもらう関数
+	virtual bool Collision_Action(std::vector<Collision_Data>* result, Shape3D* ball) = 0;
+	//レンダリング処理
+	//ギミック処理後にレンダリングが違うもののために仮想関数にしておく
+	virtual void Rendering()const;
 
 	//あたり判定に必要ない三角形を表示しておく
 	void Marking_On_Unusable_Side(const Box_Side&);	
@@ -54,24 +62,14 @@ public:
 	//位置を返す関数
 	ML::Vec3 Get_Pos() const;
 	//idを返す関数
-	string Get_Id() const;
-
-	//衝突判定
-	//判定の結果値をもらう関数
-	virtual bool Collision_Action(std::vector<Collision_Data>* result, Shape3D* ball) =0;
+	string Get_Id() const;	
 
 	//コンストラクタ・デストラクタ
 	//引数なしコンストラクタ(ゼロクリア)
 	Bbox();
-	//引数 : (箱のタイプ,位置,あたり判定矩形,初期回転量,ボックスのID)
-	Bbox(const ML::Vec3& pos, const ML::Vec3& half_Of_Length, const ML::QT& qt, const string id);
+	//引数 : (箱のタイプ,位置,あたり判定矩形,初期回転量,ボックスのID、メッシュ名)
+	Bbox(const ML::Vec3& pos, const ML::Vec3& half_Of_Length, const ML::QT& qt, const string& id, const string& mesh_Name);
 	
 
-	virtual ~Bbox()
-	{
-		if (this->collision_Base != nullptr)
-		{
-			delete this->collision_Base;
-		}
-	}
+	virtual ~Bbox();	
 };

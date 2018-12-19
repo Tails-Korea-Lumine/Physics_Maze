@@ -16,8 +16,8 @@ bool Light_Switch::Collision_Action(std::vector<Collision_Data>* result, Shape3D
 	return false;
 }
 
-Light_Switch::Light_Switch(const ML::Vec3& pos, const ML::Vec3& half_Of_Length, const ML::QT& qt, const string id)
-	:Bbox(pos, half_Of_Length, qt, id)
+Light_Switch::Light_Switch(const ML::Vec3& pos, const ML::Vec3& half_Of_Length, const ML::QT& qt, const string& id, const string& mesh_Name)
+	:Bbox(pos, half_Of_Length, qt, id,mesh_Name)
 {
 	this->chip = Bbox::BoxType::LightSwitch;	
 }

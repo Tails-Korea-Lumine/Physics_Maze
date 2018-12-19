@@ -60,8 +60,7 @@ namespace Map_Side
 		int sideNumber;
 		float chipSize;
 		int gimicCnt;
-		float rendering_Judge;
-		string chipName[10];
+		float rendering_Judge;		
 
 		//法線ベクトル
 		ML::Vec3 Normal_Side;
