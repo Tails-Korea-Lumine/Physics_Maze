@@ -10,7 +10,7 @@ public:
 	//エフェクト行動
 	void Effect_Update() override;
 	//描画
-	void Effect_Draw() const override;
+	//void Effect_Draw() const override;
 	
 
 	//コンストラクタ

@@ -28,20 +28,26 @@ bool Unstable_Wall::Collision_Action(std::vector<Collision_Data>* result, Shape3
 	//ボール速度のスカラー量分ライフを消す
 	this->Decrease_Life(ge->GetTask_One_G<Ball::Object>("ボール")->Get_Speed().Length());
 	//エフェクト生成
+	this->Be_Effect(result->at(result->size() - 1).normal);
+	return true;
+}
+
+void Unstable_Wall::Be_Effect(const ML::Vec3& normal)
+{
 	auto eff = ge->eff_Manager.lock();
 	if (this->life <= 0)
 	{
-		eff->Add_Effect(this->Get_Pos(), result->at(result->size() - 1).normal, BEffect::effType::Crashed);
+		//壊れて消えるエフェクト生成
+		eff->Add_Effect(this->Get_Pos(), normal, BEffect::effType::Crashed);
 	}
-	else
+
+	if (this->hit_Flag == false)
 	{
-		if (this->hit_Flag == false)
-		{
-			eff->Add_Effect(this->Get_Pos(), result->at(result->size() - 1).normal, BEffect::effType::Breaking);
-			this->hit_Flag = true;
-		}		
+		//あたったエフェクト生成
+		eff->Add_Effect(this->Get_Pos(), normal, BEffect::effType::Breaking);
+		this->hit_Flag = true;
 	}
-	return true;
+	
 }
 
 void Unstable_Wall::Rendering() const
@@ -54,7 +60,7 @@ void Unstable_Wall::Rendering() const
 	//行列生成
 	ML::Mat4x4 matRT, matS;
 	//スケーリング
-	matS.Scaling(this->collision_Base->Get_Length());
+	matS.Scaling(this->collision_Base->Get_Length()*2.0f);
 	//アフィン変換
 	D3DXMatrixAffineTransformation(&matRT, 1.0f, NULL, &this->collision_Base->Get_Quaternion(), &this->collision_Base->Get_Center());
 	//ワールド行列に上書き

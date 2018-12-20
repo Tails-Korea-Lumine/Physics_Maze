@@ -35,12 +35,12 @@ namespace  Physics_Manager
 		//★データ初期化	
 		
 
-		this->frame_QTxp = ML::QT(0.0f);
-		this->frame_QTxm = ML::QT(0.0f);
-		this->frame_QTyp = ML::QT(0.0f);
-		this->frame_QTym = ML::QT(0.0f);
-		this->frame_QTzp = ML::QT(0.0f);
-		this->frame_QTzm = ML::QT(0.0f);
+		this->esasing_Name_QTxp = "Decrese_StickVolumeXP";
+		this->esasing_Name_QTxm = "Decrese_StickVolumeXM";
+		this->esasing_Name_QTyp = "Decrese_StickVolumeYP";
+		this->esasing_Name_QTym = "Decrese_StickVolumeYM";
+		this->esasing_Name_QTzp = "Decrese_StickVolumeZP";
+		this->esasing_Name_QTzm = "Decrese_StickVolumeZM";
 
 		//軸の初期値
 		this->anckerX = ML::Vec3(1, 0, 0);
@@ -48,19 +48,19 @@ namespace  Physics_Manager
 		this->anckerZ = ML::Vec3(0, 0, 1);
 	
 		//easing set
-		easing::Set("Decrese_StickVolumeXP", easing::QUARTIN, 1.7f, 0, 7);
-		easing::Set("Decrese_StickVolumeXM", easing::QUARTIN, 1.7f, 0, 7);
-		easing::Set("Decrese_StickVolumeYP", easing::QUARTIN, 1.7f, 0, 7);
-		easing::Set("Decrese_StickVolumeYM", easing::QUARTIN, 1.7f, 0, 7);
-		easing::Set("Decrese_StickVolumeZP", easing::QUARTIN, 1.7f, 0, 7);
-		easing::Set("Decrese_StickVolumeZM", easing::QUARTIN, 1.7f, 0, 7);
+		easing::Set(this->esasing_Name_QTxp, easing::QUARTIN, 1.7f, 0, 7);
+		easing::Set(this->esasing_Name_QTxm, easing::QUARTIN, 1.7f, 0, 7);
+		easing::Set(this->esasing_Name_QTyp, easing::QUARTIN, 1.7f, 0, 7);
+		easing::Set(this->esasing_Name_QTym, easing::QUARTIN, 1.7f, 0, 7);
+		easing::Set(this->esasing_Name_QTzp, easing::QUARTIN, 1.7f, 0, 7);
+		easing::Set(this->esasing_Name_QTzm, easing::QUARTIN, 1.7f, 0, 7);
 		//easing set end						 
-		easing::Set_End("Decrese_StickVolumeXP");
-		easing::Set_End("Decrese_StickVolumeXM");
-		easing::Set_End("Decrese_StickVolumeYP");
-		easing::Set_End("Decrese_StickVolumeYM");
-		easing::Set_End("Decrese_StickVolumeZP");
-		easing::Set_End("Decrese_StickVolumeZM");
+		easing::Set_End(this->esasing_Name_QTxp);
+		easing::Set_End(this->esasing_Name_QTxm);
+		easing::Set_End(this->esasing_Name_QTyp);
+		easing::Set_End(this->esasing_Name_QTym);
+		easing::Set_End(this->esasing_Name_QTzp);
+		easing::Set_End(this->esasing_Name_QTzm);
 
 		//★タスクの生成
 
@@ -83,10 +83,10 @@ namespace  Physics_Manager
 	//-------------------------------------------------------------------
 	//「更新」１フレーム毎に行う処理
 	void  Object::UpDate()
-	{				
-		//マップに関することは全部マネージャ側でやる ver0.6
+	{		
 		this->Managing(PRECISION);
-		
+
+		this->Input_Analog_Action();
 	}
 	//-------------------------------------------------------------------
 	//「２Ｄ描画」１フレーム毎に行う処理
@@ -97,15 +97,14 @@ namespace  Physics_Manager
 
 	void  Object::Render3D_L0()
 	{
-		
-		
+				
 	}
 
 	//----------------------------------------------------------------------------------
 	//追加メソッド
 	//マップの処理をいっぺんに管理する
 	void Object::Managing(const unsigned int precision)
-	{		
+	{	
 		auto in1 = DI::GPad_GetState("P1");
 		//ほかのタスクの情報をもらってくる
 		auto map = ge->GetTask_Group_GN<Map_Side::Object>("マップ", "Side");
@@ -128,53 +127,8 @@ namespace  Physics_Manager
 
 		for (unsigned int i = 0; i < precision; i++)
 		{			
-			//回転をeasingで減速運動させるver0.3
-			
-			if (ge->game.lock()->GET_READY())
-			{
-				//入力されてる所のeasingデータをリセットさせる
-				if (in1.LStick.axis.y > 0.1f)
-				{					
-					easing::Re_Start("Decrese_StickVolumeXM");
-				}
-				else if (in1.LStick.axis.y < -0.1f)
-				{
-					easing::Re_Start("Decrese_StickVolumeXP");
-				}
-				if (in1.LStick.axis.x > 0.1f)
-				{
-					easing::Re_Start("Decrese_StickVolumeYM");
-				}
-				else if (in1.LStick.axis.x < -0.1f)
-				{
-					easing::Re_Start("Decrese_StickVolumeYP");
-				}
-				if (in1.Triger.axis.x <-0.1f)
-				{
-					easing::Re_Start("Decrese_StickVolumeZM");
-				}
-				else if (in1.Triger.axis.x >0.1f)
-				{
-					easing::Re_Start("Decrese_StickVolumeZP");
-				}
-			}
-			//easingデータが回転量で更新される
-			this->frame_QTxm = ML::QT(this->anckerX, ML::ToRadian(-(easing::GetPos("Decrese_StickVolumeXM"))  / delicate));
-						
-			this->frame_QTxp = ML::QT(this->anckerX, ML::ToRadian((easing::GetPos("Decrese_StickVolumeXP")) / delicate));
-			
-			
-			this->frame_QTym = ML::QT(this->anckerY, ML::ToRadian(-(easing::GetPos("Decrese_StickVolumeYM")) / delicate));
-
-			this->frame_QTyp = ML::QT(this->anckerY, ML::ToRadian((easing::GetPos("Decrese_StickVolumeYP")) / delicate));
-						
-			
-			this->frame_QTzm = ML::QT(this->anckerZ, ML::ToRadian(-(easing::GetPos("Decrese_StickVolumeZM")) / delicate));
-
-			this->frame_QTzp = ML::QT(this->anckerZ, ML::ToRadian((easing::GetPos("Decrese_StickVolumeZP")) / delicate));
-
 			//フレーム回転量のまとめ				
-			ML::QT frame_QT_All = this->frame_QTxp * this->frame_QTxm * this->frame_QTyp * this->frame_QTym *this->frame_QTzm * this->frame_QTzp;
+			ML::QT frame_QT_All = this->Calculate_Frame_Quatanion(delicate);
 
 			//各タスクの回転量を更新及び回転
 			core->Rotate_Core_and_Barrier(frame_QT_All);
@@ -190,7 +144,7 @@ namespace  Physics_Manager
 			ball->Fix_Position_for_Rotate(frame_QT_All);
 
 			ge->collision_Result.clear();
-			//あたり判定は毎回マップのほうで行う			
+		
 			//ボールとマップのあたり判定及び保存
 			//コア
 			core->Core_Check_Hit(ball->Get_Collision_Area());
@@ -213,7 +167,7 @@ namespace  Physics_Manager
 			ge->collision_Result.remove_if([](const Collision_Data& c) {return !c.collision_Flag; });
 			
 			//ボールを移動させる
-			ball->Move_Ball(precision);
+			ball->Physics_Actioin(precision);
 		}
 		
 		//カメラ目的地をボールがある面が見えるように設定
@@ -221,6 +175,62 @@ namespace  Physics_Manager
 		{
 			cm->Set_Destination(side_Normal);
 		}
+	}
+
+	//----------------------------------------------------------------------
+	//入力による処理
+	void Object::Input_Analog_Action()
+	{
+		auto in1 = DI::GPad_GetState("P1");
+		if (ge->game.lock()->GET_READY())
+		{
+			//入力されてる所のeasingデータをリセットさせる
+			if (in1.LStick.axis.y > 0.1f)
+			{
+				easing::Re_Start(this->esasing_Name_QTxm);
+			}
+			else if (in1.LStick.axis.y < -0.1f)
+			{
+				easing::Re_Start(this->esasing_Name_QTxp);
+			}
+			if (in1.LStick.axis.x > 0.1f)
+			{
+				easing::Re_Start(this->esasing_Name_QTym);
+			}
+			else if (in1.LStick.axis.x < -0.1f)
+			{
+				easing::Re_Start(this->esasing_Name_QTyp);
+			}
+			if (in1.Triger.axis.x <-0.1f)
+			{
+				easing::Re_Start(this->esasing_Name_QTzm);
+			}
+			else if (in1.Triger.axis.x >0.1f)
+			{
+				easing::Re_Start(this->esasing_Name_QTzp);
+			}
+		}
+	}
+	//----------------------------------------------------------------------
+	//クォータニオン計算
+	ML::QT Object::Calculate_Frame_Quatanion(const float& precision)
+	{
+		//easingデータが回転量で更新される
+		ML::QT frame_QTxm = ML::QT(this->anckerX, ML::ToRadian(-(easing::GetPos(this->esasing_Name_QTxm)) / precision));
+
+		ML::QT frame_QTxp = ML::QT(this->anckerX, ML::ToRadian((easing::GetPos(this->esasing_Name_QTxp)) / precision));
+
+
+		ML::QT frame_QTym = ML::QT(this->anckerY, ML::ToRadian(-(easing::GetPos(this->esasing_Name_QTym)) / precision));
+
+		ML::QT frame_QTyp = ML::QT(this->anckerY, ML::ToRadian((easing::GetPos(this->esasing_Name_QTyp)) / precision));
+
+
+		ML::QT frame_QTzm = ML::QT(this->anckerZ, ML::ToRadian(-(easing::GetPos(this->esasing_Name_QTzm)) / precision));
+
+		ML::QT frame_QTzp = ML::QT(this->anckerZ, ML::ToRadian((easing::GetPos(this->esasing_Name_QTzp)) / precision));
+
+		return frame_QTxp *  frame_QTxm *  frame_QTyp *  frame_QTym * frame_QTzm *  frame_QTzp;
 	}
 	//------------------------------------------------------------------------
 	//回転軸再計算

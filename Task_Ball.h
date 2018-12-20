@@ -73,6 +73,9 @@ namespace Ball
 		bool Is_Collision(const string&) const;
 		//転がる表現のために回転させる
 		void Rotate();
+		//移動
+		void Move_Ball(const unsigned int& precision);
+
 	public:
 		//その時のボールの情報を返す関数
 		//位置
@@ -81,14 +84,12 @@ namespace Ball
 		float Get_Radious() const;
 		//速度
 		ML::Vec3 Get_Speed() const;
-
-		//ボールの座標から6個の頂点を取り出す
-		//void Get_Poionts_to_Sphere(std::vector<ML::Vec3>* result) const;		
+			
 
 		//テレポートしたかを確認するタスク
 		bool Is_Teleport_Now() const;
-		//あたり判定による方向転換及び移動
-		void Move_Ball(const unsigned int& precisioin);
+		//あたり判定による物理処理
+		void Physics_Actioin(const unsigned int& precision);
 		//位置補正用回転関数 引数 : (マップのフレーム回転量)
 		void Fix_Position_for_Rotate(const ML::QT& qt);
 		//テレポート(指定した場所に即移動する)引数 : (目的地)

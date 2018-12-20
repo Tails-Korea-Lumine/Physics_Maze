@@ -54,12 +54,12 @@ namespace Physics_Manager
 		//変更可◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇
 		//追加したい変数・メソッドはここに追加する
 		//変数
-		ML::QT frame_QTxp;
-		ML::QT frame_QTxm;
-		ML::QT frame_QTyp;
-		ML::QT frame_QTym;
-		ML::QT frame_QTzp;
-		ML::QT frame_QTzm;
+		string esasing_Name_QTxp;
+		string esasing_Name_QTxm;
+		string esasing_Name_QTyp;
+		string esasing_Name_QTym;
+		string esasing_Name_QTzp;
+		string esasing_Name_QTzm;
 		//回転軸
 		ML::Vec3 anckerX;
 		ML::Vec3 anckerY;
@@ -68,7 +68,11 @@ namespace Physics_Manager
 		//メソッド
 		//マップの処理をいっぺんに管理する 引数 : (精密度)
 		void Managing(const unsigned int delicate);
-		
+		//入力による処理
+		void Input_Analog_Action();
+		//クォータニオン計算
+		ML::QT Calculate_Frame_Quatanion(const float& precision);
+
 	public:
 		//回転軸再設定
 		void Ancker_Calculating();

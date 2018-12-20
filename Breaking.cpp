@@ -19,32 +19,32 @@ void Breaking::Effect_Update()
 	this->alpha = sinf(ML::ToRadian(this->effect_Life));
 }
 
-void Breaking::Effect_Draw() const
-{
-	if (this->effect_Life <= 0)
-	{
-		return;
-	}
-
-	//描画用行列生成
-	ML::Mat4x4 matS, matRT;
-	matS.Scaling(this->scale);
-	//回転クォータニオン
-	ML::QT qt = this->Calc_Qt();
-	D3DXMatrixAffineTransformation(&matRT, 1.0f, NULL, &qt, &this->pos);
-
-	//透明度を設定
-	auto bsBuf = DG::EffectState().BS_Get();
-	//DG::EffectState().BS_Alpha();
-	//エフェクトが持つ透明度で描画
-	DG::EffectState().param.objectColor = ML::Color(this->alpha, 1, 1, 1);
-	DG::EffectState().param.matWorld = matS * matRT;
-	DG::Mesh_Draw(this->meshName);
-
-	//透明度を元に戻す
-	DG::EffectState().BS_Set(bsBuf);
-	DG::EffectState().param.objectColor = ML::Color(1, 1, 1, 1);
-}
+//void Breaking::Effect_Draw() const
+//{
+//	if (this->effect_Life <= 0)
+//	{
+//		return;
+//	}
+//
+//	//描画用行列生成
+//	ML::Mat4x4 matS, matRT;
+//	matS.Scaling(this->scale);
+//	//回転クォータニオン
+//	ML::QT qt = this->Calc_Qt();
+//	D3DXMatrixAffineTransformation(&matRT, 1.0f, NULL, &qt, &this->pos);
+//
+//	//透明度を設定
+//	auto bsBuf = DG::EffectState().BS_Get();
+//	DG::EffectState().BS_Alpha();
+//	//エフェクトが持つ透明度で描画
+//	DG::EffectState().param.objectColor = ML::Color(this->alpha, 1, 1, 1);
+//	DG::EffectState().param.matWorld = matS * matRT;
+//	DG::Mesh_Draw(this->meshName);
+//
+//	//透明度を元に戻す
+//	DG::EffectState().BS_Set(bsBuf);
+//	DG::EffectState().param.objectColor = ML::Color(1, 1, 1, 1);
+//}
 
 Breaking::Breaking(const ML::Vec3& pos, const ML::Vec3& angle, const string& mesh_name, const string& sound_Name)
 	:BEffect(pos, angle)

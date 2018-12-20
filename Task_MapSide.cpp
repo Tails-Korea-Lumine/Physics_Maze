@@ -396,7 +396,9 @@ namespace  Map_Side
 		{
 			if (b1 != nullptr && b2 != nullptr)
 			{
-				return b1->What_Type_Is_this_Box() == Bbox::BoxType::Wall && b2->What_Type_Is_this_Box() == Bbox::BoxType::Wall;
+				auto b1_Type = b1->What_Type_Is_this_Box();
+				auto b2_Type = b2->What_Type_Is_this_Box();
+				return (b1_Type == Bbox::BoxType::Wall) && (b2_Type == Bbox::BoxType::Wall);
 			}
 			else
 			{

@@ -95,45 +95,33 @@ namespace  Ball
 		}		
 	}
 	//-------------------------------------------------------------------
-	//あたり判定による方向転換及び移動
+	//移動
 	void Object::Move_Ball(const unsigned int& precisioin)
-	{
-		int vol;
-		//終端速度及び物理精密度による速度処理
-		auto Clamp_Speed = [&](ML::Vec3& speed)
+	{		
+		//1フレームの終端速度
+		const float termination_Speed = 6.0f;
+		//終端速度に調整する場合
+		if (this->speed.Length() > termination_Speed)
 		{
-			//1フレームの終端速度
-			const float termination_Speed = 6.0f;
-			//終端速度に調整する場合
-			if (speed.Length() > termination_Speed)
-			{
-				speed = speed.Normalize();
-				speed *= termination_Speed;
-			}
-			return speed / (float)precisioin;
-		};
-		
-		//もし,どこもあたり判定をせずに動いた場合
-		//処理せずに次のフレームに移る
-		if (ge->collision_Result.empty())
-		{
-			//今回のフレームに衝突しなかったら
-			//衝突フラグを無効にする
-			this->collision_Flag.clear();
-			
-			//移動(フレーム終了する直前に行う)
-			this->sphere->Offset(Clamp_Speed(this->speed));
-			return;
+			this->speed = speed.Normalize();
+			this->speed *= termination_Speed;
 		}
-		//前回フレームのあたり判定結果を確認
+		this->speed / (float)precisioin;
+	
 		
+		//移動(フレーム終了する直前に行う)
+		this->sphere->Offset(this->speed);
+	}
+	//あたり判定による物理処理
+	void Object::Physics_Actioin(const unsigned int& precision)
+	{
 		//結果の数分ループする
 		for (auto p : ge->collision_Result)
 		{
-			//速度と法線ベクトルの角度が似た方向なら加速無し
+			//速度と法線ベクトルの角度が鋭角なら加速無し
 			float cos;
 			MyMath::Vector_Dot(&cos, this->speed, p.normal);
-			if (cos >= cosf(ML::ToRadian(85)))
+			if (cos >= 0.0f)
 			{
 				continue;
 			}
@@ -143,7 +131,7 @@ namespace  Ball
 				//今回のフレームに衝突だったら
 				//斜め線加速をする
 				Physics::Diagonal_Accelerate(&this->speed, p.normal);
-			}		
+			}
 			//前の処理で衝突ではなかったら、今回のフレームでの衝突判定でやること			
 			else
 			{
@@ -153,17 +141,16 @@ namespace  Ball
 				//DM::Sound_Volume(this->res->hit_Se_Name, int((this->speed.Length() / 6) * 1000));
 				DM::Sound_Play(this->res->hit_Se_Name, false);
 			}
-		}		
+		}
 
 		//今回使ったフラグは全部消して、今回のあたり判定結果のフラグを書き込む
 		this->collision_Flag.clear();
 		for (auto& p : ge->collision_Result)
-		{			
+		{
 			this->collision_Flag.push_back(p.collision_Id);
 		}
-		
-		//移動(フレーム終了する直前に行う)
-		this->sphere->Offset(Clamp_Speed(this->speed));
+		//移動
+		this->Move_Ball(precision);
 	}
 	
 	//「２Ｄ描画」１フレーム毎に行う処理
@@ -205,22 +192,16 @@ namespace  Ball
 		float cos;
 		//回転軸を計算する
 		for (auto& col : ge->collision_Result)
-		{
-			//内積で速度と90度の法線ベクトルを探す
-			MyMath::Vector_Dot(&cos, this->speed, col.normal);
+		{			
+			//回転軸を作る
+			MyMath::Get_Normal_to_Vector_Cross(&anker, this->speed, col.normal);
+			//回転行列とクォータニオンの生成
+			ML::QT rot = ML::QT(anker, this->speed.Length());
+			ML::Mat4x4 matR;
+			D3DXMatrixAffineTransformation(&matR, 1.0f, &this->sphere->Get_Center(), &rot, NULL);
 
-			if (cos >= _CMATH_::cosf(ML::ToRadian(90)))
-			{
-				//回転軸を作る
-				MyMath::Get_Normal_to_Vector_Cross(&anker, this->speed, col.normal);
-				//回転行列とクォータニオンの生成
-				ML::QT rot = ML::QT(anker, this->speed.Length());
-				ML::Mat4x4 matR;
-				D3DXMatrixAffineTransformation(&matR, 1.0f, &this->sphere->Get_Center(), &rot, NULL);
-
-				//回転量アップデート
-				this->sphere->Rotation(&matR, rot);
-			}
+			//回転量アップデート
+			this->sphere->Rotation(&matR, rot);			
 		}
 	}
 
@@ -247,8 +228,7 @@ namespace  Ball
 	void Object::Fix_Position_for_Rotate(const ML::QT& qt)
 	{
 		if (ge->collision_Result.empty())
-		{
-			DM::Sound_Volume(this->res->hit_Se_Name, 1000);
+		{			
 			return;
 		}
 		//マップのフレーム回転量で回転させる
@@ -256,9 +236,7 @@ namespace  Ball
 		D3DXMatrixAffineTransformation(&matR, 1, &ge->Map_center, &qt, NULL);
 
 		//this->pos = matR.TransformCoord(this->pos);
-		this->sphere->Rotation(&matR, qt);
-
-		DM::Sound_Volume(this->res->hit_Se_Name, 0);
+		this->sphere->Rotation(&matR, qt);		
 	}
 
 	//----------------------------------------------------------------------------

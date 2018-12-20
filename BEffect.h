@@ -51,7 +51,7 @@ public:
 
 	//仮想関数
 	virtual void Effect_Update() = 0;
-	virtual void Effect_Draw() const = 0;
+	virtual void Effect_Draw() const;
 
 	//メソッド
 	//エフェクトの残り時間を減少させる
