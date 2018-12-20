@@ -9,6 +9,8 @@ class Unstable_Wall : public Bbox
 private:
 	//壊れるまでのライフ
 	float life;
+	//エフェクトを連続で生成させないためのフラグ
+	bool hit_Flag;
 public:
 	//あたり判定の行動
 	bool Collision_Action(std::vector<Collision_Data>* result, Shape3D* ball) override;

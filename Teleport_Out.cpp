@@ -23,15 +23,8 @@ void Teleport_Out::Effect_Draw() const
 	//描画用行列生成
 	ML::Mat4x4 matS, matRT;
 	matS.Scaling(this->scale);	
-	//回転軸計算
-	ML::Vec3 yplus = ML::Vec3(0, 1, 0);
-	ML::Vec3 anker;
-	MyMath::Get_Normal_to_Vector_Cross(&anker, yplus, this->angle);
-	//回転量計算
-	float cos;
-	MyMath::Vector_Dot(&cos, yplus, this->angle);
-	//クォータニオンの生成とアフィン変換
-	ML::QT qt = ML::QT(anker, acos(cos));
+	//回転クォータニオン
+	ML::QT qt = this->Calc_Qt();
 	D3DXMatrixAffineTransformation(&matRT, 1.0f, NULL, &qt, &this->pos);
 
 	//透明度を設定

@@ -7,6 +7,8 @@
 #include "Game_Clear.h"
 #include "Teleport_In.h"
 #include "Teleport_Out.h"
+#include "Breaking.h"
+#include "Crashed.h"
 
 namespace  EffectManager
 {
@@ -25,6 +27,12 @@ namespace  EffectManager
 		//ゲームクリア
 		this-> mesh_Gameclear = "Game_Clear";
 		DG::Mesh_CreateFromSOBFile(mesh_Gameclear, "./data/mesh/effect/DestroyPlayer.SOB");
+		//ブレイキング
+		this->mesh_Breaking = "Breaking";
+		DG::Mesh_CreateFromSOBFile(this->mesh_Breaking, "./data/mesh/effect/Breaking.SOB");
+		//クラッシュ
+		this->mesh_Crashed = "Crashed";
+		DG::Mesh_CreateFromSOBFile(this->mesh_Crashed, "./data/mesh/effect/Crashed.SOB");
 
 		//サウンドエフェクト
 		//テレポートイン
@@ -33,6 +41,12 @@ namespace  EffectManager
 		//テレポートアウト
 		this-> seTeleportOut = "SETeleOut";
 		DM::Sound_CreateSE(seTeleportOut, "./data/sound/TeleportOut.wav");
+		//ブレイキング
+		this->se_Breaking = "SE_Breaking";
+		DM::Sound_CreateSE(this->se_Breaking, "./data/sound/Breaking_Box.wav");
+		//クラッシュ
+		this->se_Crashed = "SE_Crashed";
+		DM::Sound_CreateSE(this->se_Crashed, "./data/sound/Crashed.wav");
 
 		return true;
 	}
@@ -43,8 +57,12 @@ namespace  EffectManager
 		DG::Mesh_Erase(this->mesh_Telein);
 		DG::Mesh_Erase(this->mesh_Gameclear);
 		DG::Mesh_Erase(this->mesh_Teleout);
+		DG::Mesh_Erase(this->mesh_Breaking);
+		DG::Mesh_Erase(this->mesh_Crashed);
 		DM::Sound_Erase(seTeleportIn);
 		DM::Sound_Erase(seTeleportOut);
+		DM::Sound_Erase(this->se_Breaking);
+		DM::Sound_Erase(this->se_Crashed);
 		return true;
 	}
 	//-------------------------------------------------------------------
@@ -133,6 +151,12 @@ namespace  EffectManager
 			break;
 		case BEffect::effType::TeleportOut:
 			ef = new Teleport_Out(pos, angle, this->res->mesh_Teleout, this->res->seTeleportOut);
+			break;
+		case BEffect::effType::Breaking:
+			ef = new Breaking(pos, angle, this->res->mesh_Breaking, this->res->se_Breaking);
+			break;
+		case BEffect::effType::Crashed:
+			ef = new Crashed(pos, angle, this->res->mesh_Crashed, this->res->se_Crashed);
 			break;
 		//条件に合ってないエフェクトハンドルは処理しない
 		default:

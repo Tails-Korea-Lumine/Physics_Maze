@@ -83,7 +83,9 @@
   <ItemGroup>
     <ClCompile Include="Bbox.cpp" />
     <ClCompile Include="BEffect.cpp" />
+    <ClCompile Include="Breaking.cpp" />
     <ClCompile Include="Collision.cpp" />
+    <ClCompile Include="Crashed.cpp" />
     <ClCompile Include="Cube.cpp" />
     <ClCompile Include="DG2014\DG2014_DGObject.cpp" />
     <ClCompile Include="DG2014\DG2014_Effect.cpp" />
@@ -135,7 +137,9 @@
   <ItemGroup>
     <ClInclude Include="Bbox.h" />
     <ClInclude Include="BEffect.h" />
+    <ClInclude Include="Breaking.h" />
     <ClInclude Include="Collision.h" />
+    <ClInclude Include="Crashed.h" />
     <ClInclude Include="Cube.h" />
     <ClInclude Include="DG2014\DG2014_DGObject.h" />
     <ClInclude Include="DG2014\DG2014_Effect.h" />

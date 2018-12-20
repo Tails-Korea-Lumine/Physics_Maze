@@ -186,6 +186,8 @@ namespace  Physics_Manager
 			{
 				(*f)->Map_Rotate(frame_QT_All);
 			}
+			//位置補正を仕掛ける
+			ball->Fix_Position_for_Rotate(frame_QT_All);
 
 			ge->collision_Result.clear();
 			//あたり判定は毎回マップのほうで行う			
@@ -209,11 +211,6 @@ namespace  Physics_Manager
 			
 			//判定結果に無駄なデータが入っているなら取り除く			
 			ge->collision_Result.remove_if([](const Collision_Data& c) {return !c.collision_Flag; });
-
-			
-			//位置補正を仕掛ける
-			
-			ball->Fix_Position_for_Rotate(frame_QT_All);
 			
 			//ボールを移動させる
 			ball->Move_Ball(precision);

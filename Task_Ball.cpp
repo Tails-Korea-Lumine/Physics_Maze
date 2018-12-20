@@ -92,7 +92,7 @@ namespace  Ball
 		if (sl > 4.0f)
 		{
 			cout << sl << endl;
-		}
+		}		
 	}
 	//-------------------------------------------------------------------
 	//あたり判定による方向転換及び移動
@@ -130,6 +130,13 @@ namespace  Ball
 		//結果の数分ループする
 		for (auto p : ge->collision_Result)
 		{
+			//速度と法線ベクトルの角度が似た方向なら加速無し
+			float cos;
+			MyMath::Vector_Dot(&cos, this->speed, p.normal);
+			if (cos >= cosf(ML::ToRadian(85)))
+			{
+				continue;
+			}
 			//前の処理で衝突だったら、今回のフレームでの衝突判定でやること
 			if (this->Is_Collision(p.collision_Id))
 			{

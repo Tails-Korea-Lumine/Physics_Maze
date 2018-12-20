@@ -99,7 +99,7 @@ bool Collision::Check_Collision_Cube_Sphere(std::vector<Collision_Data>* result,
 			cd.collision_Flag = true;
 			cd.normal = tri.normal;
 			//‚à‚¤“o˜^‚³‚ê‚Ä‚¢‚é‚à‚Ì‚È‚Ì‚©Šm”F‚·‚é
-			if (result->size() == 0 || cd != result->at(result->size() - 1))
+			if (result->empty() || cd != result->at(result->size() - 1))
 			{
 				result->push_back(cd);
 			}			

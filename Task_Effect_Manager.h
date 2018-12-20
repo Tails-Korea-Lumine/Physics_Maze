@@ -26,8 +26,12 @@ namespace EffectManager
 		string mesh_Telein;
 		string mesh_Teleout;
 		string mesh_Gameclear;
+		string mesh_Breaking;
+		string mesh_Crashed;
 		string seTeleportIn;
 		string seTeleportOut;
+		string se_Breaking;
+		string se_Crashed;
 	};
 	//-------------------------------------------------------------------
 	class  Object : public  BTask

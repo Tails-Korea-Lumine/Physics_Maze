@@ -130,6 +130,12 @@
     <Filter Include="MyPG\Bbox\Unstable_Wall">
       <UniqueIdentifier>{6837d6fb-a738-4e33-b4a5-1cfb9ae6b7f2}</UniqueIdentifier>
     </Filter>
+    <Filter Include="MyPG\BEffect\Breaking">
+      <UniqueIdentifier>{c7de5ff9-7da9-4592-8929-c6fa0a4b7589}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="MyPG\BEffect\Crashed">
+      <UniqueIdentifier>{98a15f69-3300-451b-a666-b3e9b9bf86a1}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="myLib.cpp">
@@ -275,6 +281,12 @@
     </ClCompile>
     <ClCompile Include="Unstable_Wall.cpp">
       <Filter>MyPG\Bbox\Unstable_Wall</Filter>
+    </ClCompile>
+    <ClCompile Include="Breaking.cpp">
+      <Filter>MyPG\BEffect\Breaking</Filter>
+    </ClCompile>
+    <ClCompile Include="Crashed.cpp">
+      <Filter>MyPG\BEffect\Crashed</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -423,6 +435,12 @@
     </ClInclude>
     <ClInclude Include="Unstable_Wall.h">
       <Filter>MyPG\Bbox\Unstable_Wall</Filter>
+    </ClInclude>
+    <ClInclude Include="Breaking.h">
+      <Filter>MyPG\BEffect\Breaking</Filter>
+    </ClInclude>
+    <ClInclude Include="Crashed.h">
+      <Filter>MyPG\BEffect\Crashed</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
