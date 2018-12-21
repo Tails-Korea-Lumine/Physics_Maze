@@ -4,11 +4,6 @@
 //物理運動マネージャ
 //-------------------------------------------------------------------
 #include "GameEngine_Ver3_7.h"
-#include  "Task_CameraMan.h"
-#include  "Task_MapCore.h"
-#include  "Task_MapSide.h"
-#include  "Task_MapFence.h"
-#include  "Task_Ball.h"
 
 
 namespace Physics_Manager
@@ -72,7 +67,8 @@ namespace Physics_Manager
 		void Input_Analog_Action();
 		//クォータニオン計算
 		ML::QT Calculate_Frame_Quatanion(const float& precision);
-
+		//カメラ移動の法線ベクトル選択処理
+		ML::Vec3 Select_Nearest_Side(const std::vector<ML::Vec3>& normals, const ML::Vec3& b);
 	public:
 		//回転軸再設定
 		void Ancker_Calculating();

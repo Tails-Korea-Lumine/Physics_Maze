@@ -89,6 +89,6 @@ namespace Map_Side
 		void Map_Rotate(const ML::QT& qt);
 		
 		//マップの法線ベクトルを返す処理
-		void Get_Normal_Side(ML::Vec3*) const;		
+		ML::Vec3 Get_Normal_Side() const;
 	};
 }

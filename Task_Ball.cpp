@@ -188,11 +188,10 @@ namespace  Ball
 	//転がる表現のために回転させる
 	void Object::Rotate()
 	{
-		ML::Vec3 anker;
-		float cos;
+		ML::Vec3 anker;		
 		//回転軸を計算する
 		for (auto& col : ge->collision_Result)
-		{			
+		{
 			//回転軸を作る
 			MyMath::Get_Normal_to_Vector_Cross(&anker, this->speed, col.normal);
 			//回転行列とクォータニオンの生成

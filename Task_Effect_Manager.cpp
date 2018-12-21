@@ -153,7 +153,7 @@ namespace  EffectManager
 			ef = new Teleport_Out(pos, angle, this->res->mesh_Teleout, this->res->seTeleportOut);
 			break;
 		case BEffect::effType::Breaking:
-			ef = new Breaking(pos, angle, this->res->mesh_Breaking, this->res->se_Breaking);
+			ef = new Breaking(pos, angle, this->res->mesh_Crashed, this->res->se_Breaking);
 			break;
 		case BEffect::effType::Crashed:
 			ef = new Crashed(pos, angle, this->res->mesh_Crashed, this->res->se_Crashed);

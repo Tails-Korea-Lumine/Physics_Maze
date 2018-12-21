@@ -5,6 +5,12 @@
 #include  "Task_Physics_Manager.h"
 #include "easing.h"
 #include "MyMath.h"
+#include  "Task_CameraMan.h"
+#include  "Task_MapCore.h"
+#include  "Task_MapSide.h"
+#include  "Task_MapFence.h"
+#include  "Task_Ball.h"
+
 
 #define PRECISION 3
 
@@ -120,7 +126,7 @@ namespace  Physics_Manager
 		}
 
 		//ボールが存在している面の法線ベクトル
-		ML::Vec3 side_Normal(0, 0, 0);
+		std::vector<ML::Vec3> side_Normals;
 		float delicate = 0.0f;
 		//微調整機能		
 		delicate = in1.B2.on ? (float)precision *2.0f : (float)precision;
@@ -129,12 +135,15 @@ namespace  Physics_Manager
 		{			
 			//フレーム回転量のまとめ				
 			ML::QT frame_QT_All = this->Calculate_Frame_Quatanion(delicate);
-
+			//法線ベクトル保存場所クリア
+			side_Normals.clear();
 			//各タスクの回転量を更新及び回転
 			core->Rotate_Core_and_Barrier(frame_QT_All);
 			for (auto m = map->begin(); m != map->end(); m++)
 			{
 				(*m)->Map_Rotate(frame_QT_All);
+				//マップの法線ベクトルを収得
+				side_Normals.push_back((*m)->Get_Normal_Side());
 			}
 			for (auto f = fence->begin(); f != fence->end(); f++)
 			{
@@ -150,12 +159,8 @@ namespace  Physics_Manager
 			core->Core_Check_Hit(ball->Get_Collision_Area());
 			//面
 			for (auto m = map->begin(); m != map->end(); m++)
-			{
-				//ボールが存在しているマップの法線ベクトルを収得
-				if ((*m)->Map_Check_Hit(ball->Get_Collision_Area()))
-				{
-					(*m)->Get_Normal_Side(&side_Normal);
-				}
+			{				
+				(*m)->Map_Check_Hit(ball->Get_Collision_Area());
 			}
 			//フェンス
 			for (auto f = fence->begin(); f != fence->end(); f++)
@@ -171,10 +176,39 @@ namespace  Physics_Manager
 		}
 		
 		//カメラ目的地をボールがある面が見えるように設定
-		if (side_Normal.Is_Zero_Vec() == false && (in1.B4.down || ball->Is_Teleport_Now()))
+		if (in1.B4.down || ball->Is_Teleport_Now())
 		{
-			cm->Set_Destination(side_Normal);
+			//法線ベクトル選択
+			ML::Vec3 side_Normal = this->Select_Nearest_Side(side_Normals, (ball->Get_Pos() - ge->Map_center));
+			if (!side_Normal.Is_Zero_Vec())
+			{
+				//ゼロベクトルでなければカメラを移動させる
+				cm->Set_Destination(side_Normal);
+			}
 		}
+	}
+	//カメラ移動の法線ベクトル選択処理
+	ML::Vec3 Object::Select_Nearest_Side(const std::vector<ML::Vec3>& normals, const ML::Vec3& b)
+	{
+		//全体中心からボールまでのベクトルと法線ベクトルたちを内積させる
+		float cos[6];		
+		for (size_t i =0; i<normals.size(); i++)
+		{
+			MyMath::Vector_Dot(&cos[i], normals[i], b);
+		}
+
+		//最大値を取る
+		size_t max_Num = 0;
+
+		for (size_t i = 1; i < 6; i++)
+		{
+			if (cos[max_Num] < cos[i])
+			{
+				max_Num = i;
+			}
+		}
+
+		return normals.at(max_Num);
 	}
 
 	//----------------------------------------------------------------------

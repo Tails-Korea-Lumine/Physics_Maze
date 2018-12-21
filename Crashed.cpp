@@ -8,7 +8,7 @@ void Crashed::Effect_Update()
 		return;
 	}
 	//ˆÚ“®—Ê‚ÍŽc‚èŽõ–½‚ª‰e‹¿‚·‚é
-	float speed = this->effect_Life / 10.0f;
+	float speed = this->effect_Life / 30.0f;
 
 	//”j•Ð‚ªŒã‚ë‚É”ò‚Ñ‚È‚ª‚ç’iX“§–¾‚É‚È‚é
 	this->pos.y -= speed;

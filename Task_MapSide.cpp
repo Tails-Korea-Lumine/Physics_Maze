@@ -380,9 +380,9 @@ namespace  Map_Side
 	}
 	//-----------------------------------------------------------------------------------------
 	//マップの法線ベクトルを返すメソッド
-	void Object::Get_Normal_Side(ML::Vec3* result)const
+	ML::Vec3 Object::Get_Normal_Side()const
 	{
-		*result = this->Normal_Side;
+		return this->Normal_Side;
 	}
 	//連続していて使えない面を探す
 	void Object::Check_Unusable_Side()
