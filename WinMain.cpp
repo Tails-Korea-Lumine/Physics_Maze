@@ -114,7 +114,7 @@ int __stdcall WinMain(	HINSTANCE inst_,	//
 			TranslateMessage(&msg);
 			DispatchMessage(&msg);
 		}
-		else if(GetActiveWindow() == wnd)
+		else //if(GetActiveWindow() == wnd)
 		{
 			ge->B_Step(wnd);		//	ƒQ[ƒ€ˆ—
 		}

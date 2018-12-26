@@ -2,14 +2,14 @@
 #pragma warning(disable:4996)
 #include "MyMath.h"
 
-//èdóÕÉNÉâÉX
+
 //---------------------------------------------------------------
 
 namespace Physics
 {
 
-	const static ML::Vec3 G_acceleration = ML::Vec3(0, -9.8f / 60.0f / 60.0f, 0);
-
+	//const static ML::Vec3 G_acceleration = ML::Vec3(0, -9.8f / 60.0f / 60.0f, 0);
+	const static ML::Vec3 G_acceleration = ML::Vec3(0, -980.0f, 0);
 
 	//â¡ë¨Ç≥ÇπÇÈ
 	void Gravity_Accelerate(ML::Vec3* speed, const float& Weight);

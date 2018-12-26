@@ -77,7 +77,7 @@ namespace Title
 		//メニュー選択中なのかを確認するフラグ
 		bool select_now;
 		//時間確認用のカウンタ
-		int timeCnt;
+		float timeCnt;
 		//メニューを左右に動かせる移動量
 		int moving_Menu;
 		//タイトル名を上に動かせる移動量

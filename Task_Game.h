@@ -52,7 +52,7 @@ namespace Game
 		//追加したい変数・メソッドはここに追加する
 		//変数
 		//タスク消滅までのカウンタとフラグ	
-		int countdown;
+		float countdown;
 		bool countdownFlag;
 
 		//背景を回転させる角度
@@ -61,7 +61,7 @@ namespace Game
 		Difficult_Range nowdi;
 
 		//遊んだプレー時間Resultタスクに渡すもの
-		int timeCnt;
+		float timeCnt;
 		//bgm volume
 		long vol;
 

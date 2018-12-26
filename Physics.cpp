@@ -3,7 +3,8 @@
 
 void Physics::Gravity_Accelerate(ML::Vec3* speed, const float& Weight)
 {
-	*speed += (Weight * G_acceleration );
+	float delta2 = ge->g_Time.Delta_Time() * ge->g_Time.Delta_Time();
+	*speed += (Weight * (G_acceleration * delta2));	
 }
 
 void Physics::Diagonal_Accelerate(ML::Vec3* speed, const ML::Vec3& normal)
@@ -29,8 +30,8 @@ void Physics::Diagonal_Accelerate(ML::Vec3* speed, const ML::Vec3& normal)
 
 void Physics::Reflaction_Vector(ML::Vec3* force, const ML::Vec3& normal)
 {
-	//単位ベクトルより小さくなった場合は斜め加速をさせる
-	if (force->Length() <= 1.0f)
+	//0.5m/sより力が少ない場合は斜め加速をさせる
+	if (force->Length() <= 50.0f)
 	{
 		Diagonal_Accelerate(force, normal);
 		return;

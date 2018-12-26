@@ -32,7 +32,7 @@ public:
 	};
 protected:
 	//effType playing_EffectHandle;
-	int effect_Life;
+	float effect_Life;
 	
 	ML::Vec3 pos;//エフェクト再生位置
 	ML::Vec3 target;//ターゲット位置(ある場合だけもらう)

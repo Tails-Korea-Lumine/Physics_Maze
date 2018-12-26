@@ -104,7 +104,7 @@ namespace  Title
 
 		//★データ初期化
 		this->select_now = false;
-		this->timeCnt = 0;
+		this->timeCnt = 0.0f;
 		this->next_Task_Index = { 0,0 };
 		this->moving_Menu = 0;
 		this->moving_Title_Name = 0;
@@ -233,7 +233,7 @@ namespace  Title
 		//カラーウェーブ
 		this->Color_Wave();
 		//時間上昇
-		this->timeCnt++;
+		this->timeCnt += ge->g_Time.Delta_Time();
 
 		//カウンタの上限指定		
 		if (this->moving_Title_Name > MOVING_TITLE_NAME_MAX)
@@ -434,7 +434,7 @@ namespace  Title
 	bool Object::Is_Need_to_Draw_PAK() const
 	{
 		//200フレーム以降まで何も押してないなら描画をする
-		if (this->timeCnt < 200 || this->select_now)
+		if (this->timeCnt < 4.0f || this->select_now)
 		{
 			return false;
 		}

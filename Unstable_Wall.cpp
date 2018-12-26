@@ -26,7 +26,7 @@ bool Unstable_Wall::Collision_Action(std::vector<Collision_Data>* result, Shape3
 		}
 	}
 	//ボール速度のスカラー量分ライフを消す
-	this->Decrease_Life(ge->GetTask_One_G<Ball::Object>("ボール")->Get_Speed().Length());
+	this->Decrease_Life(ge->GetTask_One_G<Ball::Object>("ボール")->Get_Speed().Length()/100.0f);
 	//エフェクト生成
 	this->Be_Effect(result->at(result->size() - 1).normal);
 	return true;

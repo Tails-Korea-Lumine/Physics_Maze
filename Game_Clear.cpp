@@ -3,17 +3,17 @@
 
 void Game_Clear::Effect_Update()
 {	
-	if (this->effect_Life >= 20)
+	if (this->effect_Life >= 0.85f)
 	{
 		//残り20フレームまで回転しながら大きくなる
 		this->scale += ML::Vec3(8.0f, 8.0f, 8.0f);
 		this->angle.y += ML::ToRadian(3.0f);
 		this->alpha += 0.8f;
 	}	
-	else if (this->effect_Life < 20)
+	else
 	{
 		//その後一気に小さくなる
-		this->scale *= sinf(ML::ToRadian((float)this->effect_Life));
+		this->scale *= sinf(this->effect_Life);
 	}
 }
 
@@ -50,7 +50,7 @@ Game_Clear::Game_Clear(const ML::Vec3& pos, const ML::Vec3& angle, const string&
 	this->sound_Name = sound_Name;
 	this->meshName = mesh_name;
 	this->alpha = 0.0f;
-	this->effect_Life = 60;
+	this->effect_Life = 1.2f;
 	this->scale = ML::Vec3(0.0f, 0.0f, 0.0f);
 	//サウンドエフェクト再生
 	if (this->sound_Name != "")

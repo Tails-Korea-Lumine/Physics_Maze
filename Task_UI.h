@@ -72,7 +72,7 @@ namespace  UI
 		ML::Box2D src_Number[11];
 
 		//時間用カウンタ
-		int timeCnt;
+		float timeCnt;
 		//幕に使うフラグ
 		WipeInOut wipe;
 		//透明度

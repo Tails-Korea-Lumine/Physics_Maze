@@ -8,6 +8,7 @@
 #include "Teleportation_Manager.h"
 #include "Task_Effect_Manager.h"
 #include "Task_Game.h"
+#include "Game_Time.h"
 
 
 //ゲーム内全域で使用する構造体などを定義する
@@ -138,6 +139,9 @@ namespace  MyPG
 		weak_ptr <EffectManager::Object> eff_Manager;
 		//本編を常駐させる
 		weak_ptr<Game::Object> game;
+		//ゲーム時間
+		Game_Time g_Time;
+
 	//----------------------------------------------
 	};
 }

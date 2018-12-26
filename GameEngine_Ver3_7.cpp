@@ -26,7 +26,6 @@ void GameEngine::B_Step(HWND wnd_)
 {
 //	ESCキーが押された	終了要請フラグをＯＮ
 	if(	GetAsyncKeyState(VK_ESCAPE)){	quitRequest = true;}
-
 	//	タスクのステップ処理
 	this->UpDate( );
 	//	登録済みタスクのアップデート処理を呼び出す

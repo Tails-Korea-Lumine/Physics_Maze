@@ -17,7 +17,7 @@ private:
 	//各扉の使用されたかを判別するフラグ
 	bool be_Used[6];
 	//時間判別用カウンタ
-	int timeCnt[6];
+	float timeCnt[6];
 
 public:
 	//座標を更新

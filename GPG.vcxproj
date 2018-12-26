@@ -104,6 +104,7 @@
     <ClCompile Include="easing.cpp" />
     <ClCompile Include="GameEngine_Ver3_7.cpp" />
     <ClCompile Include="Game_Clear.cpp" />
+    <ClCompile Include="Game_Time.cpp" />
     <ClCompile Include="Goal.cpp" />
     <ClCompile Include="Light_Switch.cpp" />
     <ClCompile Include="myLib.cpp" />
@@ -158,6 +159,7 @@
     <ClInclude Include="EFile.h" />
     <ClInclude Include="GameEngine_Ver3_7.h" />
     <ClInclude Include="Game_Clear.h" />
+    <ClInclude Include="Game_Time.h" />
     <ClInclude Include="Goal.h" />
     <ClInclude Include="library.h" />
     <ClInclude Include="Light_Switch.h" />

@@ -46,7 +46,7 @@ Teleport_Out::Teleport_Out(const ML::Vec3& pos, const ML::Vec3& angle, const str
 	this->meshName = mesh_name;
 	this->sound_Name = sound_Name;	
 	this->alpha = 0.8f;
-	this->effect_Life = 80;
+	this->effect_Life = 1.3f;
 	this->scale = ML::Vec3(200, 100, 200);
 
 	//サウンドエフェクト再生

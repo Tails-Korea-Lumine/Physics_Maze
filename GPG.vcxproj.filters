@@ -136,6 +136,9 @@
     <Filter Include="MyPG\BEffect\Crashed">
       <UniqueIdentifier>{98a15f69-3300-451b-a666-b3e9b9bf86a1}</UniqueIdentifier>
     </Filter>
+    <Filter Include="MyPG\Game_Time">
+      <UniqueIdentifier>{a364d307-acfa-49d8-8bf9-00a51ccdf69b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="myLib.cpp">
@@ -287,6 +290,9 @@
     </ClCompile>
     <ClCompile Include="Crashed.cpp">
       <Filter>MyPG\BEffect\Crashed</Filter>
+    </ClCompile>
+    <ClCompile Include="Game_Time.cpp">
+      <Filter>MyPG\Game_Time</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -441,6 +447,9 @@
     </ClInclude>
     <ClInclude Include="Crashed.h">
       <Filter>MyPG\BEffect\Crashed</Filter>
+    </ClInclude>
+    <ClInclude Include="Game_Time.h">
+      <Filter>MyPG\Game_Time</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

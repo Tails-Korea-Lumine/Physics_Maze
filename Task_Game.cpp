@@ -45,9 +45,9 @@ namespace  Game
 		this->res = Resource::Create();
 
 		//★データ初期化
-		this->countdown = 0;
+		this->countdown = 0.0f;
 		this->countdownFlag = false;
-		this->timeCnt = 0;
+		this->timeCnt = 0.0f;
 		this->nowdi = di;
 		this->render2D_Priority[1] = 1.0f;
 		ge->gameClearFlag = false;
@@ -148,7 +148,7 @@ namespace  Game
 		//カウントダウン
 		if (this->Is_Count_Down())
 		{
-			this->countdown++;
+			this->countdown += ge->g_Time.Delta_Time();
 			this->BGM_Fade_Out();
 		}
 		//1秒後にタスク消滅
@@ -165,7 +165,7 @@ namespace  Game
 			this->timeCnt = 0;
 		}
 		//時間を更新
-		this->timeCnt++;
+		this->timeCnt += ge->g_Time.Delta_Time();
 		//背景角度更新
 		this->angleY += 0.04f;
 	}
@@ -227,7 +227,7 @@ namespace  Game
 	//画面切り替えが終わったのかを確認
 	bool Object::Count_Down_Over() const
 	{
-		return (this->countdown > 130);
+		return (this->countdown > 2.1f);
 	}
 	//---------------------------------------------------------------------------
 	//ゲームクリア演出を始める
@@ -240,7 +240,7 @@ namespace  Game
 	//カメラ演出が終わったのかを確認
 	bool Object::Is_Camera_Promotion_Over()
 	{
-		return this->timeCnt > 420;
+		return this->timeCnt > 9.0f;
 	}
 	//--------------------------------------------------------------------------------
 	//BGM fade out

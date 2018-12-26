@@ -337,7 +337,7 @@ typedef struct tagEasingEquations
 	float		pos;		//現在位置
 	float		start;		//開始
 	float		end;		//終了
-	int			frame;		//現在のフレーム
+	int		frame;		//現在のフレーム
 	int			duration;	//持続フレーム
 
 	std::string nextname;
@@ -428,7 +428,7 @@ void easing::UpDate()
   for (auto& it : easingList){
     auto& esing = it.second;
 		if (esing.eq_state == EQ_STATE::EQ_START){
-			esing.frame++;
+			esing.frame ++;
 			esing.pos = eeqfunc[esing.type]((float)esing.frame, esing.start, esing.end - esing.start, (float)esing.duration);
 			if (esing.duration == esing.frame){
 				esing.eq_state = EQ_STATE::EQ_END;

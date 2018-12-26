@@ -10,13 +10,13 @@ void Breaking::Effect_Update()
 	}
 
 	//XZ方向に100まで大きくなる
-	/*this->scale.x += 20.0f;
+	this->scale.x += 20.0f;
 	this->scale.z += 20.0f;
 	this->scale.x = min(this->scale.x, 100.0f);
-	this->scale.z = min(this->scale.z, 100.0f);*/
+	this->scale.z = min(this->scale.z, 100.0f);
 
 	//移動速度と方向を生成
-	ML::Vec3 speed = ML::Vec3(0, sinf(ML::ToRadian(this->effect_Life)) * 17.0f, 0);
+	ML::Vec3 speed = ML::Vec3(0.0f, sinf(this->effect_Life) * 17.0f, 0.0f);
 	//回転クォータニオンを生成する
 	ML::QT qt = this->Calc_Qt();
 	//回転行列生成
@@ -27,7 +27,7 @@ void Breaking::Effect_Update()
 
 	this->pos += speed;
 	//透明度ははっきりなった瞬間から透明になっていく
-	this->alpha = sinf(ML::ToRadian(this->effect_Life));
+	this->alpha = sinf(this->effect_Life);
 }
 
 //void Breaking::Effect_Draw() const
@@ -63,7 +63,7 @@ Breaking::Breaking(const ML::Vec3& pos, const ML::Vec3& angle, const string& mes
 	this->meshName = mesh_name;
 	this->sound_Name = sound_Name;
 	this->alpha = 1.0f;
-	this->effect_Life = 30;
+	this->effect_Life = 0.5f;
 	this->scale = ML::Vec3(50, 50, 50);
 
 	if (this->sound_Name != "")

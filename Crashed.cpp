@@ -7,12 +7,21 @@ void Crashed::Effect_Update()
 	{
 		return;
 	}
-	//ˆÚ“®—Ê‚ÍŽc‚èŽõ–½‚ª‰e‹¿‚·‚é
-	float speed = this->effect_Life / 30.0f;
 
 	//”j•Ð‚ªŒã‚ë‚É”ò‚Ñ‚È‚ª‚ç’iX“§–¾‚É‚È‚é
-	this->pos.y -= speed;
-	this->alpha -= 0.005f;
+	//ˆÚ“®‘¬“x‚Æ•ûŒü‚ð¶¬
+	ML::Vec3 speed = ML::Vec3(0, -this->effect_Life, 0);
+	//‰ñ“]ƒNƒH[ƒ^ƒjƒIƒ“‚ð¶¬‚·‚é
+	ML::QT qt = this->Calc_Qt();
+	//‰ñ“]s—ñ¶¬
+	ML::Mat4x4 mat;
+	mat.RotationQuaternion(qt);
+	//‘¬“x‚ð‚»‚Ì•ª‰ñ“]‚·‚é
+	speed = mat.TransformCoord(speed);
+
+	this->pos += speed;
+	//“§–¾“x‚Í‚Í‚Á‚«‚è‚È‚Á‚½uŠÔ‚©‚ç“§–¾‚É‚È‚Á‚Ä‚¢‚­
+	this->alpha = sinf(this->effect_Life);
 }
 
 
@@ -21,7 +30,7 @@ Crashed::Crashed(const ML::Vec3& pos, const ML::Vec3& angle, const string& mesh_
 {
 	this->meshName = mesh_name;
 	this->sound_Name = sound_Name;
-	this->effect_Life = 150;
+	this->effect_Life = 2.5f;
 	this->alpha = 1.0f;
 	this->scale = ML::Vec3(100, 100, 100);
 

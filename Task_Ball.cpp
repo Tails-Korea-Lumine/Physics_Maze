@@ -6,6 +6,7 @@
 #include  "Task_MapSide.h"
 #include  "Task_MapCore.h"
 #include  "Task_MapFence.h"
+#include "Task_CameraMan.h"
 #include "Physics.h"
 #include <iostream>
 
@@ -47,7 +48,7 @@ namespace  Ball
 
 		float r = 30.0f;
 		this->sphere = new Sphere(ML::Vec3(1000, 500, 900), ML::Vec3(r, r, r), ML::QT());
-		this->m = 15.0f;
+		this->m = 35.0f;
 		//this->rot = 0.0f;
 		this->collision_Flag.clear();
 		this->teleportation_Flag = false;
@@ -78,9 +79,12 @@ namespace  Ball
 	//「更新」１フレーム毎に行う処理
 	void  Object::UpDate()
 	{
-		//重力加速
-		Physics::Gravity_Accelerate(&this->speed,this->m);				
-			
+		auto cm = ge->GetTask_One_G<CameraMan::Object>("カメラマン");
+		if (cm != nullptr && cm->Is_Moving_Now() == false)
+		{
+			//重力加速
+			Physics::Gravity_Accelerate(&this->speed, this->m);
+		}
 		//回転量上昇
 		this->Rotate();
 
@@ -88,30 +92,20 @@ namespace  Ball
 		this->teleportation_Flag = false;
 		
 		//デバッグ用
-		float sl = this->speed.Length();
-		if (sl > 4.0f)
+		float sl = speed.Length();
+		if (sl > 140.0f)
 		{
 			cout << sl << endl;
-		}		
+		}
 	}
 	//-------------------------------------------------------------------
 	//移動
 	void Object::Move_Ball(const unsigned int& precisioin)
-	{		
-		//1フレームの終端速度
-		const float termination_Speed = 6.0f;
-		//終端速度に調整する場合
-		if (this->speed.Length() > termination_Speed)
-		{
-			this->speed = speed.Normalize();
-			this->speed *= termination_Speed;
-		}
-		this->speed / (float)precisioin;
-	
-		
-		//移動(フレーム終了する直前に行う)
-		this->sphere->Offset(this->speed);
+	{	
+		//移動
+		this->sphere->Offset(this->speed * ge->g_Time.Delta_Time() / (float)precisioin);
 	}
+
 	//あたり判定による物理処理
 	void Object::Physics_Actioin(const unsigned int& precision)
 	{
@@ -138,8 +132,12 @@ namespace  Ball
 				//今回のフレームに衝突だったら
 				//反射角で跳ね返す
 				Physics::Reflaction_Vector(&this->speed, p.normal);
-				//DM::Sound_Volume(this->res->hit_Se_Name, int((this->speed.Length() / 6) * 1000));
-				DM::Sound_Play(this->res->hit_Se_Name, false);
+
+				if (this->speed.Length() > 30.0f)
+				{
+					DM::Sound_Play(this->res->hit_Se_Name, false);
+				}
+				
 			}
 		}
 
@@ -175,6 +173,10 @@ namespace  Ball
 	//あたり判定フラグを確認
 	bool Object::Is_Collision(const string& id) const
 	{
+		if (id == "core")
+		{
+			return true;
+		}
 		for (auto& cf : this->collision_Flag)
 		{
 			if (cf == id)
@@ -195,7 +197,7 @@ namespace  Ball
 			//回転軸を作る
 			MyMath::Get_Normal_to_Vector_Cross(&anker, this->speed, col.normal);
 			//回転行列とクォータニオンの生成
-			ML::QT rot = ML::QT(anker, this->speed.Length());
+			ML::QT rot = ML::QT(anker, this->speed.Length() * ge->g_Time.Delta_Time());
 			ML::Mat4x4 matR;
 			D3DXMatrixAffineTransformation(&matR, 1.0f, &this->sphere->Get_Center(), &rot, NULL);
 

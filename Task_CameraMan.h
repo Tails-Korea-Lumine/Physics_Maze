@@ -59,7 +59,7 @@ namespace CameraMan
 		//カメラとマップ中心の距離
 		float distance;
 		//ライトオンまでの時間を計るカウンタ
-		int timeCnt;
+		float timeCnt;
 
 		//カメラをボールが存在する面に移動させるための目的地
 		ML::Vec3 destination;

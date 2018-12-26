@@ -36,7 +36,7 @@ void BEffect::Effect_Draw()const
 void BEffect::Dec_Eff()
 {
 	//Žc‚èŽžŠÔŒ¸­
-	this->effect_Life--;
+	this->effect_Life-= ge->g_Time.Delta_Time();
 }
 
 bool BEffect::Is_Alive() const

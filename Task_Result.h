@@ -58,11 +58,11 @@ namespace Result
 		//点数
 		int score;
 		//時間確認変数
-		int timeCnt;
+		float timeCnt;
 		//数字表
 		ML::Box2D src_Number[10];
 		//タスク消滅までのカウンタとフラグ
-		int countdown;
+		float countdown;
 		bool countdownFlag;
 		//bgm volume
 		long vol;

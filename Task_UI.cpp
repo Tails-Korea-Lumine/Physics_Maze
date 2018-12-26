@@ -49,7 +49,7 @@ namespace  UI
 
 		//★データ初期化
 		this->render2D_Priority[0] = 1.0f;
-		this->timeCnt = 0;
+		this->timeCnt = 0.0f;
 		this->wipe = WipeInOut::Wipe_Out;
 		this->wipe_Alpha = 1.0f;
 
@@ -100,18 +100,11 @@ namespace  UI
 		//UIで見せる時計は準備が終わった後に流れる
 		if (ge->game.lock()->GET_READY())
 		{
-			this->timeCnt++;
+			this->timeCnt += ge->g_Time.Delta_Time();
 		}
 
-		//透明度の範囲指定
-		if (this->wipe_Alpha < 0.0f)
-		{
-			this->wipe_Alpha = 0.0f;
-		}
-		if (this->wipe_Alpha > 1.0f)
-		{
-			this->wipe_Alpha = 1.0f;
-		}
+		//透明度の範囲指定		
+		this->wipe_Alpha = min(1.0f, max(this->wipe_Alpha, 0.0f));
 	}
 	//-------------------------------------------------------------------
 	//「２Ｄ描画」１フレーム毎に行う処理
@@ -127,12 +120,13 @@ namespace  UI
 	//時間の描画
 	void Object::Draw_Time() const
 	{
-		int min10, min1, sec10, sec1;
+		int min10, min1, sec10, sec1, time;
+		time = (int)this->timeCnt;
 		//各位の数値を別々にもらう
-		min10 = this->timeCnt / 60 / 60 / 10;
-		min1 = this->timeCnt / 60 / 60 % 10;
-		sec10 = this->timeCnt / 60 % 60 / 10;
-		sec1 = this->timeCnt / 60 % 60 % 10;
+		min10 = time / 60 / 10;
+		min1 = time / 60 % 10;
+		sec10 = time  % 60 / 10;
+		sec1 = time  % 60 % 10;
 
 		ML::Box2D draw_UI_Time(0, 0, 200, 64);
 		ML::Box2D src_UI_Time(0, 0, 430, 140);

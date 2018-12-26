@@ -57,7 +57,7 @@ namespace  CameraMan
 		this->distance = 2750.0f;
 		this->angle = ML::Vec3(0, 0, 0);
 		this->maxAngle = 30;
-		this->timeCnt = 0;
+		this->timeCnt = 0.0f;
 		this->destination = this->nowPos;
 		this->moving_Flag = false;
 
@@ -101,7 +101,7 @@ namespace  CameraMan
 		{
 			this->Turnon_the_Light();
 		}
-		this->timeCnt++;
+		this->timeCnt += ge->g_Time.Delta_Time();
 	}
 	//-------------------------------------------------------------------
 	//「２Ｄ描画」１フレーム毎に行う処理
@@ -134,7 +134,7 @@ namespace  CameraMan
 	//3秒がたったのかを確認
 	bool Object::It_Passed_3sec() const
 	{
-		if (this->timeCnt > 180)
+		if (this->timeCnt > 3.0f)
 		{
 			return true;
 		}
@@ -145,31 +145,32 @@ namespace  CameraMan
 	//ゲームスタート演出
 	void Object::ProMotion()
 	{
-		if (this->timeCnt < 180)
+		//目的地
+		ML::Vec3 destination[3] =
 		{
-			ge->camera[0]->pos.z += 22;
-		}
-		else if (this->timeCnt == 180)
+			ML::Vec3(2050.0f,1050.0f,2500.0f),
+			ML::Vec3(50.0f,-950.0f, -1960.0f),
+			ML::Vec3(ge->Map_center - ML::Vec3(0,0,this->distance))
+		};
+		//スタート位置
+		ML::Vec3 start_Pos[3]
 		{
-			ge->camera[0]->pos = ML::Vec3(50, -950, 1940);
-		}
-		else if (this->timeCnt < 360)
-		{
-			ge->camera[0]->pos.z -= 22;
-		}
-		else if (this->timeCnt == 360)
-		{
-			ge->camera[0]->pos = ML::Vec3(1050, 50, -1100);
-		}
-		else
-		{
-			ge->camera[0]->pos.z -= 13;
-		}
+			ML::Vec3(2050.0f, 1050.0f, -1500.0f),
+			ML::Vec3(50, -950, 1940),
+			ML::Vec3(1050, 50, -1100)
+		};
+		//配列のインデクスに使うためsize_tに宣言
+		size_t time = (size_t)(this->timeCnt / 3.0f);
+		
+		ML::Vec3 d = destination[time] - start_Pos[time];
+		//目的地に進んで行く					
+		ge->camera[0]->pos = start_Pos[time] + (d * sinf((this->timeCnt - (float)(time*3))/2.0f));
 
-		if (ge->camera[0]->pos.z < ge->Map_center.z - this->distance)
-		{
-			ge->camera[0]->pos.z = ge->Map_center.z - this->distance;
-		}
+		////最大距離制限
+		//if (ge->camera[0]->pos.z < ge->Map_center.z - this->distance)
+		//{
+		//	ge->camera[0]->pos.z = ge->Map_center.z - this->distance;
+		//}
 	}
 
 	//--------------------------------------------------------------------------
@@ -191,14 +192,15 @@ namespace  CameraMan
 			{				
 				this->moving_Flag = false;
 				this->nowPos = this->destination;
-				//軸再計算
-				ge->GetTask_One_G<Physics_Manager::Object>("物理運動")->Ancker_Calculating();
+				
 				//easing reset
 				easing::Reset("Moving_Camera");
 			}
 			//カメラ位置の更新
 			ge->camera[0]->pos = this->nowPos;
 			ge->camera[0]->UpDate();
+			//軸再計算
+			ge->GetTask_One_G<Physics_Manager::Object>("物理運動")->Ancker_Calculating();
 		}
 	}
 	//---------------------------------------------------------------------------

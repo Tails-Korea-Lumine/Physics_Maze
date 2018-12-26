@@ -43,7 +43,7 @@ Teleport_In::Teleport_In(const ML::Vec3& pos, const ML::Vec3& target, const ML::
 	this->meshName = mesh_name;
 	this->sound_Name = sound_Name;
 	this->alpha = 1.0f;
-	this->effect_Life = 15;
+	this->effect_Life = 0.3f;
 	this->scale = ML::Vec3(80.0f, 80.0f, 80.0f);
 	this->pos.y += 100.0f;
 

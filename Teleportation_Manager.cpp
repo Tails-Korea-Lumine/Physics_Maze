@@ -1,4 +1,5 @@
 #include "Teleportation_Manager.h"
+#include "MyPG.h"
 
 void Teleportation_Manager::Update_Door_Position(const int& sidenum, const ML::Vec3& pos)
 {
@@ -23,8 +24,8 @@ bool Teleportation_Manager::Find_Exit(const int& sidenum, ML::Vec3* exitpos)
 	{
 		this->be_Used[exitnum] = true;
 		this->be_Used[sidenum] = true;
-		this->timeCnt[exitnum] = 0;
-		this->timeCnt[sidenum] = 0;
+		this->timeCnt[exitnum] = 0.0f;
+		this->timeCnt[sidenum] = 0.0f;
 		*exitpos = this->doorPos[exitnum];
 		return true;
 	}
@@ -47,9 +48,9 @@ void Teleportation_Manager::Increse_Counter()
 {
 	for (int i =0; i<6; i++)
 	{
-		this->timeCnt[i]++;
+		this->timeCnt[i] += ge->g_Time.Delta_Time();
 		//5•bŒãÄ‹N“®
-		if (this->timeCnt[i] > 300)
+		if (this->timeCnt[i] > 6.0f)
 		{
 			this->be_Used[i] = false;
 		}

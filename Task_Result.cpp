@@ -54,7 +54,7 @@ namespace  Result
 		this->res = Resource::Create();
 
 		//★データ初期化
-		this->countdown = 0;
+		this->countdown = 0.0f;
 		this->countdownFlag = false;		
 		//bgm再生
 		DM::Sound_Play(this->res->bgmName, true);
@@ -63,16 +63,16 @@ namespace  Result
 		switch (di)
 		{
 		case Difficult_Range::Easy:
-			this->score = 300 - (playTime / 60);
+			this->score = 300 - (playTime);
 			break;
 		case Difficult_Range::Normal:
-			this->score = 600 - (playTime / 60);
+			this->score = 600 - (playTime);
 			break;
 		case Difficult_Range::Hard:
-			this->score = 1000 - (playTime / 60);
+			this->score = 1000 - (playTime);
 			break;
 		}
-		this->timeCnt = 0;
+		this->timeCnt = 0.0f;
 		//数字表の情報初期化
 		for (int i = 0; i < 10; i++)
 		{
@@ -120,12 +120,12 @@ namespace  Result
 			this->countdownFlag = true;
 			ge->GetTask_One_G<UI::Object>("UI")->Start_WipeIn();
 			//強制的に画面情報が全部表示する時間にする
-			this->timeCnt = 300;
+			this->timeCnt = 300.0f;
 		}
 		//フラグが立っている間にカウントダウンする
 		if (this->Is_Count_Down())
 		{
-			this->countdown++;
+			this->countdown += ge->g_Time.Delta_Time();
 			this->BGM_Fade_Out();
 		}
 		//1秒後にタスク消滅
@@ -135,7 +135,7 @@ namespace  Result
 		}
 		
 
-		this->timeCnt++;
+		this->timeCnt += ge->g_Time.Delta_Time();
 	}
 	//-------------------------------------------------------------------
 	//「２Ｄ描画」１フレーム毎に行う処理
@@ -237,14 +237,14 @@ namespace  Result
 	bool Object::Is_Count_Down_Over() const
 	{
 		//カウントダウンは1秒
-		return (this->countdown > 60);
+		return (this->countdown > 1.0f);
 	}
 
 	//-----------------------------------------------------------------------
 	//引数ぐらいの時間がたったのかを確認する
 	bool Object::Is_Over_Argument_Seconds(const int sec) const
 	{
-		return (this->timeCnt > (60 * sec));
+		return ((int)this->timeCnt > sec);
 	}
 	//--------------------------------------------------------------------------------
 	//BGM fade out

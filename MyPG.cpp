@@ -10,7 +10,7 @@ namespace MyPG
 		sizeY,							//	画面サイズY
 		1,								//	表示倍率
 		1,								//	マルチサンプル(1or2or4)
-		false,							//	フルスクリーンモード
+		true,							//	フルスクリーンモード
 		480,							//	2D描画用解像度X(現在非対応）
 		270,							//	2D描画用解像度Y(現在非対応）
 		"SPINNING CUBE",				//	ウインドウタイトル
@@ -124,6 +124,8 @@ namespace MyPG
 		DI::UpDate();
 	//	サウンドの更新(ストリーミング監視）
 		DM::Check_Stream( );
+		//時間経過
+		this->g_Time.Update();
 	}
 
 	//2D描画環境のデフォルトパラメータ設定
