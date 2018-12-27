@@ -82,8 +82,8 @@ void Collision::Intersect_OBB_Sphere(ML::Vec3* result, const Shape3D* owner, con
 //マス別に呼ばれる関数
 bool Collision::Check_Collision_Cube_Sphere(std::vector<Collision_Data>* result, const Shape3D* owner, const ML::Vec3& nearest_point)
 {		
-	//一時的に判定を保存しておくコンテナ
-	std::vector<Collision_Data> datas;
+	//一時的に判定の法線ベクトルを保存しておくコンテナ
+	std::vector<ML::Vec3> datas;
 	//コンストラクタによってゼロベクトルとfalseで生成される
 	Collision_Data cd;
 
@@ -93,30 +93,27 @@ bool Collision::Check_Collision_Cube_Sphere(std::vector<Collision_Data>* result,
 
 	for (auto& tri : all_Tri)
 	{
-		Collision_Data first;
+		//Collision_Data first;
 		//例外でないかつ三角形と点のあたり判定が合ってる場合で保存する
 		if (Check_Collision_Triangle_Point(tri, nearest_point))
 		{
-			//以下あたった三角形の法線ベクトルとフラグを返す処理
-			first.collision_Flag = true;
-			first.normal = tri.normal;
-			////もう登録されているものなのか確認する
-			//if (result->empty() || cd != result->at(result->size() - 1))
-			//{
-			//	result->push_back(cd);
-			//}
-			datas.push_back(first);
+			//あたった判定のデータをコンテナーに保存				
+			datas.push_back(tri.normal);
 		}
 	}
 	//ボックス1個に同時に何個のポリゴンが同時に当たったら
 	//法線ベクトルを合成する
-	for (auto& d : datas)
+	if (datas.empty() == false)
 	{
-		cd.normal += d.normal;
 		cd.collision_Flag = true;
+		for (auto& d : datas)
+		{
+			cd.normal += d;
+		}
+		//合成した法線ベクトルを正規化
+		cd.normal = cd.normal.Normalize();
 	}
-	//正規化してリザルトに保存
-	cd.normal = cd.normal.Normalize();
+	//リザルトに保存
 	result->push_back(cd);
 
 	return cd.collision_Flag;

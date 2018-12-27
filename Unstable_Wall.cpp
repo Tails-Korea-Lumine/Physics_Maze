@@ -65,8 +65,12 @@ void Unstable_Wall::Rendering() const
 	D3DXMatrixAffineTransformation(&matRT, 1.0f, NULL, &this->collision_Base->Get_Quaternion(), &this->collision_Base->Get_Center());
 	//ワールド行列に上書き
 	DG::EffectState().param.matWorld = matS * matRT;
+	//色変更
+	DG::EffectState().param.objectColor = ML::Color(1, 1, 0.3f, 0.89f);
 	//レンダリング
 	DG::Mesh_Draw(this->mesh_Name);
+	//色を元道理に
+	DG::EffectState().param.objectColor = ML::Color(1, 1,1,1);
 }
 
 void Unstable_Wall::Decrease_Life(const float& dec)

@@ -119,7 +119,7 @@ namespace  Game
 		{
 			//šˆø‚«Œp‚¬ƒ^ƒXƒN‚Ì¶¬
 			
-			auto nextTask = Result::Object::Create(true,this->timeCnt,this->nowdi);
+			auto nextTask = Result::Object::Create(true,(int)this->timeCnt,this->nowdi);
 		}
 
 		return  true;

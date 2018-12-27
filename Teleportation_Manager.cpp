@@ -50,7 +50,7 @@ void Teleportation_Manager::Increse_Counter()
 	{
 		this->timeCnt[i] += ge->g_Time.Delta_Time();
 		//5•bŒãÄ‹N“®
-		if (this->timeCnt[i] > 6.0f)
+		if (this->timeCnt[i] > 5.0f)
 		{
 			this->be_Used[i] = false;
 		}

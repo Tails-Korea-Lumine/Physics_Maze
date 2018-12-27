@@ -72,7 +72,7 @@ namespace Ball
 		//一個前のフレームで衝突したかを返す
 		bool Is_Collision(const string&) const;
 		//転がる表現のために回転させる
-		void Rotate();
+		void Rotate(const unsigned int& precision);
 		//移動
 		void Move_Ball(const unsigned int& precision);
 

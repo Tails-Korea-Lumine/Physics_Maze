@@ -23,14 +23,12 @@ void Physics::Diagonal_Accelerate(ML::Vec3* speed, const ML::Vec3& normal)
 	//”½ŽËŠp‚É•ÏŠ·‚µ‚½ƒxƒNƒgƒ‹
 	//ML::Vec3 after_Collision;
 
-	*speed += after_Normal;
-	//d‚³‚ª‰Á‘¬‚É‰e‹¿‚ð—^‚¦‚é
-	//return after_Collision;
+	*speed += after_Normal;	
 }
 
 void Physics::Reflaction_Vector(ML::Vec3* force, const ML::Vec3& normal)
 {
-	//0.5m/s‚æ‚è—Í‚ª­‚È‚¢ê‡‚ÍŽÎ‚ß‰Á‘¬‚ð‚³‚¹‚é
+	//0.5m/s‚æ‚è—Í‚ª¬‚³‚¢ê‡‚ÍŽÎ‚ß‰Á‘¬‚ð‚³‚¹‚é
 	if (force->Length() <= 50.0f)
 	{
 		Diagonal_Accelerate(force, normal);

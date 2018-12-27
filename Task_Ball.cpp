@@ -84,19 +84,10 @@ namespace  Ball
 		{
 			//重力加速
 			Physics::Gravity_Accelerate(&this->speed, this->m);
-		}
-		//回転量上昇
-		this->Rotate();
+		}		
 
 		//テレポートフラグを無効に
-		this->teleportation_Flag = false;
-		
-		//デバッグ用
-		float sl = speed.Length();
-		if (sl > 140.0f)
-		{
-			cout << sl << endl;
-		}
+		this->teleportation_Flag = false;		
 	}
 	//-------------------------------------------------------------------
 	//移動
@@ -104,6 +95,8 @@ namespace  Ball
 	{	
 		//移動
 		this->sphere->Offset(this->speed * ge->g_Time.Delta_Time() / (float)precisioin);
+		//回転量上昇
+		this->Rotate(precisioin);
 	}
 
 	//あたり判定による物理処理
@@ -132,7 +125,7 @@ namespace  Ball
 				//今回のフレームに衝突だったら
 				//反射角で跳ね返す
 				Physics::Reflaction_Vector(&this->speed, p.normal);
-
+				//0.3m/s以下は音を出さない
 				if (this->speed.Length() > 30.0f)
 				{
 					DM::Sound_Play(this->res->hit_Se_Name, false);
@@ -173,7 +166,7 @@ namespace  Ball
 	//あたり判定フラグを確認
 	bool Object::Is_Collision(const string& id) const
 	{
-		if (id == "core")
+		if (id == "core" || id == "barrier")
 		{
 			return true;
 		}
@@ -188,21 +181,30 @@ namespace  Ball
 	}
 	//--------------------------------------------------------------
 	//転がる表現のために回転させる
-	void Object::Rotate()
+	void Object::Rotate(const unsigned int& precision)
 	{
-		ML::Vec3 anker;		
+		ML::Vec3 anker;
+		float rot;
 		//回転軸を計算する
 		for (auto& col : ge->collision_Result)
 		{
 			//回転軸を作る
 			MyMath::Get_Normal_to_Vector_Cross(&anker, this->speed, col.normal);
+			anker = anker.Normalize();
+			//軸がゼロベクトルなら処理しない
+			if (anker.Is_Zero_Vec())
+			{
+				continue;
+			}
+			//速度に対する回転量計算
+			MyMath::Get_Rotation_By_Speed(&rot, this->sphere->Get_Length().x, this->speed.Length() * ge->g_Time.Delta_Time()/ precision);
 			//回転行列とクォータニオンの生成
-			ML::QT rot = ML::QT(anker, this->speed.Length() * ge->g_Time.Delta_Time());
+			ML::QT qt = ML::QT(anker, -rot);
 			ML::Mat4x4 matR;
-			D3DXMatrixAffineTransformation(&matR, 1.0f, &this->sphere->Get_Center(), &rot, NULL);
+			D3DXMatrixAffineTransformation(&matR, 1.0f, &this->sphere->Get_Center(), &qt, NULL);
 
 			//回転量アップデート
-			this->sphere->Rotation(&matR, rot);			
+			this->sphere->Rotation(&matR, qt);			
 		}
 	}
 

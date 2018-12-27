@@ -51,3 +51,9 @@ void MyMath::Vector_Cross(float* result, const ML::Vec3& v1, const ML::Vec3& v2)
 
 	*result = Cross_to_Position.Length() / (v1_Lenth * v2_Lenth);	
 }
+
+
+void MyMath::Get_Rotation_By_Speed(float* result, const float& r, const float& speed)
+{
+	*result = atan2f(speed,r);
+}
