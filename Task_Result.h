@@ -67,6 +67,9 @@ namespace Result
 		//bgm volume
 		long vol;
 
+		//ゲームパッドから入力をもらえるすべてのものを確認
+		bool Press_Any_Key() const;
+
 	public:
 		//メソッド
 		//点数描画

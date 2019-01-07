@@ -25,7 +25,7 @@ namespace  Result
 		DG::Image_Create(this->yourScore, "./data/image/yourScore.png");
 		DG::Image_Create(this->result, "./data/image/result.png");
 		DG::Image_Create(this->Number_Image, "./data/image/Number.png");
-		DG::Image_Create(this->presS, "./data/image/pressS.png");
+		DG::Image_Create(this->presS, "./data/image/preaaAny.png");
 
 		DM::Sound_CreateStream(this->bgmName, "./data/sound/ending.wav");
 
@@ -112,10 +112,10 @@ namespace  Result
 	//「更新」１フレーム毎に行う処理
 	void  Object::UpDate()
 	{
-		auto in = DI::GPad_GetState("P1");
+		//auto in = DI::GPad_GetState("P1");
 		easing::UpDate();
 		//カウントダウンフラグを立てる
-		if (in.ST.down)
+		if (this->Press_Any_Key())
 		{
 			this->countdownFlag = true;
 			ge->GetTask_One_G<UI::Object>("UI")->Start_WipeIn();
@@ -252,6 +252,23 @@ namespace  Result
 	{
 		this->vol -= 5;
 		DM::Sound_Volume(this->res->bgmName, this->vol);
+	}
+	//--------------------------------------------------------------------------------
+	bool Object::Press_Any_Key() const
+	{
+		auto in1 = DI::GPad_GetState("P1");
+		//ゲームパッドから入力をもらえるすべてのものを確認
+		if (in1.B1.down || in1.B2.down || in1.B3.down || in1.B4.down ||
+			in1.HD.down || in1.HL.down || in1.HR.down || in1.HU.down ||
+			in1.L1.down || in1.L2.down || in1.L3.down ||
+			in1.R1.down || in1.R2.down || in1.R3.down ||
+			in1.SE.down || in1.ST.down ||
+			in1.LStick.volume != 0 || in1.RStick.volume != 0 || in1.Triger.volume != 0)
+		{
+			return true;
+		}
+
+		return false;
 	}
 	//★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★
 	//以下は基本的に変更不要なメソッド
