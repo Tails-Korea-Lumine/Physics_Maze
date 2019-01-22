@@ -5,17 +5,19 @@
 
 //---------------------------------------------------------------
 
-namespace Physics
+class Physics
 {
+private:
+	//力の量に対して法線ベクトルの長さを調整する
+	static void Resizing_Normal(ML::Vec3* result, const ML::Vec3& force, const ML::Vec3& normal);
 
-	//const static ML::Vec3 G_acceleration = ML::Vec3(0, -9.8f / 60.0f / 60.0f, 0);
-	const static ML::Vec3 G_acceleration = ML::Vec3(0, -980.0f, 0);
+public:
 
 	//加速させる
-	void Gravity_Accelerate(ML::Vec3* speed, const float& Weight);
+	static void Gravity_Accelerate(ML::Vec3* speed, const float& Weight);
 	//壁とぶつかった後の移動方向と速度を返す
-	void Diagonal_Accelerate(ML::Vec3* speed, const ML::Vec3& normal);
+	static void Diagonal_Accelerate(ML::Vec3* speed, const ML::Vec3& normal);
 
 	//反射ベクトルを求める
-	void Reflaction_Vector(ML::Vec3* force, const ML::Vec3& normal);
+	static void Reflaction_Vector(ML::Vec3* force, const ML::Vec3& normal);
 };

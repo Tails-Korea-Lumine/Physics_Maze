@@ -153,13 +153,8 @@ bool Cube::Hit(std::vector<Collision_Data>* result, Shape3D* other)
 		return false;
 	}
 
-	//‹…‚ÆƒLƒ…[ƒu‚ğ‹t‰ñ“]‚µ‚ÄAÅ’Z‹——£‚Ì“_‚ğæ‚é
-	ML::Vec3 nearest_Point;
-	Collision::Intersect_OBB_Sphere(&nearest_Point, this, other);
-
 	//”»’è
-	return Collision::Check_Collision_Cube_Sphere(result, this, nearest_Point) ;
-	
+	return Collision::Check_Collision_Cube_Sphere(result, this, other) ;	
 }
 
 

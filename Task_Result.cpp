@@ -262,8 +262,8 @@ namespace  Result
 			in1.HD.down || in1.HL.down || in1.HR.down || in1.HU.down ||
 			in1.L1.down || in1.L2.down || in1.L3.down ||
 			in1.R1.down || in1.R2.down || in1.R3.down ||
-			in1.SE.down || in1.ST.down ||
-			in1.LStick.volume != 0 || in1.RStick.volume != 0 || in1.Triger.volume != 0)
+			in1.SE.down || in1.ST.down
+			)
 		{
 			return true;
 		}

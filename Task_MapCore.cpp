@@ -136,8 +136,8 @@ namespace  Map_Core
 		DG::EffectState().param.matWorld = matW;
 
 		DG::Mesh_Draw(this->res->meshName);*/
+		
 		this->core->Rendering();
-
 	}
 
 	//-----------------------------------------------------------------------------------

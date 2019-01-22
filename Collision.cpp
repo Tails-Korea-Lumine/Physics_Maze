@@ -2,6 +2,8 @@
 #include "Sphere.h"
 #include "Cube.h"
 
+//あたり判定基準値
+static const float judge = _CMATH_::cosf(ML::ToRadian(359));
 
 bool Collision::Check_Collision_Triangle_Point(const Triangle& tri, const ML::Vec3& p)
 {
@@ -16,7 +18,6 @@ bool Collision::Check_Collision_Triangle_Point(const Triangle& tri, const ML::Ve
 	C = tri.c - p;
 
 	//三角形の頂点と同じくなった場合
-	//if (A.Length() == 0.0f || B.Length() == 0.0f || C.Length() == 0.0f)
 	if(A.Is_Zero_Vec() || B.Is_Zero_Vec() || C.Is_Zero_Vec())
 	{
 		return true; //計算不可能かつ三角形に内包されているのであたってる判定で返す
@@ -80,7 +81,7 @@ void Collision::Intersect_OBB_Sphere(ML::Vec3* result, const Shape3D* owner, con
 
 
 //マス別に呼ばれる関数
-bool Collision::Check_Collision_Cube_Sphere(std::vector<Collision_Data>* result, const Shape3D* owner, const ML::Vec3& nearest_point)
+bool Collision::Check_Collision_Cube_Sphere(std::vector<Collision_Data>* result, const Shape3D* cube, const Shape3D* sphere)
 {		
 	//一時的に判定の法線ベクトルを保存しておくコンテナ
 	std::vector<ML::Vec3> datas;
@@ -89,7 +90,11 @@ bool Collision::Check_Collision_Cube_Sphere(std::vector<Collision_Data>* result,
 
 	//判定用の三角形を取り出す
 	std::vector<Triangle> all_Tri;
-	owner->Get_Triangle_Box3D(&all_Tri);
+	cube->Get_Triangle_Box3D(&all_Tri);
+
+	//球上の一番近い点
+	ML::Vec3 nearest_point;
+	Collision::Intersect_OBB_Sphere(&nearest_point, cube, sphere);
 
 	for (auto& tri : all_Tri)
 	{
