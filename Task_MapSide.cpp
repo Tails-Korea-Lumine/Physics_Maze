@@ -167,7 +167,20 @@ namespace  Map_Side
 					continue;
 				}
 				//各マスのレンダリング処理
+				const float rb = 37.45f;
+				const float gb = 52.98f;
+				const float bb = 11.34;
+
+				float r = abs( cosf(rb * (this->sideNumber + 1)));
+				float g = abs( cosf(gb * (this->sideNumber + 1)));
+				float b = abs( cosf(bb * (this->sideNumber + 1)));
+				ML::Color color = ML::Color(1, r, g, b);
+				if (this->arr[z][x]->What_Type_Is_this_Box() == Bbox::BoxType::Wall || this->arr[z][x]->What_Type_Is_this_Box() == Bbox::BoxType::Unstable_Wall)
+				{
+					DG::EffectState().param.objectColor = color;
+				}
 				this->arr[z][x]->Rendering();
+				DG::EffectState().param.objectColor = ML::Color(1, 1, 1, 1);
 			}
 		}
 		
@@ -242,7 +255,7 @@ namespace  Map_Side
 				//基本の壁障害物
 				case Bbox::BoxType::Wall:
 					//配列に登録
-					this->arr[z][x] = new Wall(pos, base, this->map_QT, id, chipName[chip]);
+					this->arr[z][x] = new Wall(pos, base, this->map_QT, id, "MapCore");
 					break;
 				//ゴール位置
 				case Bbox::BoxType::Goal:
