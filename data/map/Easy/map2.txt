@@ -1,7 +1,4 @@
-2
 
-Box2.sob
-Goal.sob
 
 8 8
 

@@ -41,13 +41,11 @@ namespace  Ball
 		//リソースクラス生成orリソース共有
 		this->res = Resource::Create();
 
-		//★データ初期化
-		//this->pos = ML::Vec3(1000, 500, 900);//仮の位置後で調整をかける(2018/04/20)
+		//★データ初期化		
 		this->speed = ML::Vec3(0, 0, 0);
-		//this->moveVec = ML::Vec3(0, 0, 0);
 
 		float r = 30.0f;
-		this->sphere = new Sphere(ML::Vec3(1000, 500, 900), ML::Vec3(r, r, r), ML::QT());
+		this->sphere = new Sphere(ML::Vec3(1000, 500, 900), ML::Vec3(r, r, r), ML::QT());//初期生成位置は仮の位置
 		this->m = 35.0f;
 		//this->rot = 0.0f;
 		this->collision_Flag.clear();

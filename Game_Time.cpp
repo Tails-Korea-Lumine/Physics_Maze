@@ -18,7 +18,7 @@ void Game_Time::Update()
 
 float Game_Time::Delta_Time() const
 {
-	return this->delta_Time;
+	return this->delta_Time > 1.0f ? 1.0f : this->delta_Time;
 }
 
 Game_Time::Game_Time()

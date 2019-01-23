@@ -1,9 +1,3 @@
-3
-Box4.sob
-Goal.sob
-Door.SOB
-
-
 8 8
 
 0 1 0 0 1 0 0 1

@@ -19,13 +19,33 @@ namespace  Map_Side
 	//-------------------------------------------------------------------
 	//リソースの初期化
 	bool  Resource::Initialize()
-	{	
+	{
+		//0番はメッシュを使ってないので空白をpush_back
+		this->chips.push_back("");
+		//メッシュ名の読み込みおよび生成
+		ifstream f("./data/map/mesh_Names.txt");
+		if (f.is_open() == false)
+		{
+			//ファイルを読み込めなかった場合は生成失敗
+			return false;
+		}
+		int chipnum;
+		f >> chipnum;
+		for(int i = 0 ; i<chipnum; i++)
+		{
+			string chip_Name , chip_File_Path;
+			f >> chip_Name;
+			chip_File_Path = "./data/mesh/" + chip_Name;
+			this->chips.push_back(chip_Name);
+			DG::Mesh_CreateFromSOBFile(chip_Name, chip_File_Path);
+		}
+		f.close();
 		return true;
 	}
 	//-------------------------------------------------------------------
 	//リソースの解放
 	bool  Resource::Finalize()
-	{			
+	{
 		return true;
 	}
 	//-------------------------------------------------------------------
@@ -156,7 +176,11 @@ namespace  Map_Side
 			//必要ないときはこのまま処理終了
 			return;
 		}			
-		
+		//色選択の条件
+		auto Need_Color_Select = [](const Bbox* b)
+		{
+			return b->What_Type_Is_this_Box() == Bbox::BoxType::Wall || b->What_Type_Is_this_Box() == Bbox::BoxType::Unstable_Wall;
+		};
 		size_t z, x;
 		for (z = 0; z < this->sizeZ; z++)
 		{
@@ -165,21 +189,16 @@ namespace  Map_Side
 				if (this->arr[z][x] == nullptr || this->Is_Need_Render(z, x) == false)
 				{
 					continue;
+				}				
+
+				if (Need_Color_Select(this->arr[z][x]))
+				{
+					//色変更
+					DG::EffectState().param.objectColor = this->Select_Color();
 				}
 				//各マスのレンダリング処理
-				const float rb = 37.45f;
-				const float gb = 52.98f;
-				const float bb = 11.34;
-
-				float r = abs( cosf(rb * (this->sideNumber + 1)));
-				float g = abs( cosf(gb * (this->sideNumber + 1)));
-				float b = abs( cosf(bb * (this->sideNumber + 1)));
-				ML::Color color = ML::Color(1, r, g, b);
-				if (this->arr[z][x]->What_Type_Is_this_Box() == Bbox::BoxType::Wall || this->arr[z][x]->What_Type_Is_this_Box() == Bbox::BoxType::Unstable_Wall)
-				{
-					DG::EffectState().param.objectColor = color;
-				}
 				this->arr[z][x]->Rendering();
+				//色をもと道理に戻す
 				DG::EffectState().param.objectColor = ML::Color(1, 1, 1, 1);
 			}
 		}
@@ -187,7 +206,7 @@ namespace  Map_Side
 	}
 
 	//-----------------------------------------------------------------------------------
-	//追加メソッド		
+	//追加メソッド
 	//外部ファイルからのマップロード
 	bool Object::Map_Load(string f_)
 	{
@@ -201,17 +220,17 @@ namespace  Map_Side
 			return false;
 		}
 		//レンダリングするメッシュの個数
-		int chipNum;
-		fin >> chipNum;
+		//int chipNum;
+		//fin >> chipNum;
 		//チップファイル名読み込みと、メッシュのロード
-		for (int c = 1; c <= chipNum; c++)
+		/*for (int c = 1; c <= chipNum; c++)
 		{
 			string chipFileName, chipFilePath;
 			fin >> chipFileName;
 			chipFilePath = "./data/mesh/" + chipFileName;
 			chipName[c] = "Map" + to_string(this->sideNumber) + "Chip" + std::to_string(c);
 			DG::Mesh_CreateFromSOBFile(chipName[c], chipFilePath);
-		}
+		}*/
 		//マップ配列サイズの読み込み
 		fin >> this->sizeX >> this->sizeZ;
 		//マップ配列データの読みこみ
@@ -237,13 +256,13 @@ namespace  Map_Side
 				//テレポート
 				case Bbox::BoxType::Teleportation:
 					//配列に登録
-					this->arr[z][x] = new Teleportation(pos, base, this->map_QT, id, chipName[chip], this->sideNumber);
+					this->arr[z][x] = new Teleportation(pos, base, this->map_QT, id, this->res->chips[chip], this->sideNumber);
 					break;
 				//スイッチはあたり判定範囲を小さく	
 				case Bbox::BoxType::LightSwitch:
 					base /= 10.0f;
 					//配列に登録
-					this->arr[z][x] = new Light_Switch(pos, base, this->map_QT, id, chipName[chip]);
+					this->arr[z][x] = new Light_Switch(pos, base, this->map_QT, id, this->res->chips[chip]);
 					break;
 				//ボールをスタート位置に置く
 				case Bbox::BoxType::Start:					
@@ -255,26 +274,23 @@ namespace  Map_Side
 				//基本の壁障害物
 				case Bbox::BoxType::Wall:
 					//配列に登録
-					this->arr[z][x] = new Wall(pos, base, this->map_QT, id, "MapCore");
+					this->arr[z][x] = new Wall(pos, base, this->map_QT, id, this->res->chips[chip]);
 					break;
 				//ゴール位置
 				case Bbox::BoxType::Goal:
 					base /= 10.0f;					
 					//配列に登録
-					this->arr[z][x] = new Goal(pos, base, this->map_QT, id, chipName[chip]);
+					this->arr[z][x] = new Goal(pos, base, this->map_QT, id, this->res->chips[chip]);
 					break;
 				//壊れる壁
 				case Bbox::BoxType::Unstable_Wall:
-					this->arr[z][x] = new Unstable_Wall(pos, base, this->map_QT, id, chipName[chip]);
+					this->arr[z][x] = new Unstable_Wall(pos, base, this->map_QT, id, this->res->chips[chip]);
 					break;
 				default:
 					continue;
 					break;
 				}
-								
-				
 			}
-			
 		}
 		fin.close();
 		return true;
@@ -453,6 +469,21 @@ namespace  Map_Side
 	}
 
 	//-------------------------------------------------------------------------------------
+	//色の計算
+	ML::Color Object::Select_Color()
+	{
+		//色のスペクトラムの倍率
+		const float rb = 37.45f;
+		const float gb = 52.98f;
+		const float bb = 11.34;
+		//実際の色
+		float r = abs(cosf(rb * (this->sideNumber + 1)));
+		float g = abs(cosf(gb * (this->sideNumber + 1)));
+		float b = abs(cosf(bb * (this->sideNumber + 1)));
+
+		return ML::Color(1, r, g, b);
+	}
+
 	//配列ソート及びボールをスタート位置に置く
 	//void Object::Array_Sorting()
 	//{

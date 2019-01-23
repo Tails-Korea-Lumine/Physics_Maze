@@ -28,7 +28,7 @@ namespace Map_Side
 		static   WP  instance;
 		static  Resource::SP  Create();
 		//共有する変数はここに追加する
-
+		std::vector<string> chips;
 	};
 	//-------------------------------------------------------------------
 	class  Object : public BTask
@@ -81,7 +81,8 @@ namespace Map_Side
 		//void Insert_Id_To_Ball();
 		//クォータニオンを更新する関数
 		void UpDate_Quartanion(const ML::QT& qt);
-		
+		//面の表示色を計算
+		ML::Color Select_Color();
 	public:
 		//球とマップのあたり判定
 		bool Map_Check_Hit(Shape3D* ball);

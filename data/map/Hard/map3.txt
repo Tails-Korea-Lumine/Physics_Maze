@@ -1,9 +1,4 @@
-5
-Box3.sob
-Goal.sob
-Door.SOB
-Switch.SOB
-Unstable_Wall.SOB
+
 
 8 8
 

@@ -56,7 +56,7 @@ void Unstable_Wall::Rendering() const
 	if (this->life <= 0.0f)
 	{
 		return;
-	}
+	}	
 	//行列生成
 	ML::Mat4x4 matRT, matS;
 	//スケーリング
@@ -64,13 +64,9 @@ void Unstable_Wall::Rendering() const
 	//アフィン変換
 	D3DXMatrixAffineTransformation(&matRT, 1.0f, NULL, &this->collision_Base->Get_Quaternion(), &this->collision_Base->Get_Center());
 	//ワールド行列に上書き
-	DG::EffectState().param.matWorld = matS * matRT;
-	//色変更
-	DG::EffectState().param.objectColor = ML::Color(1, 1, 0.3f, 0.89f);
+	DG::EffectState().param.matWorld = matS * matRT;	
 	//レンダリング
-	DG::Mesh_Draw(this->mesh_Name);
-	//色を元道理に
-	DG::EffectState().param.objectColor = ML::Color(1, 1,1,1);
+	DG::Mesh_Draw(this->mesh_Name);	
 }
 
 void Unstable_Wall::Decrease_Life(const float& dec)
