@@ -8,8 +8,8 @@
 enum nowMenu
 {
 	clear = -10,
-	Start_Tutorial = 0,
-	difficult = -1,
+	Start_Tutorial = 10,
+	difficult = 0,
 	TutorialCalum = 1,
 };
 

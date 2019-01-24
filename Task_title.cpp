@@ -172,7 +172,7 @@ namespace  Title
 		if (!ge->QuitFlag() && this->nextTaskCreate)
 		{
 			//★引き継ぎタスクの生成
-			if (this->next_Task_Index.x == -1)
+			if (this->next_Task_Index.x == 0)
 			{
 				//ゲームタスクに移る
 				auto nextTask = Game::Object::Create(true, Difficult_Range(this->next_Task_Index.y));

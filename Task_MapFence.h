@@ -66,6 +66,7 @@ namespace MapFence
 		//メソッド
 		//外部ファイルからの読み込み
 		bool Map_Load(string f_);
+		bool Mesh_Load(std::vector<string>*);
 		//クォータニオンを更新する関数
 		void UpDate_Quartanion(const ML::QT& qt);
 		//連続していて使えない面を探す

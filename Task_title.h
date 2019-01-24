@@ -8,16 +8,16 @@
 
 enum Difficult_Range
 {
-	Easy = -1,
+	Easy = 0,
 	Normal = 1,
-	Hard = 3,
+	Hard = 2,
 };
 
 enum Tutorial_Column
 {
-	OutLine = -1,
+	OutLine = 0,
 	Control = 1,
-	Obstacle = 3,
+	Obstacle = 2,
 };
 
 namespace Title

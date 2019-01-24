@@ -60,18 +60,14 @@ namespace  Result
 		DM::Sound_Play(this->res->bgmName, true);
 
 		//点数計算式 : 難易度別の基準点数-プレー時間(秒単位)
-		switch (di)
+		int initial_Score[] =
 		{
-		case Difficult_Range::Easy:
-			this->score = 300 - (playTime);
-			break;
-		case Difficult_Range::Normal:
-			this->score = 600 - (playTime);
-			break;
-		case Difficult_Range::Hard:
-			this->score = 1000 - (playTime);
-			break;
-		}
+			300,
+			600,
+			1000
+		};
+		this->score = initial_Score[di] - playTime;
+
 		this->timeCnt = 0.0f;
 		//数字表の情報初期化
 		for (int i = 0; i < 10; i++)
@@ -173,10 +169,10 @@ namespace  Result
 		{
 			this->Draw_Score();
 		}
-		//press S to return title
+		//press ANY KEY
 		if (this->Is_Over_Argument_Seconds(4))
 		{
-			ML::Box2D draw_pressS((ge->screenWidth / 3), ge->screenHeight-100, 700, 70);
+			ML::Box2D draw_pressS((ge->screenWidth *2 / 5), ge->screenHeight-100, 700, 70);
 			//画像全体サイズ
 			POINT size_PressS = DG::Image_Size(this->res->presS);
 			ML::Box2D src_pressS(0, 0, size_PressS.x, size_PressS.y);

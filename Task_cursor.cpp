@@ -53,11 +53,11 @@ namespace  Cursor
 		this->countdownFlag = false;
 		this->now = Start_Tutorial;
 
-		this->first_Menu_Range[0] = -1;
+		this->first_Menu_Range[0] = 0;
 		this->first_Menu_Range[1] = 1;
 
-		this->last_Menu_Range[0] = -1;
-		this->last_Menu_Range[1] = 3;
+		this->last_Menu_Range[0] = 0;
+		this->last_Menu_Range[1] = 2;
 
 		//★タスクの生成
 
@@ -140,7 +140,7 @@ namespace  Cursor
 		auto in1 = DI::GPad_GetState("P1");
 
 		//メニュー移動単位
-		int cursor_Moving = 2;
+		const int cursor_Moving = 1;
 		//移動
 		if (in1.LStick.U.down || in1.HU.down)
 		{
@@ -157,29 +157,15 @@ namespace  Cursor
 		//現在メニュ－に応じる移動範囲設定
 		if (this->now == Start_Tutorial)
 		{
-			if (select.y < this->first_Menu_Range[0])
-			{
-				select.y = this->first_Menu_Range[0];
-			}
-			else if (select.y > this->first_Menu_Range[1])
-			{
-				select.y = this->first_Menu_Range[1];
-			}
+			select.y = min(this->first_Menu_Range[1], max(select.y, this->first_Menu_Range[0]));
 		}
 		else
 		{
-			if (select.y < this->last_Menu_Range[0])
-			{
-				select.y = this->last_Menu_Range[0];
-			}
-			else if (select.y > this->last_Menu_Range[1])
-			{
-				select.y = this->last_Menu_Range[1];
-			}
+			select.y = min(this->last_Menu_Range[1], max(select.y, this->last_Menu_Range[0]));
 		}
 		
 		//目的地になるところを計算して返す
-		return (ge->screenHeight/2)-50 + (select.y * 50);
+		return (ge->screenHeight/2)-100 + (select.y * 100);
 	}
 
 	//---------------------------------------------------------------------------------

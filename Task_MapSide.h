@@ -28,7 +28,6 @@ namespace Map_Side
 		static   WP  instance;
 		static  Resource::SP  Create();
 		//共有する変数はここに追加する
-		std::vector<string> chips;
 	};
 	//-------------------------------------------------------------------
 	class  Object : public BTask
@@ -70,6 +69,7 @@ namespace Map_Side
 	
 		//メソッド
 		bool Map_Load(string f_);
+		bool Mesh_Load(std::vector<string>*);
 		//レンダリングするかを確認するメソッド
 		bool Is_Need_Render();
 		bool Is_Need_Render(const unsigned int& z ,const unsigned int& index);
@@ -85,7 +85,7 @@ namespace Map_Side
 		ML::Color Select_Color();
 	public:
 		//球とマップのあたり判定
-		bool Map_Check_Hit(Shape3D* ball);
+		void Map_Check_Hit(Shape3D* ball);
 		//マップ回転
 		void Map_Rotate(const ML::QT& qt);
 		

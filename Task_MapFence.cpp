@@ -59,38 +59,25 @@ namespace  MapFence
 			this->Map_Load("./data/fence/Hard/line" + to_string(sideNum) + ".txt");
 			break;
 		}
-		//面ごとに別の初期値を与える
-		switch(fenceNumber)
+		//全体初期値の配列
+		ML::QT initial_Value_Qt[]=
 		{
-		case 0:
-		case 8:
-			this->Map_Rotate( ML::QT(0.0f));
-			break;
-		case 9:
-		case 1:
-			this->Map_Rotate(ML::QT(ML::Vec3(0, 1, 0), ML::ToRadian(90)));
-			break;
-		case 10:
-		case 2:
-			this->Map_Rotate(ML::QT(ML::Vec3(0, 1, 0), ML::ToRadian(180)));
-			break;
-		case 11:
-		case 3:
-			this->Map_Rotate(ML::QT(ML::Vec3(0, 1, 0), ML::ToRadian(-90)));
-			break;
-		case 4:
-			this->Map_Rotate(ML::QT(ML::Vec3(1, 0, 0), ML::ToRadian(90)));
-			break;
-		case 5:
-			this->Map_Rotate(ML::QT(ML::Vec3(1, 0, 0), ML::ToRadian(90)) * ML::QT(ML::Vec3(0, 1, 0), ML::ToRadian(90)));
-			break;
-		case 6:
-			this->Map_Rotate(ML::QT(ML::Vec3(1, 0, 0), ML::ToRadian(90)) * ML::QT(ML::Vec3(0, 1, 0), ML::ToRadian(180)));
-			break;
-		case 7:
-			this->Map_Rotate(ML::QT(ML::Vec3(1, 0, 0), ML::ToRadian(90)) * ML::QT(ML::Vec3(0, 1, 0), ML::ToRadian(-90)));
-			break;
-		}
+			ML::QT(0.0f) ,
+			ML::QT(ML::Vec3(0, 1, 0), ML::ToRadian(90)),
+			ML::QT(ML::Vec3(0, 1, 0), ML::ToRadian(180)),
+			ML::QT(ML::Vec3(0, 1, 0), ML::ToRadian(-90)),
+			ML::QT(ML::Vec3(1, 0, 0), ML::ToRadian(90)),
+			ML::QT(ML::Vec3(1, 0, 0), ML::ToRadian(90)) * ML::QT(ML::Vec3(0, 1, 0), ML::ToRadian(90)),
+			ML::QT(ML::Vec3(1, 0, 0), ML::ToRadian(90)) * ML::QT(ML::Vec3(0, 1, 0), ML::ToRadian(180)),
+			ML::QT(ML::Vec3(1, 0, 0), ML::ToRadian(90)) * ML::QT(ML::Vec3(0, 1, 0), ML::ToRadian(-90)),
+			ML::QT(0.0f),
+			ML::QT(ML::Vec3(0, 1, 0), ML::ToRadian(90)),
+			ML::QT(ML::Vec3(0, 1, 0), ML::ToRadian(180)),
+			ML::QT(ML::Vec3(0, 1, 0), ML::ToRadian(-90))
+		};
+
+		//面ごとに別の初期値を与える	
+		this->Map_Rotate(initial_Value_Qt[this->fenceNumber]);
 		this->Check_Unusable_Side();
 		//this->Array_Sorting();
 		//this->Insert_Id_To_Ball();
@@ -141,8 +128,13 @@ namespace  MapFence
 			{
 				continue;
 			}
+			
+			//色変更
+			DG::EffectState().param.objectColor = ML::Color(1, 0.28f, 0.28f, 0.28f);
 			//描画
 			this->arr[i]->Rendering();
+			//色を元道理に
+			DG::EffectState().param.objectColor = ML::Color(1, 1, 1, 1);
 		}
 	}
 
@@ -151,24 +143,20 @@ namespace  MapFence
 	//外部ファイルからのマップロード
 	bool Object::Map_Load(string f_)
 	{		
+		//メッシュ名の保存場所
+		std::vector<string> chipName;
+		if (this->Mesh_Load(&chipName) == false)
+		{
+			//メッシュ読み込みが失敗したらマップロードも失敗したことにする
+			return false;
+		}
 		//外部ファイルから読み込み
 		ifstream fin(f_);
 		if (!fin)
 		{
 			return false;
-		}
-		int chipNum;
-		fin >> chipNum;
-		string chipName[10];
-		//チップファイル名読み込みと、メッシュのロード
-		for (int c = 1; c <= chipNum; c++)
-		{
-			string chipFileName, chipFilePath;
-			fin >> chipFileName;
-			chipFilePath = "./data/mesh/" + chipFileName;
-			chipName[c] = "Fence_Chip" + std::to_string(c);
-			DG::Mesh_CreateFromSOBFile(chipName[c], chipFilePath);
-		}
+		}		
+		
 		//マップ配列サイズの読み込み
 		fin >> this->size;
 		//マップ配列データの読みこみ
@@ -199,11 +187,11 @@ namespace  MapFence
 			{
 			case Bbox::BoxType::Wall:
 				//配列に登録
-				this->arr[i] = new Wall(pos, base, this->map_QT, id,chipName[chip]);
+				this->arr[i] = new Wall(pos, base, this->map_QT, id,chipName.at(chip));
 				break;
 			case Bbox::BoxType::Unstable_Wall:
 				//配列に登録
-				this->arr[i] = new Unstable_Wall(pos, base, this->map_QT, id, chipName[chip]);
+				this->arr[i] = new Unstable_Wall(pos, base, this->map_QT, id, chipName.at(chip));
 				break;
 			default:
 				continue;
@@ -212,6 +200,34 @@ namespace  MapFence
 			
 		}
 		fin.close();
+		return true;
+	}
+	//-----------------------------------------------------------
+	bool Object::Mesh_Load(std::vector<string>* chips)
+	{
+		//0番はメッシュを使ってないので空白をpush_back
+		chips->push_back("");
+		//メッシュ名の読み込みおよび生成
+		ifstream f("./data/mesh_Names.txt");
+		if (f.is_open() == false)
+		{
+			//ファイルを読み込めなかった場合は生成失敗
+			return false;
+		}
+		//メッシュの個数
+		int chipnum;
+		f >> chipnum;
+		//読み込み
+		for (int i = 0; i<chipnum; i++)
+		{
+			string chip_Name, chip_File_Path;
+			f >> chip_Name;
+			chip_File_Path = "./data/mesh/" + chip_Name;
+			chips->push_back(chip_Name);
+			//メッシュ生成
+			DG::Mesh_CreateFromSOBFile(chip_Name, chip_File_Path);
+		}
+		f.close();
 		return true;
 	}
 	//-----------------------------------------------------------------------

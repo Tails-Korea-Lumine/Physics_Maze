@@ -20,26 +20,7 @@ namespace  Map_Side
 	//リソースの初期化
 	bool  Resource::Initialize()
 	{
-		//0番はメッシュを使ってないので空白をpush_back
-		this->chips.push_back("");
-		//メッシュ名の読み込みおよび生成
-		ifstream f("./data/map/mesh_Names.txt");
-		if (f.is_open() == false)
-		{
-			//ファイルを読み込めなかった場合は生成失敗
-			return false;
-		}
-		int chipnum;
-		f >> chipnum;
-		for(int i = 0 ; i<chipnum; i++)
-		{
-			string chip_Name , chip_File_Path;
-			f >> chip_Name;
-			chip_File_Path = "./data/mesh/" + chip_Name;
-			this->chips.push_back(chip_Name);
-			DG::Mesh_CreateFromSOBFile(chip_Name, chip_File_Path);
-		}
-		f.close();
+		
 		return true;
 	}
 	//-------------------------------------------------------------------
@@ -91,34 +72,26 @@ namespace  Map_Side
 			this->Map_Load("./data/map/Hard/map" + to_string(sideNum) + ".txt");
 			break;
 		}
-		//面ごとに別の初期値を与える
-		switch (sideNumber)
+		//全体初期値の配列
+		struct IV
 		{
-		case 0:
-			this->Map_Rotate(ML::QT(0.0f));
-			this->Normal_Side = ML::Vec3(0, 1, 0);
-			break;
-		case 1:
-			this->Map_Rotate(ML::QT(ML::Vec3(1, 0, 0), ML::ToRadian(90)));
-			this->Normal_Side = ML::Vec3(0, 0, 1);
-			break;
-		case 2:
-			this->Map_Rotate(ML::QT(ML::Vec3(0, 0, 1), ML::ToRadian(90)));
-			this->Normal_Side = ML::Vec3(-1, 0, 0);
-			break;
-		case 3:
-			this->Map_Rotate(ML::QT(ML::Vec3(0, 0, 1), ML::ToRadian(-90)));
-			this->Normal_Side = ML::Vec3(1, 0, 0);
-			break;
-		case 4:
-			this->Map_Rotate(ML::QT(ML::Vec3(1, 0, 0), ML::ToRadian(-90)));
-			this->Normal_Side = ML::Vec3(0, 0, -1);
-			break;
-		case 5:
-			this->Map_Rotate(ML::QT(ML::Vec3(1, 0, 0), ML::ToRadian(180)));
-			this->Normal_Side = ML::Vec3(0, -1, 0);
-			break;
-		}
+			ML::QT qt;
+			ML::Vec3 normal;
+		};
+
+		IV initial_Value[] =
+		{
+			{ML::QT(0.0f),ML::Vec3(0, 1, 0)},
+			{ML::QT(ML::Vec3(1, 0, 0), ML::ToRadian(90)),ML::Vec3(0, 0, 1)},
+			{ML::QT(ML::Vec3(0, 0, 1), ML::ToRadian(90)),ML::Vec3(-1, 0, 0)},
+			{ML::QT(ML::Vec3(0, 0, 1), ML::ToRadian(-90)),ML::Vec3(1, 0, 0)},
+			{ML::QT(ML::Vec3(1, 0, 0), ML::ToRadian(-90)),ML::Vec3(0, 0, -1)},
+			{ML::QT(ML::Vec3(1, 0, 0), ML::ToRadian(180)),ML::Vec3(0, -1, 0)}
+		};		
+
+		//面ごとに別の初期値を与える		
+		this->Map_Rotate(initial_Value[this->sideNumber].qt);
+		this->Normal_Side = initial_Value[this->sideNumber].normal;
 		
 		this->Check_Unusable_Side();
 		//this->Array_Sorting();
@@ -211,26 +184,20 @@ namespace  Map_Side
 	bool Object::Map_Load(string f_)
 	{
 		//生成したメッシュ名を保存しておく場所
-		string chipName[10];
+		std::vector<string> chipName;
+		//回転行列
 		ML::Mat4x4 matR;
+		if (this->Mesh_Load(&chipName) == false)
+		{
+			//メッシュ読み込みが失敗したらマップロードも失敗したことにする
+			return false;
+		}
 		//外部ファイルから読み込み
 		ifstream fin(f_);
 		if (!fin)
 		{
 			return false;
 		}
-		//レンダリングするメッシュの個数
-		//int chipNum;
-		//fin >> chipNum;
-		//チップファイル名読み込みと、メッシュのロード
-		/*for (int c = 1; c <= chipNum; c++)
-		{
-			string chipFileName, chipFilePath;
-			fin >> chipFileName;
-			chipFilePath = "./data/mesh/" + chipFileName;
-			chipName[c] = "Map" + to_string(this->sideNumber) + "Chip" + std::to_string(c);
-			DG::Mesh_CreateFromSOBFile(chipName[c], chipFilePath);
-		}*/
 		//マップ配列サイズの読み込み
 		fin >> this->sizeX >> this->sizeZ;
 		//マップ配列データの読みこみ
@@ -254,37 +221,33 @@ namespace  Map_Side
 				switch (Bbox::BoxType(chip))
 				{
 				//テレポート
-				case Bbox::BoxType::Teleportation:
-					//配列に登録
-					this->arr[z][x] = new Teleportation(pos, base, this->map_QT, id, this->res->chips[chip], this->sideNumber);
+				case Bbox::BoxType::Teleportation:					
+					this->arr[z][x] = new Teleportation(pos, base, this->map_QT, id, chipName.at(chip), this->sideNumber);
 					break;
 				//スイッチはあたり判定範囲を小さく	
 				case Bbox::BoxType::LightSwitch:
 					base /= 10.0f;
-					//配列に登録
-					this->arr[z][x] = new Light_Switch(pos, base, this->map_QT, id, this->res->chips[chip]);
+					this->arr[z][x] = new Light_Switch(pos, base, this->map_QT, id, chipName.at(chip));
 					break;
 				//ボールをスタート位置に置く
-				case Bbox::BoxType::Start:					
+				case Bbox::BoxType::Start:
+					//配列に登録せずボールを移動させる
 					D3DXMatrixAffineTransformation(&matR, 1.0f, &ge->Map_center, &ML::QT(ML::Vec3(1, 0, 0), ML::ToRadian(-90)), NULL);
 					pos = matR.TransformCoord(pos);
 					ge->GetTask_One_G<Ball::Object>("ボール")->Teleportation(pos);
-					//配列登録はしない
 					break;
 				//基本の壁障害物
 				case Bbox::BoxType::Wall:
-					//配列に登録
-					this->arr[z][x] = new Wall(pos, base, this->map_QT, id, this->res->chips[chip]);
+					this->arr[z][x] = new Wall(pos, base, this->map_QT, id, chipName.at(chip));
 					break;
 				//ゴール位置
 				case Bbox::BoxType::Goal:
 					base /= 10.0f;					
-					//配列に登録
-					this->arr[z][x] = new Goal(pos, base, this->map_QT, id, this->res->chips[chip]);
+					this->arr[z][x] = new Goal(pos, base, this->map_QT, id, chipName.at(chip));
 					break;
 				//壊れる壁
 				case Bbox::BoxType::Unstable_Wall:
-					this->arr[z][x] = new Unstable_Wall(pos, base, this->map_QT, id, this->res->chips[chip]);
+					this->arr[z][x] = new Unstable_Wall(pos, base, this->map_QT, id, chipName.at(chip));
 					break;
 				default:
 					continue;
@@ -295,11 +258,37 @@ namespace  Map_Side
 		fin.close();
 		return true;
 	}
+	//---------------------------------------------------------------------
+	bool Object::Mesh_Load(std::vector<string>* chips)
+	{
+		//0番はメッシュを使ってないので空白をpush_back
+		chips->push_back("");
+		//メッシュ名の読み込みおよび生成
+		ifstream f("./data/mesh_Names.txt");
+		if (f.is_open() == false)
+		{
+			//ファイルを読み込めなかった場合は生成失敗
+			return false;
+		}
+		//メッシュの個数
+		int chipnum;
+		f >> chipnum;
+		//読み込み
+		for (int i = 0; i<chipnum; i++)
+		{
+			string chip_Name, chip_File_Path;
+			f >> chip_Name;
+			chip_File_Path = "./data/mesh/" + chip_Name;
+			chips->push_back(chip_Name);
+			//メッシュ生成
+			DG::Mesh_CreateFromSOBFile(chip_Name, chip_File_Path);
+		}
+		f.close();
+		return true;
+	}
 	//-----------------------------------------------------------------------
-	bool Object::Map_Check_Hit(Shape3D* ball)
-	{		
-		//ボールがこの面にあるかを確認するためのフラグ	
-		bool ball_on_This_Side = false;
+	void Object::Map_Check_Hit(Shape3D* ball)
+	{
 		std::vector<Collision_Data> col_Poligons;
 
 		//判定スタート		
@@ -320,8 +309,7 @@ namespace  Map_Side
 				if (d.Length() > this->chipSize)
 				{
 					continue;
-				}
-				ball_on_This_Side = true;
+				}			
 
 				//判定開始及びギミック処理
 				if (!this->arr[z][x]->Collision_Action(&col_Poligons, ball))
@@ -336,9 +324,7 @@ namespace  Map_Side
 				}
 			}
 			
-		}
-		//戻り値はボールがこの面にあるかを確認したフラグ
-		return ball_on_This_Side;
+		}		
 	}
 
 	//------------------------------------------------------------------------
