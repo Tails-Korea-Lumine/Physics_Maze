@@ -11,6 +11,7 @@ enum Difficult_Range
 	Easy = 0,
 	Normal = 1,
 	Hard = 2,
+	Tutorial = 3,
 };
 
 enum Tutorial_Column

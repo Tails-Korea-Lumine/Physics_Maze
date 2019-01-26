@@ -461,7 +461,7 @@ namespace  Map_Side
 		//色のスペクトラムの倍率
 		const float rb = 37.45f;
 		const float gb = 52.98f;
-		const float bb = 11.34;
+		const float bb = 11.34f;
 		//実際の色
 		float r = abs(cosf(rb * (this->sideNumber + 1)));
 		float g = abs(cosf(gb * (this->sideNumber + 1)));
