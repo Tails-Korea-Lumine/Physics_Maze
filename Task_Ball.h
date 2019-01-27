@@ -61,16 +61,11 @@ namespace Ball
 
 		//重さ
 		float m;
-		
-		//接触しているかを判定するフラグ
-		std::list<string> collision_Flag;
-
+				
 		//テレポートをしたのかを判別するフラグ
 		bool teleportation_Flag;
 
-		//メソッド
-		//一個前のフレームで衝突したかを返す
-		bool Is_Collision(const string&) const;
+		//メソッド		
 		//転がる表現のために回転させる
 		void Rotate(const unsigned int& precision);
 		//移動

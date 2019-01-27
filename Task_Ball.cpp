@@ -47,8 +47,6 @@ namespace  Ball
 		float r = 30.0f;
 		this->sphere = new Sphere(ML::Vec3(1000, 500, 900), ML::Vec3(r, r, r), ML::QT());//初期生成位置は仮の位置
 		this->m = 35.0f;
-		//this->rot = 0.0f;
-		this->collision_Flag.clear();
 		this->teleportation_Flag = false;
 
 	
@@ -62,7 +60,6 @@ namespace  Ball
 	{
 		//★データ＆タスク解放
 		ge->eff_Manager.lock()->Add_Effect(this->Get_Pos(), ML::Vec3(0, 0, 0), BEffect::effType::Game_Clear);
-		this->collision_Flag.clear();
 		delete this->sphere;
 
 		if (!ge->QuitFlag() && this->nextTaskCreate)
@@ -100,6 +97,7 @@ namespace  Ball
 	//あたり判定による物理処理
 	void Object::Physics_Actioin(const unsigned int& precision)
 	{
+		const float sin = sinf(ML::ToRadian(89));
 		//結果の数分ループする
 		for (auto p : ge->collision_Result)
 		{
@@ -110,34 +108,19 @@ namespace  Ball
 			{
 				continue;
 			}
-			//前の処理で衝突だったら、今回のフレームでの衝突判定でやること
-			if (this->Is_Collision(p.collision_Id))
-			{
-				//今回のフレームに衝突だったら
-				//斜め線加速をする
-				Physics::Diagonal_Accelerate(&this->speed, p.normal);
-			}
-			//前の処理で衝突ではなかったら、今回のフレームでの衝突判定でやること			
-			else
-			{
-				//今回のフレームに衝突だったら
-				//反射角で跳ね返す
-				Physics::Reflaction_Vector(&this->speed, p.normal);
-				//0.3m/s以下は音を出さない
-				if (this->speed.Length() > 30.0f)
-				{
-					DM::Sound_Play(this->res->hit_Se_Name, false);
-				}
-				
-			}
-		}
+			//反射角で跳ね返す
+			Physics::Reflaction_Vector(&this->speed, p.normal);
 
-		//今回使ったフラグは全部消して、今回のあたり判定結果のフラグを書き込む
-		this->collision_Flag.clear();
-		for (auto& p : ge->collision_Result)
-		{
-			this->collision_Flag.push_back(p.collision_Id);
-		}
+			//衝突の音を出す処理
+			float s;
+			MyMath::Vector_Cross(&s, this->speed, p.normal);
+			
+			//反射角が一定角度以下または、1.3m/s以下は音を出さない
+			if ((s <= sin) && speed.Length() >= 130.0f)
+			{
+				DM::Sound_Play(this->res->hit_Se_Name, false);
+			}
+		}		
 		//移動
 		this->Move_Ball(precision);
 	}
@@ -160,24 +143,7 @@ namespace  Ball
 
 	//--------------------------------------------------------------------
 	//追加メソッド
-
-	//あたり判定フラグを確認
-	bool Object::Is_Collision(const string& id) const
-	{
-		if (id == "core" || id == "barrier")
-		{
-			return true;
-		}
-		for (auto& cf : this->collision_Flag)
-		{
-			if (cf == id)
-			{
-				return true;
-			}
-		}
-		return false;
-	}
-	//--------------------------------------------------------------
+	
 	//転がる表現のために回転させる
 	void Object::Rotate(const unsigned int& precision)
 	{

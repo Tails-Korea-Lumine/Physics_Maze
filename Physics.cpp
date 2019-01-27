@@ -34,21 +34,14 @@ void Physics::Diagonal_Accelerate(ML::Vec3* speed, const ML::Vec3& normal)
 }
 
 void Physics::Reflaction_Vector(ML::Vec3* force, const ML::Vec3& normal)
-{
-	//0.5m/sより力が小さい場合は斜め加速をさせる
-	if (force->Length() <= 50.0f)
-	{
-		Diagonal_Accelerate(force, normal);
-		return;
-	}
-
+{	
 	//長さを力に合わせた後のベクトル
 	ML::Vec3 after_Normal;
 
 	Physics::Resizing_Normal(&after_Normal, *force, normal);
 
 	//反射角に変換したベクトル
-	*force += (2 * after_Normal);
+	*force += (1.5f * after_Normal);
 	//消耗される力を考えて60％にする
-	*force *= 0.6f;	
+	//*force *= 0.8f;	
 }
