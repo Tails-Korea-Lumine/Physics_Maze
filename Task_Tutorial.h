@@ -57,7 +57,7 @@ namespace Tutorial
 		int countDown;
 		bool countDown_Flag;
 
-		int timeCnt;
+		float timeCnt;
 		bool page_Change_Flag;
 		int page_Change_Speed;
 

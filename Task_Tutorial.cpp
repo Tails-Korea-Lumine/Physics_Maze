@@ -5,6 +5,13 @@
 #include  "Task_Tutorial.h"
 #include  "Task_Title.h"
 #include "Task_UI.h"
+#include "Task_Effect_Manager.h"
+#include "Task_Physics_Manager.h"
+#include "Task_MapCore.h"
+#include "Task_MapFence.h"
+#include "Task_MapSide.h"
+#include "Task_Ball.h"
+#include "Task_CameraMan.h"
 #include "easing.h"
 
 namespace  Tutorial
@@ -71,29 +78,21 @@ namespace  Tutorial
 		this->page_Change_Speed = (int)ge->screenWidth / 80;
 
 		this->vol = 1000;
-
+		//マップの中心地
+		ge->Map_center = ML::Vec3(1050, 50, 1050);
+		//判定の結果をゼロクリア
+		ge->collision_Result.clear();
+		//外部からテュートリアル内容を読み込む処理
 		switch(this->column)
 		{
 		case Tutorial_Column::OutLine:
-			for (int i = 0; i < 3; i++)
-			{
-				this->posx[i] = ge->screenWidth * i;
-				
-			}
+			//未実装
 			break;
 		case Tutorial_Column::Control:
-			for (int i = 0; i < 3; i++)
-			{
-				this->posx[i] = ge->screenWidth * (i-1);
-				
-			}
+			//未実装
 			break;
 		case Tutorial_Column::Obstacle:
-			for (int i = 0; i < 3; i++)
-			{
-				this->posx[i] = ge->screenWidth * (i-2);
-				
-			}
+			//未実装
 			break;
 		}
 
@@ -101,8 +100,28 @@ namespace  Tutorial
 			
 		DG::EffectState().param.bgColor = ML::Color(1, 0, 0, 0);
 		//★タスクの生成
-
+		//ui
 		auto ui = UI::Object::Create(true);
+		//カメラ
+		auto camera = CameraMan::Object::Create(true);
+		//ボール
+		auto ball = Ball::Object::Create(true);
+		//中心キューブ
+		auto core = Map_Core::Object::Create(true,Difficult_Range::TUTORIAL);
+		//面
+		for (int i = 0; i < 6; i++)
+		{
+			auto side = Map_Side::Object::Create(true, i, Difficult_Range::TUTORIAL);
+		}
+		//角
+		for (int f = 0; f < 12; f++)
+		{
+			auto fence = MapFence::Object::Create(true, f, Difficult_Range::TUTORIAL);
+		}
+		//マネージャ
+		auto ma = Physics_Manager::Object::Create(true);
+		//エフェクト
+		auto effect = EffectManager::Object::Create(true);
 
 		return  true;
 	}
@@ -110,9 +129,13 @@ namespace  Tutorial
 	//「終了」タスク消滅時に１回だけ行う処理
 	bool  Object::Finalize()
 	{
-		//★データ＆タスク解放
-
+		//★データ＆タスク解放		
+		ge->KillAll_G("マップ");
+		ge->KillAll_G("ボール");
 		ge->KillAll_G("UI");
+		ge->KillAll_G("カメラマン");
+		ge->KillAll_G("エフェクト");
+		ge->KillAll_G("物理運動");
 
 		if (!ge->QuitFlag() && this->nextTaskCreate)
 		{
@@ -126,53 +149,6 @@ namespace  Tutorial
 	//「更新」１フレーム毎に行う処理
 	void  Object::UpDate()
 	{
-		const int scroll_Speed = 8;
-		const int scroll_Max_Range = -200;
-
-		easing::UpDate();
-
-		auto in = DI::GPad_GetState("P1");
-		//スクロール操作
-		if (in.LStick.D.on || in.HD.on)
-		{
-			this->posy -= scroll_Speed;
-		}
-		if (in.LStick.U.on || in.HU.on)
-		{
-			this->posy += scroll_Speed;
-		}		
-		//ページ切り替え操作
-		if (in.L1.down || in.L2.down)
-		{
-			if (this->Can_I_Change_the_Page())
-			{
-				this->page_Change_Flag = false;
-				this->timeCnt = 0;
-				this->posy = 0;
-			}
-		}
-		else if (in.R1.down || in.R2.down)
-		{
-			if (this->Can_I_Change_the_Page())
-			{
-				this->page_Change_Flag = true;
-				this->timeCnt = 0;
-				this->posy = 0;
-			}
-		}
-		//ページ切り替えの動き
-		this->Page_Chage(this->page_Change_Flag);
-
-		//posyの範囲設定		
-		this->posy = min(max(this->posy, scroll_Max_Range), 0);
-
-		//画面切り替え開始
-		if (in.ST.down)
-		{
-			ge->GetTask_One_G<UI::Object>("UI")->Start_WipeIn();
-			this->countDown_Flag = true;
-		}
-
 		//カウントダウン
 		if (this->Is_Count_Down())
 		{
@@ -184,47 +160,12 @@ namespace  Tutorial
 			this->Kill();
 		}
 		//時間上昇
-		this->timeCnt++;
+		this->timeCnt += ge->g_Time.Delta_Time();
 	}
 	//-------------------------------------------------------------------
 	//「２Ｄ描画」１フレーム毎に行う処理
 	void  Object::Render2D_AF()
 	{
-		ML::Box2D drawBG(0, 0, ge->screenWidth, ge->screenHeight);
-		//画像全体サイズ
-		POINT size_BG = DG::Image_Size(this->res->Bg_Img);
-		ML::Box2D srcBG(0, 0, size_BG.x, size_BG.y);
-
-		DG::Image_Draw(this->res->Bg_Img, drawBG, srcBG);
-
-		ML::Box2D draw[3] = 
-		{
-			{0, 0, (int)ge->screenWidth, 1248},
-			{ 0, 0, (int)ge->screenWidth, 1248 },
-			{ 0, 0, (int)ge->screenWidth, 1248 },
-		};
-		ML::Box2D src(0, 0,1280, 1248);
-		for (int i = 0; i < 3; i++)
-		{
-			draw[i].Offset(this->posx[i], this->posy);
-			DG::Image_Draw(this->res->imageName[i], draw[i], src);
-		}
-		
-		//ガイドイメージ
-		ML::Box2D drawguide[2] =
-		{
-			{0,(int)ge->screenHeight-60,(int)ge->screenWidth/2,60},
-			{(int)ge->screenWidth/2,(int)ge->screenHeight-60,(int)ge->screenWidth / 2,60 }
-		};
-		ML::Box2D srcguide[2] =
-		{
-			{ 0,0,2200,140},
-			{0,0,1400,140}
-		};
-		for (int i = 0; i < 2; i++)
-		{
-			DG::Image_Draw(this->res->guide_Img[i], drawguide[i], srcguide[i]);
-		}
 
 	}
 

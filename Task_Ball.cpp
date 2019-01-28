@@ -59,7 +59,11 @@ namespace  Ball
 	bool  Object::Finalize()
 	{
 		//★データ＆タスク解放
-		ge->eff_Manager.lock()->Add_Effect(this->Get_Pos(), ML::Vec3(0, 0, 0), BEffect::effType::Game_Clear);
+		//if (!ge->eff_Manager.expired())
+		{
+			ge->eff_Manager.lock()->Add_Effect(this->Get_Pos(), ML::Vec3(0, 0, 0), BEffect::effType::Game_Clear);
+		}
+		
 		delete this->sphere;
 
 		if (!ge->QuitFlag() && this->nextTaskCreate)
