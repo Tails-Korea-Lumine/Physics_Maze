@@ -85,7 +85,7 @@ namespace  CameraMan
 	//「更新」１フレーム毎に行う処理
 	void  Object::UpDate()
 	{
-		if (!ge->game.expired() && !ge->game.lock()->GET_READY())
+		if (!ge->game.lock()->GET_READY())
 		{
 			this->ProMotion();
 		}

@@ -180,7 +180,7 @@ namespace  Title
 			else if (this->next_Task_Index.x == 1)
 			{
 				//テュートリアルタスクに移る
-				auto nextTask = Tutorial::Object::Create(true,Tutorial_Column(this->next_Task_Index.y));
+				ge->tutorial = Tutorial::Object::Create(true,Tutorial_Column(this->next_Task_Index.y));
 			}
 		}
 

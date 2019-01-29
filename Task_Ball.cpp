@@ -59,7 +59,7 @@ namespace  Ball
 	bool  Object::Finalize()
 	{
 		//★データ＆タスク解放
-		//if (!ge->eff_Manager.expired())
+		if (!ge->eff_Manager.expired())
 		{
 			ge->eff_Manager.lock()->Add_Effect(this->Get_Pos(), ML::Vec3(0, 0, 0), BEffect::effType::Game_Clear);
 		}

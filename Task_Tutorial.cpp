@@ -77,6 +77,10 @@ namespace  Tutorial
 		this->page_Change_Flag = false;
 		this->page_Change_Speed = (int)ge->screenWidth / 80;
 
+		this->state = Tutorial_State::Message;
+
+		this->check_Num = 0;
+
 		this->vol = 1000;
 		//マップの中心地
 		ge->Map_center = ML::Vec3(1050, 50, 1050);
@@ -221,7 +225,7 @@ namespace  Tutorial
 	//カウントダウンが終わったのかを確認
 	bool Object::Count_Down_Over() const
 	{
-		return (this->countDown > 60);
+		return (this->countDown > 1.2f);
 	}
 	//----------------------------------------------------------------------------------
 	//ページ切り替えが可能かを判断
@@ -236,6 +240,58 @@ namespace  Tutorial
 		this->vol -= 5;
 		DM::Sound_Volume(this->res->bgmName, this->vol);
 	}
+	//----------------------------------------------------------------------
+	//現在のテュートリアル状態を返す
+	Tutorial_State Object::Get_Tutorial_State() const
+	{
+		return this->state;
+	}
+	//----------------------------------------------------------------------------
+	//各項目チェック関数
+	void Object::Check_Rotate_X()
+	{
+		auto in1 = DI::GPad_GetState("P1");
+
+		if (in1.LStick.U.down)
+		{
+			this->check_Num++;
+		}
+		if (in1.LStick.D.down)
+		{
+			this->check_Num++;
+		}
+	}
+
+	void Object::Check_Rotate_Y()
+	{
+		auto in1 = DI::GPad_GetState("P1");
+
+		if (in1.LStick.L.down)
+		{
+			this->check_Num++;
+		}
+		if (in1.LStick.R.down)
+		{
+			this->check_Num++;
+		}
+	}
+
+	void Object::Check_Rotate_Z()
+	{
+		auto in1 = DI::GPad_GetState("P1");
+
+		if (in1.Triger.L.down)
+		{
+			this->check_Num++;
+		}
+		if (in1.Triger.R.down)
+		{
+			this->check_Num++;
+		}
+	}
+
+
+
 	//★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★
 	//以下は基本的に変更不要なメソッド
 	//★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★

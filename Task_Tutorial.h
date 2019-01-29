@@ -6,6 +6,13 @@
 #include "GameEngine_Ver3_7.h"
 #include "Task_title.h"
 
+enum Tutorial_State
+{
+	Message,
+	Test,
+	Interval,
+};
+
 namespace Tutorial
 {
 	//タスクに割り当てるグループ名と固有名
@@ -66,18 +73,37 @@ namespace Tutorial
 
 		//bgm volume
 		long vol;
-		
+		//タイトルで選んだテュートリアル項目
 		Tutorial_Column column;
+		//現在のテュートリアル状態
+		Tutorial_State state;
+		//テュートリアル完了回数
+		int check_Num;
 
 		//BGMヴォリュームをフェイドアウトさせる
 		void BGM_Fade_Out();
-
-	public:
-		void Page_Chage(bool page_Move_Right);
-		bool Can_I_Change_the_Page() const;
 		//自分消滅までのカウントダウン開始を確認
 		bool Is_Count_Down() const;
 		//カウントダウンが終わったのかを確認
 		bool Count_Down_Over() const;
+
+		//各項目チェック関数
+		//X軸回転
+		void Check_Rotate_X();
+		//Y軸回転
+		void Check_Rotate_Y();
+		//Z軸回転
+		void Check_Rotate_Z();
+		//カメラ移動
+		void Check_Camera_Move();
+		//精密回転
+		void Check_Pricision_Rotate();
+
+	public:
+		void Page_Chage(bool page_Move_Right);
+		bool Can_I_Change_the_Page() const;
+		
+		//現在のテュートリアル状態を返す
+		Tutorial_State Get_Tutorial_State() const;
 	};
 }
